@@ -16,15 +16,18 @@ protected:
     nt::NetworkTableEntry m_active;
     nt::NetworkTableEntry m_default;
     nt::NetworkTableEntry m_choices;
+    nt::NetworkTableEntry m_selected;
 
     QComboBox *m_chooser;
+
+    qsizetype m_flashCounter = 0;
 public:
     StringChooserWidget(const QString &title, const QString &topic);
     virtual ~StringChooserWidget();
 
     QJsonObject saveObject() override;
 
-//    void update() override;
+    void update() override;
 };
 
 #endif // STRINGCHOOSERWIDGET_H

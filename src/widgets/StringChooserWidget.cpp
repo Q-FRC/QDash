@@ -7,6 +7,7 @@ StringChooserWidget::StringChooserWidget(const QString &title, const QString &to
     m_active = m_table->GetEntry("active");
     m_default = m_table->GetEntry("default");
     m_choices = m_table->GetEntry("options");
+    m_selected = m_table->GetEntry("selected");
 
     m_value = QString::fromStdString(m_default.GetString(""));
 
@@ -22,7 +23,7 @@ StringChooserWidget::StringChooserWidget(const QString &title, const QString &to
     m_chooser->setCurrentText(m_value);
 
     connect(m_chooser, &QComboBox::currentTextChanged, this, [this](QString text) {
-        m_active.SetString(text.toStdString());
+        m_selected.SetString(text.toStdString());
     });
 
     m_layout->addWidget(m_chooser, 1, 0);
@@ -42,21 +43,33 @@ QJsonObject StringChooserWidget::saveObject() {
     return object;
 }
 
-// TODO: implement a check/x-mark to verify if values  match
-// TODO: allow updating stuff
-//void StringChooserWidget::update() {
-//    if (false) {
-//        m_chooser->clear();
+void StringChooserWidget::update() {
+    QString activeValue = m_chooser->currentText();
+    std::string activeValueStd = activeValue.toStdString();
+    if (m_active.GetString(activeValueStd) != activeValueStd) {
+        if (m_flashCounter == 5) {
+            setStyleSheet("background-color: red;");
+        }
 
-//        m_value = QString::fromStdString(m_active.GetString(""));
+        if (m_flashCounter == 10) {
+            setStyleSheet("background-color: black;");
+            m_flashCounter = -1;
+        }
 
-//        std::vector<std::string> choices = m_choices.GetStringArray({});
-//        QStringList qchoices{};
+        ++m_flashCounter;
+    }
+    if (false) {
+        m_chooser->clear();
 
-//        for (const std::string &choice : choices) {
-//            qchoices << QString::fromStdString(choice);
-//        }
-//        m_chooser->addItems(qchoices);
-//        m_chooser->setCurrentText(m_value);
-//    }
-//}
+        m_value = QString::fromStdString(m_active.GetString(""));
+
+        std::vector<std::string> choices = m_choices.GetStringArray({});
+        QStringList qchoices{};
+
+        for (const std::string &choice : choices) {
+            qchoices << QString::fromStdString(choice);
+        }
+        m_chooser->addItems(qchoices);
+        m_chooser->setCurrentText(m_value);
+    }
+}
