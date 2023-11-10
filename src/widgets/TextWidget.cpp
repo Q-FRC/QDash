@@ -8,7 +8,7 @@ TextWidget::TextWidget(const WidgetTypes &type, const QString &title, const QStr
 {
     m_text = new QLineEdit(defaultText, this);
 
-    m_layout->addWidget(m_text, 1, 0);
+    m_layout->addWidget(m_text, 1, 0, 3, 1);
 
     m_text->setStyleSheet("border: none; border-bottom: 1px solid white;");
     m_text->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);

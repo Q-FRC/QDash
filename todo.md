@@ -32,10 +32,6 @@
 # Theming
 - More themes
 - Background color for titles
-- Give less room overall for the title
-
-# Shuffleboard API Compatibility
-- No.
 
 # Stuff I'll do way after I leave FRC
 - Drag & Drop

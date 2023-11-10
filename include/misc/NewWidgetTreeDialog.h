@@ -25,6 +25,8 @@ private:
     void constructList();
     QAction *createWidgetAction(const QString &text, const QString &ntTopic, const WidgetTypes &widgetType);
     void createTreeIfNotExists(QString topicName, Globals::TopicTypes type);
+
+    QString getParentPath(QTreeWidgetItem *item);
 public:
     NewWidgetTreeDialog(QWidget *parent);
     virtual ~NewWidgetTreeDialog();

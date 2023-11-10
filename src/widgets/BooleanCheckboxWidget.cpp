@@ -11,7 +11,7 @@ BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &title, const bool &d
 
     m_checkbox->setStyleSheet("QCheckBox::indicator:unchecked { width: 30px; height: 30px; } QCheckBox::indicator:checked { width: 30px; height: 30px; }");
 
-    m_layout->addWidget(m_checkbox, 1, 0, Qt::AlignHCenter);
+    m_layout->addWidget(m_checkbox, 1, 0, 3, 1, Qt::AlignHCenter);
 
     connect(m_checkbox, &QCheckBox::stateChanged, this, [this](int state) {
         m_entry.SetBoolean(state == Qt::Checked);
