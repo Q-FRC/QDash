@@ -2,7 +2,7 @@
 
 #include "widgets/BooleanCheckboxWidget.h"
 
-NewBooleanCheckboxDialog::NewBooleanCheckboxDialog(std::string ntTopic, QWidget *parent = nullptr, WidgetData data = makeWidgetData(0, 0, 0, 0, 0)) : NewWidgetDialog(ntTopic, parent, data)
+NewBooleanCheckboxDialog::NewBooleanCheckboxDialog(std::string ntTopic, QWidget *parent = nullptr, WidgetData data = WidgetData{0, 0, 0, 0, 0}) : NewWidgetDialog(ntTopic, parent, data)
 {
     m_layout->addWidget(m_buttonBox);
 

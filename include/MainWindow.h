@@ -62,7 +62,8 @@ public slots:
     void newWidget(BaseWidget *widget, WidgetData data);
 
     // NT Settings
-    void ntSettings();
+    void ntSettingsPopup();
+    void setNtSettings(ServerData data);
 
     // File Actions
     void save();

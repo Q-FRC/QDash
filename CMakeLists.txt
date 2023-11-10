@@ -39,7 +39,7 @@ set(PROJECT_SOURCES
         src/dialogs/NewCameraViewDialog.cpp
 
         src/misc/NewWidgetListDialog.cpp
-
+        src/misc/NTSettingsDialog.cpp
 
         # =======================================
 
@@ -67,7 +67,7 @@ set(PROJECT_SOURCES
         include/dialogs/NewCameraViewDialog.h
 
         include/misc/NewWidgetListDialog.h
-
+        include/misc/NTSettingsDialog.h
 
 )
 

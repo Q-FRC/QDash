@@ -4,6 +4,7 @@
 #include "dialogs/NewCameraViewDialog.h"
 
 #include "misc/NewWidgetListDialog.h"
+#include "misc/NTSettingsDialog.h"
 
 #include "ntcore/networktables/NetworkTableInstance.h"
 
@@ -30,7 +31,7 @@ MainWindow::MainWindow()
     // NT Settings
     {
         QAction *ntServerAction = new QAction("NT Server");
-        connect(ntServerAction, &QAction::triggered, this, &MainWindow::ntSettings);
+        connect(ntServerAction, &QAction::triggered, this, &MainWindow::ntSettingsPopup);
 
         m_menubar->addAction(ntServerAction);
     } // End NT Settings
@@ -131,14 +132,15 @@ void MainWindow::update()
 
     repaint();
 
-    setWindowTitle("QFRCDashboard (" + Globals::server + ") - " + (Globals::inst.IsConnected() ? "" : "Not ") + "Connected");
+    setWindowTitle("QFRCDashboard (" + QString::fromStdString(Globals::server.server) + ") - " + (Globals::inst.IsConnected() ? "" : "Not ") + "Connected");
 }
 
 /* File I/O */
 
 QJsonDocument MainWindow::saveObject() {
     QJsonDocument doc{};
-    QJsonArray topArray{};
+    QJsonObject topObject{};
+    QJsonArray tabs{};
 
     for (TabWidget *tab : m_tabWidgets) {
         QJsonObject object{};
@@ -163,10 +165,12 @@ QJsonDocument MainWindow::saveObject() {
         }
 
         object.insert("widgets", widgets);
-        topArray.insert(topArray.size(), object);
+        tabs.insert(tabs.size(), object);
     }
 
-    doc.setArray(topArray);
+    topObject.insert("server", "bruh");
+    topObject.insert("tabs", tabs);
+    doc.setObject(topObject);
     return doc;
 }
 
@@ -271,14 +275,37 @@ void MainWindow::newWidget(BaseWidget *widget, WidgetData data) {
 }
 
 // NT Settings
-void MainWindow::ntSettings() {
-    bool ok;
-    QString server = QInputDialog::getText(this, "NT Server Settings", "Input NT4 Server Address", QLineEdit::Normal, "", &ok);
+void MainWindow::ntSettingsPopup() {
+    NTSettingsDialog *dialog = new NTSettingsDialog(this);
 
-    if (!server.isEmpty() && ok) {
-        Globals::server = server;
-        Globals::inst.SetServer(server.toStdString().c_str(), NT_DEFAULT_PORT4);
+    dialog->show();
+
+    connect(dialog, &NTSettingsDialog::dataReady, this, &MainWindow::setNtSettings);
+}
+
+void MainWindow::setNtSettings(ServerData data) {
+    std::string server = data.server;
+    bool isTeamNumber = data.teamNumber;
+    int port = data.port;
+
+    if (server.empty()) return;
+
+    if (isTeamNumber) {
+        int team;
+        try {
+            team = std::stoi(server);
+        } catch (std::invalid_argument const &) {
+            QMessageBox::critical(this, "Malformed Input", "Team number was selected but address does not resemble an integer.");
+            return;
+        }
+
+        Globals::inst.SetServerTeam(team, port);
+    } else {
+        Globals::inst.SetServer(server.c_str(), port);
     }
+
+    Globals::server = data;
+    Globals::inst.Disconnect();
 }
 
 // File Actions

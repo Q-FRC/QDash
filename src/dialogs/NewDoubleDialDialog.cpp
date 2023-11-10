@@ -2,7 +2,7 @@
 
 #include "widgets/DoubleDialWidget.h"
 
-NewDoubleDialDialog::NewDoubleDialDialog(std::string ntTopic, QWidget *parent = nullptr, WidgetData data = makeWidgetData(0, 0, 0, 0, 0)) : NewWidgetDialog(ntTopic, parent, data)
+NewDoubleDialDialog::NewDoubleDialDialog(std::string ntTopic, QWidget *parent = nullptr, WidgetData data = WidgetData{0, 0, 0, 0, 0}) : NewWidgetDialog(ntTopic, parent, data)
 {
     m_minInput = new QDoubleSpinBox(this);
     m_minInput->setRange(-1000000., 1000000.);

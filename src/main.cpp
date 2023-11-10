@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
     QApplication app(argc, argv);
 
     Globals::inst.StartClient4("QFRCDashboard");
-    Globals::inst.SetServer(Globals::server.toStdString().c_str(), NT_DEFAULT_PORT4);
+    Globals::inst.SetServer(Globals::server.server.c_str(), NT_DEFAULT_PORT4);
 
     MainWindow *window = new MainWindow();
 

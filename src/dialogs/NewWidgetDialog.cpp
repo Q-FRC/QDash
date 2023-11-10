@@ -11,11 +11,11 @@
 #include <QColorDialog>
 
 // default to a zeroed-out data
-NewWidgetDialog::NewWidgetDialog(std::string ntTopic, QWidget *parent = nullptr, const WidgetData &data = makeWidgetData(0, 0, 0, 0, 0)) : QDialog(parent)
+NewWidgetDialog::NewWidgetDialog(std::string ntTopic, QWidget *parent = nullptr, const WidgetData &data = WidgetData{0, 0, 0, 0, 0}) : QDialog(parent)
 {
     m_entry = Globals::inst.GetEntry(ntTopic);
 
-    bool isNewWidget = (data == makeWidgetData(0, 0, 0, 0, 0));
+    bool isNewWidget = (data == WidgetData{0, 0, 0, 0, 0});
 
     m_layout = new QFormLayout(this);
 

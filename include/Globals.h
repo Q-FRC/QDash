@@ -6,7 +6,7 @@
 #include <QMap>
 
 
-typedef struct WidgetData {
+typedef struct {
     int tabIdx;
     int row;
     int col;
@@ -24,12 +24,17 @@ enum class WidgetTypes {
     CameraView = 6
 };
 
-extern WidgetData makeWidgetData(int row, int col, int rowSpan, int colSpan, int tabIdx);
+typedef struct {
+    bool teamNumber;
+    std::string server;
+    int port;
+} ServerData;
+
 extern bool operator==(const WidgetData &a, const WidgetData &b);
 
 namespace Globals {
 extern nt::NetworkTableInstance inst;
-extern QString server;
+extern ServerData server;
 
 enum class TopicTypes {
     SendableChooser,

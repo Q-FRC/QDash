@@ -4,7 +4,7 @@
 
 #include <QColorDialog>
 
-NewBooleanDisplayDialog::NewBooleanDisplayDialog(std::string ntTopic, QWidget *parent = nullptr, WidgetData data = makeWidgetData(0, 0, 0, 0, 0)) : NewWidgetDialog(ntTopic, parent, data)
+NewBooleanDisplayDialog::NewBooleanDisplayDialog(std::string ntTopic, QWidget *parent = nullptr, WidgetData data = WidgetData{0, 0, 0, 0, 0}) : NewWidgetDialog(ntTopic, parent, data)
 {
     m_trueColorLabel = new QLabel("True Color:", this);
 
