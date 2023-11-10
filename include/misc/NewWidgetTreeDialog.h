@@ -1,29 +1,33 @@
-#ifndef NEWWIDGETLISTDIALOG_H
-#define NEWWIDGETLISTDIALOG_H
+#ifndef NEWWIDGETTREEDIALOG_H
+#define NEWWIDGETTREEDIALOG_H
 
 #include <QDialog>
 
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QDialogButtonBox>
+#include <QTreeWidget>
 
 #include "Globals.h"
 #include "widgets/BaseWidget.h"
 
-class NewWidgetListDialog : public QDialog
+class NewWidgetTreeDialog : public QDialog
 {
     Q_OBJECT
 private:
     QVBoxLayout *m_layout;
-    QListWidget *m_list;
+    QTreeWidget *m_tree;
 
     QDialogButtonBox *m_buttonBox;
 
+    QMap<QString, QTreeWidgetItem *> m_itemTableMap;
+
     void constructList();
     QAction *createWidgetAction(const QString &text, const QString &ntTopic, const WidgetTypes &widgetType);
+    void createTreeIfNotExists(QString topicName, Globals::TopicTypes type);
 public:
-    NewWidgetListDialog(QWidget *parent);
-    virtual ~NewWidgetListDialog();
+    NewWidgetTreeDialog(QWidget *parent);
+    virtual ~NewWidgetTreeDialog();
 
     void showNewWidgetDialog(WidgetTypes widgetType, std::string ntTopic);
 
@@ -36,4 +40,4 @@ signals:
     void widgetReady(BaseWidget *widget, WidgetData data);
 };
 
-#endif // NEWWIDGETLISTDIALOG_H
+#endif // NEWWIDGETTREEDIALOG_H

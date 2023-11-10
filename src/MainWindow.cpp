@@ -3,7 +3,7 @@
 #include "dialogs/NewWidgetDialog.h"
 #include "dialogs/NewCameraViewDialog.h"
 
-#include "misc/NewWidgetListDialog.h"
+#include "misc/NewWidgetTreeDialog.h"
 #include "misc/NTSettingsDialog.h"
 
 #include "ntcore/networktables/NetworkTableInstance.h"
@@ -419,15 +419,15 @@ void MainWindow::newWidgetPopup() {
             newTab();
         }
     } else {
-        NewWidgetListDialog *listDialog = new NewWidgetListDialog(this);
+        NewWidgetTreeDialog *listDialog = new NewWidgetTreeDialog(this);
         listDialog->setWindowTitle("Select Widget...");
 
-        // Width: 1/4 of available space
+        // Width: 1/2 of available space
         // Height: 1/2 of available space
         QRect screenSize = qApp->primaryScreen()->geometry();
-        listDialog->resize(screenSize.width() / 4., screenSize.height() / 2.);
+        listDialog->resize(screenSize.width() / 2., screenSize.height() / 2.);
 
-        connect(listDialog, &NewWidgetListDialog::widgetReady, this, &MainWindow::newWidget);
+        connect(listDialog, &NewWidgetTreeDialog::widgetReady, this, &MainWindow::newWidget);
         listDialog->show();
     }
 }

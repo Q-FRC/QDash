@@ -43,6 +43,8 @@ enum class TopicTypes {
     Boolean
 };
 
+extern QMap<TopicTypes, QString> typeDisplayNames;
+
 extern QStringList ntTopics;
 extern QMap<QString, TopicTypes> availableTopics;
 extern WidgetData *defaultWidgetData;

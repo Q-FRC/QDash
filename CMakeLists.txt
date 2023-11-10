@@ -38,7 +38,7 @@ set(PROJECT_SOURCES
         src/dialogs/NewStringChooserDialog.cpp
         src/dialogs/NewCameraViewDialog.cpp
 
-        src/misc/NewWidgetListDialog.cpp
+        src/misc/NewWidgetTreeDialog.cpp
         src/misc/NTSettingsDialog.cpp
 
         # =======================================
@@ -66,7 +66,7 @@ set(PROJECT_SOURCES
         include/dialogs/NewStringChooserDialog.h
         include/dialogs/NewCameraViewDialog.h
 
-        include/misc/NewWidgetListDialog.h
+        include/misc/NewWidgetTreeDialog.h
         include/misc/NTSettingsDialog.h
 
 )

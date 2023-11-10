@@ -26,10 +26,8 @@
 - Yes
 
 # NT
-- More options
 - Keep subscriptions global; one subscription shared between multiple widgets with the same topic
   * Propagate changes on the topic level, not the widget level
-- New widget dialog should look like a tree, not a straight list
 
 # Theming
 - More themes
