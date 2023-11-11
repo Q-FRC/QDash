@@ -1,4 +1,5 @@
 #include "widgets/TextWidget.h"
+#include "TopicStore.h"
 
 #include <QAction>
 #include <QMenu>
@@ -14,7 +15,9 @@ TextWidget::TextWidget(const WidgetTypes &type, const QString &title, const QStr
     m_text->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 }
 
-TextWidget::~TextWidget() {}
+TextWidget::~TextWidget() {
+    TopicStore::unsubscribe(m_entry, this);
+}
 
 QString TextWidget::text() {
     return m_text->text();

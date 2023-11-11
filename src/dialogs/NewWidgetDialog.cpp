@@ -13,8 +13,6 @@
 // default to a zeroed-out data
 NewWidgetDialog::NewWidgetDialog(std::string ntTopic, QWidget *parent = nullptr, const WidgetData &data = WidgetData{0, 0, 0, 0, 0}) : QDialog(parent)
 {
-    m_entry = Globals::inst.GetEntry(ntTopic);
-
     bool isNewWidget = (data == WidgetData{0, 0, 0, 0, 0});
 
     m_layout = new QFormLayout(this);
@@ -66,9 +64,7 @@ NewWidgetDialog::NewWidgetDialog(std::string ntTopic, QWidget *parent = nullptr,
     connect(m_buttonBox, &QDialogButtonBox::rejected, this, &QDialog::close);
 }
 
-NewWidgetDialog::~NewWidgetDialog() {
-    m_entry.Unpublish();
-}
+NewWidgetDialog::~NewWidgetDialog() {}
 
 NewWidgetDialog *NewWidgetDialog::fromWidgetType(WidgetTypes type, std::string ntTopic, QWidget *parent, const WidgetData &data) {
     switch(type) {

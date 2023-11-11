@@ -1,8 +1,8 @@
 #pragma once
 
-#include "widgets/BaseWidget.h"
-
 #include <QFrame>
+
+#include "widgets/BaseWidget.h"
 
 class BooleanDisplayWidget : public BaseWidget
 {
@@ -15,7 +15,7 @@ protected:
     QColor m_falseColor = Qt::red;
 public:
     BooleanDisplayWidget(const QString &title, const bool &defaultValue, const QString &topic);
-    virtual ~BooleanDisplayWidget();
+    ~BooleanDisplayWidget();
 
     QColor trueColor();
     void setTrueColor(const QColor &color);
@@ -25,5 +25,5 @@ public:
 
     QJsonObject saveObject() override;
 
-    void update();
+    void update() override;
 };

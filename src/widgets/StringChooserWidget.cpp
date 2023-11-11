@@ -1,19 +1,18 @@
 #include "widgets/StringChooserWidget.h"
 #include "Globals.h"
+#include "TopicStore.h"
 
-StringChooserWidget::StringChooserWidget(const QString &title, const QString &topic) : BaseWidget(WidgetTypes::SendableChooser, title, topic)
+StringChooserWidget::StringChooserWidget(const QString &title, const QString &topic) : BaseWidget(WidgetTypes::SendableChooser, title, topic),
+    m_active(TopicStore::subscribe(topic.toStdString() + "/active", this)),
+    m_default(TopicStore::subscribe(topic.toStdString() + "/default", this)),
+    m_choices(TopicStore::subscribe(topic.toStdString() + "/options", this)),
+    m_selected(TopicStore::subscribe(topic.toStdString() + "/selected", this))
 {
-    m_table = Globals::inst.GetTable(topic.toStdString());
-    m_active = m_table->GetEntry("active");
-    m_default = m_table->GetEntry("default");
-    m_choices = m_table->GetEntry("options");
-    m_selected = m_table->GetEntry("selected");
-
-    m_value = QString::fromStdString(m_default.GetString(""));
+    m_value = QString::fromStdString(m_active->GetString(""));
 
     m_chooser = new QComboBox(this);
 
-    std::vector<std::string> choices = m_choices.GetStringArray({});
+    std::vector<std::string> choices = m_choices->GetStringArray({});
     QStringList qchoices{};
 
     for (const std::string &choice : choices) {
@@ -23,7 +22,7 @@ StringChooserWidget::StringChooserWidget(const QString &title, const QString &to
     m_chooser->setCurrentText(m_value);
 
     connect(m_chooser, &QComboBox::currentTextChanged, this, [this](QString text) {
-        m_selected.SetString(text.toStdString());
+        m_selected->SetString(text.toStdString());
     });
 
     m_layout->addWidget(m_chooser, 1, 0);
@@ -32,7 +31,11 @@ StringChooserWidget::StringChooserWidget(const QString &title, const QString &to
 }
 
 StringChooserWidget::~StringChooserWidget() {
-    m_entry.Unpublish();
+    TopicStore::unsubscribe(m_entry, this);
+    TopicStore::unsubscribe(m_active, this);
+    TopicStore::unsubscribe(m_default, this);
+    TopicStore::unsubscribe(m_choices, this);
+    TopicStore::unsubscribe(m_selected, this);
 }
 
 QJsonObject StringChooserWidget::saveObject() {
@@ -46,24 +49,36 @@ QJsonObject StringChooserWidget::saveObject() {
 void StringChooserWidget::update() {
     QString activeValue = m_chooser->currentText();
     std::string activeValueStd = activeValue.toStdString();
-    if (m_active.GetString(activeValueStd) != activeValueStd) {
+    if (m_active->GetString(activeValueStd) != activeValueStd) {
         if (m_flashCounter == 5) {
             setStyleSheet("background-color: red;");
         }
 
         if (m_flashCounter == 10) {
-            setStyleSheet("background-color: black;");
+            setStyleSheet("BaseWidget { background-color: black; border: 1px solid white; color: white; }");
             m_flashCounter = -1;
         }
 
         ++m_flashCounter;
+    } else {
+        setStyleSheet("BaseWidget { background-color: black; border: 1px solid white; color: white; }");
     }
-    if (false) {
+
+    // this is an interesting way to do things
+    std::vector<std::string> choices = m_choices->GetStringArray({});
+
+    std::vector<std::string> currentChoices{};
+
+    for (int i = 0; i < m_chooser->count(); ++i) {
+        currentChoices.push_back(m_chooser->itemText(i).toStdString());
+    }
+
+    std::sort(choices.begin(), choices.end());
+    std::sort(currentChoices.begin(), currentChoices.end());
+
+    if (choices != currentChoices) {
         m_chooser->clear();
 
-        m_value = QString::fromStdString(m_active.GetString(""));
-
-        std::vector<std::string> choices = m_choices.GetStringArray({});
         QStringList qchoices{};
 
         for (const std::string &choice : choices) {

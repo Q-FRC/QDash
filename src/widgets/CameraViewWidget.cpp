@@ -1,10 +1,10 @@
-#include "widgets/CameraViewWidget.h"
+ #include "widgets/CameraViewWidget.h"
 
 CameraViewWidget::CameraViewWidget(const QString &title, const QUrl &url) : BaseWidget(WidgetTypes::CameraView, title, "")
 {
     m_videoWidget = new QVideoWidget(this);
 
-    m_player = new QMediaPlayer;
+    m_player = new QMediaPlayer(this);
     m_player->setSource(url);
     m_player->setVideoOutput(m_videoWidget);
 

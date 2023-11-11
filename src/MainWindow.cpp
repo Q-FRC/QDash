@@ -30,14 +30,14 @@ MainWindow::MainWindow()
     m_menubar = menuBar();
     // NT Settings
     {
-        QAction *ntServerAction = new QAction("NT Server");
+        QAction *ntServerAction = new QAction("NT &Server");
         connect(ntServerAction, &QAction::triggered, this, &MainWindow::ntSettingsPopup);
 
         m_menubar->addAction(ntServerAction);
     } // End NT Settings
 
     { // File
-        QMenu *fileMenu = new QMenu("File");
+        QMenu *fileMenu = new QMenu("&File");
 
         QAction *saveAction = new QAction("Save");
         saveAction->setShortcut(tr("Ctrl+S"));
@@ -61,7 +61,7 @@ MainWindow::MainWindow()
     } // End File
 
     { // Tab
-        QMenu *tabMenu = new QMenu("Tab");
+        QMenu *tabMenu = new QMenu("&Tab");
 
         QAction *newTab = new QAction("New Tab");
 
@@ -103,11 +103,13 @@ MainWindow::~MainWindow() {}
 
 void MainWindow::update()
 {
+
     QMapIterator<BaseWidget *, WidgetData> iterator(m_widgets);
 
     while (iterator.hasNext())
     {
         iterator.next();
+
         iterator.key()->update();
         if (m_needsRelay) {
             WidgetData data = iterator.value();
@@ -126,8 +128,7 @@ void MainWindow::update()
                 }
             }
         }
-    } 
-    
+    }
     m_needsRelay = false;
 
     repaint();
@@ -406,6 +407,8 @@ void MainWindow::closeTab() {
                 m_widgets.remove(widget);
                 m_widgets.insert(widget, data);
             }
+
+            delete widget;
         }
     }
 }

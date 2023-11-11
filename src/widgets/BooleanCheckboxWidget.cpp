@@ -1,4 +1,5 @@
 #include "widgets/BooleanCheckboxWidget.h"
+#include "TopicStore.h"
 
 BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &title, const bool &defaultValue, const QString &topic) : BaseWidget(WidgetTypes::BooleanCheckbox, title, topic)
 {
@@ -14,12 +15,12 @@ BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &title, const bool &d
     m_layout->addWidget(m_checkbox, 1, 0, 3, 1, Qt::AlignHCenter);
 
     connect(m_checkbox, &QCheckBox::stateChanged, this, [this](int state) {
-        m_entry.SetBoolean(state == Qt::Checked);
+        m_entry->SetBoolean(state == Qt::Checked);
     });
 }
 
 BooleanCheckboxWidget::~BooleanCheckboxWidget() {
-    m_entry.Unpublish();
+    TopicStore::unsubscribe(m_entry, this);
 }
 
 QJsonObject BooleanCheckboxWidget::saveObject() {
@@ -32,7 +33,7 @@ QJsonObject BooleanCheckboxWidget::saveObject() {
 }
 
 void BooleanCheckboxWidget::update() {
-    bool value = m_entry.GetBoolean(m_value);
+    bool value = m_entry->GetBoolean(m_value);
 
     m_value = value;
 

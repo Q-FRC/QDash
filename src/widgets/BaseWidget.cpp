@@ -1,5 +1,6 @@
 #include "widgets/BaseWidget.h"
 #include "Globals.h"
+#include "TopicStore.h"
 
 #include "dialogs/NewWidgetDialog.h"
 
@@ -18,12 +19,12 @@
 #include <QJsonArray>
 
 BaseWidget::BaseWidget(const WidgetTypes &type, const QString &title, const QString &topic)
+    : m_entry(TopicStore::subscribe(topic.toStdString(), this))
 {
     m_type = type;
 
     m_layout = new QGridLayout(this);
     m_title = new QLineEdit(title, this);
-    m_entry = Globals::inst.GetEntry(topic.toStdString());
 
     m_layout->addWidget(m_title, 0, 0);
 
@@ -39,6 +40,10 @@ BaseWidget::BaseWidget(const WidgetTypes &type, const QString &title, const QStr
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
+BaseWidget::~BaseWidget() {
+    TopicStore::unsubscribe(m_entry, this);
+}
+
 QFont BaseWidget::titleFont()
 {
     return m_title->font();
@@ -48,8 +53,6 @@ void BaseWidget::setTitleFont(const QFont &font)
 {
     m_title->setFont(font);
 }
-
-BaseWidget::~BaseWidget() {}
 
 QString BaseWidget::title()
 {
@@ -63,13 +66,13 @@ void BaseWidget::setTitle(const QString &title)
 
 std::string BaseWidget::topic()
 {
-    return m_entry.GetName();
+    return m_entry->GetName();
 }
 
 void BaseWidget::setTopic(const std::string &topic)
 {
-    m_entry.Unpublish();
-    m_entry = Globals::inst.GetEntry(topic);
+    TopicStore::unsubscribe(m_entry, this);
+    m_entry = TopicStore::subscribe(topic, this);
 }
 
 QMenu *BaseWidget::constructContextMenu(WidgetData data) {
@@ -80,7 +83,7 @@ QMenu *BaseWidget::constructContextMenu(WidgetData data) {
     menu->addAction(resizeAction);
 
     connect(resizeAction, &QAction::triggered, this, [this, data](bool) {
-        NewWidgetDialog *dialog = NewWidgetDialog::fromWidgetType(m_type, m_entry.GetName(), this->parentWidget(), data);
+        NewWidgetDialog *dialog = NewWidgetDialog::fromWidgetType(m_type, m_entry->GetName(), this->parentWidget(), data);
         dialog->setWindowTitle("Resize Widget");
         dialog->show();
 
@@ -119,7 +122,7 @@ QJsonObject BaseWidget::saveObject() {
     QJsonObject object{};
 
     object.insert("title", title());
-    object.insert("topic", QString::fromStdString(m_entry.GetName()));
+    object.insert("topic", QString::fromStdString(m_entry->GetName()));
     object.insert("titleFont", titleFont().toString());
 
     return object;

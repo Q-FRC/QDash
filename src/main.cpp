@@ -29,7 +29,6 @@ int main(int argc, char **argv) {
 
     QTimer *filterTimer = new QTimer(window);
     QObject::connect(filterTimer, &QTimer::timeout, window, [] {
-        Globals::availableTopics.clear();
         for (const QString &topic : Globals::ntTopics) {
             std::string topicName = topic.toStdString();
             Globals::TopicTypes topicType;
@@ -74,6 +73,18 @@ int main(int argc, char **argv) {
                 }
 
                 Globals::availableTopics.insert(QString::fromStdString(topicName), topicType);
+            }
+
+            entry.Unpublish();
+        }
+
+        // delete unused topics
+        for (const QString &topic : Globals::availableTopics.keys()) {
+            QStringList split = topic.split('/');
+            QString supertable = split.sliced(0, split.length() - 1).join('/');
+            // account for sendables
+            if ((!Globals::ntTopics.contains(topic) && !Globals::ntTopics.contains(topic + "/.type")) || Globals::availableTopics.keys().contains(supertable)) {
+                Globals::availableTopics.remove(topic);
             }
         }
     });

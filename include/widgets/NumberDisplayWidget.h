@@ -2,6 +2,8 @@
 
 #include "TextWidget.h"
 
+class BaseWidget;
+
 class NumberDisplayWidget : public TextWidget
 {
 protected:
@@ -10,7 +12,7 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 public:
     NumberDisplayWidget(const WidgetTypes &type, const QString &title, const double &defaultValue, const QString &topic);
-    virtual ~NumberDisplayWidget();
+    ~NumberDisplayWidget();
 
     QJsonObject saveObject() override;
 

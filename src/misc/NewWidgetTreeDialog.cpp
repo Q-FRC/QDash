@@ -129,7 +129,7 @@ void NewWidgetTreeDialog::createTreeIfNotExists(QString topicName, Globals::Topi
         QTreeWidgetItem *parent = m_itemTableMap.value(superTable);
 
         if (parent == nullptr) {
-            qDebug() << "something bad happened with" << table << superTable;
+            qCritical() << "something bad happened with" << table << superTable;
             continue;
         }
 
@@ -154,7 +154,7 @@ void NewWidgetTreeDialog::createTreeIfNotExists(QString topicName, Globals::Topi
     QTreeWidgetItem *parent = m_itemTableMap.value(superTable);
 
     if (parent == nullptr) {
-        qDebug() << "something very bad happened with topic" << topic << superTable;
+        qCritical() << "something very bad happened with topic" << topic << superTable;
         return;
     }
 

@@ -1,9 +1,9 @@
 #ifndef CAMERAVIEWWIDGET_H
 #define CAMERAVIEWWIDGET_H
 
-#include "widgets/BaseWidget.h"
 #include <QVideoWidget>
 #include <QMediaPlayer>
+#include "widgets/BaseWidget.h"
 
 class CameraViewWidget : public BaseWidget
 {
@@ -14,7 +14,7 @@ protected:
     QUrl m_url;
 public:
     CameraViewWidget(const QString &title, const QUrl &url);
-    virtual ~CameraViewWidget();
+    ~CameraViewWidget();
 
     QUrl url();
     void setUrl(const QUrl &url);

@@ -18,10 +18,10 @@ protected:
 
     QLineEdit *m_title;
 
-    nt::NetworkTableEntry m_entry;
+    nt::NetworkTableEntry *m_entry;
 public:
     BaseWidget(const WidgetTypes &type, const QString &title, const QString &topic);
-    virtual ~BaseWidget();
+    ~BaseWidget();
 
     QFont titleFont();
     void setTitleFont(const QFont &font);

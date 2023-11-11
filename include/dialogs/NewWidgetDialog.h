@@ -19,7 +19,6 @@ class NewWidgetDialog : public QDialog
         Q_OBJECT
 protected:
     QFormLayout *m_layout;
-    nt::NetworkTableEntry m_entry;
 
     QLabel *m_nameLabel;
     QLineEdit *m_nameInput;

@@ -1,4 +1,5 @@
 #include "widgets/BooleanDisplayWidget.h"
+#include "TopicStore.h"
 
 BooleanDisplayWidget::BooleanDisplayWidget(const QString &title, const bool &defaultValue, const QString &topic) : BaseWidget(WidgetTypes::BooleanDisplay, title, topic)
 {
@@ -9,7 +10,7 @@ BooleanDisplayWidget::BooleanDisplayWidget(const QString &title, const bool &def
 }
 
 BooleanDisplayWidget::~BooleanDisplayWidget() {
-    m_entry.Unpublish();
+    TopicStore::unsubscribe(m_entry, this);
 }
 
 QColor BooleanDisplayWidget::trueColor() {
@@ -40,7 +41,7 @@ QJsonObject BooleanDisplayWidget::saveObject() {
 }
 
 void BooleanDisplayWidget::update() {
-    bool value = m_entry.GetBoolean(m_value);
+    bool value = m_entry->GetBoolean(m_value);
 
     m_value = value;
 

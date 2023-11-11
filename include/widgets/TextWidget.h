@@ -4,6 +4,8 @@
 
 #include <QLineEdit>
 
+class BaseWidget;
+
 class TextWidget : public BaseWidget
 {
     Q_OBJECT
@@ -11,7 +13,7 @@ protected:
     QLineEdit *m_text;
 public:
     TextWidget(const WidgetTypes &type, const QString &title, const QString &defaultText, const QString &topic);
-    virtual ~TextWidget();
+    ~TextWidget();
     
     QString text();
     void setText(const QString &text);

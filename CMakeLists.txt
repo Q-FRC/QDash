@@ -17,6 +17,7 @@ set(PROJECT_SOURCES
         src/main.cpp
         src/Globals.cpp
         src/MainWindow.cpp
+        src/TopicStore.cpp
 
         src/widgets/BaseWidget.cpp
         src/widgets/NumberDisplayWidget.cpp
@@ -45,6 +46,7 @@ set(PROJECT_SOURCES
 
         include/Globals.h
         include/MainWindow.h
+        include/TopicStore.h
 
         include/widgets/BaseWidget.h
         include/widgets/NumberDisplayWidget.h
@@ -75,6 +77,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(QFRCDashboard
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+
     )
 endif()
 

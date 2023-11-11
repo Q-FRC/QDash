@@ -1,4 +1,5 @@
 #include "widgets/StringDisplayWidget.h"
+#include "TopicStore.h"
 
 StringDisplayWidget::StringDisplayWidget(const QString &title, const QString &defaultValue, const QString &topic) : TextWidget(WidgetTypes::StringDisplay, title, defaultValue, topic)
 {
@@ -6,7 +7,7 @@ StringDisplayWidget::StringDisplayWidget(const QString &title, const QString &de
 }
 
 StringDisplayWidget::~StringDisplayWidget() {
-    m_entry.Unpublish();
+    TopicStore::unsubscribe(m_entry, this);
 }
 
 QJsonObject StringDisplayWidget::saveObject() {
@@ -20,7 +21,7 @@ QJsonObject StringDisplayWidget::saveObject() {
 
 void StringDisplayWidget::update() {
     if (!m_text->hasFocus()) {
-        QString value = QString::fromStdString(m_entry.GetString(m_value.toStdString()));
+        QString value = QString::fromStdString(m_entry->GetString(m_value.toStdString()));
 
         m_value = value;
         setText(value);
@@ -29,7 +30,7 @@ void StringDisplayWidget::update() {
 
 void StringDisplayWidget::keyPressEvent(QKeyEvent *event) {
     if (m_text->hasFocus()) {
-        m_entry.SetString(m_text->text().toStdString());
+        m_entry->SetString(m_text->text().toStdString());
         m_value = m_text->text();
     }
 }

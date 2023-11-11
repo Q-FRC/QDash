@@ -10,7 +10,7 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 public:
     StringDisplayWidget(const QString &title, const QString &defaultValue, const QString &topic);
-    virtual ~StringDisplayWidget();
+    ~StringDisplayWidget();
 
     QJsonObject saveObject() override;
 

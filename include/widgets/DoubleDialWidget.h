@@ -5,6 +5,8 @@
 
 #include <QDial>
 
+class BaseWidget;
+
 /**
  * @brief Display a double on a dial.
  *
@@ -21,7 +23,7 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 public:
     DoubleDialWidget(const QString &title, const double &defaultValue, const QString &topic);
-    virtual ~DoubleDialWidget();
+    ~DoubleDialWidget();
 
     QPointF range();
     void setRange(QPointF range);
