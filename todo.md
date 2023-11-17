@@ -25,10 +25,6 @@
 # Commands
 - Yes
 
-# NT
-- Keep subscriptions global; one subscription shared between multiple widgets with the same topic
-  * Propagate changes on the topic level, not the widget level
-
 # Theming
 - More themes
 - Background color for titles

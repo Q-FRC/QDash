@@ -29,6 +29,7 @@ set(PROJECT_SOURCES
         src/widgets/DoubleDialWidget.cpp
         src/widgets/StringChooserWidget.cpp
         src/widgets/CameraViewWidget.cpp
+        src/widgets/EnumWidget.cpp
 
         src/dialogs/NewWidgetDialog.cpp
         src/dialogs/NewBooleanCheckboxDialog.cpp
@@ -38,6 +39,7 @@ set(PROJECT_SOURCES
         src/dialogs/NewDoubleDialDialog.cpp
         src/dialogs/NewStringChooserDialog.cpp
         src/dialogs/NewCameraViewDialog.cpp
+        src/dialogs/NewEnumWidgetDialog.cpp
 
         src/misc/NewWidgetTreeDialog.cpp
         src/misc/NTSettingsDialog.cpp
@@ -58,6 +60,7 @@ set(PROJECT_SOURCES
         include/widgets/DoubleDialWidget.h
         include/widgets/StringChooserWidget.h
         include/widgets/CameraViewWidget.h
+        include/widgets/EnumWidget.h
 
         include/dialogs/NewWidgetDialog.h
         include/dialogs/NewBooleanCheckboxDialog.h
@@ -67,17 +70,16 @@ set(PROJECT_SOURCES
         include/dialogs/NewDoubleDialDialog.h
         include/dialogs/NewStringChooserDialog.h
         include/dialogs/NewCameraViewDialog.h
+        include/dialogs/NewEnumWidgetDialog.h
 
         include/misc/NewWidgetTreeDialog.h
         include/misc/NTSettingsDialog.h
-
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(QFRCDashboard
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-
     )
 endif()
 

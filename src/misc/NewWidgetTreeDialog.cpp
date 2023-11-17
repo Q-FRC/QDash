@@ -87,9 +87,17 @@ void NewWidgetTreeDialog::constructList() {
         }
         case Globals::TopicTypes::String:
         default: {
-            connect(m_tree, &QTreeWidget::itemActivated, this, [this, topicName](QTreeWidgetItem *item) {
+            QMenu *stringMenu = new QMenu(topicName);
+
+            QAction *displayAction = createWidgetAction("Text Display", topicName, WidgetTypes::StringDisplay);
+            stringMenu->addAction(displayAction);
+
+            QAction *enumAction = createWidgetAction("Enum", topicName, WidgetTypes::EnumWidget);
+            stringMenu->addAction(enumAction);
+
+            connect(m_tree, &QTreeWidget::itemActivated, this, [this, topicName, stringMenu](QTreeWidgetItem *item) {
                 if (getParentPath(item) == topicName) {
-                    showNewWidgetDialog(WidgetTypes::StringDisplay, topicName.toStdString());
+                    stringMenu->popup(QCursor::pos());
                 }
             });
             break;

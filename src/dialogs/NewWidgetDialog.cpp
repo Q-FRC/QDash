@@ -1,6 +1,7 @@
 #include "dialogs/NewWidgetDialog.h"
 #include "dialogs/NewBooleanCheckboxDialog.h"
 #include "dialogs/NewBooleanDisplayDialog.h"
+#include "dialogs/NewEnumWidgetDialog.h"
 #include "dialogs/NewStringDisplayDialog.h"
 #include "dialogs/NewDoubleDisplayDialog.h"
 #include "dialogs/NewDoubleDialDialog.h"
@@ -87,6 +88,9 @@ NewWidgetDialog *NewWidgetDialog::fromWidgetType(WidgetTypes type, std::string n
     case WidgetTypes::SendableChooser: {
         return new NewStringChooserDialog(ntTopic, parent, data);
         break;
+    }
+    case WidgetTypes::EnumWidget: {
+        return new NewEnumWidgetDialog(ntTopic, parent, data);
     }
     case WidgetTypes::StringDisplay:
     default: {

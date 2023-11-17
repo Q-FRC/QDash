@@ -21,8 +21,12 @@ enum class WidgetTypes {
     DoubleDisplay = 3,
     DoubleDial = 4,
     SendableChooser = 5,
-    CameraView = 6
+    CameraView = 6,
+    EnumWidget = 7
 };
+
+Q_DECLARE_FLAGS(WidgetType, WidgetTypes);
+Q_DECLARE_OPERATORS_FOR_FLAGS(WidgetType);
 
 typedef struct {
     bool teamNumber;

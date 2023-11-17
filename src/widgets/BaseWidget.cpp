@@ -8,6 +8,7 @@
 #include "widgets/BooleanDisplayWidget.h"
 #include "widgets/CameraViewWidget.h"
 #include "widgets/DoubleDialWidget.h"
+#include "widgets/EnumWidget.h"
 #include "widgets/NumberDisplayWidget.h"
 #include "widgets/StringChooserWidget.h"
 #include "widgets/StringDisplayWidget.h"
@@ -194,6 +195,26 @@ std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int ta
             obj.value("title").toString(),
             QUrl(obj.value("url").toString()));
 
+        break;
+    }
+    case WidgetTypes::EnumWidget: {
+        EnumWidget *enumWidget = new EnumWidget(
+            obj.value("title").toString(),
+            obj.value("value").toString(),
+            obj.value("topic").toString());
+
+        QVariantMap variantColorMap = obj.value("colors").toObject().toVariantMap();
+        QMap<QString, QColor> colorMap{};
+
+        QMapIterator<QString, QVariant> iter(variantColorMap);
+
+        while (iter.hasNext()) {
+            iter.next();
+            colorMap.insert(iter.key(), iter.value().value<QColor>());
+        }
+
+        enumWidget->setColors(colorMap);
+        widget = enumWidget;
         break;
     }
     case WidgetTypes::StringDisplay:
