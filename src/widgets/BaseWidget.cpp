@@ -137,10 +137,13 @@ std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int ta
 
     switch (widgetType) {
     case WidgetTypes::BooleanCheckbox: {
-        widget = new BooleanCheckboxWidget(
+        BooleanCheckboxWidget *checkboxWidget = new BooleanCheckboxWidget(
             obj.value("title").toString(),
             obj.value("value").toBool(),
             obj.value("topic").toString());
+
+        checkboxWidget->setCheckboxSize(obj.value("checkboxSize").toInt());
+        widget = checkboxWidget;
         break;
     }
     case WidgetTypes::BooleanDisplay: {
