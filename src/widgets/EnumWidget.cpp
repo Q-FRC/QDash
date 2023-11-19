@@ -13,11 +13,11 @@ EnumWidget::~EnumWidget() {
     TopicStore::unsubscribe(m_entry, this);
 }
 
-QMap<QString, QColor> EnumWidget::colors() {
+QVariantMap EnumWidget::colors() {
     return m_colors;
 }
 
-void EnumWidget::setColors(QMap<QString, QColor> colors) {
+void EnumWidget::setColors(QVariantMap colors) {
     m_colors = colors;
 }
 
@@ -25,15 +25,14 @@ QJsonObject EnumWidget::saveObject() {
     QJsonObject object = BaseWidget::saveObject();
 
     object.insert("value", m_value);
-    object.insert("widgetType", (int) WidgetTypes::BooleanDisplay);
 
     QJsonObject colorMap{};
-    QMapIterator<QString, QColor> iter(m_colors);
+    QMapIterator<QString, QVariant> iter(m_colors);
 
     while (iter.hasNext()) {
         iter.next();
 
-        colorMap.insert(iter.key(), iter.value().name());
+        colorMap.insert(iter.key(), iter.value().value<QColor>().name());
     }
 
     object.insert("colors", colorMap);
@@ -46,5 +45,5 @@ void EnumWidget::update() {
 
     m_value = QString::fromStdString(value);
 
-    m_colorWidget->setStyleSheet("background-color: " + m_colors.value(m_value).name() + ";");
+    m_colorWidget->setStyleSheet("background-color: " + m_colors.value(m_value).toString() + ";");
 }

@@ -6,6 +6,7 @@
 
 class TabWidget : public QWidget
 {
+    Q_OBJECT
 private:
     QGridLayout *m_layout;
     

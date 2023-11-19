@@ -12,6 +12,9 @@
 class BaseWidget : public QWidget
 {
     Q_OBJECT
+
+    Q_PROPERTY(QString title READ title WRITE setTitle)
+    Q_PROPERTY(QString Topic READ topic WRITE setTopic REQUIRED)
 protected:
     WidgetTypes m_type;
     QGridLayout *m_layout;
@@ -29,8 +32,8 @@ public:
     QString title();
     void setTitle(const QString &title);
 
-    std::string topic();
-    void setTopic(const std::string &topic);
+    QString topic();
+    void setTopic(const QString &topic);
 
     virtual QMenu *constructContextMenu(WidgetData data);
 
@@ -41,6 +44,7 @@ public:
     virtual void update() {}
 
     static std::pair<BaseWidget *, WidgetData> fromJson(QJsonObject obj, int tabIdx);
+    static BaseWidget *defaultWidgetFromTopic(QString ntTopic, WidgetTypes type);
 
 signals:
     void reconfigRequested(BaseWidget *widget, WidgetData data);

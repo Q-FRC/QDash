@@ -6,8 +6,11 @@ class BaseWidget;
 
 class NumberDisplayWidget : public TextWidget
 {
+    Q_OBJECT
+
+    Q_PROPERTY(double value MEMBER m_value)
 protected:
-    double m_value;
+    double m_value = 0.;
 
     void keyPressEvent(QKeyEvent *event) override;
 public:

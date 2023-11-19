@@ -6,8 +6,13 @@
 
 class BooleanDisplayWidget : public BaseWidget
 {
+    Q_OBJECT
+
+    Q_PROPERTY(bool value MEMBER m_value)
+    Q_PROPERTY(QColor True_Color READ trueColor WRITE setTrueColor REQUIRED)
+    Q_PROPERTY(QColor False_Color READ falseColor WRITE setFalseColor REQUIRED)
 protected:
-    bool m_value;
+    bool m_value = false;
 
     QFrame *m_colorWidget;
 

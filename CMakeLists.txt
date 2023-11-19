@@ -31,18 +31,9 @@ set(PROJECT_SOURCES
         src/widgets/CameraViewWidget.cpp
         src/widgets/EnumWidget.cpp
 
-        src/dialogs/NewWidgetDialog.cpp
-        src/dialogs/NewBooleanCheckboxDialog.cpp
-        src/dialogs/NewStringDisplayDialog.cpp
-        src/dialogs/NewDoubleDisplayDialog.cpp
-        src/dialogs/NewBooleanDisplayDialog.cpp
-        src/dialogs/NewDoubleDialDialog.cpp
-        src/dialogs/NewStringChooserDialog.cpp
-        src/dialogs/NewCameraViewDialog.cpp
-        src/dialogs/NewEnumWidgetDialog.cpp
-
         src/misc/NewWidgetTreeDialog.cpp
         src/misc/NTSettingsDialog.cpp
+        src/misc/WidgetDialogGenerator.cpp
 
         # =======================================
 
@@ -62,18 +53,9 @@ set(PROJECT_SOURCES
         include/widgets/CameraViewWidget.h
         include/widgets/EnumWidget.h
 
-        include/dialogs/NewWidgetDialog.h
-        include/dialogs/NewBooleanCheckboxDialog.h
-        include/dialogs/NewStringDisplayDialog.h
-        include/dialogs/NewDoubleDisplayDialog.h
-        include/dialogs/NewBooleanDisplayDialog.h
-        include/dialogs/NewDoubleDialDialog.h
-        include/dialogs/NewStringChooserDialog.h
-        include/dialogs/NewCameraViewDialog.h
-        include/dialogs/NewEnumWidgetDialog.h
-
         include/misc/NewWidgetTreeDialog.h
         include/misc/NTSettingsDialog.h
+        include/misc/WidgetDialogGenerator.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -6,8 +6,11 @@
 
 class BooleanCheckboxWidget : public BaseWidget
 {
+    Q_OBJECT
+
+    Q_PROPERTY(bool value MEMBER m_value)
 protected:
-    bool m_value;
+    bool m_value = false;
 
     QCheckBox *m_checkbox;
 public:

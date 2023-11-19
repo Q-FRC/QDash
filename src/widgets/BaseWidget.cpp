@@ -2,8 +2,6 @@
 #include "Globals.h"
 #include "TopicStore.h"
 
-#include "dialogs/NewWidgetDialog.h"
-
 #include "widgets/BooleanCheckboxWidget.h"
 #include "widgets/BooleanDisplayWidget.h"
 #include "widgets/CameraViewWidget.h"
@@ -12,6 +10,8 @@
 #include "widgets/NumberDisplayWidget.h"
 #include "widgets/StringChooserWidget.h"
 #include "widgets/StringDisplayWidget.h"
+
+#include "misc/WidgetDialogGenerator.h"
 
 #include <QMenu>
 #include <QFontDialog>
@@ -65,15 +65,15 @@ void BaseWidget::setTitle(const QString &title)
     m_title->setText(title);
 }
 
-std::string BaseWidget::topic()
+QString BaseWidget::topic()
 {
-    return m_entry->GetName();
+    return QString::fromStdString(m_entry->GetName());
 }
 
-void BaseWidget::setTopic(const std::string &topic)
+void BaseWidget::setTopic(const QString &topic)
 {
     TopicStore::unsubscribe(m_entry, this);
-    m_entry = TopicStore::subscribe(topic, this);
+    m_entry = TopicStore::subscribe(topic.toStdString(), this);
 }
 
 QMenu *BaseWidget::constructContextMenu(WidgetData data) {
@@ -84,11 +84,11 @@ QMenu *BaseWidget::constructContextMenu(WidgetData data) {
     menu->addAction(resizeAction);
 
     connect(resizeAction, &QAction::triggered, this, [this, data](bool) {
-        NewWidgetDialog *dialog = NewWidgetDialog::fromWidgetType(m_type, m_entry->GetName(), this->parentWidget(), data);
+        WidgetDialogGenerator *dialog = new WidgetDialogGenerator(this, true, data);
         dialog->setWindowTitle("Resize Widget");
         dialog->show();
 
-        connect(dialog, &NewWidgetDialog::widgetReady, this, [this](BaseWidget *widget, WidgetData data) {
+        connect(dialog, &WidgetDialogGenerator::widgetReady, this, [this](BaseWidget *widget, WidgetData data) {
             emit reconfigRequested(widget, data);
         });
     });
@@ -125,6 +125,7 @@ QJsonObject BaseWidget::saveObject() {
     object.insert("title", title());
     object.insert("topic", QString::fromStdString(m_entry->GetName()));
     object.insert("titleFont", titleFont().toString());
+    object.insert("widgetType", (int) m_type);
 
     return object;
 }
@@ -178,7 +179,8 @@ std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int ta
         font.fromString(obj.value("textFont").toString());
         dialWidget->setFont(font);
 
-        dialWidget->setRange(QPoint(obj.value("min").toDouble(), obj.value("max").toDouble()));
+        dialWidget->setMin(obj.value("min").toDouble());
+            dialWidget->setMax(obj.value("max").toDouble());
 
         widget = dialWidget;
         break;
@@ -186,6 +188,7 @@ std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int ta
     case WidgetTypes::SendableChooser: {
         widget = new StringChooserWidget(
             obj.value("title").toString(),
+            "",
             obj.value("topic").toString());
 
         break;
@@ -193,7 +196,8 @@ std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int ta
     case WidgetTypes::CameraView: {
         widget = new CameraViewWidget(
             obj.value("title").toString(),
-            QUrl(obj.value("url").toString()));
+            QUrl(obj.value("url").toString()),
+            "");
 
         break;
     }
@@ -204,16 +208,8 @@ std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int ta
             obj.value("topic").toString());
 
         QVariantMap variantColorMap = obj.value("colors").toObject().toVariantMap();
-        QMap<QString, QColor> colorMap{};
 
-        QMapIterator<QString, QVariant> iter(variantColorMap);
-
-        while (iter.hasNext()) {
-            iter.next();
-            colorMap.insert(iter.key(), iter.value().value<QColor>());
-        }
-
-        enumWidget->setColors(colorMap);
+        enumWidget->setColors(variantColorMap);
         widget = enumWidget;
         break;
     }
@@ -246,4 +242,89 @@ std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int ta
     data.colSpan = geometry.at(3).toInt();
 
     return std::make_pair(widget, data);
+}
+
+BaseWidget *BaseWidget::defaultWidgetFromTopic(QString ntTopic, WidgetTypes type) {
+    BaseWidget *widget;
+
+    switch (type) {
+    case WidgetTypes::BooleanCheckbox: {
+        widget = new BooleanCheckboxWidget(
+            ntTopic,
+            false,
+            ntTopic);
+
+
+        break;
+    }
+    case WidgetTypes::BooleanDisplay: {
+        widget = new BooleanDisplayWidget(
+            ntTopic,
+            false,
+            ntTopic);
+
+
+        break;
+    }
+    case WidgetTypes::DoubleDisplay: {
+        widget = new NumberDisplayWidget(
+            WidgetTypes::DoubleDisplay,
+            ntTopic,
+            0.,
+            ntTopic);
+
+
+        break;
+    }
+    case WidgetTypes::DoubleDial: {
+        widget = new DoubleDialWidget(
+            ntTopic,
+            0.,
+            ntTopic);
+
+
+        break;
+    }
+    case WidgetTypes::SendableChooser: {
+        widget = new StringChooserWidget(
+            ntTopic,
+            "",
+            ntTopic);
+
+
+
+        break;
+    }
+    case WidgetTypes::CameraView: {
+        widget = new CameraViewWidget(
+            "",
+            QUrl(),
+            "");
+
+
+
+        break;
+    }
+    case WidgetTypes::EnumWidget: {
+        widget = new EnumWidget(
+            ntTopic,
+            "",
+            ntTopic);
+
+
+        break;
+    }
+    case WidgetTypes::StringDisplay:
+    default: {
+        widget = new StringDisplayWidget(
+            ntTopic,
+            "",
+            ntTopic);
+
+
+        break;
+    }
+    } // switch
+
+    return widget;
 }

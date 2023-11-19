@@ -9,8 +9,11 @@ class BaseWidget;
 
 class StringChooserWidget : public BaseWidget
 {
+    Q_OBJECT
+
+    Q_PROPERTY(QString value MEMBER m_value)
 protected:
-    QString m_value;
+    QString m_value = "";
 
     nt::NetworkTableEntry *m_active;
     nt::NetworkTableEntry *m_default;
@@ -21,7 +24,7 @@ protected:
 
     qsizetype m_flashCounter = 0;
 public:
-    StringChooserWidget(const QString &title, const QString &topic);
+    StringChooserWidget(const QString &title, const QString &defaultValue, const QString &topic);
     ~StringChooserWidget();
 
     QJsonObject saveObject() override;

@@ -4,8 +4,11 @@
 
 class StringDisplayWidget : public TextWidget
 {
+    Q_OBJECT
+
+    Q_PROPERTY(QString value MEMBER m_value)
 protected:
-    QString m_value;
+    QString m_value = "";
 
     void keyPressEvent(QKeyEvent *event) override;
 public:

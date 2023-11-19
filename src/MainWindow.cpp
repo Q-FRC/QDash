@@ -1,10 +1,9 @@
 #include "MainWindow.h"
 #include "Globals.h"
-#include "dialogs/NewWidgetDialog.h"
-#include "dialogs/NewCameraViewDialog.h"
 
 #include "misc/NewWidgetTreeDialog.h"
 #include "misc/NTSettingsDialog.h"
+#include "misc/WidgetDialogGenerator.h"
 
 #include "ntcore/networktables/NetworkTableInstance.h"
 
@@ -18,6 +17,7 @@
 #include <QJsonArray>
 #include <QFileDialog>
 #include <QApplication>
+#include <QMetaProperty>
 
 MainWindow::MainWindow()
 {
@@ -176,7 +176,11 @@ QJsonDocument MainWindow::saveObject() {
 }
 
 void MainWindow::loadObject(const QJsonDocument &doc) {
-    QJsonArray array = doc.array();
+    QJsonObject object = doc.object();
+
+    // TODO: load server
+
+    QJsonArray array = object.value("tabs").toArray();
 
     for (QJsonValueRef ref : array) {
         QJsonObject object = ref.toObject();
@@ -365,6 +369,7 @@ void MainWindow::open() {
     QByteArray data = stream.readAll().toUtf8();
 
     QJsonDocument doc = QJsonDocument::fromJson(data);
+
     loadObject(doc);
     file.close();
 }
@@ -443,9 +448,11 @@ void MainWindow::newCameraView() {
             newTab();
         }
     } else {
-        NewCameraViewDialog *dialog = new NewCameraViewDialog(this);
+        BaseWidget *widget = BaseWidget::defaultWidgetFromTopic("", WidgetTypes::CameraView);
+        WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget);
+        dialog->setWindowTitle("New Camera View");
         dialog->open();
 
-        connect(dialog, &NewWidgetDialog::widgetReady, this, &MainWindow::newWidget);
+        connect(dialog, &WidgetDialogGenerator::widgetReady, this, &MainWindow::newWidget);
     }
 }

@@ -8,13 +8,8 @@
 - Slider bar
 - Improve the dial; 360-degree range
 
-# Enum Widget
-- Can display certain colors depending on the string, double, or int value of a topic.
-- Should be infinitely configurable; at least 50 value-color combos.
-
 # Bool Widgets
 - Edit checkbox size
-- Edit true/false colors
 
 # Field2d
 - Exactly as in Shuffleboard.

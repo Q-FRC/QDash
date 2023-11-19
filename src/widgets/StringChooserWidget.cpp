@@ -2,13 +2,13 @@
 #include "Globals.h"
 #include "TopicStore.h"
 
-StringChooserWidget::StringChooserWidget(const QString &title, const QString &topic) : BaseWidget(WidgetTypes::SendableChooser, title, topic),
+StringChooserWidget::StringChooserWidget(const QString &title, const QString &defaultValue, const QString &topic) : BaseWidget(WidgetTypes::SendableChooser, title, topic),
     m_active(TopicStore::subscribe(topic.toStdString() + "/active", this)),
     m_default(TopicStore::subscribe(topic.toStdString() + "/default", this)),
     m_choices(TopicStore::subscribe(topic.toStdString() + "/options", this)),
     m_selected(TopicStore::subscribe(topic.toStdString() + "/selected", this))
 {
-    m_value = QString::fromStdString(m_active->GetString(""));
+    m_value = QString::fromStdString(defaultValue.isEmpty() ? m_active->GetString("") : defaultValue.toStdString());
 
     m_chooser = new QComboBox(this);
 

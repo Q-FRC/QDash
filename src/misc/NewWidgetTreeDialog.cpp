@@ -1,5 +1,6 @@
 #include "misc/NewWidgetTreeDialog.h"
-#include "dialogs/NewWidgetDialog.h"
+
+#include "misc/WidgetDialogGenerator.h"
 
 #include <QMenu>
 #include <QKeyEvent>
@@ -200,11 +201,13 @@ QAction *NewWidgetTreeDialog::createWidgetAction(const QString &text, const QStr
 }
 
 void NewWidgetTreeDialog::showNewWidgetDialog(WidgetTypes widgetType, std::string ntTopic) {
-    NewWidgetDialog *dialog = NewWidgetDialog::fromWidgetType(widgetType, ntTopic, this->parentWidget());
+    auto widget = BaseWidget::defaultWidgetFromTopic(QString::fromStdString(ntTopic), widgetType);
+
+    WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget);
     dialog->setWindowTitle("New Widget");
     dialog->show();
 
-    connect(dialog, &NewWidgetDialog::widgetReady, this, &NewWidgetTreeDialog::emitWidget);
+    connect(dialog, &WidgetDialogGenerator::widgetReady, this, &NewWidgetTreeDialog::emitWidget);
     close();
 }
 

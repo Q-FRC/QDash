@@ -24,23 +24,29 @@ DoubleDialWidget::~DoubleDialWidget() {
     TopicStore::unsubscribe(m_entry, this);
 }
 
-QPointF DoubleDialWidget::range() {
-    return QPointF(m_dial->minimum() / 100., m_dial->maximum() / 100.);
+double DoubleDialWidget::min() {
+    return m_min;
 }
 
-void DoubleDialWidget::setRange(QPointF range) {
-    setRange(range.x() * 100., range.y() * 100.);
+void DoubleDialWidget::setMin(double min) {
+    m_min = min;
+    m_dial->setMinimum(min * 100.);
 }
 
-void DoubleDialWidget::setRange(double min, double max) {
-    m_dial->setRange(min * 100, max * 100);
+double DoubleDialWidget::max() {
+    return m_max;
+}
+
+void DoubleDialWidget::setMax(double max) {
+    m_max = max;
+    m_dial->setMaximum(max * 100.);
 }
 
 QJsonObject DoubleDialWidget::saveObject() {
     QJsonObject object = NumberDisplayWidget::saveObject();
 
-    object.insert("min", range().x());
-    object.insert("max", range().y());
+    object.insert("min", min());
+    object.insert("max", max());
     object.insert("widgetType", (int) WidgetTypes::DoubleDial);
 
     return object;
