@@ -407,10 +407,12 @@ void MainWindow::closeTab() {
     int index = m_centralWidget->currentIndex();
 
     QMessageBox::StandardButton close = QMessageBox::question(this, "Close Tab?", "Are you sure you want to close this tab?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+
     if (close == QMessageBox::Yes) {
         QWidget *tab = m_centralWidget->widget(index);
         m_centralWidget->removeTab(index);
         m_tabWidgets.remove(index);
+
         QMapIterator<BaseWidget *, WidgetData> iterator(m_widgets);
 
         while (iterator.hasNext())
@@ -418,16 +420,16 @@ void MainWindow::closeTab() {
             iterator.next();
             BaseWidget *widget = iterator.key();
             WidgetData data = iterator.value();
+
             if (data.tabIdx == index) {
                 m_widgets.remove(widget);
+                delete widget;
             } else if (data.tabIdx > index) {
                 data.tabIdx -= 1;
 
                 m_widgets.remove(widget);
                 m_widgets.insert(widget, data);
             }
-
-            delete widget;
         }
     }
 }

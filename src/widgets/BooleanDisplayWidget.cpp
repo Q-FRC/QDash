@@ -33,11 +33,22 @@ QJsonObject BooleanDisplayWidget::saveObject() {
     QJsonObject object = BaseWidget::saveObject();
 
     object.insert("value", m_value);
-    object.insert("widgetType", (int) WidgetTypes::BooleanDisplay);
     object.insert("trueColor", m_trueColor.name());
     object.insert("falseColor", m_falseColor.name());
 
     return object;
+}
+
+BaseWidget * BooleanDisplayWidget::fromJson(QJsonObject obj) {
+    BooleanDisplayWidget *widget = new BooleanDisplayWidget(
+        obj.value("title").toString(""),
+        obj.value("value").toBool(false),
+        obj.value("topic").toString(""));
+
+    widget->setTrueColor(QColor::fromString(obj.value("trueColor").toString("#00FF00")));
+    widget->setFalseColor(QColor::fromString(obj.value("falseColor").toString("#FF0000")));
+
+    return widget;
 }
 
 void BooleanDisplayWidget::update() {

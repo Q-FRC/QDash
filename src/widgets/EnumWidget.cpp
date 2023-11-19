@@ -40,6 +40,18 @@ QJsonObject EnumWidget::saveObject() {
     return object;
 }
 
+BaseWidget * EnumWidget::fromJson(QJsonObject obj) {
+    EnumWidget *widget = new EnumWidget(
+        obj.value("title").toString(""),
+        obj.value("value").toString(""),
+        obj.value("topic").toString(""));
+
+    QVariantMap variantColorMap = obj.value("colors").toObject({}).toVariantMap();
+
+    widget->setColors(variantColorMap);
+    return widget;
+}
+
 void EnumWidget::update() {
     std::string value = m_entry->GetString(m_value.toStdString());
 

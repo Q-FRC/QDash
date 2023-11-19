@@ -28,7 +28,13 @@ QJsonObject CameraViewWidget::saveObject() {
     QJsonObject object = BaseWidget::saveObject();
 
     object.insert("url", url().toString());
-    object.insert("widgetType", (int) WidgetTypes::CameraView);
 
     return object;
+}
+
+BaseWidget * CameraViewWidget::fromJson(QJsonObject obj) {
+    return new CameraViewWidget(
+        obj.value("title").toString(""),
+        QUrl(obj.value("url").toString("")),
+        "");
 }

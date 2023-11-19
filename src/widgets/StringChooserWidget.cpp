@@ -41,14 +41,20 @@ StringChooserWidget::~StringChooserWidget() {
 QJsonObject StringChooserWidget::saveObject() {
     QJsonObject object = BaseWidget::saveObject();
 
-    object.insert("widgetType", (int) WidgetTypes::SendableChooser);
-
     return object;
+}
+
+BaseWidget * StringChooserWidget::fromJson(QJsonObject obj) {
+    return new StringChooserWidget(
+        obj.value("title").toString(""),
+        "",
+        obj.value("topic").toString(""));
 }
 
 void StringChooserWidget::update() {
     QString activeValue = m_chooser->currentText();
     std::string activeValueStd = activeValue.toStdString();
+
     if (m_active->GetString(activeValueStd) != activeValueStd) {
         if (m_flashCounter == 5) {
             setStyleSheet("background-color: red;");

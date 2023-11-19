@@ -2,6 +2,7 @@
 #include "stores/TopicStore.h"
 
 #include <QKeyEvent>
+#include <QApplication>
 
 NumberDisplayWidget::NumberDisplayWidget(const WidgetTypes &type, const QString &title, const double &defaultValue, const QString &topic) : TextWidget(type, title, QString::number(defaultValue), topic)
 {
@@ -25,9 +26,22 @@ QJsonObject NumberDisplayWidget::saveObject() {
     QJsonObject object = TextWidget::saveObject();
 
     object.insert("value", m_value);
-    object.insert("widgetType", (int) WidgetTypes::DoubleDisplay);
 
     return object;
+}
+
+BaseWidget * NumberDisplayWidget::fromJson(QJsonObject obj) {
+    NumberDisplayWidget *widget = new NumberDisplayWidget(
+        WidgetTypes::DoubleDisplay,
+        obj.value("title").toString(""),
+        obj.value("value").toDouble(0.),
+        obj.value("topic").toString(""));
+
+    QFont font;
+    font.fromString(obj.value("textFont").toString(qApp->font().toString()));
+    widget->setFont(font);
+
+    return widget;
 }
 
 void NumberDisplayWidget::keyPressEvent(QKeyEvent *event) {

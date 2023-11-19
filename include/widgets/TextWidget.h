@@ -24,6 +24,7 @@ public:
     QMenu *constructContextMenu(WidgetData data) override;
 
     virtual QJsonObject saveObject() override;
+    static BaseWidget * fromJson(QJsonObject obj);
 
     void update() override;
 };

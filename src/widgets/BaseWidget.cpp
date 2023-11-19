@@ -18,6 +18,7 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QJsonArray>
+#include <QApplication>
 
 BaseWidget::BaseWidget(const WidgetTypes &type, const QString &title, const QString &topic)
     : m_entry(TopicStore::subscribe(topic.toStdString(), this))
@@ -137,197 +138,62 @@ std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int ta
 
     switch (widgetType) {
     case WidgetTypes::BooleanCheckbox: {
-        BooleanCheckboxWidget *checkboxWidget = new BooleanCheckboxWidget(
-            obj.value("title").toString(),
-            obj.value("value").toBool(),
-            obj.value("topic").toString());
-
-        checkboxWidget->setCheckboxSize(obj.value("checkboxSize").toInt());
-        widget = checkboxWidget;
+        widget = BooleanCheckboxWidget::fromJson(obj);
         break;
     }
     case WidgetTypes::BooleanDisplay: {
-        BooleanDisplayWidget *displayWidget = new BooleanDisplayWidget(
-            obj.value("title").toString(),
-            obj.value("value").toBool(),
-            obj.value("topic").toString());
-
-        displayWidget->setTrueColor(QColor::fromString(obj.value("trueColor").toString()));
-        displayWidget->setFalseColor(QColor::fromString(obj.value("falseColor").toString()));
-
-        widget = displayWidget;
+        widget = BooleanDisplayWidget::fromJson(obj);
         break;
     }
     case WidgetTypes::DoubleDisplay: {
-        NumberDisplayWidget *displayWidget = new NumberDisplayWidget(
-            WidgetTypes::DoubleDisplay,
-            obj.value("title").toString(),
-            obj.value("value").toDouble(),
-            obj.value("topic").toString());
-
-        QFont font;
-        font.fromString(obj.value("textFont").toString());
-        displayWidget->setFont(font);
-
-        widget = displayWidget;
+        widget = NumberDisplayWidget::fromJson(obj);
         break;
     }
     case WidgetTypes::DoubleDial: {
-        DoubleDialWidget *dialWidget = new DoubleDialWidget(
-            obj.value("title").toString(),
-            obj.value("value").toDouble(),
-            obj.value("topic").toString());
-
-        QFont font;
-        font.fromString(obj.value("textFont").toString());
-        dialWidget->setFont(font);
-
-        dialWidget->setMin(obj.value("min").toDouble());
-            dialWidget->setMax(obj.value("max").toDouble());
-
-        widget = dialWidget;
+        widget = DoubleDialWidget::fromJson(obj);
         break;
     }
     case WidgetTypes::SendableChooser: {
-        widget = new StringChooserWidget(
-            obj.value("title").toString(),
-            "",
-            obj.value("topic").toString());
-
+        widget = StringChooserWidget::fromJson(obj);
         break;
     }
     case WidgetTypes::CameraView: {
-        widget = new CameraViewWidget(
-            obj.value("title").toString(),
-            QUrl(obj.value("url").toString()),
-            "");
-
+        widget = CameraViewWidget::fromJson(obj);
         break;
     }
     case WidgetTypes::EnumWidget: {
-        EnumWidget *enumWidget = new EnumWidget(
-            obj.value("title").toString(),
-            obj.value("value").toString(),
-            obj.value("topic").toString());
-
-        QVariantMap variantColorMap = obj.value("colors").toObject().toVariantMap();
-
-        enumWidget->setColors(variantColorMap);
-        widget = enumWidget;
+        widget = EnumWidget::fromJson(obj);
         break;
     }
     case WidgetTypes::StringDisplay:
     default: {
-        StringDisplayWidget *displayWidget = new StringDisplayWidget(
-            obj.value("title").toString(),
-            obj.value("value").toString(),
-            obj.value("topic").toString());
-
-        QFont font;
-        font.fromString(obj.value("textFont").toString());
-        displayWidget->setFont(font);
-
-        widget = displayWidget;
+        widget = StringDisplayWidget::fromJson(obj);
         break;
     }
     } // switch
 
     QFont titleFont;
-    titleFont.fromString(obj.value("titleFont").toString());
+    titleFont.fromString(obj.value("titleFont").toString(qApp->font().toString()));
     widget->setTitleFont(titleFont);
 
-    QJsonArray geometry = obj.value("geometry").toArray();
+    QJsonArray geometry = obj.value("geometry").toArray({});
     WidgetData data;
     data.tabIdx = tabIdx;
-    data.row = geometry.at(0).toInt();
-    data.col = geometry.at(1).toInt();
-    data.rowSpan = geometry.at(2).toInt();
-    data.colSpan = geometry.at(3).toInt();
+    data.row = geometry.at(0).toInt(0);
+    data.col = geometry.at(1).toInt(0);
+    data.rowSpan = geometry.at(2).toInt(1);
+    data.colSpan = geometry.at(3).toInt(1);
 
     return std::make_pair(widget, data);
 }
 
 BaseWidget *BaseWidget::defaultWidgetFromTopic(QString ntTopic, WidgetTypes type) {
-    BaseWidget *widget;
+    // construct a barebones JSON object
+    // and use the existing architecture to make a "default" widget
+    QJsonObject obj{};
+    obj.insert("topic", ntTopic);
+    obj.insert("widgetType", (int) type);
 
-    switch (type) {
-    case WidgetTypes::BooleanCheckbox: {
-        widget = new BooleanCheckboxWidget(
-            ntTopic,
-            false,
-            ntTopic);
-
-
-        break;
-    }
-    case WidgetTypes::BooleanDisplay: {
-        widget = new BooleanDisplayWidget(
-            ntTopic,
-            false,
-            ntTopic);
-
-
-        break;
-    }
-    case WidgetTypes::DoubleDisplay: {
-        widget = new NumberDisplayWidget(
-            WidgetTypes::DoubleDisplay,
-            ntTopic,
-            0.,
-            ntTopic);
-
-
-        break;
-    }
-    case WidgetTypes::DoubleDial: {
-        widget = new DoubleDialWidget(
-            ntTopic,
-            0.,
-            ntTopic);
-
-
-        break;
-    }
-    case WidgetTypes::SendableChooser: {
-        widget = new StringChooserWidget(
-            ntTopic,
-            "",
-            ntTopic);
-
-
-
-        break;
-    }
-    case WidgetTypes::CameraView: {
-        widget = new CameraViewWidget(
-            "",
-            QUrl(),
-            "");
-
-
-
-        break;
-    }
-    case WidgetTypes::EnumWidget: {
-        widget = new EnumWidget(
-            ntTopic,
-            "",
-            ntTopic);
-
-
-        break;
-    }
-    case WidgetTypes::StringDisplay:
-    default: {
-        widget = new StringDisplayWidget(
-            ntTopic,
-            "",
-            ntTopic);
-
-
-        break;
-    }
-    } // switch
-
-    return widget;
+    auto widget = BaseWidget::fromJson(obj, 0);
+    return widget.first;
 }

@@ -16,6 +16,7 @@ public:
     ~StringDisplayWidget();
 
     QJsonObject saveObject() override;
+    static BaseWidget * fromJson(QJsonObject obj);
 
     void update();
 };

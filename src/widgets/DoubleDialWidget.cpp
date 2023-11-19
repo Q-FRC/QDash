@@ -1,6 +1,8 @@
 #include "widgets/DoubleDialWidget.h"
 #include "stores/TopicStore.h"
 
+#include <QApplication>
+
 DoubleDialWidget::DoubleDialWidget(const QString &title, const double &defaultValue, const QString &topic) : NumberDisplayWidget(WidgetTypes::DoubleDial, title, defaultValue, topic) {
     m_dial = new QDial(this);
 
@@ -47,7 +49,6 @@ QJsonObject DoubleDialWidget::saveObject() {
 
     object.insert("min", min());
     object.insert("max", max());
-    object.insert("widgetType", (int) WidgetTypes::DoubleDial);
 
     return object;
 }
@@ -62,6 +63,22 @@ void DoubleDialWidget::update() {
 
         m_dial->setValue(m_fakeValue);
     }
+}
+
+BaseWidget * DoubleDialWidget::fromJson(QJsonObject obj) {
+    DoubleDialWidget *widget = new DoubleDialWidget(
+        obj.value("title").toString(""),
+        obj.value("value").toDouble(0.),
+        obj.value("topic").toString(""));
+
+    QFont font;
+    font.fromString(obj.value("textFont").toString(qApp->font().toString()));
+    widget->setFont(font);
+
+    widget->setMin(obj.value("min").toDouble(0.));
+    widget->setMax(obj.value("max").toDouble(360.));
+
+    return widget;
 }
 
 void DoubleDialWidget::keyPressEvent(QKeyEvent *event) {

@@ -38,10 +38,19 @@ QJsonObject BooleanCheckboxWidget::saveObject() {
     QJsonObject object = BaseWidget::saveObject();
 
     object.insert("value", m_value);
-    object.insert("widgetType", (int) WidgetTypes::BooleanCheckbox);
     object.insert("checkboxSize", m_checkboxSize);
 
     return object;
+}
+
+BaseWidget * BooleanCheckboxWidget::fromJson(QJsonObject obj) {
+    BooleanCheckboxWidget *widget = new BooleanCheckboxWidget(
+        obj.value("title").toString(""),
+        obj.value("value").toBool(false),
+        obj.value("topic").toString(""));
+
+    widget->setCheckboxSize(obj.value("checkboxSize").toInt(30));
+    return widget;
 }
 
 void BooleanCheckboxWidget::update() {

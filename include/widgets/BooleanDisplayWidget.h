@@ -29,6 +29,7 @@ public:
     void setFalseColor(const QColor &color);
 
     QJsonObject saveObject() override;
+    static BaseWidget * fromJson(QJsonObject obj);
 
     void update() override;
 };

@@ -24,6 +24,7 @@ public:
     void setColors(QVariantMap colors);
 
     QJsonObject saveObject() override;
+    static BaseWidget * fromJson(QJsonObject obj);
 
     void update() override;
 };

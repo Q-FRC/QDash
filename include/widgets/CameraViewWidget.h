@@ -25,6 +25,7 @@ public:
     void setUrl(const QUrl &url);
 
     QJsonObject saveObject() override;
+    static BaseWidget * fromJson(QJsonObject obj);
 };
 
 #endif // CAMERAVIEWWIDGET_H
