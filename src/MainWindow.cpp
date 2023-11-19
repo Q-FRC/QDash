@@ -169,7 +169,12 @@ QJsonDocument MainWindow::saveObject() {
         tabs.insert(tabs.size(), object);
     }
 
-    topObject.insert("server", "bruh");
+    QJsonObject serverObj{};
+    serverObj.insert("useTeamNumber", Globals::server.teamNumber);
+    serverObj.insert("address", QString::fromStdString(Globals::server.server));
+    serverObj.insert("port", Globals::server.port);
+
+    topObject.insert("server", serverObj);
     topObject.insert("tabs", tabs);
     doc.setObject(topObject);
     return doc;
@@ -179,6 +184,16 @@ void MainWindow::loadObject(const QJsonDocument &doc) {
     QJsonObject object = doc.object();
 
     // TODO: load server
+
+    QJsonObject serverObj = object.value("server").toObject();
+
+    ServerData server = ServerData{
+        serverObj.value("useTeamNumber").toBool(false),
+        serverObj.value("address").toString("0.0.0.0").toStdString(),
+        serverObj.value("port").toInt(NT_DEFAULT_PORT4)
+    };
+
+    setNtSettings(server);
 
     QJsonArray array = object.value("tabs").toArray();
 
