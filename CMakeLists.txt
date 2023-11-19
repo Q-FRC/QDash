@@ -17,7 +17,6 @@ set(PROJECT_SOURCES
         src/main.cpp
         src/Globals.cpp
         src/MainWindow.cpp
-        src/TopicStore.cpp
 
         src/widgets/BaseWidget.cpp
         src/widgets/NumberDisplayWidget.cpp
@@ -35,11 +34,13 @@ set(PROJECT_SOURCES
         src/misc/NTSettingsDialog.cpp
         src/misc/WidgetDialogGenerator.cpp
 
+        src/stores/TopicStore.cpp
+        src/stores/TypeStore.cpp
+
         # =======================================
 
         include/Globals.h
         include/MainWindow.h
-        include/TopicStore.h
 
         include/widgets/BaseWidget.h
         include/widgets/NumberDisplayWidget.h
@@ -56,6 +57,9 @@ set(PROJECT_SOURCES
         include/misc/NewWidgetTreeDialog.h
         include/misc/NTSettingsDialog.h
         include/misc/WidgetDialogGenerator.h
+
+        include/stores/TopicStore.h
+        include/stores/TypeStore.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

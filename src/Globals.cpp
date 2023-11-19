@@ -5,15 +5,15 @@
 nt::NetworkTableInstance Globals::inst = nt::NetworkTableInstance::GetDefault();
 ServerData Globals::server{false, "0.0.0.0", NT_DEFAULT_PORT4};
 
-QMap<Globals::TopicTypes, QString> Globals::typeDisplayNames = {
-    {Globals::TopicTypes::SendableChooser, "Sendable Chooser"},
-    {Globals::TopicTypes::Double, "Double"},
-    {Globals::TopicTypes::String, "String"},
-    {Globals::TopicTypes::Boolean, "Boolean"}
+QMap<TopicTypes, QString> Globals::topicTypeDisplayNames = {
+    {TopicTypes::SendableChooser, "Sendable Chooser"},
+    {TopicTypes::Double, "Double"},
+    {TopicTypes::String, "String"},
+    {TopicTypes::Boolean, "Boolean"}
 };
 
 QStringList Globals::ntTopics{};
-QMap<QString, Globals::TopicTypes> Globals::availableTopics;
+QMap<QString, TopicTypes> Globals::availableTopics;
 
 bool operator==(const WidgetData &a, const WidgetData &b) {
     return (a.row == b.row) &&

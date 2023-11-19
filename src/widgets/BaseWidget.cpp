@@ -1,6 +1,6 @@
 #include "widgets/BaseWidget.h"
 #include "Globals.h"
-#include "TopicStore.h"
+#include "stores/TopicStore.h"
 
 #include "widgets/BooleanCheckboxWidget.h"
 #include "widgets/BooleanDisplayWidget.h"

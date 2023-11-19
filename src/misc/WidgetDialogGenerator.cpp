@@ -1,5 +1,6 @@
 #include "misc/WidgetDialogGenerator.h"
 
+#include "qheaderview.h"
 #include "widgets/BaseWidget.h"
 
 #include <QMetaObject>
@@ -66,6 +67,7 @@ WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, bool isResize, 
 
         QWidget *widgetToAdd;
 
+        // TODO: split this into individual functions
         switch (property.metaType().id()) {
             case QMetaType::Double: {
                 // QDoubleSpinBox
@@ -122,6 +124,10 @@ WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, bool isResize, 
 
                 // TODO: serialize map into table
                 QTableWidget *table = new QTableWidget(0, 2, this);
+                table->horizontalHeader()->setStretchLastSection(false);
+                table->setHorizontalHeaderLabels({"Key", "Value"});
+
+                serializeMap(property.read(widget).toMap(), table);
 
                 QPushButton *addButton = new QPushButton("Add", this);
                 connect(addButton, &QPushButton::clicked, this, [table] {
@@ -148,10 +154,6 @@ WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, bool isResize, 
 
                 buttons->addWidget(addButton);
                 buttons->addWidget(removeButton);
-//                buttons->addWidget(m_colorButton);
-
-//                m_layout->addWidget(m_tableWidget);
-//                m_layout->addRow(m_buttonLayout);
 
                 tableLayout->addWidget(table);
                 tableLayout->addLayout(buttons);
@@ -242,8 +244,22 @@ QVariantMap WidgetDialogGenerator::serializeTable(QTableWidget *widget) {
         QString key = widget->item(i, 0)->text();
         QString value = widget->item(i, 1)->text();
 
-        variantMap.insert(key, value);
+        if (!key.isEmpty() && !value.isEmpty()) variantMap.insert(key, value);
     }
 
     return variantMap;
+}
+
+void WidgetDialogGenerator::serializeMap(QVariantMap map, QTableWidget *widget) {
+    QMapIterator<QString, QVariant> iter(map);
+
+    int i = 0;
+    while (iter.hasNext()) {
+        iter.next();
+
+        widget->insertRow(i);
+        widget->setItem(i, 0, new QTableWidgetItem(iter.key()));
+        widget->setItem(i, 1, new QTableWidgetItem(iter.value().toString()));
+        ++i;
+    }
 }

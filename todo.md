@@ -28,12 +28,6 @@
 - Drag & Drop
 
 # Custom Widgets; rando mthoughts I had
-- every custom widget must still be a class (use QPluginLoader)
-- HOWEVER, They just need to be created and have a few metaproperties defined.
-    * DisplayType (QMetaType, any supported type)
 - Define and lay out a few widgets
 - Define metaproperties for each necessary property (e.g. min value)
 - Bind class metaproperties to widget metaproperties (e.g. QAbstractSlider::minimum)
-
-- BaseWidget can generate a new/resize dialog based upon these metaproperties
-- Widgets are layed out according to the definition in the plugin class.

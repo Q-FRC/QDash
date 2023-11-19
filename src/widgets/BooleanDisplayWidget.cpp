@@ -1,5 +1,5 @@
 #include "widgets/BooleanDisplayWidget.h"
-#include "TopicStore.h"
+#include "stores/TopicStore.h"
 
 BooleanDisplayWidget::BooleanDisplayWidget(const QString &title, const bool &defaultValue, const QString &topic) : BaseWidget(WidgetTypes::BooleanDisplay, title, topic)
 {

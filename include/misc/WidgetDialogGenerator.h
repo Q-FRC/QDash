@@ -42,6 +42,7 @@ public:
     void bindMetaProperty(const QMetaProperty property, Getter getter);
 
     QVariantMap serializeTable(QTableWidget *widget);
+    void serializeMap(QVariantMap map, QTableWidget *widget);
 signals:
     void widgetReady(BaseWidget *widget, WidgetData data);
 };

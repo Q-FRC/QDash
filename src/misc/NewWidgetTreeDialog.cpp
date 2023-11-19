@@ -2,13 +2,15 @@
 
 #include "misc/WidgetDialogGenerator.h"
 
+#include "stores/TypeStore.h"
+
 #include <QMenu>
 #include <QKeyEvent>
 #include <QHeaderView>
 
 #include "Globals.h"
 
-NewWidgetTreeDialog::NewWidgetTreeDialog(QWidget *parent = nullptr) : QDialog(parent)
+NewWidgetTreeDialog::NewWidgetTreeDialog(QWidget *parent) : QDialog(parent)
 {
     m_layout = new QVBoxLayout(this);
 
@@ -29,85 +31,36 @@ NewWidgetTreeDialog::NewWidgetTreeDialog(QWidget *parent = nullptr) : QDialog(pa
     m_layout->addWidget(m_buttonBox);
 
     constructList();
+
+    connect(Globals::typeStore, &TypeStore::widgetReady, this, &NewWidgetTreeDialog::emitWidget);
+    connect(Globals::typeStore, &TypeStore::dialogShown, this, &QDialog::close);
 }
 
 NewWidgetTreeDialog::~NewWidgetTreeDialog() {}
 
 void NewWidgetTreeDialog::constructList() {
     m_tree->clear();
-    QMapIterator<QString, Globals::TopicTypes> iterator(Globals::availableTopics);
+    QMapIterator<QString, TopicTypes> iterator(Globals::availableTopics);
 
     while (iterator.hasNext())
     {
         iterator.next();
         QString topicName = iterator.key();
-        Globals::TopicTypes topicType = iterator.value();
+        TopicTypes topicType = iterator.value();
 
         createTreeIfNotExists(topicName, topicType);
 
-        switch(topicType) {
-        case Globals::TopicTypes::Boolean: {
-            QMenu *boolMenu = new QMenu(topicName);
+        QMenu *widgetMenu = Globals::typeStore->generateMenuForType(topicType, topicName.toStdString());
 
-            QAction *checkboxAction = createWidgetAction("Checkbox", topicName, WidgetTypes::BooleanCheckbox);
-            boolMenu->addAction(checkboxAction);
-
-            QAction *colorAction = createWidgetAction("Color Display", topicName, WidgetTypes::BooleanDisplay);
-            boolMenu->addAction(colorAction);
-
-            connect(m_tree, &QTreeWidget::itemActivated, this, [this, topicName, boolMenu](QTreeWidgetItem *item) {
-                if (getParentPath(item) == topicName) {
-                    boolMenu->popup(QCursor::pos());
-                }
-            });
-            break;
-        }
-        case Globals::TopicTypes::Double: {
-            QMenu *doubleMenu = new QMenu(topicName);
-
-            QAction *displayAction = createWidgetAction("Number Display", topicName, WidgetTypes::DoubleDisplay);
-            doubleMenu->addAction(displayAction);
-
-            QAction *dialAction = createWidgetAction("Dial", topicName, WidgetTypes::DoubleDial);
-            doubleMenu->addAction(dialAction);
-
-            connect(m_tree, &QTreeWidget::itemActivated, this, [this, topicName, doubleMenu](QTreeWidgetItem *item) {
-                if (getParentPath(item) == topicName) {
-                    doubleMenu->popup(QCursor::pos());
-                }
-            });
-            break;
-        }
-        case Globals::TopicTypes::SendableChooser: {
-            connect(m_tree, &QTreeWidget::itemActivated, this, [this, topicName](QTreeWidgetItem *item) {
-                if (getParentPath(item) == topicName) {
-                    showNewWidgetDialog(WidgetTypes::SendableChooser, topicName.toStdString());
-                }
-            });
-            break;
-        }
-        case Globals::TopicTypes::String:
-        default: {
-            QMenu *stringMenu = new QMenu(topicName);
-
-            QAction *displayAction = createWidgetAction("Text Display", topicName, WidgetTypes::StringDisplay);
-            stringMenu->addAction(displayAction);
-
-            QAction *enumAction = createWidgetAction("Enum", topicName, WidgetTypes::EnumWidget);
-            stringMenu->addAction(enumAction);
-
-            connect(m_tree, &QTreeWidget::itemActivated, this, [this, topicName, stringMenu](QTreeWidgetItem *item) {
-                if (getParentPath(item) == topicName) {
-                    stringMenu->popup(QCursor::pos());
-                }
-            });
-            break;
-        }
-        }
+        connect(m_tree, &QTreeWidget::itemActivated, this, [this, topicName, widgetMenu](QTreeWidgetItem *item) {
+            if (getParentPath(item) == topicName) {
+                widgetMenu->popup(QCursor::pos());
+            }
+        });
     }
 }
 
-void NewWidgetTreeDialog::createTreeIfNotExists(QString topicName, Globals::TopicTypes type) {
+void NewWidgetTreeDialog::createTreeIfNotExists(QString topicName, TopicTypes type) {
     QStringList split = topicName.split('/');
     if (!split.at(0).isEmpty()) { // protect against entries not prefixed with /
         split.prepend("");
@@ -150,7 +103,7 @@ void NewWidgetTreeDialog::createTreeIfNotExists(QString topicName, Globals::Topi
     QString superTable = tablePath.join('/');
 
     QStringList columns{};
-    columns << topic << Globals::typeDisplayNames.value(type);
+    columns << topic << Globals::topicTypeDisplayNames.value(type);
 
     QTreeWidgetItem *item = new QTreeWidgetItem(columns);
     item->setFirstColumnSpanned(true);

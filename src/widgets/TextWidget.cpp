@@ -1,5 +1,5 @@
 #include "widgets/TextWidget.h"
-#include "TopicStore.h"
+#include "stores/TopicStore.h"
 
 #include <QAction>
 #include <QMenu>

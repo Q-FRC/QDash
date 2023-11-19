@@ -28,6 +28,16 @@ enum class WidgetTypes {
 Q_DECLARE_FLAGS(WidgetType, WidgetTypes);
 Q_DECLARE_OPERATORS_FOR_FLAGS(WidgetType);
 
+enum class TopicTypes {
+    SendableChooser,
+    Double,
+    String,
+    Boolean
+};
+
+Q_DECLARE_FLAGS(TopicType, TopicTypes);
+Q_DECLARE_OPERATORS_FOR_FLAGS(TopicType);
+
 typedef struct {
     bool teamNumber;
     std::string server;
@@ -36,18 +46,15 @@ typedef struct {
 
 extern bool operator==(const WidgetData &a, const WidgetData &b);
 
+class TypeStore;
+
 namespace Globals {
 extern nt::NetworkTableInstance inst;
 extern ServerData server;
 
-enum class TopicTypes {
-    SendableChooser,
-    Double,
-    String,
-    Boolean
-};
+extern TypeStore *typeStore;
 
-extern QMap<TopicTypes, QString> typeDisplayNames;
+extern QMap<TopicTypes, QString> topicTypeDisplayNames;
 
 extern QStringList ntTopics;
 extern QMap<QString, TopicTypes> availableTopics;

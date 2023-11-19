@@ -1,5 +1,5 @@
 #include "widgets/EnumWidget.h"
-#include "TopicStore.h"
+#include "stores/TopicStore.h"
 
 EnumWidget::EnumWidget(const QString &title, const QString &defaultValue, const QString &topic) : BaseWidget(WidgetTypes::EnumWidget, title, topic)
 {
@@ -45,5 +45,5 @@ void EnumWidget::update() {
 
     m_value = QString::fromStdString(value);
 
-    m_colorWidget->setStyleSheet("background-color: " + m_colors.value(m_value).toString() + ";");
+    if (m_colors.contains(m_value)) m_colorWidget->setStyleSheet("background-color: " + m_colors.value(m_value).toString() + ";");
 }

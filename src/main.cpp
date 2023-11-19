@@ -6,12 +6,28 @@
 
 #include "MainWindow.h"
 #include "Globals.h"
+#include "stores/TypeStore.h"
+
+TypeStore *Globals::typeStore = new TypeStore;
+
+#define REGISTER_TYPE(topic, widget, name) Globals::typeStore->registerType(topic, widget, name);
 
 int main(int argc, char **argv) {
     QApplication app(argc, argv);
 
     Globals::inst.StartClient4("QFRCDashboard");
     Globals::inst.SetServer(Globals::server.server.c_str(), NT_DEFAULT_PORT4);
+
+    REGISTER_TYPE(TopicTypes::Boolean, WidgetTypes::BooleanCheckbox, "Checkbox")
+    REGISTER_TYPE(TopicTypes::Boolean, WidgetTypes::BooleanDisplay, "Color Display")
+
+    REGISTER_TYPE(TopicTypes::Double, WidgetTypes::DoubleDial, "Dial")
+    REGISTER_TYPE(TopicTypes::Double, WidgetTypes::DoubleDisplay, "Double Display")
+
+    REGISTER_TYPE(TopicTypes::String, WidgetTypes::StringDisplay, "Text Display")
+    REGISTER_TYPE(TopicTypes::String, WidgetTypes::EnumWidget, "Enum");
+
+    REGISTER_TYPE(TopicTypes::SendableChooser, WidgetTypes::SendableChooser, "Sendable Chooser");
 
     MainWindow *window = new MainWindow();
 
@@ -31,7 +47,7 @@ int main(int argc, char **argv) {
     QObject::connect(filterTimer, &QTimer::timeout, window, [] {
         for (const QString &topic : Globals::ntTopics) {
             std::string topicName = topic.toStdString();
-            Globals::TopicTypes topicType;
+            TopicTypes topicType;
 
             nt::NetworkTableEntry entry = Globals::inst.GetEntry(topicName);
 
@@ -50,7 +66,7 @@ int main(int argc, char **argv) {
             std::string value = typeEntry.GetString("");
 
             if (!value.empty() && value.compare("String Chooser") == 0) {
-                topicType = Globals::TopicTypes::SendableChooser;
+                topicType = TopicTypes::SendableChooser;
 
                 bool containsSupertable = Globals::availableTopics.contains(supertable);
 
@@ -58,16 +74,16 @@ int main(int argc, char **argv) {
             } else {
                 switch (entry.GetType()) {
                 case nt::NetworkTableType::kBoolean: {
-                    topicType = Globals::TopicTypes::Boolean;
+                    topicType = TopicTypes::Boolean;
                     break;
                 }
                 case nt::NetworkTableType::kDouble: {
-                    topicType = Globals::TopicTypes::Double;
+                    topicType = TopicTypes::Double;
                     break;
                 }
                 case nt::NetworkTableType::kString:
                 default: {
-                    topicType = Globals::TopicTypes::String;
+                    topicType = TopicTypes::String;
                     break;
                 }
                 }

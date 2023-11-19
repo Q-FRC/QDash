@@ -1,6 +1,6 @@
 #include "widgets/StringChooserWidget.h"
 #include "Globals.h"
-#include "TopicStore.h"
+#include "stores/TopicStore.h"
 
 StringChooserWidget::StringChooserWidget(const QString &title, const QString &defaultValue, const QString &topic) : BaseWidget(WidgetTypes::SendableChooser, title, topic),
     m_active(TopicStore::subscribe(topic.toStdString() + "/active", this)),

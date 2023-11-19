@@ -1,5 +1,5 @@
 #include "widgets/StringDisplayWidget.h"
-#include "TopicStore.h"
+#include "stores/TopicStore.h"
 
 StringDisplayWidget::StringDisplayWidget(const QString &title, const QString &defaultValue, const QString &topic) : TextWidget(WidgetTypes::StringDisplay, title, defaultValue, topic)
 {

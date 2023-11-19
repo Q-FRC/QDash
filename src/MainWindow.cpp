@@ -237,7 +237,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
             widget->setTitle(widgetPressed->title());
 
             setNeedsRelay(true);
-            delete widgetPressed;
         });
 
         connect(widgetPressed, &BaseWidget::deleteRequested, this, [this, widgetPressed] {

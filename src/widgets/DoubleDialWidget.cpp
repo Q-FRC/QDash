@@ -1,5 +1,5 @@
 #include "widgets/DoubleDialWidget.h"
-#include "TopicStore.h"
+#include "stores/TopicStore.h"
 
 DoubleDialWidget::DoubleDialWidget(const QString &title, const double &defaultValue, const QString &topic) : NumberDisplayWidget(WidgetTypes::DoubleDial, title, defaultValue, topic) {
     m_dial = new QDial(this);

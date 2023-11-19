@@ -1,5 +1,5 @@
 #include "widgets/NumberDisplayWidget.h"
-#include "TopicStore.h"
+#include "stores/TopicStore.h"
 
 #include <QKeyEvent>
 

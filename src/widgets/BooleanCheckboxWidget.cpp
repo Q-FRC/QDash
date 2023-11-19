@@ -1,5 +1,5 @@
 #include "widgets/BooleanCheckboxWidget.h"
-#include "TopicStore.h"
+#include "stores/TopicStore.h"
 
 BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &title, const bool &defaultValue, const QString &topic) : BaseWidget(WidgetTypes::BooleanCheckbox, title, topic)
 {
