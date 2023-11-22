@@ -3,6 +3,7 @@
 #include "misc/WidgetDialogGenerator.h"
 
 #include "stores/TypeStore.h"
+#include "stores/FilterStore.h"
 
 #include <QMenu>
 #include <QKeyEvent>
@@ -40,7 +41,7 @@ NewWidgetTreeDialog::~NewWidgetTreeDialog() {}
 
 void NewWidgetTreeDialog::constructList() {
     m_tree->clear();
-    QMapIterator<QString, TopicTypes> iterator(Globals::availableTopics);
+    QMapIterator<QString, TopicTypes> iterator(FilterStore::FilteredTopics);
 
     while (iterator.hasNext())
     {

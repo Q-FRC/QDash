@@ -14,7 +14,6 @@ QMap<TopicTypes, QString> Globals::topicTypeDisplayNames = {
 };
 
 QStringList Globals::ntTopics{};
-QMap<QString, TopicTypes> Globals::availableTopics;
 
 bool operator==(const WidgetData &a, const WidgetData &b) {
     return (a.row == b.row) &&

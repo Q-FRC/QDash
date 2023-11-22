@@ -77,7 +77,6 @@ extern TypeStore *typeStore;
 extern QMap<TopicTypes, QString> topicTypeDisplayNames;
 
 extern QStringList ntTopics;
-extern QMap<QString, TopicTypes> availableTopics;
 extern WidgetData *defaultWidgetData;
 
 extern QMap<QString, FrameShape> shapeNameMap;

@@ -39,6 +39,7 @@ set(PROJECT_SOURCES
 
         src/stores/TopicStore.cpp
         src/stores/TypeStore.cpp
+        src/stores/FilterStore.cpp
 
         # =======================================
 
@@ -66,6 +67,7 @@ set(PROJECT_SOURCES
 
         include/stores/TopicStore.h
         include/stores/TypeStore.h
+        include/stores/FilterStore.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
