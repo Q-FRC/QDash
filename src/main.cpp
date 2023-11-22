@@ -3,6 +3,8 @@
 #include <QApplication>
 #include <QTimer>
 #include <QRadioButton>
+#include <QSettings>
+#include <QMessageBox>
 
 #include "MainWindow.h"
 #include "Globals.h"
@@ -13,6 +15,9 @@ TypeStore *Globals::typeStore = new TypeStore;
 
 int main(int argc, char **argv) {
     QApplication app(argc, argv);
+
+    app.setOrganizationName("binex-dsk");
+    app.setApplicationName("QFRCDashboard");
 
     Globals::inst.StartClient4("QFRCDashboard");
     Globals::inst.SetServer(Globals::server.server.c_str(), NT_DEFAULT_PORT4);
@@ -56,6 +61,28 @@ int main(int argc, char **argv) {
     MainWindow *window = new MainWindow();
 
     window->show();
+
+    QSettings settings(&app);
+
+    // settings dont exist or firstrun is true
+    bool firstRun = !settings.contains("firstRun") || settings.value("firstRun").toBool();
+
+    if (firstRun) {
+        settings.setValue("firstRun", false);
+
+        QMessageBox::information(window, "Welcome to QFRCDashboard!",
+                                 "Welcome to QFRCDashboard. Ensure to check the GitHub page in the \"about\" "
+                                 "tab.\n\n"
+                                 "To get started, open the NT server settings tab with Alt+S and input your desired "
+                                 "NetworkTables settings. Once connected, add a tab with Ctrl+T, and search "
+                                 "for your widget in the New Widget tab with Alt+N.\n\n"
+
+                                 "Note that row and column indices start AT 0! Spans, however, do not.\n\n"
+
+                                 "Save and load at any time with Ctrl+S and Ctrl+O, or through the File Menu. "
+                                 "Close tabs with Ctrl+W or through the Tab menu. Modify or delete widgets--"
+                                 "or even change their fonts--by right clicking any widget.");
+    }
 
     Globals::inst.AddListener({{""}}, nt::EventFlags::kTopic, [] (const nt::Event &event) {
         std::string topicName(event.GetTopicInfo()->name);

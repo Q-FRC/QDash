@@ -79,4 +79,7 @@ public slots:
 
     // Camera View
     void newCameraView();
+
+    // About Menu
+    void aboutDialog();
 };

@@ -18,6 +18,7 @@
 #include <QFileDialog>
 #include <QApplication>
 #include <QMetaProperty>
+#include <QShortcut>
 
 MainWindow::MainWindow()
 {
@@ -37,21 +38,21 @@ MainWindow::MainWindow()
     } // End NT Settings
 
     { // File
-        QMenu *fileMenu = new QMenu("&File");
+        QMenu *fileMenu = new QMenu("&File", this);
 
-        QAction *saveAction = new QAction("Save");
+        QAction *saveAction = new QAction("Save", fileMenu);
         saveAction->setShortcut(tr("Ctrl+S"));
         fileMenu->addAction(saveAction);
 
         connect(saveAction, &QAction::triggered, this, &MainWindow::save);
 
-        QAction *saveAsAction = new QAction("Save As...");
+        QAction *saveAsAction = new QAction("Save As...", fileMenu);
         saveAsAction->setShortcut(tr("Ctrl+Shift+S"));
         fileMenu->addAction(saveAsAction);
 
         connect(saveAsAction, &QAction::triggered, this, &MainWindow::saveAs);
 
-        QAction *loadAction = new QAction("Open File...");
+        QAction *loadAction = new QAction("Open File...", fileMenu);
         loadAction->setShortcut(tr("Ctrl+O"));
         fileMenu->addAction(loadAction);
 
@@ -61,16 +62,16 @@ MainWindow::MainWindow()
     } // End File
 
     { // Tab
-        QMenu *tabMenu = new QMenu("&Tab");
+        QMenu *tabMenu = new QMenu("&Tab", this);
 
-        QAction *newTab = new QAction("New Tab");
+        QAction *newTab = new QAction("New Tab", tabMenu);
 
         newTab->setShortcut(QKeySequence::AddTab);
         connect(newTab, &QAction::triggered, this, &MainWindow::newTab);
 
         tabMenu->addAction(newTab);
 
-        QAction *closeTab = new QAction("Close Tab");
+        QAction *closeTab = new QAction("Close Tab", tabMenu);
 
         closeTab->setShortcut(QKeySequence::Close);
         connect(closeTab, &QAction::triggered, this, &MainWindow::closeTab);
@@ -81,7 +82,7 @@ MainWindow::MainWindow()
     } // End Tab
 
     { // New Widget
-        QAction *newWidgetAction = new QAction("&New Widget");
+        QAction *newWidgetAction = new QAction("&New Widget", this);
 
         connect(newWidgetAction, &QAction::triggered, this, &MainWindow::newWidgetPopup);
 
@@ -89,12 +90,38 @@ MainWindow::MainWindow()
     } // End New Widget
 
     { // Camera View
-        QAction *cameraAction = new QAction("New &Camera View");
+        QAction *cameraAction = new QAction("New &Camera View", this);
 
         connect(cameraAction, &QAction::triggered, this, &MainWindow::newCameraView);
 
         m_menubar->addAction(cameraAction);
     } // End Camera View
+
+    { // About
+        QMenu *aboutMenu = new QMenu("&About");
+
+        QAction *aboutAction = new QAction("About QFRCDashboard", aboutMenu);
+        connect(aboutAction, &QAction::triggered, this, &MainWindow::aboutDialog);
+        aboutMenu->addAction(aboutAction);
+
+        QAction *aboutQtAction = new QAction("About Qt", aboutMenu);
+        connect(aboutQtAction, &QAction::triggered, this, [this] {
+            QMessageBox::aboutQt(this, "About Qt");
+        });
+        aboutMenu->addAction(aboutQtAction);
+
+        menuBar()->addMenu(aboutMenu);
+    }
+
+    // Initialize Shortcuts
+    {
+        new QShortcut(QKeySequence(Qt::Key_Control + Qt::Key_Tab), this, [this] {
+            int tabIdx = m_centralWidget->currentIndex() + 1;
+            if (tabIdx == m_centralWidget->count()) tabIdx = 0;
+
+            m_centralWidget->setCurrentIndex(tabIdx);
+        });
+    }
 
     update();
 }
@@ -471,4 +498,16 @@ void MainWindow::newCameraView() {
 
         connect(dialog, &WidgetDialogGenerator::widgetReady, this, &MainWindow::newWidget);
     }
+}
+
+// About Menu
+void MainWindow::aboutDialog() {
+    QStringList aboutString;
+    aboutString << "Current Version: 0.1.0"
+                << "GitHub: https://github.com/binex-dsk/QFRCDashboard"
+                << "Author: Carson Rueter <swurl@swurl.xyz>"
+                << "Contributors:"
+                << "Copyleft 2023 Carson Rueter"
+                << "Enjoy :)";
+    QMessageBox::about(this, "About QFRCDashboard", aboutString.join("\n"));
 }
