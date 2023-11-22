@@ -36,6 +36,7 @@ set(PROJECT_SOURCES
         src/misc/NTSettingsDialog.cpp
         src/misc/WidgetDialogGenerator.cpp
         src/misc/ShapedFrame.cpp
+        src/misc/BetterDial.cpp
 
         src/stores/TopicStore.cpp
         src/stores/TypeStore.cpp
@@ -64,6 +65,7 @@ set(PROJECT_SOURCES
         include/misc/NTSettingsDialog.h
         include/misc/WidgetDialogGenerator.h
         include/misc/ShapedFrame.h
+        include/misc/BetterDial.h
 
         include/stores/TopicStore.h
         include/stores/TypeStore.h

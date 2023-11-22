@@ -94,9 +94,10 @@ int main(int argc, char **argv) {
         }
     });
 
+    // TODO: configurable timings
     QTimer *filterTimer = new QTimer(window);
     QObject::connect(filterTimer, &QTimer::timeout, window, &FilterStore::filterTopics);
-    filterTimer->start(50);
+    filterTimer->start(1000);
 
     QTimer *timer = new QTimer(window);
     QObject::connect(timer, &QTimer::timeout, window, [window]() {

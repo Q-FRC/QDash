@@ -4,18 +4,18 @@
 #include <QApplication>
 
 IntegerDialWidget::IntegerDialWidget(const QString &title, const int &defaultValue, const QString &topic) : IntegerDisplayWidget(title, defaultValue, topic) {
-    m_dial = new QDial(this);
+    m_dial = new BetterDial(this);
     m_type = WidgetTypes::IntegerDial;
 
-    m_dial->setMinimum(0);
-    m_dial->setMaximum(36000);
+    m_dial->setMin(0);
+    m_dial->setMax(1000);
 
     m_layout->removeWidget(m_text);
 
     m_layout->addWidget(m_dial, 1, 0, 2, 1);
     m_layout->addWidget(m_text, 3, 0);
 
-    connect(m_dial, &QAbstractSlider::sliderMoved, this, [this](int position) {
+    connect(m_dial, &BetterDial::sliderMoved, this, [this](int position) {
         m_entry->SetInteger(position);
         m_text->setText(QString::number(position));
     });
@@ -31,7 +31,7 @@ int IntegerDialWidget::min() {
 
 void IntegerDialWidget::setMin(int min) {
     m_min = min;
-    m_dial->setMinimum(min);
+    m_dial->setMin(min);
 }
 
 int IntegerDialWidget::max() {
@@ -40,7 +40,16 @@ int IntegerDialWidget::max() {
 
 void IntegerDialWidget::setMax(int max) {
     m_max = max;
-    m_dial->setMaximum(max);
+    m_dial->setMax(max);
+}
+
+double IntegerDialWidget::startingAngle() {
+    return m_startingAngle;
+}
+
+void IntegerDialWidget::setStartingAngle(double angle) {
+    m_startingAngle = angle;
+    m_dial->setStartingAngle(angle * M_PI / 180.);
 }
 
 QJsonObject IntegerDialWidget::saveObject() {
@@ -48,6 +57,7 @@ QJsonObject IntegerDialWidget::saveObject() {
 
     object.insert("min", min());
     object.insert("max", max());
+    object.insert("startingAngle", m_startingAngle);
 
     return object;
 }
@@ -59,7 +69,7 @@ void IntegerDialWidget::update() {
         m_value = value;
         setText(QString::number(value));
 
-        m_dial->setValue(m_value);
+        if (!m_dial->isDragging()) m_dial->setValue(m_value);
     }
 }
 
@@ -75,6 +85,8 @@ BaseWidget * IntegerDialWidget::fromJson(QJsonObject obj) {
 
     widget->setMin(obj.value("min").toInt(0));
     widget->setMax(obj.value("max").toInt(1000));
+
+    widget->setStartingAngle(obj.value("startingAngle").toDouble(180.));
 
     return widget;
 }
