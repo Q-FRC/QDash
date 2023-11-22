@@ -4,16 +4,10 @@
 
 #include <QString>
 #include <QMap>
+#include <QMetaType>
+#include <QMetaEnum>
 
-
-typedef struct {
-    int tabIdx;
-    int row;
-    int col;
-    int rowSpan;
-    int colSpan;
-} WidgetData;
-
+// ENUMS //
 enum class WidgetTypes {
     BooleanCheckbox = 0,
     BooleanDisplay = 1,
@@ -38,17 +32,40 @@ enum class TopicTypes {
 Q_DECLARE_FLAGS(TopicType, TopicTypes);
 Q_DECLARE_OPERATORS_FOR_FLAGS(TopicType);
 
+// STRUCTS //
 typedef struct {
     bool teamNumber;
     std::string server;
     int port;
 } ServerData;
 
+typedef struct {
+    int tabIdx;
+    int row;
+    int col;
+    int rowSpan;
+    int colSpan;
+} WidgetData;
+
 extern bool operator==(const WidgetData &a, const WidgetData &b);
 
 class TypeStore;
 
+
+// NAMESPACES //
 namespace Globals {
+
+Q_NAMESPACE
+
+enum class FrameShape {
+    Circle,
+    Triangle,
+    Rectangle,
+    Hexagon
+};
+
+Q_ENUM_NS(FrameShape)
+
 extern nt::NetworkTableInstance inst;
 extern ServerData server;
 
@@ -59,4 +76,12 @@ extern QMap<TopicTypes, QString> topicTypeDisplayNames;
 extern QStringList ntTopics;
 extern QMap<QString, TopicTypes> availableTopics;
 extern WidgetData *defaultWidgetData;
+
+extern QMap<QString, FrameShape> shapeNameMap;
+}
+
+
+namespace CustomMetaTypes {
+//static const int FrameShape = QMetaEnum::fromType<Globals::FrameShape>().metaType().id();
+static const int FrameShape = qMetaTypeId<Globals::FrameShape>();
 }

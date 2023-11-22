@@ -35,6 +35,10 @@ private:
     WidgetData m_data;
 
     QMultiMap<const QMetaProperty, Getter> m_propertyGetterMap;
+
+    QMetaProperty m_currentProperty;
+    BaseWidget *m_currentWidget;
+
 public:
     WidgetDialogGenerator(BaseWidget *widget, bool isResize = false, WidgetData data = WidgetData{0, 0, 0, 0, 0});
     ~WidgetDialogGenerator();
@@ -43,6 +47,23 @@ public:
 
     QVariantMap serializeTable(QTableWidget *widget);
     void serializeMap(QVariantMap map, QTableWidget *widget);
+
+    /** property functions **/
+    QWidget *doubleProperty(QMetaProperty property);
+    QWidget *intProperty(QMetaProperty property);
+
+    QWidget *colorProperty(QMetaProperty property);
+
+    QWidget *mapProperty(QMetaProperty property);
+
+    QWidget *bitmapProperty(QMetaProperty property);
+    QWidget *imageProperty(QMetaProperty property);
+
+    QWidget *fontProperty(QMetaProperty property);
+
+    QWidget *stringProperty(QMetaProperty property);
+
+    QWidget *shapeProperty(QMetaProperty property);
 signals:
     void widgetReady(BaseWidget *widget, WidgetData data);
 };

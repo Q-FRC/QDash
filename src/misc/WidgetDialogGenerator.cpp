@@ -11,6 +11,7 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QTableWidgetItem>
+#include <QComboBox>
 
 bool operator<(QMetaProperty a, QMetaProperty b) {
     return a.name() < a.name();
@@ -66,137 +67,26 @@ WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, bool isResize, 
         }
 
         QWidget *widgetToAdd;
+        int id = property.typeId();
 
-        // TODO: split this into individual functions
-        switch (property.metaType().id()) {
-            case QMetaType::Double: {
-                // QDoubleSpinBox
-                QDoubleSpinBox *spinBox = new QDoubleSpinBox(this);
-                spinBox->setRange(-1000000, 1000000);
-                /*if (isResize)*/ spinBox->setValue(property.read(widget).toDouble());
+#define PROPERTY_FUNCTION(type, function) if (id == type) widgetToAdd = function(property); else
 
-                auto func = std::bind(&QDoubleSpinBox::value, spinBox);
-                bindMetaProperty(property, func);
+        PROPERTY_FUNCTION(QMetaType::Double, doubleProperty)
+        PROPERTY_FUNCTION(QMetaType::Int, intProperty)
+        PROPERTY_FUNCTION(QMetaType::QColor, colorProperty)
+        PROPERTY_FUNCTION(QMetaType::QVariantMap, mapProperty)
+        PROPERTY_FUNCTION(QMetaType::QBitmap, bitmapProperty)
+        PROPERTY_FUNCTION(QMetaType::QImage, imageProperty)
+        PROPERTY_FUNCTION(QMetaType::QFont, fontProperty)
+        PROPERTY_FUNCTION(QMetaType::QString, stringProperty)
+        PROPERTY_FUNCTION(QMetaType::QUrl, stringProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::FrameShape, shapeProperty)
+        { // else
+            qCritical() << "Bad metatype for property" << property.name();
+            continue;
+        } // else
 
-                widgetToAdd = spinBox;
-                break;
-            }
-            case QMetaType::Int: {
-                // QSpinBox
-                QSpinBox *spinBox = new QSpinBox(this);
-                spinBox->setRange(-1000000, 1000000);
-                /*if (isResize)*/ spinBox->setValue(property.read(widget).toInt());
-
-                auto func = std::bind(&QSpinBox::value, spinBox);
-                bindMetaProperty(property, func);
-
-                widgetToAdd = spinBox;
-                break;
-            }
-            case QMetaType::QColor: {
-                // QColorDialog etc.
-                QWidget *input = new QWidget(this);
-                QHBoxLayout *inputLayout = new QHBoxLayout(input);
-
-                QLineEdit *colorEdit = new QLineEdit(this);
-                /*if (isResize)*/ colorEdit->setText(property.read(widget).toString());
-
-                QPushButton *colorSelect = new QPushButton("Select Color...", this);
-
-                inputLayout->addWidget(colorEdit);
-                inputLayout->addWidget(colorSelect);
-
-                connect(colorSelect, &QPushButton::clicked, this, [colorEdit, this] {
-                    QColor color = QColorDialog::getColor(QColor::fromString(colorEdit->text()), this);
-
-                    colorEdit->setText(color.name());
-                });
-
-                auto func = std::bind(&QLineEdit::text, colorEdit);
-                bindMetaProperty(property, func);
-
-                widgetToAdd = input;
-                break;
-            }
-            case QMetaType::QVariantMap: {
-                // Table setup
-                // An insert button for certain types as well.
-
-                // TODO: serialize map into table
-                QTableWidget *table = new QTableWidget(0, 2, this);
-                table->horizontalHeader()->setStretchLastSection(false);
-                table->setHorizontalHeaderLabels({"Key", "Value"});
-
-                serializeMap(property.read(widget).toMap(), table);
-
-                QPushButton *addButton = new QPushButton("Add", this);
-                connect(addButton, &QPushButton::clicked, this, [table] {
-                    int rowCount = table->rowCount();
-
-                    table->insertRow(rowCount);
-                });
-
-                QPushButton *removeButton = new QPushButton("Delete", this);
-                removeButton->setShortcut(Qt::Key_Delete);
-                connect(removeButton, &QPushButton::clicked, this, [table] {
-                    QList<QTableWidgetItem *> selectedItems = table->selectedItems();
-
-                    if (selectedItems.empty()) return;
-
-                    table->removeRow(selectedItems.at(0)->row());
-                });
-
-                QWidget *tableLayoutWidget = new QWidget;
-
-                QVBoxLayout *tableLayout = new QVBoxLayout(tableLayoutWidget);
-
-                QHBoxLayout *buttons = new QHBoxLayout;
-
-                buttons->addWidget(addButton);
-                buttons->addWidget(removeButton);
-
-                tableLayout->addWidget(table);
-                tableLayout->addLayout(buttons);
-
-                widgetToAdd = tableLayoutWidget;
-
-                // TODO: Insert buttons for certain types (images, etc)
-
-                auto func = std::bind(&WidgetDialogGenerator::serializeTable, this, table);
-                bindMetaProperty(property, func);
-                break;
-            }
-            case QMetaType::QBitmap: {
-                // idk what type to ues
-                // but a shape select
-                qCritical() << "Not implemented";
-                break;
-            }
-            case QMetaType::QImage: {
-                // image
-                qCritical() << "Not Implemented";
-                break;
-            }
-            case QMetaType::QFont: {
-                // font dialog
-            }
-            case QMetaType::QString:
-            case QMetaType::QUrl: {
-                // bruh
-                QLineEdit *edit = new QLineEdit(this);
-                /*if (isResize)*/ edit->setText(property.read(widget).toString());
-
-                auto func = std::bind(&QLineEdit::text, edit);
-                bindMetaProperty(property, func);
-
-                widgetToAdd = edit;
-                break;
-            }
-            default: {
-                qCritical() << "Bad metatype for property" << property.name();
-                break;
-            }
-        } // switch
+#undef PROPERTY_FUNCTION
 
         m_layout->addRow(QString(property.name()).replace('_', ' '), widgetToAdd);
     }
@@ -262,4 +152,140 @@ void WidgetDialogGenerator::serializeMap(QVariantMap map, QTableWidget *widget) 
         widget->setItem(i, 1, new QTableWidgetItem(iter.value().toString()));
         ++i;
     }
+}
+
+QWidget *WidgetDialogGenerator::doubleProperty(QMetaProperty property) {
+    // QDoubleSpinBox
+    QDoubleSpinBox *spinBox = new QDoubleSpinBox(this);
+    spinBox->setRange(-1000000, 1000000);
+    /*if (isResize)*/ spinBox->setValue(property.read(m_widget).toDouble());
+
+    auto func = std::bind(&QDoubleSpinBox::value, spinBox);
+    bindMetaProperty(property, func);
+
+    return spinBox;
+}
+
+QWidget *WidgetDialogGenerator::intProperty(QMetaProperty property) {
+    // QSpinBox
+    QSpinBox *spinBox = new QSpinBox(this);
+    spinBox->setRange(-1000000, 1000000);
+    /*if (isResize)*/ spinBox->setValue(property.read(m_widget).toInt());
+
+    auto func = std::bind(&QSpinBox::value, spinBox);
+    bindMetaProperty(property, func);
+
+    return spinBox;
+}
+
+QWidget *WidgetDialogGenerator::colorProperty(QMetaProperty property) {
+    // QColorDialog etc.
+    QWidget *input = new QWidget(this);
+    QHBoxLayout *inputLayout = new QHBoxLayout(input);
+
+    QLineEdit *colorEdit = new QLineEdit(this);
+    /*if (isResize)*/ colorEdit->setText(property.read(m_widget).toString());
+
+    QPushButton *colorSelect = new QPushButton("Select Color...", this);
+
+    inputLayout->addWidget(colorEdit);
+    inputLayout->addWidget(colorSelect);
+
+    connect(colorSelect, &QPushButton::clicked, this, [colorEdit, this] {
+        QColor color = QColorDialog::getColor(QColor::fromString(colorEdit->text()), this);
+
+        colorEdit->setText(color.name());
+    });
+
+    auto func = std::bind(&QLineEdit::text, colorEdit);
+    bindMetaProperty(property, func);
+
+    return input;
+}
+
+QWidget *WidgetDialogGenerator::mapProperty(QMetaProperty property) {
+    // Table setup
+    // An insert button for certain types as well.
+        QTableWidget *table = new QTableWidget(0, 2, this);
+    table->horizontalHeader()->setStretchLastSection(false);
+    table->setHorizontalHeaderLabels({"Key", "Value"});
+
+    serializeMap(property.read(m_widget).toMap(), table);
+
+    QPushButton *addButton = new QPushButton("Add", this);
+    connect(addButton, &QPushButton::clicked, this, [table] {
+        int rowCount = table->rowCount();
+
+        table->insertRow(rowCount);
+    });
+
+    QPushButton *removeButton = new QPushButton("Delete", this);
+    removeButton->setShortcut(Qt::Key_Delete);
+    connect(removeButton, &QPushButton::clicked, this, [table] {
+        QList<QTableWidgetItem *> selectedItems = table->selectedItems();
+
+        if (selectedItems.empty()) return;
+
+        table->removeRow(selectedItems.at(0)->row());
+    });
+
+    QWidget *tableLayoutWidget = new QWidget;
+
+    QVBoxLayout *tableLayout = new QVBoxLayout(tableLayoutWidget);
+
+    QHBoxLayout *buttons = new QHBoxLayout;
+
+    buttons->addWidget(addButton);
+    buttons->addWidget(removeButton);
+
+    tableLayout->addWidget(table);
+    tableLayout->addLayout(buttons);
+
+    // TODO: Insert buttons for certain types (images, etc)
+
+    auto func = std::bind(&WidgetDialogGenerator::serializeTable, this, table);
+    bindMetaProperty(property, func);
+
+    return tableLayoutWidget;
+}
+
+QWidget *WidgetDialogGenerator::bitmapProperty(QMetaProperty property) {
+    qCritical() << "Not implemented";
+    return nullptr;
+}
+
+QWidget *WidgetDialogGenerator::imageProperty(QMetaProperty property) {
+    qCritical() << "Not implemented";
+    return nullptr;
+}
+
+QWidget *WidgetDialogGenerator::fontProperty(QMetaProperty property) {
+    qCritical() << "Not implemented";
+    return nullptr;
+}
+
+QWidget *WidgetDialogGenerator::stringProperty(QMetaProperty property) {
+    // bruh
+    QLineEdit *edit = new QLineEdit(this);
+    /*if (isResize)*/ edit->setText(property.read(m_widget).toString());
+
+    auto func = std::bind(&QLineEdit::text, edit);
+    bindMetaProperty(property, func);
+
+    return edit;
+}
+
+QWidget *WidgetDialogGenerator::shapeProperty(QMetaProperty property) {
+    QComboBox *comboBox = new QComboBox(this);
+    comboBox->addItems(Globals::shapeNameMap.keys());
+
+    comboBox->setCurrentText(Globals::shapeNameMap.key(property.read(m_widget).value<Globals::FrameShape>()));
+
+    Getter func = [comboBox]() -> QVariant {
+        return QVariant::fromValue(Globals::shapeNameMap.value(comboBox->currentText()));
+    };
+
+    bindMetaProperty(property, func);
+
+    return comboBox;
 }

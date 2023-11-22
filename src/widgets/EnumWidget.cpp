@@ -4,7 +4,7 @@
 EnumWidget::EnumWidget(const QString &title, const QString &defaultValue, const QString &topic) : BaseWidget(WidgetTypes::EnumWidget, title, topic)
 {
     m_value = defaultValue;
-    m_colorWidget = new QFrame(this);
+    m_colorWidget = new ShapedFrame(Globals::FrameShape::Rectangle, this);
 
     m_layout->addWidget(m_colorWidget, 1, 0, 3, 1);
 }
@@ -19,6 +19,15 @@ QVariantMap EnumWidget::colors() {
 
 void EnumWidget::setColors(QVariantMap colors) {
     m_colors = colors;
+}
+
+Globals::FrameShape EnumWidget::shape() {
+    return m_shape;
+}
+
+void EnumWidget::setShape(Globals::FrameShape shape) {
+    m_shape = shape;
+    m_colorWidget->setShape(shape);
 }
 
 QJsonObject EnumWidget::saveObject() {
@@ -36,6 +45,7 @@ QJsonObject EnumWidget::saveObject() {
     }
 
     object.insert("colors", colorMap);
+    object.insert("shape", Globals::shapeNameMap.key(m_shape));
 
     return object;
 }
@@ -49,6 +59,7 @@ BaseWidget * EnumWidget::fromJson(QJsonObject obj) {
     QVariantMap variantColorMap = obj.value("colors").toObject({}).toVariantMap();
 
     widget->setColors(variantColorMap);
+    widget->setShape(Globals::shapeNameMap.value(obj.value("shape").toString("Circle")));
     return widget;
 }
 
@@ -57,5 +68,5 @@ void EnumWidget::update() {
 
     m_value = QString::fromStdString(value);
 
-    if (m_colors.contains(m_value)) m_colorWidget->setStyleSheet("background-color: " + m_colors.value(m_value).toString() + ";");
+    if (m_colors.contains(m_value)) m_colorWidget->setColor(m_colors.value(m_value).value<QColor>());
 }
