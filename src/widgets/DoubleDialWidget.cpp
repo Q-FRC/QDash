@@ -5,6 +5,7 @@
 
 DoubleDialWidget::DoubleDialWidget(const QString &title, const double &defaultValue, const QString &topic) : DoubleDisplayWidget(title, defaultValue, topic) {
     m_dial = new QDial(this);
+    m_type = WidgetTypes::DoubleDial;
 
     m_fakeValue = defaultValue * 100;
 

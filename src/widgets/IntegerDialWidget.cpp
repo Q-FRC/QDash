@@ -5,6 +5,7 @@
 
 IntegerDialWidget::IntegerDialWidget(const QString &title, const int &defaultValue, const QString &topic) : IntegerDisplayWidget(title, defaultValue, topic) {
     m_dial = new QDial(this);
+    m_type = WidgetTypes::IntegerDial;
 
     m_dial->setMinimum(0);
     m_dial->setMaximum(36000);
