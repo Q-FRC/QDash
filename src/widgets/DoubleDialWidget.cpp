@@ -3,7 +3,7 @@
 
 #include <QApplication>
 
-DoubleDialWidget::DoubleDialWidget(const QString &title, const double &defaultValue, const QString &topic) : NumberDisplayWidget(WidgetTypes::DoubleDial, title, defaultValue, topic) {
+DoubleDialWidget::DoubleDialWidget(const QString &title, const double &defaultValue, const QString &topic) : DoubleDisplayWidget(title, defaultValue, topic) {
     m_dial = new QDial(this);
 
     m_fakeValue = defaultValue * 100;
@@ -45,7 +45,7 @@ void DoubleDialWidget::setMax(double max) {
 }
 
 QJsonObject DoubleDialWidget::saveObject() {
-    QJsonObject object = NumberDisplayWidget::saveObject();
+    QJsonObject object = DoubleDisplayWidget::saveObject();
 
     object.insert("min", min());
     object.insert("max", max());

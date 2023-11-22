@@ -9,7 +9,8 @@ QMap<TopicTypes, QString> Globals::topicTypeDisplayNames = {
     {TopicTypes::SendableChooser, "Sendable Chooser"},
     {TopicTypes::Double, "Double"},
     {TopicTypes::String, "String"},
-    {TopicTypes::Boolean, "Boolean"}
+    {TopicTypes::Boolean, "Boolean"},
+    {TopicTypes::Int, "Integer"}
 };
 
 QStringList Globals::ntTopics{};

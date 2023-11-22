@@ -19,7 +19,7 @@ set(PROJECT_SOURCES
         src/MainWindow.cpp
 
         src/widgets/BaseWidget.cpp
-        src/widgets/NumberDisplayWidget.cpp
+        src/widgets/DoubleDisplayWidget.cpp
         src/widgets/TabWidget.cpp
         src/widgets/BooleanDisplayWidget.cpp
         src/widgets/StringDisplayWidget.cpp
@@ -29,6 +29,8 @@ set(PROJECT_SOURCES
         src/widgets/StringChooserWidget.cpp
         src/widgets/CameraViewWidget.cpp
         src/widgets/EnumWidget.cpp
+        src/widgets/IntegerDisplayWidget.cpp
+        src/widgets/IntegerDialWidget.cpp
 
         src/misc/NewWidgetTreeDialog.cpp
         src/misc/NTSettingsDialog.cpp
@@ -44,7 +46,7 @@ set(PROJECT_SOURCES
         include/MainWindow.h
 
         include/widgets/BaseWidget.h
-        include/widgets/NumberDisplayWidget.h
+        include/widgets/DoubleDisplayWidget.h
         include/widgets/TabWidget.h
         include/widgets/BooleanDisplayWidget.h
         include/widgets/StringDisplayWidget.h
@@ -54,6 +56,8 @@ set(PROJECT_SOURCES
         include/widgets/StringChooserWidget.h
         include/widgets/CameraViewWidget.h
         include/widgets/EnumWidget.h
+        include/widgets/IntegerDisplayWidget.h
+        include/widgets/IntegerDialWidget.h
 
         include/misc/NewWidgetTreeDialog.h
         include/misc/NTSettingsDialog.h

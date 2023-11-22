@@ -4,18 +4,18 @@
 
 class BaseWidget;
 
-class NumberDisplayWidget : public TextWidget
+class IntegerDisplayWidget : public TextWidget
 {
     Q_OBJECT
 
-    Q_PROPERTY(double value MEMBER m_value)
+    Q_PROPERTY(int value MEMBER m_value)
 protected:
-    double m_value = 0.;
+    int m_value = 0;
 
     void keyPressEvent(QKeyEvent *event) override;
 public:
-    NumberDisplayWidget(const WidgetTypes &type, const QString &title, const double &defaultValue, const QString &topic);
-    ~NumberDisplayWidget();
+    IntegerDisplayWidget(const QString &title, const int &defaultValue, const QString &topic);
+    ~IntegerDisplayWidget();
 
     QJsonObject saveObject() override;
     static BaseWidget * fromJson(QJsonObject obj);

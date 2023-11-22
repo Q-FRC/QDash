@@ -16,7 +16,9 @@ enum class WidgetTypes {
     DoubleDial = 4,
     SendableChooser = 5,
     CameraView = 6,
-    EnumWidget = 7
+    EnumWidget = 7,
+    IntegerDisplay = 8,
+    IntegerDial = 9
 };
 
 Q_DECLARE_FLAGS(WidgetType, WidgetTypes);
@@ -26,7 +28,8 @@ enum class TopicTypes {
     SendableChooser,
     Double,
     String,
-    Boolean
+    Boolean,
+    Int
 };
 
 Q_DECLARE_FLAGS(TopicType, TopicTypes);

@@ -10,13 +10,14 @@
 
 TypeStore *Globals::typeStore = new TypeStore;
 
-#define REGISTER_TYPE(topic, widget, name) Globals::typeStore->registerType(topic, widget, name);
-
 int main(int argc, char **argv) {
     QApplication app(argc, argv);
 
     Globals::inst.StartClient4("QFRCDashboard");
     Globals::inst.SetServer(Globals::server.server.c_str(), NT_DEFAULT_PORT4);
+
+// TODO add FilterStore and have globals register here as well.
+#define REGISTER_TYPE(topic, widget, name) Globals::typeStore->registerType(topic, widget, name);
 
     REGISTER_TYPE(TopicTypes::Boolean, WidgetTypes::BooleanCheckbox, "Checkbox")
     REGISTER_TYPE(TopicTypes::Boolean, WidgetTypes::BooleanDisplay, "Color Display")
@@ -25,9 +26,14 @@ int main(int argc, char **argv) {
     REGISTER_TYPE(TopicTypes::Double, WidgetTypes::DoubleDisplay, "Double Display")
 
     REGISTER_TYPE(TopicTypes::String, WidgetTypes::StringDisplay, "Text Display")
-    REGISTER_TYPE(TopicTypes::String, WidgetTypes::EnumWidget, "Enum");
+    REGISTER_TYPE(TopicTypes::String, WidgetTypes::EnumWidget, "Enum")
+
+    REGISTER_TYPE(TopicTypes::Int, WidgetTypes::IntegerDisplay, "Integer Display")
+    REGISTER_TYPE(TopicTypes::Int, WidgetTypes::IntegerDial, "Dial")
 
     REGISTER_TYPE(TopicTypes::SendableChooser, WidgetTypes::SendableChooser, "Sendable Chooser");
+
+#undef REGISTER_TYPE
 
     MainWindow *window = new MainWindow();
 
@@ -79,6 +85,10 @@ int main(int argc, char **argv) {
                 }
                 case nt::NetworkTableType::kDouble: {
                     topicType = TopicTypes::Double;
+                    break;
+                }
+                case nt::NetworkTableType::kInteger: {
+                    topicType = TopicTypes::Int;
                     break;
                 }
                 case nt::NetworkTableType::kString:

@@ -1,7 +1,7 @@
 #ifndef DOUBLEDIALWIDGET_H
 #define DOUBLEDIALWIDGET_H
 
-#include "widgets/NumberDisplayWidget.h"
+#include "widgets/DoubleDisplayWidget.h"
 
 #include <QDial>
 
@@ -12,7 +12,7 @@ class BaseWidget;
  *
  * Due to limitations within QDial, this only supports up to two decimal places.
  */
-class DoubleDialWidget : public NumberDisplayWidget
+class DoubleDialWidget : public DoubleDisplayWidget
 {
     Q_OBJECT
 

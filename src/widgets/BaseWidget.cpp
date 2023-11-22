@@ -7,9 +7,11 @@
 #include "widgets/CameraViewWidget.h"
 #include "widgets/DoubleDialWidget.h"
 #include "widgets/EnumWidget.h"
-#include "widgets/NumberDisplayWidget.h"
+#include "widgets/DoubleDisplayWidget.h"
 #include "widgets/StringChooserWidget.h"
 #include "widgets/StringDisplayWidget.h"
+#include "widgets/IntegerDisplayWidget.h"
+#include "widgets/IntegerDialWidget.h"
 
 #include "misc/WidgetDialogGenerator.h"
 
@@ -134,47 +136,35 @@ QJsonObject BaseWidget::saveObject() {
 std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int tabIdx) {
     WidgetTypes widgetType = (WidgetTypes) obj.value("widgetType").toInt();
 
-    BaseWidget *widget;
+    BaseWidget *baseWidget;
 
-    switch (widgetType) {
-    case WidgetTypes::BooleanCheckbox: {
-        widget = BooleanCheckboxWidget::fromJson(obj);
-        break;
-    }
-    case WidgetTypes::BooleanDisplay: {
-        widget = BooleanDisplayWidget::fromJson(obj);
-        break;
-    }
-    case WidgetTypes::DoubleDisplay: {
-        widget = NumberDisplayWidget::fromJson(obj);
-        break;
-    }
-    case WidgetTypes::DoubleDial: {
-        widget = DoubleDialWidget::fromJson(obj);
-        break;
-    }
-    case WidgetTypes::SendableChooser: {
-        widget = StringChooserWidget::fromJson(obj);
-        break;
-    }
-    case WidgetTypes::CameraView: {
-        widget = CameraViewWidget::fromJson(obj);
-        break;
-    }
-    case WidgetTypes::EnumWidget: {
-        widget = EnumWidget::fromJson(obj);
-        break;
-    }
-    case WidgetTypes::StringDisplay:
-    default: {
-        widget = StringDisplayWidget::fromJson(obj);
-        break;
-    }
-    } // switch
+#define REGISTER_WIDGET_TYPE(type, widget) if (widgetType == type) baseWidget = widget::fromJson(obj); else
+
+    REGISTER_WIDGET_TYPE(WidgetTypes::BooleanCheckbox, BooleanCheckboxWidget)
+    REGISTER_WIDGET_TYPE(WidgetTypes::BooleanDisplay, BooleanDisplayWidget)
+
+    REGISTER_WIDGET_TYPE(WidgetTypes::DoubleDisplay, DoubleDisplayWidget)
+    REGISTER_WIDGET_TYPE(WidgetTypes::DoubleDial, DoubleDialWidget)
+
+    REGISTER_WIDGET_TYPE(WidgetTypes::SendableChooser, StringChooserWidget)
+
+    REGISTER_WIDGET_TYPE(WidgetTypes::CameraView, CameraViewWidget)
+
+    REGISTER_WIDGET_TYPE(WidgetTypes::EnumWidget, EnumWidget)
+
+    REGISTER_WIDGET_TYPE(WidgetTypes::IntegerDisplay, IntegerDisplayWidget)
+    REGISTER_WIDGET_TYPE(WidgetTypes::IntegerDial, IntegerDialWidget)
+
+    // implicit-condition: StringDisplay
+    { // else
+        baseWidget = StringDisplayWidget::fromJson(obj);
+    } // else
+
+#undef REGISTER_WIDGET_TYPE
 
     QFont titleFont;
     titleFont.fromString(obj.value("titleFont").toString(qApp->font().toString()));
-    widget->setTitleFont(titleFont);
+    baseWidget->setTitleFont(titleFont);
 
     QJsonArray geometry = obj.value("geometry").toArray({});
     WidgetData data;
@@ -184,7 +174,7 @@ std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int ta
     data.rowSpan = geometry.at(2).toInt(1);
     data.colSpan = geometry.at(3).toInt(1);
 
-    return std::make_pair(widget, data);
+    return std::make_pair(baseWidget, data);
 }
 
 BaseWidget *BaseWidget::defaultWidgetFromTopic(QString ntTopic, WidgetTypes type) {
