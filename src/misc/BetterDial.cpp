@@ -104,18 +104,22 @@ void BetterDial::paintEvent(QPaintEvent *event) {
 
 void BetterDial::mousePressEvent(QMouseEvent *event) {
     QWidget::mousePressEvent(event);
+
     if (event->buttons() & Qt::LeftButton) {
         setValue(valueFromPoint(event->position()));
         emit sliderMoved(m_value);
+
         m_isDragging = true;
     }
 }
 
 void BetterDial::mouseMoveEvent(QMouseEvent *event) {
     QWidget::mousePressEvent(event);
+
     if (event->buttons() & Qt::LeftButton) {
         setValue(valueFromPoint(event->position()));
         emit sliderMoved(m_value);
+
         m_isDragging = true;
     }
 }

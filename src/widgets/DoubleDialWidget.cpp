@@ -64,13 +64,12 @@ QJsonObject DoubleDialWidget::saveObject() {
     return object;
 }
 
-void DoubleDialWidget::update() {
+void DoubleDialWidget::setValue(nt::Value value) {
     if (!m_text->hasFocus()) {
-        double value = m_entry->GetDouble(m_value);
+        m_value = value.GetDouble();
 
-        m_value = value;
-        m_fakeValue = value * 100;
-        setText(QString::number(value));
+        m_fakeValue = m_value * 100;
+        setText(QString::number(m_value));
 
         if (!m_dial->isDragging()) m_dial->setValue(m_fakeValue);
     }

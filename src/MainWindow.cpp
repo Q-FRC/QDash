@@ -128,41 +128,6 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow() {}
 
-void MainWindow::update()
-{
-
-    QMapIterator<BaseWidget *, WidgetData> iterator(m_widgets);
-
-    while (iterator.hasNext())
-    {
-        iterator.next();
-
-        iterator.key()->update();
-        if (m_needsRelay) {
-            WidgetData data = iterator.value();
-            TabWidget *tabWidget = m_tabWidgets.at(data.tabIdx);
-
-            if (tabWidget != nullptr) {
-                tabWidget->layout()->removeWidget(iterator.key());
-                tabWidget->layout()->addWidget(iterator.key(), data.row, data.col, data.rowSpan, data.colSpan);
-
-                for (int i = 0; i < data.row + data.rowSpan; ++i) {
-                    tabWidget->layout()->setRowStretch(i, 1);
-                }
-
-                for (int i = 0; i < data.col + data.colSpan; ++i) {
-                    tabWidget->layout()->setColumnStretch(i, 1);
-                }
-            }
-        }
-    }
-    m_needsRelay = false;
-
-    repaint();
-
-    setWindowTitle("QFRCDashboard (" + QString::fromStdString(Globals::server.server) + ") - " + (Globals::inst.IsConnected() ? "" : "Not ") + "Connected");
-}
-
 /* File I/O */
 
 QJsonDocument MainWindow::saveObject() {
@@ -247,7 +212,8 @@ void MainWindow::loadObject(const QJsonDocument &doc) {
             m_widgets.insert(widget, data);
         } // widgets
     } // tabs
-    setNeedsRelay(true);
+
+    relay();
 }
 
 /* Private Member Functions */
@@ -278,12 +244,12 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
 
             widget->setTitle(widgetPressed->title());
 
-            setNeedsRelay(true);
+            relay();
         });
 
         connect(widgetPressed, &BaseWidget::deleteRequested, this, [this, widgetPressed] {
             m_widgets.remove(widgetPressed);
-            setNeedsRelay(true);
+            relay();
 
             delete widgetPressed;
         });
@@ -308,16 +274,39 @@ QMap<BaseWidget *, WidgetData> MainWindow::widgetsForTab(int tabIdx) {
     return map;
 }
 
-void MainWindow::setNeedsRelay(bool needsRelay) {
-    m_needsRelay = needsRelay;
+void MainWindow::relay() {
+    QMapIterator<BaseWidget *, WidgetData> iterator(m_widgets);
+
+    while (iterator.hasNext())
+    {
+        iterator.next();
+
+        WidgetData data = iterator.value();
+        TabWidget *tabWidget = m_tabWidgets.at(data.tabIdx);
+
+        if (tabWidget != nullptr) {
+            tabWidget->layout()->removeWidget(iterator.key());
+            tabWidget->layout()->addWidget(iterator.key(), data.row, data.col, data.rowSpan, data.colSpan);
+
+            for (int i = 0; i < data.row + data.rowSpan; ++i) {
+                tabWidget->layout()->setRowStretch(i, 1);
+            }
+
+            for (int i = 0; i < data.col + data.colSpan; ++i) {
+                tabWidget->layout()->setColumnStretch(i, 1);
+            }
+        }
+    }
+
+    repaint();
+
+    setWindowTitle("QFRCDashboard (" + QString::fromStdString(Globals::server.server) + ") - " + (Globals::inst.IsConnected() ? "" : "Not ") + "Connected");
 }
 
 /* Slots */
 void MainWindow::newWidget(BaseWidget *widget, WidgetData data) {
     data.tabIdx = m_centralWidget->currentIndex();
     m_widgets.insert(widget, data);
-
-    m_needsRelay = true;
 }
 
 // NT Settings

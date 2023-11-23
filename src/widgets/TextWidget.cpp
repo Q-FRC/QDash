@@ -57,7 +57,3 @@ QJsonObject TextWidget::saveObject() {
 
     return object;
 }
-
-void TextWidget::update() {
-
-}

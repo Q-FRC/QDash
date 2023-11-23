@@ -17,8 +17,8 @@ public:
     DoubleDisplayWidget(const QString &title, const double &defaultValue, const QString &topic);
     ~DoubleDisplayWidget();
 
+    void setValue(nt::Value value) override;
+
     QJsonObject saveObject() override;
     static BaseWidget * fromJson(QJsonObject obj);
-
-    void update() override;
 };

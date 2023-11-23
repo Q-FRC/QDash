@@ -15,8 +15,8 @@ public:
     StringDisplayWidget(const QString &title, const QString &defaultValue, const QString &topic);
     ~StringDisplayWidget();
 
+    void setValue(nt::Value value) override;
+
     QJsonObject saveObject() override;
     static BaseWidget * fromJson(QJsonObject obj);
-
-    void update();
 };

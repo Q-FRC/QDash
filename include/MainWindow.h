@@ -45,14 +45,13 @@ private:
 
     void mousePressEvent(QMouseEvent *event);
 
-    QMap<BaseWidget *, WidgetData> widgetsForTab(int tabIdx);    
+    QMap<BaseWidget *, WidgetData> widgetsForTab(int tabIdx);
 
-    void setNeedsRelay(bool needsRelay);
+    void relay();
     WidgetData getWidgetData(BaseWidget *widget);
 public:
     MainWindow();
     virtual ~MainWindow();
-    void update();
 
     // File I/O
     QJsonDocument saveObject();

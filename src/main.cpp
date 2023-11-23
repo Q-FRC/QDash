@@ -89,21 +89,12 @@ int main(int argc, char **argv) {
 
         if (event.Is(nt::EventFlags::kPublish)) {
             Globals::ntTopics.append(QString::fromStdString(topicName));
+            FilterStore::filterTopics();
         } else if (event.Is(nt::EventFlags::kUnpublish)) {
             Globals::ntTopics.removeOne(QString::fromStdString(topicName));
+            FilterStore::filterTopics();
         }
     });
-
-    // TODO: configurable timings
-    QTimer *filterTimer = new QTimer(window);
-    QObject::connect(filterTimer, &QTimer::timeout, window, &FilterStore::filterTopics);
-    filterTimer->start(1000);
-
-    QTimer *timer = new QTimer(window);
-    QObject::connect(timer, &QTimer::timeout, window, [window]() {
-        window->update();
-    });
-    timer->start(100);
 
     return app.exec();
 }

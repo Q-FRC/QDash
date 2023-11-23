@@ -63,10 +63,8 @@ BaseWidget * EnumWidget::fromJson(QJsonObject obj) {
     return widget;
 }
 
-void EnumWidget::update() {
-    std::string value = m_entry->GetString(m_value.toStdString());
-
-    m_value = QString::fromStdString(value);
+void EnumWidget::setValue(nt::Value value) {
+    m_value = QString::fromStdString(std::string(value.GetString()));
 
     if (m_colors.contains(m_value)) m_colorWidget->setColor(m_colors.value(m_value).value<QColor>());
 }

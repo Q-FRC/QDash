@@ -13,12 +13,10 @@ IntegerDisplayWidget::~IntegerDisplayWidget() {
     TopicStore::unsubscribe(m_entry, this);
 }
 
-void IntegerDisplayWidget::update() {
+void IntegerDisplayWidget::setValue(nt::Value value) {
     if (!m_text->hasFocus()) {
-        int value = m_entry->GetInteger(m_value);
-
-        m_value = value;
-        setText(QString::number(value));
+        m_value = value.GetInteger();
+        setText(QString::number(m_value));
     }
 }
 

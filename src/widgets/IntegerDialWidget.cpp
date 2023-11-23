@@ -17,6 +17,7 @@ IntegerDialWidget::IntegerDialWidget(const QString &title, const int &defaultVal
 
     connect(m_dial, &BetterDial::sliderMoved, this, [this](int position) {
         m_entry->SetInteger(position);
+        m_value = position;
         m_text->setText(QString::number(position));
     });
 }
@@ -62,12 +63,10 @@ QJsonObject IntegerDialWidget::saveObject() {
     return object;
 }
 
-void IntegerDialWidget::update() {
+void IntegerDialWidget::setValue(nt::Value value) {
     if (!m_text->hasFocus()) {
-        int value = m_entry->GetInteger(m_value);
-
-        m_value = value;
-        setText(QString::number(value));
+        m_value = value.GetInteger();
+        setText(QString::number(m_value));
 
         if (!m_dial->isDragging()) m_dial->setValue(m_value);
     }

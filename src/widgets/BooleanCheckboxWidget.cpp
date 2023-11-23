@@ -53,10 +53,8 @@ BaseWidget * BooleanCheckboxWidget::fromJson(QJsonObject obj) {
     return widget;
 }
 
-void BooleanCheckboxWidget::update() {
-    bool value = m_entry->GetBoolean(m_value);
+void BooleanCheckboxWidget::setValue(nt::Value value) {
+    m_value = value.GetBoolean();
 
-    m_value = value;
-
-    m_checkbox->setCheckState(value ? Qt::Checked : Qt::Unchecked);
+    m_checkbox->setCheckState(m_value ? Qt::Checked : Qt::Unchecked);
 }

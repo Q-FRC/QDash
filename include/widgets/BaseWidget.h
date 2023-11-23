@@ -37,11 +37,11 @@ public:
 
     virtual QMenu *constructContextMenu(WidgetData data);
 
+    virtual void setValue(nt::Value value);
+
     void paintEvent(QPaintEvent *event);
 
     virtual QJsonObject saveObject();
-
-    virtual void update() {}
 
     static std::pair<BaseWidget *, WidgetData> fromJson(QJsonObject obj, int tabIdx);
     static BaseWidget *defaultWidgetFromTopic(QString ntTopic, WidgetTypes type);

@@ -46,10 +46,10 @@ public:
     // input degrees
     void setStartingAngle(double angle);
 
+    void setValue(nt::Value value) override;
+
     QJsonObject saveObject() override;
     static BaseWidget * fromJson(QJsonObject obj);
-
-    void update() override;
 };
 
 #endif // DOUBLEDIALWIDGET_H
