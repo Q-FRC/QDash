@@ -1,6 +1,29 @@
 # QFRCDashboard
 A reliable, high-performance, low-footprint dashboard for use with FRC.
 
+## Lightweight
+Dashboards don't have to be resource hogs. In fact, dashboards should be designed to take up as little resources as possible. Dashboards that use up resources like nobody's business will cause **packet loss** and **comms issues** when run on driver stations!
+
+Because of this, QFRCDashboard has been specifically designed to use up as little resources as possible. Compared to WPILib's Shuffleboard (measured on a ThinkPad X220--percentages include all CPU cores):
+
+| Metric            | Shuffleboard  | QFRCDashboard |
+| ----------------- | ------------- | ------------- |
+| Memory (Base)     | 530MB         | <200MB        |
+| Memory (Heavy Use)| 600MB-1.2GB   | 200-250MB     |
+| CPU (Base)        | 2-10%         | 0-1%          |
+| CPU (Heavy Use)   | 10-30%        | 0-3%          |
+
+Network usage has not been tested, but an eye test shows significantly greater network activity with Shuffleboard than QFRCDashboard.
+
+QFRCDashboard excels with its lightweight performance thanks to many factors:
+- The efficiency of C++ and Qt vs. Java and JavaFX
+- No menu that subscribes to every topic at once
+- Shared subscriptions between duplicate topics
+- Widgets only update and repaint when they need to
+- Minimal, deferred repaints
+
+Thanks to these factors, QFRCDashboard is the best choice for a high-performance dashboard with no compromises.
+
 ## Download
 Coming soon. Downloads will be made available via Github Actions and Jenkins for Linux and Windows, and hopefully BSD and MacOS.
 
@@ -10,9 +33,7 @@ Set your NT server URL with the menubar option, create a new tab in the Tab menu
 (Note: row and column numbers are zero-indexed. Row and column spans, however, start from 1.)
 
 ## WIP
-This is very much WIP, don't expect everything to work. Also, I'm not a UI designer, so the final look and feel of the application is absolutely not what you see now. You can check the [todo.md](todo.md) file to see what my next plans are, however be aware that this is not exhaustive. Support for theming (possibly through custom QRCs) will come later.
-
-For now, please feel free to use this and give me feedback via issues, or, if you're brave enough to dive into the realm of unaudited Qt code, make a PR.
+QFRCDashboard is not complete. There are tons of new features, bugfixes, that will be added in up-and-coming releases. In its current state, QFRCDashboard is *completely usable for the average team*.
 
 ## Forking
 Follow the [GPL3](LICENSE) of this project, credit the original project, and make it clear that your application is not QFRCDashboard itself. Cool? Cool.
@@ -26,14 +47,14 @@ If you're at all confused with the code structure, make an issue about it and I 
 Simple CMake, just run
 
 ```bash
-CMake -S . -B build
+cmake -S . -B build
 cd build
 make -j$(nproc)
 ```
 
-I don't know how Windows works with CMake, so compile it however Windows does it.
+Install target will work eventually. :)
 
 ## Miscellaneous Notes
 This is not tested on Windows as I don't have a working Windows installation. Please test and let me know how it works.
 
-This was not created with the intent of looking the best or having the most features. This was created solely to solve the performance and reliability issues of existing solutions, most notably SmartDashboard and Shuffleboard. Feel free to help make it look better, but please don't complain that it doesn't have 3500 themes individually color-coded to every FRC team in existence. :)
+QFRCDashboard is created solely for the purpose of A RELIABLE, LOW-OVERHEAD FRC dashboard. QFRCDashboard is NOT created with eye-candy or intense theming in mind. Contributions and suggestions to theming will be accepted and worked on, but without user request or contribution, QFRCDashboard will see very little updates to theming.

@@ -102,11 +102,16 @@ int main(int argc, char **argv) {
 
         if (event.Is(nt::EventFlags::kPublish)) {
             Globals::ntTopics.append(QString::fromStdString(topicName));
-            FilterStore::filterTopics();
         } else if (event.Is(nt::EventFlags::kUnpublish)) {
             Globals::ntTopics.removeOne(QString::fromStdString(topicName));
-            FilterStore::filterTopics();
         }
+        FilterStore::filterTopics();
+    });
+
+    // if initially connected to localhost, refilter
+    // to ensure sendables are captured
+    QTimer::singleShot(1000, window, [] {
+        if (Globals::inst.IsConnected()) FilterStore::filterTopics();
     });
 
     return app.exec();
