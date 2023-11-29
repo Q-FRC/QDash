@@ -12,6 +12,8 @@
 #include "widgets/StringDisplayWidget.h"
 #include "widgets/IntegerDisplayWidget.h"
 #include "widgets/IntegerDialWidget.h"
+#include "widgets/FieldWidget.h"
+#include "widgets/SendableFieldWidget.h"
 
 #include "misc/WidgetDialogGenerator.h"
 
@@ -113,7 +115,7 @@ QMenu *BaseWidget::constructContextMenu(WidgetData data) {
     return menu;
 }
 
-void BaseWidget::setValue(nt::Value value) {}
+void BaseWidget::setValue(const nt::Value &value) {}
 
 void BaseWidget::paintEvent(QPaintEvent *event) {
     QStyleOption opt;
@@ -156,6 +158,9 @@ std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int ta
 
     REGISTER_WIDGET_TYPE(WidgetTypes::IntegerDisplay, IntegerDisplayWidget)
     REGISTER_WIDGET_TYPE(WidgetTypes::IntegerDial, IntegerDialWidget)
+
+    REGISTER_WIDGET_TYPE(WidgetTypes::Field, FieldWidget)
+    REGISTER_WIDGET_TYPE(WidgetTypes::SendableField, SendableFieldWidget)
 
     // implicit-condition: StringDisplay
     { // else

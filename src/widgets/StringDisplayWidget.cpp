@@ -33,7 +33,7 @@ BaseWidget * StringDisplayWidget::fromJson(QJsonObject obj) {
     return widget;
 }
 
-void StringDisplayWidget::setValue(nt::Value value) {
+void StringDisplayWidget::setValue(const nt::Value &value) {
     if (!m_text->hasFocus()) {
         m_value = QString::fromStdString(std::string(value.GetString()));
         setText(m_value);

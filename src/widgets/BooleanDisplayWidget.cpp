@@ -62,7 +62,7 @@ BaseWidget * BooleanDisplayWidget::fromJson(QJsonObject obj) {
     return widget;
 }
 
-void BooleanDisplayWidget::setValue(nt::Value value) {
+void BooleanDisplayWidget::setValue(const nt::Value &value) {
     m_value = value.GetBoolean();
 
     m_colorWidget->setColor(m_value ? m_trueColor : m_falseColor);

@@ -17,7 +17,7 @@ public:
     IntegerDisplayWidget(const QString &title, const int &defaultValue, const QString &topic);
     ~IntegerDisplayWidget();
 
-    void setValue(nt::Value value) override;
+    void setValue(const nt::Value &value) override;
 
     QJsonObject saveObject() override;
     static BaseWidget * fromJson(QJsonObject obj);

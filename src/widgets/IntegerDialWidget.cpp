@@ -63,7 +63,7 @@ QJsonObject IntegerDialWidget::saveObject() {
     return object;
 }
 
-void IntegerDialWidget::setValue(nt::Value value) {
+void IntegerDialWidget::setValue(const nt::Value &value) {
     if (!m_text->hasFocus()) {
         m_value = value.GetInteger();
         setText(QString::number(m_value));

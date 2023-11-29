@@ -44,6 +44,7 @@ private:
     QString m_filename{};
 
     void mousePressEvent(QMouseEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
     QMap<BaseWidget *, WidgetData> widgetsForTab(int tabIdx);
 
@@ -52,6 +53,8 @@ private:
 public:
     MainWindow();
     virtual ~MainWindow();
+
+    void update();
 
     // File I/O
     QJsonDocument saveObject();

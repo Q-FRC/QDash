@@ -51,7 +51,7 @@ BaseWidget * StringChooserWidget::fromJson(QJsonObject obj) {
         obj.value("topic").toString(""));
 }
 
-void StringChooserWidget::setValue(nt::Value value) {
+void StringChooserWidget::setValue(const nt::Value &value) {
     QString activeValue = m_chooser->currentText();
     std::string activeValueStd = activeValue.toStdString();
 

@@ -6,8 +6,6 @@ BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &title, const bool &d
     m_value = defaultValue;
 
     m_checkbox = new QCheckBox(this);
-    m_checkbox->setObjectName("checkboxWidget");
-
     m_checkbox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     m_checkbox->setStyleSheet("QCheckBox::indicator:unchecked { width: 30px; height: 30px; } QCheckBox::indicator:checked { width: 30px; height: 30px; }");
@@ -53,7 +51,7 @@ BaseWidget * BooleanCheckboxWidget::fromJson(QJsonObject obj) {
     return widget;
 }
 
-void BooleanCheckboxWidget::setValue(nt::Value value) {
+void BooleanCheckboxWidget::setValue(const nt::Value &value) {
     m_value = value.GetBoolean();
 
     m_checkbox->setCheckState(m_value ? Qt::Checked : Qt::Unchecked);

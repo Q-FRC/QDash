@@ -13,7 +13,7 @@ DoubleDisplayWidget::~DoubleDisplayWidget() {
     TopicStore::unsubscribe(m_entry, this);
 }
 
-void DoubleDisplayWidget::setValue(nt::Value value) {
+void DoubleDisplayWidget::setValue(const nt::Value &value) {
     if (!m_text->hasFocus()) {
         m_value = value.GetDouble();
         setText(QString::number(m_value));

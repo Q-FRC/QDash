@@ -13,8 +13,8 @@ find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets MultimediaWidgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets MultimediaWidgets)
 find_package(ntcore REQUIRED)
 
-add_compile_options(-fsanitize=address)
-add_link_options(-fsanitize=address)
+#add_compile_options(-fsanitize=address)
+#add_link_options(-fsanitize=address)
 
 set(PROJECT_SOURCES
         src/main.cpp
@@ -34,12 +34,15 @@ set(PROJECT_SOURCES
         src/widgets/EnumWidget.cpp
         src/widgets/IntegerDisplayWidget.cpp
         src/widgets/IntegerDialWidget.cpp
+        src/widgets/FieldWidget.cpp
+        src/widgets/SendableFieldWidget.cpp
 
         src/misc/NewWidgetTreeDialog.cpp
         src/misc/NTSettingsDialog.cpp
         src/misc/WidgetDialogGenerator.cpp
         src/misc/ShapedFrame.cpp
         src/misc/BetterDial.cpp
+        src/misc/FieldImage.cpp
 
         src/stores/TopicStore.cpp
         src/stores/TypeStore.cpp
@@ -63,12 +66,15 @@ set(PROJECT_SOURCES
         include/widgets/EnumWidget.h
         include/widgets/IntegerDisplayWidget.h
         include/widgets/IntegerDialWidget.h
+        include/widgets/FieldWidget.h
+        include/widgets/SendableFieldWidget.h
 
         include/misc/NewWidgetTreeDialog.h
         include/misc/NTSettingsDialog.h
         include/misc/WidgetDialogGenerator.h
         include/misc/ShapedFrame.h
         include/misc/BetterDial.h
+        include/misc/FieldImage.h
 
         include/stores/TopicStore.h
         include/stores/TypeStore.h
@@ -78,6 +84,7 @@ set(PROJECT_SOURCES
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(QFRCDashboard
         MANUAL_FINALIZATION
+        fields.qrc
         ${PROJECT_SOURCES}
     )
 endif()

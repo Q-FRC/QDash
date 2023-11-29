@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QMetaType>
 #include <QMetaEnum>
+#include <QFile>
 
 // ENUMS //
 enum class WidgetTypes {
@@ -18,7 +19,9 @@ enum class WidgetTypes {
     CameraView = 6,
     EnumWidget = 7,
     IntegerDisplay = 8,
-    IntegerDial = 9
+    IntegerDial = 9,
+    SendableField = 10, // UNUSED BY SAVE/LOAD
+    Field = 11
 };
 
 Q_DECLARE_FLAGS(WidgetType, WidgetTypes);
@@ -26,7 +29,9 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(WidgetType);
 
 enum class TopicTypes {
     SendableChooser,
+    Field2d,
     Double,
+    DoubleArray,
     String,
     Boolean,
     Int
@@ -80,10 +85,16 @@ extern QStringList ntTopics;
 extern WidgetData *defaultWidgetData;
 
 extern QMap<QString, FrameShape> shapeNameMap;
+
+typedef struct {
+    QString fileName;
+} File;
 }
 
+Q_DECLARE_METATYPE(Globals::File)
 
 namespace CustomMetaTypes {
 //static const int FrameShape = QMetaEnum::fromType<Globals::FrameShape>().metaType().id();
 static const int FrameShape = qMetaTypeId<Globals::FrameShape>();
+static const int File = qMetaTypeId<Globals::File>();
 }

@@ -27,7 +27,7 @@ public:
     StringChooserWidget(const QString &title, const QString &defaultValue, const QString &topic);
     ~StringChooserWidget();
 
-    void setValue(nt::Value value) override;
+    void setValue(const nt::Value &value) override;
 
     QJsonObject saveObject() override;
     static BaseWidget * fromJson(QJsonObject obj);

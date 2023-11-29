@@ -19,6 +19,17 @@ int main(int argc, char **argv) {
     app.setOrganizationName("binex-dsk");
     app.setApplicationName("QFRCDashboard");
 
+    MainWindow *window = new MainWindow();
+    window->show();
+
+    Globals::inst.AddConnectionListener(true, [window] (const nt::Event &event) {
+        bool connected = event.Is(nt::EventFlags::kConnected);
+
+        QMetaObject::invokeMethod(window, [window, connected] {
+            window->setWindowTitle("QFRCDashboard (" + QString::fromStdString(Globals::server.server) + ") - " + (connected ? "" : "Not ") + "Connected");
+        });
+    });
+
     Globals::inst.StartClient4("QFRCDashboard");
     Globals::inst.SetServer(Globals::server.server.c_str(), NT_DEFAULT_PORT4);
 
@@ -28,6 +39,7 @@ int main(int argc, char **argv) {
     REGISTER_NT(nt::NetworkTableType::kBoolean, TopicTypes::Boolean)
     REGISTER_NT(nt::NetworkTableType::kString, TopicTypes::String)
     REGISTER_NT(nt::NetworkTableType::kDouble, TopicTypes::Double)
+    REGISTER_NT(nt::NetworkTableType::kDoubleArray, TopicTypes::DoubleArray)
     REGISTER_NT(nt::NetworkTableType::kInteger, TopicTypes::Int)
 
 #undef REGISTER_NT
@@ -36,6 +48,7 @@ int main(int argc, char **argv) {
 #define REGISTER_SENDABLE(typeString, topicType) FilterStore::registerSendable(typeString, topicType);
 
     REGISTER_SENDABLE("String Chooser", TopicTypes::SendableChooser)
+    REGISTER_SENDABLE("Field2d", TopicTypes::Field2d)
 
 #undef REGISTER_SENDABLE
 
@@ -48,6 +61,8 @@ int main(int argc, char **argv) {
     REGISTER_TYPE(TopicTypes::Double, WidgetTypes::DoubleDial, "Dial")
     REGISTER_TYPE(TopicTypes::Double, WidgetTypes::DoubleDisplay, "Double Display")
 
+    REGISTER_TYPE(TopicTypes::DoubleArray, WidgetTypes::Field, "Field2d")
+
     REGISTER_TYPE(TopicTypes::String, WidgetTypes::StringDisplay, "Text Display")
     REGISTER_TYPE(TopicTypes::String, WidgetTypes::EnumWidget, "Enum")
 
@@ -56,11 +71,9 @@ int main(int argc, char **argv) {
 
     REGISTER_TYPE(TopicTypes::SendableChooser, WidgetTypes::SendableChooser, "Sendable Chooser");
 
+    REGISTER_TYPE(TopicTypes::Field2d, WidgetTypes::SendableField, "Field2d");
+
 #undef REGISTER_TYPE
-
-    MainWindow *window = new MainWindow();
-
-    window->show();
 
     QSettings settings(&app);
 

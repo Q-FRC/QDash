@@ -32,7 +32,7 @@ public:
     Globals::FrameShape shape();
     void setShape(Globals::FrameShape shape);
 
-    void setValue(nt::Value value) override;
+    void setValue(const nt::Value &value) override;
 
     QJsonObject saveObject() override;
     static BaseWidget * fromJson(QJsonObject obj);

@@ -37,7 +37,7 @@ public:
 
     virtual QMenu *constructContextMenu(WidgetData data);
 
-    virtual void setValue(nt::Value value);
+    virtual void setValue(const nt::Value &value);
 
     void paintEvent(QPaintEvent *event);
 

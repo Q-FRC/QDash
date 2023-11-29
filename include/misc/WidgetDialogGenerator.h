@@ -59,6 +59,8 @@ public:
     QWidget *bitmapProperty(QMetaProperty property);
     QWidget *imageProperty(QMetaProperty property);
 
+    QWidget *fileProperty(QMetaProperty property);
+
     QWidget *fontProperty(QMetaProperty property);
 
     QWidget *stringProperty(QMetaProperty property);

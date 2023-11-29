@@ -64,7 +64,7 @@ QJsonObject DoubleDialWidget::saveObject() {
     return object;
 }
 
-void DoubleDialWidget::setValue(nt::Value value) {
+void DoubleDialWidget::setValue(const nt::Value &value) {
     if (!m_text->hasFocus()) {
         m_value = value.GetDouble();
 
