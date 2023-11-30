@@ -29,8 +29,10 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
         // ensure thread-safety
         if (value.IsValid())
             QMetaObject::invokeMethod(subscriber, [subscriber, value] {
-                subscriber->setValue(value);
-                subscriber->update();
+                if (subscriber->ready()) {
+                    subscriber->setValue(value);
+                    subscriber->update();
+                }
             }); // QMetaObject and its consequences have been a disaster for the human race
     };
 

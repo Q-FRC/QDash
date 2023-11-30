@@ -20,6 +20,7 @@ IntegerDialWidget::IntegerDialWidget(const QString &title, const int &defaultVal
         m_value = position;
         m_text->setText(QString::number(position));
     });
+    m_ready = true;
 }
 
 IntegerDialWidget::~IntegerDialWidget() {

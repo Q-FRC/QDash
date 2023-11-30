@@ -7,6 +7,7 @@ EnumWidget::EnumWidget(const QString &title, const QString &defaultValue, const 
     m_colorWidget = new ShapedFrame(Globals::FrameShape::Rectangle, this);
 
     m_layout->addWidget(m_colorWidget, 1, 0, 3, 1);
+    m_ready = true;
 }
 
 EnumWidget::~EnumWidget() {

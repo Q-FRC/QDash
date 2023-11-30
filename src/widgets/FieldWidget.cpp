@@ -10,14 +10,15 @@ FieldWidget::FieldWidget(const QString &title, const std::vector<double> &defaul
 {
     m_value = defaultValue;
 
-    if (fromSendable) {
-        setTopic(topic + "/Robot");
-    }
-
     m_imageLabel = new FieldImage(this);
     m_imageLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     m_layout->addWidget(m_imageLabel, 1, 0, 3, 1, Qt::AlignHCenter);
+
+    if (fromSendable) {
+        setTopic(topic + "/Robot");
+    }
+    m_ready = true;
 }
 
 FieldWidget::~FieldWidget() {}

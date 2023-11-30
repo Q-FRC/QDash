@@ -7,6 +7,7 @@
 DoubleDisplayWidget::DoubleDisplayWidget(const QString &title, const double &defaultValue, const QString &topic) : TextWidget(WidgetTypes::DoubleDisplay, title, QString::number(defaultValue), topic)
 {
     m_value = defaultValue;
+    m_ready = true;
 }
 
 DoubleDisplayWidget::~DoubleDisplayWidget() {

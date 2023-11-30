@@ -7,6 +7,7 @@
 IntegerDisplayWidget::IntegerDisplayWidget(const QString &title, const int &defaultValue, const QString &topic) : TextWidget(WidgetTypes::IntegerDisplay, title, QString::number(defaultValue), topic)
 {
     m_value = defaultValue;
+    m_ready = true;
 }
 
 IntegerDisplayWidget::~IntegerDisplayWidget() {

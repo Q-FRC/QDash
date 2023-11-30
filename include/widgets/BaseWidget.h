@@ -20,11 +20,15 @@ protected:
     QGridLayout *m_layout;
 
     QLineEdit *m_title;
+    bool m_ready = false;
 
     nt::NetworkTableEntry *m_entry;
 public:
     BaseWidget(const WidgetTypes &type, const QString &title, const QString &topic);
     ~BaseWidget();
+
+    bool ready();
+    void setReady(bool ready);
 
     QFont titleFont();
     void setTitleFont(const QFont &font);

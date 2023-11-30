@@ -28,6 +28,7 @@ StringChooserWidget::StringChooserWidget(const QString &title, const QString &de
     m_layout->addWidget(m_chooser, 1, 0);
 
     m_layout->setColumnStretch(0, -1);
+    m_ready = true;
 }
 
 StringChooserWidget::~StringChooserWidget() {

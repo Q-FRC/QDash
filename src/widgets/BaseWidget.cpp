@@ -50,6 +50,14 @@ BaseWidget::~BaseWidget() {
     TopicStore::unsubscribe(m_entry, this);
 }
 
+bool BaseWidget::ready() {
+    return m_ready;
+}
+
+void BaseWidget::setReady(bool ready) {
+    m_ready = ready;
+}
+
 QFont BaseWidget::titleFont()
 {
     return m_title->font();
