@@ -84,7 +84,7 @@ set(PROJECT_SOURCES
 )
 
 if(WIN32)
-    set(RCS_FILE ${CMAKE_CURRENT_SOURCE_DIR}/QFRCDashboard.rc)
+    set(RCS_FILE ${CMAKE_CURRENT_BINARY_DIR}/QFRCDashboard.rc)
 endif()
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -107,6 +107,8 @@ install(TARGETS QFRCDashboard
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+set(Dashboard_VERSION "1.0.0-beta3")
+
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(QFRCDashboard)
 endif()
@@ -115,3 +117,6 @@ if(UNIX AND NOT(APPLE))
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/QFRCDashboard.desktop DESTINATION "share/applications")
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/QFRCDashboard.svg DESTINATION "share/icons/hicolor/scalable/apps")
 endif()
+
+configure_file(QFRCDashboard.rc.in QFRCDashboard.rc)
+configure_file(QFRCDashboard.manifest.in QFRCDashboard.manifest)

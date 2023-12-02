@@ -508,7 +508,7 @@ void MainWindow::newCameraView() {
 //  Menu
 void MainWindow::aboutDialog() {
     QStringList aboutString;
-    aboutString << "Current Version: 0.9.0"
+    aboutString << "Current Version: 1.0.0-beta3"
                 << "GitHub: https://github.com/binex-dsk/QFRCDashboard"
                 << "Author: Carson Rueter <swurl@swurl.xyz>"
                 << "Contributors: Ashley Hawkins"
