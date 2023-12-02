@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     MainWindow *window = new MainWindow();
     window->show();
 
-    Globals::inst.AddConnectionListener(true, [window, timer] (const nt::Event &event) {
+    Globals::inst.AddConnectionListener(true, [window] (const nt::Event &event) {
         bool connected = event.Is(nt::EventFlags::kConnected);
 
         QMetaObject::invokeMethod(window, [window, connected] {
