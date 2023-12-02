@@ -120,3 +120,4 @@ endif()
 
 configure_file(QFRCDashboard.rc.in QFRCDashboard.rc)
 configure_file(QFRCDashboard.manifest.in QFRCDashboard.manifest)
+configure_file(QFRCDashboard.ico QFRCDashboard.ico COPYONLY)
