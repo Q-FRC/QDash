@@ -108,6 +108,7 @@ install(TARGETS QFRCDashboard
 )
 
 set(Dashboard_VERSION "1.0.0-beta3")
+set(Dashboard_VERSION_NUMBER "1.0.0.3")
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(QFRCDashboard)

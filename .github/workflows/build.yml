@@ -3,11 +3,6 @@
 name: CMake on multiple platforms
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
   workflow_call:
     inputs:
       build_type:
