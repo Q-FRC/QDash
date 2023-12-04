@@ -1,4 +1,4 @@
-# QFRCDashboard
+![QFRCDashboard](QFRCDashboard-display.png "QFRCDashboard")
 A reliable, high-performance, low-footprint dashboard for use with FRC.
 
 ## Lightweight
