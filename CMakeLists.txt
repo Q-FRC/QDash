@@ -95,6 +95,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         fields.qrc
         ${RCS_FILE}
         ${PROJECT_SOURCES}
+
     )
 endif()
 

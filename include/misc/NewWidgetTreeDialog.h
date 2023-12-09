@@ -23,16 +23,13 @@ private:
     QMap<QString, QTreeWidgetItem *> m_itemTableMap;
 
     void constructList();
-    QAction *createWidgetAction(const QString &text, const QString &ntTopic, const WidgetTypes &widgetType);
     void createTreeIfNotExists(QString topicName, TopicTypes type);
 
     QString getParentPath(QTreeWidgetItem *item);
 public:
     explicit NewWidgetTreeDialog(QWidget *parent = nullptr);
     virtual ~NewWidgetTreeDialog();
-
-    void showNewWidgetDialog(WidgetTypes widgetType, std::string ntTopic);
-
+    
     void keyPressEvent(QKeyEvent *event);
 
 public slots:

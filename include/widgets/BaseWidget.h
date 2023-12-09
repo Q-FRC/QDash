@@ -3,13 +3,24 @@
 #include "networktables/NetworkTableEntry.h"
 #include "Globals.h"
 
-#include <QWidget>
+#include <QFrame>
 #include <QLabel>
 #include <QGridLayout>
 #include <QLineEdit>
 #include <QJsonObject>
 
-class BaseWidget : public QWidget
+enum ResizeFlags {
+    NONE = 0,
+    TOP = 1 << 0,
+    BOTTOM = 1 << 1,
+    RIGHT = 1 << 2,
+    LEFT = 1 << 3
+};
+
+Q_DECLARE_FLAGS(ResizeDirection, ResizeFlags)
+Q_DECLARE_OPERATORS_FOR_FLAGS(ResizeDirection)
+
+class BaseWidget : public QFrame
 {
     Q_OBJECT
 
@@ -21,6 +32,8 @@ protected:
 
     QLineEdit *m_title;
     bool m_ready = false;
+
+    ResizeDirection m_resize = NONE;
 
     nt::NetworkTableEntry *m_entry;
 public:
@@ -38,6 +51,9 @@ public:
 
     QString topic();
     virtual void setTopic(const QString &topic);
+
+    ResizeDirection resizing();
+    void setResizing(ResizeDirection direction);
 
     virtual QMenu *constructContextMenu(WidgetData data);
 
@@ -75,4 +91,7 @@ private:
     QJsonValue writeFontProperty(const QMetaProperty &property);
     QJsonValue writeStringProperty(const QMetaProperty &property);
     QJsonValue writeShapeProperty(const QMetaProperty &property);
+
+    void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event);
 };

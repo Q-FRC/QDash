@@ -1,7 +1,5 @@
 #include "misc/NewWidgetTreeDialog.h"
 
-#include "misc/WidgetDialogGenerator.h"
-
 #include "stores/TypeStore.h"
 #include "stores/FilterStore.h"
 
@@ -35,7 +33,6 @@ NewWidgetTreeDialog::NewWidgetTreeDialog(QWidget *parent) : QDialog(parent)
     constructList();
 
     connect(Globals::typeStore, &TypeStore::widgetReady, this, &NewWidgetTreeDialog::emitWidget);
-    connect(Globals::typeStore, &TypeStore::dialogShown, this, &QDialog::close);
 }
 
 NewWidgetTreeDialog::~NewWidgetTreeDialog() {}
@@ -145,27 +142,7 @@ void NewWidgetTreeDialog::keyPressEvent(QKeyEvent *event) {
     QDialog::keyPressEvent(event);
 }
 
-QAction *NewWidgetTreeDialog::createWidgetAction(const QString &text, const QString &ntTopic, const WidgetTypes &widgetType) {
-    QAction *action = new QAction(text, this);
-
-    connect(action, &QAction::triggered, this, [this, text, ntTopic, widgetType](bool) {
-        showNewWidgetDialog(widgetType, ntTopic.toStdString());
-    });
-
-    return action;
-}
-
-void NewWidgetTreeDialog::showNewWidgetDialog(WidgetTypes widgetType, std::string ntTopic) {
-    auto widget = BaseWidget::defaultWidgetFromTopic(QString::fromStdString(ntTopic), widgetType);
-
-    WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget, this->parentWidget());
-    dialog->setWindowTitle("New Widget");
-    dialog->show();
-
-    connect(dialog, &WidgetDialogGenerator::widgetReady, this, &NewWidgetTreeDialog::emitWidget);
-    close();
-}
-
 void NewWidgetTreeDialog::emitWidget(BaseWidget *widget, WidgetData data) {
     emit widgetReady(widget, data);
+    close();
 }

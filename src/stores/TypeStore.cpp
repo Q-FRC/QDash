@@ -1,5 +1,4 @@
 #include "stores/TypeStore.h"
-#include "misc/WidgetDialogGenerator.h"
 #include "widgets/BaseWidget.h"
 
 #include <QMenu>
@@ -24,14 +23,7 @@ QList<QAction *> TypeStore::generateActionsForType(TopicTypes type, std::string 
         connect(action, &QAction::triggered, action, [this, type, widgetType, displayName, ntTopic] {
             auto widget = BaseWidget::defaultWidgetFromTopic(QString::fromStdString(ntTopic), widgetType);
 
-            WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget, (QWidget *) this->parent());
-            dialog->setWindowTitle("New " + displayName + " Widget");
-
-            dialog->show();
-
-            emit dialogShown();
-
-            connect(dialog, &WidgetDialogGenerator::widgetReady, this, &TypeStore::emitWidget);
+            emit widgetReady(widget, WidgetData{0, 0, 0, 1, 1});
         });
 
         actions.append(action);

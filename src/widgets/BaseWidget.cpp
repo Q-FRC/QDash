@@ -23,6 +23,7 @@
 #include <QPainter>
 #include <QJsonArray>
 #include <QApplication>
+#include <QMouseEvent>
 
 BaseWidget::BaseWidget(const WidgetTypes &type, const QString &title, const QString &topic)
     : m_entry(TopicStore::subscribe(topic.toStdString(), this))
@@ -34,8 +35,11 @@ BaseWidget::BaseWidget(const WidgetTypes &type, const QString &title, const QStr
 
     m_layout->addWidget(m_title, 0, 0);
 
-    setStyleSheet("BaseWidget { background-color: black; border: 1px solid white; color: white; }");
+    setStyleSheet("BaseWidget { background-color: " + qApp->palette().color(QPalette::ColorRole::Base).darker(150).name() + "; border: 1px solid white; color: white; }");
     m_title->setStyleSheet("QLineEdit { border: none; border-bottom: 2px solid white; }");
+
+    this->setFrameShape(QFrame::Panel);
+    this->setFrameShadow(QFrame::Raised);
 
     QFont titleFont = this->titleFont();
     titleFont.setBold(true);
@@ -44,6 +48,8 @@ BaseWidget::BaseWidget(const WidgetTypes &type, const QString &title, const QStr
     m_title->setAlignment(Qt::AlignHCenter);
 
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setMouseTracking(true);
+    setContentsMargins(5, 5, 5, 5);
 }
 
 BaseWidget::~BaseWidget() {
@@ -87,6 +93,14 @@ void BaseWidget::setTopic(const QString &topic)
 {
     TopicStore::unsubscribe(m_entry, this);
     m_entry = TopicStore::subscribe(topic.toStdString(), this);
+}
+
+ResizeDirection BaseWidget::resizing() {
+    return m_resize;
+}
+
+void BaseWidget::setResizing(ResizeDirection direction) {
+    m_resize = direction;
 }
 
 QMenu *BaseWidget::constructContextMenu(WidgetData data) {
@@ -341,4 +355,65 @@ QJsonValue BaseWidget::writeStringProperty(const QMetaProperty &property) {
 
 QJsonValue BaseWidget::writeShapeProperty(const QMetaProperty &property) {
     return QJsonValue(Globals::shapeNameMap.key(property.read(this).value<Globals::FrameShape>()));
+}
+
+void BaseWidget::mouseMoveEvent(QMouseEvent *event) {
+    QRect rect = this->rect();
+    QRect left(rect.topLeft(), rect.bottomLeft());
+    QRect right(rect.topRight(), rect.bottomRight());
+    QRect top(rect.topRight(), rect.topLeft());
+    QRect bottom(rect.bottomRight(), rect.bottomLeft());
+
+    QRect pointerRect = QRect(event->position().toPoint() - QPoint(10, 10), QSize(20, 20));
+
+    QCursor qcursor;
+    Qt::CursorShape shape = Qt::SizeAllCursor;
+
+    ResizeDirection direction = NONE;
+
+#define ONE_EDGE(edge, edgeDirection) if (edge.intersects(pointerRect)) { direction |= edgeDirection; }
+
+    ONE_EDGE(left, LEFT)
+    ONE_EDGE(right, RIGHT)
+    ONE_EDGE(top, TOP)
+    ONE_EDGE(bottom, BOTTOM)
+
+#undef ONE_EDGE
+
+    switch (direction) {
+    case LEFT:
+    case RIGHT:
+        shape = Qt::SizeHorCursor;
+        break;
+    case TOP:
+    case BOTTOM:
+        shape = Qt::SizeVerCursor;
+        break;
+    case TOP | RIGHT:
+    case BOTTOM | LEFT:
+        shape = Qt::SizeBDiagCursor;
+        break;
+    case TOP | LEFT:
+    case BOTTOM | RIGHT: {
+        shape = Qt::SizeFDiagCursor;
+        break;
+    }
+    default: {}
+    }
+
+    if (shape != qcursor.shape()) {
+        m_resize = direction;
+        qcursor.setShape(shape);
+        setCursor(qcursor);
+    } else {
+        m_resize = NONE;
+    }
+
+    event->ignore();
+}
+
+void BaseWidget::mousePressEvent(QMouseEvent *event) {
+    QWidget::mousePressEvent(event);
+    mouseMoveEvent(event);
+    event->ignore();
 }

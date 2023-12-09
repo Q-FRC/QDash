@@ -10,6 +10,8 @@ private:
     int m_min;
     int m_max;
 
+    int m_radius;
+
     int m_value;
 
     double m_start;

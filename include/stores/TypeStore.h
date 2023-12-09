@@ -27,7 +27,6 @@ public slots:
     void emitWidget(BaseWidget *widget, WidgetData data);
 signals:
     void widgetReady(BaseWidget *widget, WidgetData data);
-    void dialogShown();
 };
 
 #endif // TYPESTORE_H

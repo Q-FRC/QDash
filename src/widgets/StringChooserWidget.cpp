@@ -2,6 +2,8 @@
 #include "Globals.h"
 #include "stores/TopicStore.h"
 
+#include <QApplication>
+
 StringChooserWidget::StringChooserWidget(const QString &topic, const QString &defaultValue, const QString &title) : BaseWidget(WidgetTypes::SendableChooser, title, topic),
     m_active(TopicStore::subscribe(topic.toStdString() + "/active", this)),
     m_default(TopicStore::subscribe(topic.toStdString() + "/default", this)),
@@ -65,13 +67,13 @@ void StringChooserWidget::setValue(const nt::Value &value) {
         }
 
         if (m_flashCounter == 10) {
-            setStyleSheet("BaseWidget { background-color: black; border: 1px solid white; color: white; }");
+            setStyleSheet("BaseWidget { background-color: " + qApp->palette().color(QPalette::ColorRole::Base).darker(150).name() + "; border: 1px solid white; color: white; }");
             m_flashCounter = -1;
         }
 
         ++m_flashCounter;
     } else {
-        setStyleSheet("BaseWidget { background-color: black; border: 1px solid white; color: white; }");
+        setStyleSheet("BaseWidget { background-color: " + qApp->palette().color(QPalette::ColorRole::Base).darker(150).name() + "; border: 1px solid white; color: white; }");
     }
 
     // this is an interesting way to do things

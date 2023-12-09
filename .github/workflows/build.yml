@@ -164,7 +164,7 @@ jobs:
     runs-on: windows-2022
 
     env:
-      VERSION: "0.9.0"
+      VERSION: "1.0.0"
       BUILD_WIN_DIR: "winbuild"
       INSTALL_WIN_DIR: "install-win"
       NTCORE_INSTALL_DIR: "install-ntcore"

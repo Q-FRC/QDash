@@ -36,10 +36,16 @@ void FieldImage::paintEvent(QPaintEvent *event) {
     int w = event->rect().width();
     int h = event->rect().height() * 4. / 5.;
 
-    setPixmap(pixmap().scaled(w, h, Qt::KeepAspectRatio));
+    QPixmap pixmap = this->pixmap();
+    QPixmap pixmap2 = pixmap.scaled(w, h, Qt::KeepAspectRatio);
 
-    m_imageWidth = pixmap().width();
-    m_imageHeight = pixmap().height();
+    if (pixmap.width() != pixmap2.width() || pixmap.height() != pixmap2.height()) {
+        pixmap = pixmap.scaled(w, h, Qt::KeepAspectRatio);
+        setPixmap(pixmap);
+    }
+
+    m_imageWidth = pixmap.width();
+    m_imageHeight = pixmap.height();
 
     if (m_value.size() < 3) return;
 

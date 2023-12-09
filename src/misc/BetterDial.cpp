@@ -14,6 +14,8 @@ BetterDial::BetterDial(QWidget *parent)
     setMin(0);
     setMax(10);
     setStartingAngle(0.);
+
+    removeEventFilter(parent);
 }
 
 int BetterDial::min() {
@@ -63,6 +65,8 @@ void BetterDial::paintEvent(QPaintEvent *event) {
     int diameter = qMin(rect.width(), rect.height());
     int radius = diameter / 2;
 
+    m_radius = radius;
+
     // Background Circle
     painter.setBrush(QBrush(Qt::white));
 
@@ -105,26 +109,35 @@ void BetterDial::paintEvent(QPaintEvent *event) {
 void BetterDial::mousePressEvent(QMouseEvent *event) {
     QWidget::mousePressEvent(event);
 
+    if (std::abs((event->pos() - rect().center()).manhattanLength()) >= m_radius) return event->ignore();
+
     if (event->buttons() & Qt::LeftButton) {
         setValue(valueFromPoint(event->position()));
         emit sliderMoved(m_value);
 
         m_isDragging = true;
+        event->accept();
     }
 }
 
 void BetterDial::mouseMoveEvent(QMouseEvent *event) {
     QWidget::mousePressEvent(event);
 
+    if (std::abs((event->pos() - rect().center()).manhattanLength()) >= m_radius) return event->ignore();
+
     if (event->buttons() & Qt::LeftButton) {
         setValue(valueFromPoint(event->position()));
         emit sliderMoved(m_value);
 
         m_isDragging = true;
+
+        event->accept();
     }
 }
 
 void BetterDial::mouseReleaseEvent(QMouseEvent *event) {
+    if (std::abs((event->pos() - rect().center()).manhattanLength()) >= m_radius) return event->ignore();
+
     m_isDragging = false;
 }
 
