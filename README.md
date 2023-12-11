@@ -34,7 +34,7 @@ Development/debug builds are also available on a per-commit basis. These builds 
 [![Debug](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_builds.yml/badge.svg)](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_builds.yml)
 
 ## Usage Guide
-Set your NT server URL with the menubar option, create a new tab in the Tab menu, and add a widget using the New Widget menu option. Save and load layouts with the File menu, and resize and edit widgets as desired by right-clicking and selecting Resize, Delete, etc.
+Set your NT server URL with the menubar option, create a new tab in the Tab menu, and add a widget using the New Widget menu option. Save and load layouts with the File menu, and resize and edit widgets as desired by right-clicking and selecting Resize, Delete, etc, or resize and drag with the mouse.
 
 (Note: row and column numbers are zero-indexed. Row and column spans, however, start from 1.)
 
@@ -58,9 +58,7 @@ cd build
 make -j$(nproc)
 ```
 
-Install target will work eventually. :)
+You can use CMake's install commands to install for packaging and system installs.
 
 ## Miscellaneous Notes
-This is not tested on Windows as I don't have a working Windows installation. Please test and let me know how it works.
-
 QFRCDashboard is created solely for the purpose of A RELIABLE, LOW-OVERHEAD FRC dashboard. QFRCDashboard is NOT created with eye-candy or intense theming in mind. Contributions and suggestions to theming will be accepted and worked on, but without user request or contribution, QFRCDashboard will see very little updates to theming.
