@@ -9,10 +9,12 @@
 #include "stores/FilterStore.h"
 #include "stores/TypeStore.h"
 
+#include <SingleApplication>
+
 TypeStore *Globals::typeStore = new TypeStore;
 
 int main(int argc, char **argv) {
-    QApplication app(argc, argv);
+    SingleApplication app(argc, argv);
 
     app.setOrganizationName("binex-dsk");
     app.setApplicationName("QFRCDashboard");
@@ -31,7 +33,7 @@ int main(int argc, char **argv) {
     Globals::inst.StartClient4("QFRCDashboard");
     Globals::inst.SetServer(Globals::server.server.c_str(), NT_DEFAULT_PORT4);
 
-    // NT REGISTRATION
+// NT REGISTRATION
 #define REGISTER_NT(ntType, topicType, displayName) FilterStore::registerNTType(ntType, topicType, displayName);
 
     REGISTER_NT(nt::NetworkTableType::kBoolean, TopicTypes::Boolean, "Boolean")
@@ -42,7 +44,7 @@ int main(int argc, char **argv) {
 
 #undef REGISTER_NT
 
-    // SENDABLE REGISTRATION
+// SENDABLE REGISTRATION
 #define REGISTER_SENDABLE(typeString, topicType) FilterStore::registerSendable(typeString, topicType);
 
     REGISTER_SENDABLE("Sendable Chooser", TopicTypes::SendableChooser)
@@ -52,7 +54,7 @@ int main(int argc, char **argv) {
 
 #undef REGISTER_SENDABLE
 
-    // WIDGET REGISTRATION
+// WIDGET REGISTRATION
 #define REGISTER_TYPE(topic, widget, name) Globals::typeStore->registerType(topic, widget, name);
 
     REGISTER_TYPE(TopicTypes::Boolean, WidgetTypes::BooleanCheckbox, "Checkbox")
@@ -109,6 +111,13 @@ int main(int argc, char **argv) {
         }
         FilterStore::filterTopics();
     });
+
+    QObject::connect(
+        &app,
+        &SingleApplication::instanceStarted,
+        window,
+        &QMainWindow::raise
+        );
 
     return app.exec();
 }

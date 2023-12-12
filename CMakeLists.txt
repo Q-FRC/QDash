@@ -101,9 +101,13 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     )
 endif()
 
-target_link_libraries(QFRCDashboard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::MultimediaWidgets ntcore)
+set(QAPPLICATION_CLASS QApplication)
+add_subdirectory("SingleApplication")
+
+target_link_libraries(QFRCDashboard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::MultimediaWidgets ntcore SingleApplication::SingleApplication)
 
 target_include_directories(QFRCDashboard PRIVATE include/)
+target_include_directories(QFRCDashboard PRIVATE SingleApplication/)
 
 include(GNUInstallDirs)
 install(TARGETS QFRCDashboard

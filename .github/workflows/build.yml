@@ -96,6 +96,7 @@ jobs:
     - name: Configure CMake (Linux)
       if: runner.os == 'Linux'
       run: |
+        git submodule update --init
         cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/bin/g++-10
 
     - name: Build
@@ -257,6 +258,7 @@ jobs:
 
       - name: 'Build (Windows)'
         run: |
+          git submodule update --init
           cmake -S . -B ${{ env.BUILD_WIN_DIR }} -Dntcore_ROOT=${{ env.NTCORE_INSTALL_DIR }} -DProtobuf_ROOT=${{ env.PROTOBUF_INSTALL_DIR }} -DCMAKE_CXX_FLAGS="/I${{ runner.workspace }}\QFRCDashboard\${{ env.NTCORE_INSTALL_DIR }}\include /MT /FS" -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=${{ inputs.build_type }}
           cmake --build ${{ env.BUILD_WIN_DIR }} --config ${{ inputs.build_type }} --parallel $(nproc)
         env:
@@ -268,15 +270,14 @@ jobs:
           mkdir ${{ env.INSTALL_WIN_DIR }}
           set PATH=%PATH%;"${{ runner.workspace }}\Qt\6.6.0\msvc2019_64\bin"
           windeployqt ${{ env.BUILD_WIN_DIR }}\QFRCDashboard.exe --dir ${{ env.INSTALL_WIN_DIR }}
+          cp ${{ env.BUILD_WIN_DIR }}\QFRCDashboard.exe ${{ env.INSTALL_WIN_DIR }}
           if "${{ inputs.build_type }}" == "Debug" (
-            cp ${{ env.BUILD_WIN_DIR }}\QFRCDashboard.exe ${{ env.INSTALL_WIN_DIR }}
             cp ${{ env.NTCORE_INSTALL_DIR }}\bin\ntcored.dll ${{ env.INSTALL_WIN_DIR }}
             cp ${{ env.NTCORE_INSTALL_DIR }}\bin\wpinetd.dll ${{ env.INSTALL_WIN_DIR }}
             cp ${{ env.NTCORE_INSTALL_DIR }}\bin\wpiutild.dll ${{ env.INSTALL_WIN_DIR }}
             cp ${{ env.PROTOBUF_INSTALL_DIR }}\bin\libprotobufd.dll ${{ env.INSTALL_WIN_DIR }}
             cp C:\Windows\System32\ucrtbased.dll ${{ env.INSTALL_WIN_DIR }}
           ) else (
-            cp ${{ env.BUILD_WIN_DIR }}\QFRCDashboard.exe ${{ env.INSTALL_WIN_DIR }}
             cp ${{ env.NTCORE_INSTALL_DIR }}\bin\ntcore.dll ${{ env.INSTALL_WIN_DIR }}
             cp ${{ env.NTCORE_INSTALL_DIR }}\bin\wpinet.dll ${{ env.INSTALL_WIN_DIR }}
             cp ${{ env.NTCORE_INSTALL_DIR }}\bin\wpiutil.dll ${{ env.INSTALL_WIN_DIR }}
