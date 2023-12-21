@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.25)
+include(FetchContent)
 
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0074 NEW)
@@ -11,16 +12,13 @@ if (NOT USE_SYSTEM_PROTOBUF)
     set(protobuf_BUILD_TESTS OFF)
     set(ABSL_PROPAGATE_CXX_STD ON)
 
-    add_subdirectory(protobuf)
-
-    set(Protobuf_DIR ${CMAKE_CURRENT_BINARY_DIR}/protobuf/cmake/protobuf)
-    set(Protobuf_ROOT ${CMAKE_CURRENT_BINARY_DIR}/protobuf)
-
-    set(Protobuf_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/protobuf/src)
-
-    file(WRITE "${Protobuf_DIR}/protobuf-targets.cmake" "")
-else()
-    find_package(Protobuf)
+    FetchContent_Declare(
+            protobuf
+            GIT_REPOSITORY https://github.com/protocolbuffers/protobuf.git
+            GIT_TAG        7f94235e552599141950d7a4a3eaf93bc87d1b22 # 25.1
+            OVERRIDE_FIND_PACKAGE
+    )
+    FetchContent_MakeAvailable(Protobuf)
 endif()
 
 # WPILIB
@@ -38,5 +36,11 @@ if (NOT USE_SYSTEM_NTCORE)
 
     set(NO_WERROR ON)
 
-    add_subdirectory(allwpilib)
+    FetchContent_Declare(
+            ntcore
+            GIT_REPOSITORY https://github.com/binex-dsk/allwpilib.git
+            GIT_TAG        0b799b77f18f764847fc51eb4675e198d011b6f5
+            OVERRIDE_FIND_PACKAGE
+    )
+    FetchContent_MakeAvailable(ntcore)
 endif()

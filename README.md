@@ -50,9 +50,10 @@ You are allowed to contribute as you please. However, if you constantly spam use
 If you're at all confused with the code structure, make an issue about it and I will help you.
 
 ## Building
-This project uses CMake.
+This project uses CMake. Additionally, you must initialize git submodules first.
 
 ```bash
+git submodule update --init
 cmake -S . -B build
 cd build
 make -j$(nproc)
@@ -66,15 +67,7 @@ cmake --install build --prefix ${PKGDIR}
 ```
 
 ### Submodules
-If you don't want to install protobuf and ntcore to your system, submodules and CMake options are provided for such. First, initialize the submodules with git:
-
-```bash
-git submodule update --init --recursive
-```
-
-The recursive argument is necessary.
-
-Now, you can force CMake to use the bundled ntcore/protobuf with these options:
+If you don't want to install protobuf and ntcore to your system, CMake options are provided for such:
 
 - `USE_SYSTEM_NTCORE` (default ON)
 - `USE_SYSTEM_PROTOBUF` (default ON)
@@ -87,6 +80,29 @@ cmake -S . -B build -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF
 ```
 
 Though you can use the system ntcore with the bundled protobuf, this is not recommended and is entirely untested.
+
+### Ubuntu
+```bash
+sudo apt install qt6-base-dev build-essential qt6-multimedia-dev ninja-build
+git clone https://github.com/binex-dsk/QFRCDashboard.git
+cd QFRCDashboard
+mkdir build && cd build
+cmake ..
+make -j
+```
+
+### Windows
+- Install Qt from [here](https://www.qt.io/download-qt-installer-oss). Take note of where you download it!
+- Install CMake https://cmake.org/download/ (add to `PATH`)
+```bash
+git clone https://github.com/binex-dsk/QFRCDashboard.git
+cd QFRCDashboard
+mkdir build && cd build
+cmake -DCMAKE_PREFIX_PATH="C:\\Qt6\\6.6.1\\msvc2019_64" ..
+cmake --build .
+C:\Qt6\6.6.1\msvc2019_64\bin\windeployqt.exe .
+```
+OR use [CLion](https://www.jetbrains.com/clion/)
 
 ## Miscellaneous Notes
 QFRCDashboard is created solely for the purpose of A RELIABLE, LOW-OVERHEAD FRC dashboard. QFRCDashboard is NOT created with eye-candy or intense theming in mind. Contributions and suggestions to theming will be accepted and worked on, but without user request or contribution, QFRCDashboard will see very little updates to theming.
