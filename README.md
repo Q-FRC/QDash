@@ -50,7 +50,7 @@ You are allowed to contribute as you please. However, if you constantly spam use
 If you're at all confused with the code structure, make an issue about it and I will help you.
 
 ## Building
-Simple CMake, just run
+This project uses CMake.
 
 ```bash
 cmake -S . -B build
@@ -59,6 +59,34 @@ make -j$(nproc)
 ```
 
 You can use CMake's install commands to install for packaging and system installs.
+
+```bash
+sudo cmake --install build --prefix /usr
+cmake --install build --prefix ${PKGDIR}
+```
+
+### Submodules
+If you don't want to install protobuf and ntcore to your system, submodules and CMake options are provided for such. First, initialize the submodules with git:
+
+```bash
+git submodule update --init --recursive
+```
+
+The recursive argument is necessary.
+
+Now, you can force CMake to use the bundled ntcore/protobuf with these options:
+
+- `USE_SYSTEM_NTCORE` (default ON)
+- `USE_SYSTEM_PROTOBUF` (default ON)
+
+Examples:
+
+```bash
+cmake -S . -B build -DUSE_SYSTEM_NTCORE=OFF
+cmake -S . -B build -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF
+```
+
+Though you can use the system ntcore with the bundled protobuf, this is not recommended and is entirely untested.
 
 ## Miscellaneous Notes
 QFRCDashboard is created solely for the purpose of A RELIABLE, LOW-OVERHEAD FRC dashboard. QFRCDashboard is NOT created with eye-candy or intense theming in mind. Contributions and suggestions to theming will be accepted and worked on, but without user request or contribution, QFRCDashboard will see very little updates to theming.

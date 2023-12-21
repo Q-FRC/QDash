@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ntcore/networktables/NetworkTableInstance.h>
+#include <networktables/NetworkTableInstance.h>
 
 #include <QString>
 #include <QMap>

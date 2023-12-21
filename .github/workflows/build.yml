@@ -40,6 +40,9 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
+    - name: Install CMake
+      uses: lukka/get-cmake@v3.28.1
+
     - name: 'Install Qt 6.6.0'
       if: runner.os == 'Linux'
       uses: jurplel/install-qt-action@v3.3.0
@@ -47,44 +50,10 @@ jobs:
         version: 6.6.0
         modules: qtmultimedia
 
-    - name: 'Checkout wpilib'
-      uses: actions/checkout@v4
-      with:
-        repository: 'wpilibsuite/allwpilib'
-        ref: '9b8011aa67e30f150862545758056ff4d0cc0eac' # MAY want 2023
-        path: 'allwpilib'
-
-    - name: 'Prepare ntcore'
-      run: |
-        cd allwpilib
-        git apply ../.github/patches/No-Werror.patch
-        cd ..
-
     - name: 'Install Python Dependencies (Linux)'
       if: runner.os == 'Linux'
       run: |
         pip install jinja2
-
-    - name: 'Build ntcore (Linux)'
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get install libprotobuf-dev libprotobuf17 libstdc++-10-dev gcc-10 ninja-build
-        cmake -B wpilib_build -S "allwpilib" \
-          -DCMAKE_INSTALL_PREFIX='/usr' \
-          -DUSE_SYSTEM_EIGEN=OFF \
-          -DUSE_SYSTEM_FMTLIB=OFF \
-          -DWITH_JAVA=OFF \
-          -DWITH_CSCORE=OFF \
-          -DWITH_NTCORE=ON \
-          -DWITH_WPIMATH=OFF \
-          -DWITH_WPILIB=OFF \
-          -DWITH_TESTS=OFF \
-          -DWITH_GUI=OFF \
-          -DWITH_SIMULATION_MODULES=OFF \
-          -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
-          -Wno-dev
-        cmake --build wpilib_build --parallel $(nproc)
-        sudo cmake --install wpilib_build
 
     - name: Prepare AppImage (Linux)
       if: runner.os == 'Linux'
@@ -96,8 +65,9 @@ jobs:
     - name: Configure CMake (Linux)
       if: runner.os == 'Linux'
       run: |
-        git submodule update --init
-        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/bin/g++-10
+        sudo apt-get install libprotobuf-dev libprotobuf17 libstdc++-10-dev gcc-10 ninja-build
+        git submodule update --init --recursive
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/bin/g++-10 -DUSE_SYSTEM_NTCORE=OFF -DBUILD_SHARED_LIBS=OFF
 
     - name: Build
       run: |
@@ -175,7 +145,7 @@ jobs:
       - uses: ilammy/msvc-dev-cmd@v1
 
       - name: Install CMake
-        uses: lukka/get-cmake@v3.27.6
+        uses: lukka/get-cmake@v3.28.1
 
       - name: Run sccache-cache
         uses: mozilla-actions/sccache-action@v0.0.3
@@ -193,73 +163,10 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - name: 'Checkout protobuf'
-        uses: actions/checkout@v4
-        with:
-          repository: 'protocolbuffers/protobuf'
-          # ref: 'v2024.1.1-beta-3' # MAY want 2023
-          path: 'protobuf'
-
-      - name: 'Prepare protobuf (Windows)'
-        working-directory: protobuf
-        run: |
-          git submodule update --init --recursive
-
-      - name: 'Configure protobuf CMake (Windows)'
-        run: |
-         cmake -S protobuf -B win-pb-build -G "Ninja" -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PROTOBUF_DIR }} -Dprotobuf_ALLOW_CCACHE=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_MSVC_STATIC_RUNTIME=OFF -Dprotobuf_BUILD_SHARED_LIBS=ON
-        env:
-          SCCACHE_GHA_ENABLED: "true"
-
-      - name: 'Build protobuf (Windows)'
-        working-directory: win-pb-build
-        run: |
-          cmake --build . --parallel $(nproc)
-        env:
-          SCCACHE_GHA_ENABLED: "true"
-
-      - name: 'Install protobuf (Windows)'
-        run: |
-          cmake --install win-pb-build --prefix ${{ env.PROTOBUF_INSTALL_DIR }}
-        env:
-          SCCACHE_GHA_ENABLED: "true"
-
-      - name: 'Checkout wpilib'
-        uses: actions/checkout@v4
-        with:
-          repository: 'wpilibsuite/allwpilib'
-          ref: '9b8011aa67e30f150862545758056ff4d0cc0eac' # MAY want 2023
-          path: 'allwpilib'
-
-      - name: 'Prepare ntcore'
-        run: |
-          cd allwpilib
-          git apply ../.github/patches/No-Werror.patch
-          cd ..
-
-      - name: 'Configure ntcore CMake (Windows)'
-        run: |
-         cmake -S allwpilib -B win-nt-build -DCMAKE_CXX_FLAGS="/FS /EHsc" -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -DWITH_JAVA=OFF -DWITH_EXAMPLES=OFF -DUSE_SYSTEM_FMTLIB=OFF -DUSE_SYSTEM_LIBUV=OFF -DUSE_SYSTEM_EIGEN=OFF -DWITH_CSCORE=OFF -DWITH_NTCORE=ON -DWITH_WPIMATH=OFF -DWITH_WPILIB=OFF -DWITH_TESTS=OFF -DWITH_GUI=OFF -DWITH_SIMULATION_MODULES=OFF -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_DIR }} -DProtobuf_ROOT=${{ env.PROTOBUF_INSTALL_DIR }} -DCMAKE_POLICY_DEFAULT_CMP0074=NEW
-        env:
-          SCCACHE_GHA_ENABLED: "true"
-
-      - name: 'Build ntcore (Windows)'
-        working-directory: win-nt-build
-        run: |
-          cmake --build . --parallel $(nproc) --config ${{ inputs.build_type }}
-        env:
-          SCCACHE_GHA_ENABLED: "true"
-
-      - name: 'Install ntcore (Windows)'
-        run: |
-          cmake --install win-nt-build --config ${{ inputs.build_type }} --prefix ${{ env.NTCORE_INSTALL_DIR }}
-        env:
-          SCCACHE_GHA_ENABLED: "true"
-
       - name: 'Build (Windows)'
         run: |
-          git submodule update --init
-          cmake -S . -B ${{ env.BUILD_WIN_DIR }} -Dntcore_ROOT=${{ env.NTCORE_INSTALL_DIR }} -DProtobuf_ROOT=${{ env.PROTOBUF_INSTALL_DIR }} -DCMAKE_CXX_FLAGS="/I${{ runner.workspace }}\QFRCDashboard\${{ env.NTCORE_INSTALL_DIR }}\include /MT /FS" -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=${{ inputs.build_type }}
+          git submodule update --init --recursive
+          cmake -S . -B ${{ env.BUILD_WIN_DIR }} -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF
           cmake --build ${{ env.BUILD_WIN_DIR }} --config ${{ inputs.build_type }} --parallel $(nproc)
         env:
           SCCACHE_GHA_ENABLED: "true"
@@ -267,6 +174,8 @@ jobs:
       - name: Package (Windows)
         shell: cmd
         run: |
+          cmake --install ${{ env.BUILD_WIN_DIR }}\3rd_party\allwpilib --prefix ${{ env.NTCORE_INSTALL_DIR }}
+          cmake --install ${{ env.BUILD_WIN_DIR }}\3rd_party\protobuf --prefix ${{ env.PROTOBUF_INSTALL_DIR }}
           mkdir ${{ env.INSTALL_WIN_DIR }}
           set PATH=%PATH%;"${{ runner.workspace }}\Qt\6.6.0\msvc2019_64\bin"
           windeployqt ${{ env.BUILD_WIN_DIR }}\QFRCDashboard.exe --dir ${{ env.INSTALL_WIN_DIR }}

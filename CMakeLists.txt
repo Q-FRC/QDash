@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.28)
 
 project(QFRCDashboard VERSION 0.1 LANGUAGES CXX)
 
@@ -11,12 +11,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
+option(USE_SYSTEM_NTCORE "Use system ntcore installation" ON)
+option(USE_SYSTEM_PROTOBUF "Use system protobuf installation" ON)
+
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets MultimediaWidgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets MultimediaWidgets)
-find_package(ntcore REQUIRED)
-
-#add_compile_options(-fsanitize=address)
-#add_link_options(-fsanitize=address)
+add_subdirectory(3rd_party)
 
 set(PROJECT_SOURCES
         src/main.cpp
@@ -104,8 +104,13 @@ endif()
 set(QAPPLICATION_CLASS QApplication)
 add_subdirectory("SingleApplication")
 
+if (USE_SYSTEM_NTCORE)
+    find_package(ntcore)
+endif()
+
 target_link_libraries(QFRCDashboard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::MultimediaWidgets ntcore SingleApplication::SingleApplication)
 
+target_include_directories(QFRCDashboard PRIVATE "$<TARGET_PROPERTY:ntcore,INTERFACE_INCLUDE_DIRECTORIES>")
 target_include_directories(QFRCDashboard PRIVATE include/)
 target_include_directories(QFRCDashboard PRIVATE SingleApplication/)
 
