@@ -3,7 +3,7 @@
 
 #include <QApplication>
 
-IntegerDialWidget::IntegerDialWidget(const QString &topic, const int &defaultValue, const QString &title) : IntegerDisplayWidget(topic, defaultValue, title) {
+IntegerDialWidget::IntegerDialWidget(const QString &topic, const int &defaultValue, const QString &title) : IntegerDisplayWidget(topic, defaultValue, title, false) {
     m_dial = new BetterDial(this);
     m_type = WidgetTypes::IntegerDial;
 

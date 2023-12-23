@@ -1,4 +1,5 @@
 #include "stores/TopicStore.h"
+#include "qapplication.h"
 #include "widgets/BaseWidget.h"
 
 #include "Globals.h"
@@ -91,4 +92,18 @@ void TopicStore::unsubscribe(std::string ntTopic, BaseWidget *subscriber) {
 
 void TopicStore::unsubscribe(nt::NetworkTableEntry *entry, BaseWidget *subscriber) {
     unsubscribe(entry->GetName(), subscriber);
+}
+
+double TopicStore::getDoubleFromEntry(nt::NetworkTableEntry *entry) {
+    nt::Value value = entry->GetValue();
+
+    if (value.IsBoolean()) {
+        return (double) entry->GetBoolean(0);
+    } else if (value.IsDouble()) {
+        return entry->GetDouble(0.);
+    } else if (value.IsInteger()) {
+        return (double) entry->GetInteger(0);
+    }
+
+    return 0.;
 }

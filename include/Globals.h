@@ -7,6 +7,7 @@
 #include <QMetaType>
 #include <QMetaEnum>
 #include <QFile>
+#include <QColor>
 
 // ENUMS //
 enum class WidgetTypes {
@@ -22,26 +23,21 @@ enum class WidgetTypes {
     IntegerDial = 9,
     SendableField = 10, // UNUSED BY SAVE/LOAD
     Field = 11,
-    Command = 12
+    Command = 12,
+    Graph = 13
 };
-
-Q_DECLARE_FLAGS(WidgetType, WidgetTypes);
-Q_DECLARE_OPERATORS_FOR_FLAGS(WidgetType);
 
 enum class TopicTypes {
-    SendableChooser,
-    Field2d,
-    Command,
+    Double = 0,
+    DoubleArray = 1,
+    String = 2,
+    Boolean = 3,
+    Int = 4,
 
-    Double,
-    DoubleArray,
-    String,
-    Boolean,
-    Int
+    SendableChooser = 5,
+    Field2d = 6,
+    Command = 7
 };
-
-Q_DECLARE_FLAGS(TopicType, TopicTypes);
-Q_DECLARE_OPERATORS_FOR_FLAGS(TopicType);
 
 // STRUCTS //
 typedef struct {
@@ -97,17 +93,29 @@ typedef struct Topic {
 
     bool operator==(const struct Topic &other) const;
 } Topic;
+
+extern uint qHash(const Globals::Topic &topic);
+
+typedef struct GraphXAxis {
+    bool useTime;
+    QString topic;
+
+    bool operator==(const struct GraphXAxis &other) const;
+} GraphXAxis;
 }
 
 Q_DECLARE_METATYPE(Globals::File)
 Q_DECLARE_METATYPE(Globals::Topic)
+Q_DECLARE_METATYPE(Globals::GraphXAxis)
 
 namespace CustomMetaTypes {
 static const int FrameShape = qMetaTypeId<Globals::FrameShape>();
 static const int File = qMetaTypeId<Globals::File>();
 static const int Topic = qMetaTypeId<Globals::Topic>();
+static const int TopicList = qMetaTypeId<QList<Globals::Topic>>();
+static const int XAxis = qMetaTypeId<Globals::GraphXAxis>();
+static const int TopicColorMap = qMetaTypeId<QHash<Globals::Topic, QColor>>();
 }
-
 
 extern bool operator==(const WidgetData &a, const WidgetData &b);
 // extern bool operator==(const Globals::Topic &a, const Globals::Topic &b);

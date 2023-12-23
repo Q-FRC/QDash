@@ -44,14 +44,16 @@ void FilterStore::filterTopics() {
         Globals::Topic supertable(topic);
         supertable.name = split.sliced(0, split.length() - 1).join('/');
 
+        const QString name = topic.name;
+
         // account for sendables
         if (FilteredTopics.contains(supertable)) {
             FilteredTopics.removeAll(topic);
         }
 
         if (
-            (!Globals::ntTopics.contains(topic.name) &&
-             !Globals::ntTopics.contains(topic.name + "/.type"))) {
+            (!Globals::ntTopics.contains(name) &&
+             !Globals::ntTopics.contains(name + ("/.type")))) {
             FilteredTopics.removeAll(topic);
             UnfilteredTopics.removeAll(topic);
         }
@@ -99,4 +101,23 @@ void FilterStore::sortTopic(QString topic) {
 
     entry.Unpublish();
     typeEntry.Unpublish();
+}
+
+Globals::Topic FilterStore::topicFromName(const QString &topicName, const QList<Globals::Topic> &topics) {
+    for (const Globals::Topic & topic : topics) {
+        if (topic.name == topicName) {
+            return topic;
+        }
+    }
+
+    return Globals::Topic{topicName, TopicTypes::String};
+}
+
+// please coroutines
+QStringList FilterStore::topicNames(QList<Globals::Topic> list) {
+    QStringList strings{};
+    for (const Globals::Topic &topic : list) {
+        strings.append(topic.name);
+    }
+    return strings;
 }

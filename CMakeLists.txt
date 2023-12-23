@@ -30,8 +30,8 @@ if( ${USE_SYSTEM_PROTOBUF})
     endif()
 endif()
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets MultimediaWidgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets MultimediaWidgets)
+find_package(QT NAMES Qt6 REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets MultimediaWidgets Charts)
 add_subdirectory(3rd_party EXCLUDE_FROM_ALL)
 
 set(PROJECT_SOURCES
@@ -55,6 +55,7 @@ set(PROJECT_SOURCES
         src/widgets/FieldWidget.cpp
         src/widgets/SendableFieldWidget.cpp
         src/widgets/CommandWidget.cpp
+        src/widgets/GraphWidget.cpp
 
         src/misc/NewWidgetTreeDialog.cpp
         src/misc/NTSettingsDialog.cpp
@@ -89,6 +90,7 @@ set(PROJECT_SOURCES
         include/widgets/FieldWidget.h
         include/widgets/SendableFieldWidget.h
         include/widgets/CommandWidget.h
+        include/widgets/GraphWidget.h
 
         include/misc/NewWidgetTreeDialog.h
         include/misc/NTSettingsDialog.h
@@ -113,6 +115,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         fields.qrc
         ${RCS_FILE}
         ${PROJECT_SOURCES}
+        include/misc/ChartView.h src/misc/ChartView.cpp
 
     )
 endif()
@@ -120,9 +123,7 @@ endif()
 set(QAPPLICATION_CLASS QApplication)
 add_subdirectory("SingleApplication")
 
-find_package(ntcore)
-
-target_link_libraries(QFRCDashboard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::MultimediaWidgets ntcore SingleApplication::SingleApplication)
+target_link_libraries(QFRCDashboard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::MultimediaWidgets Qt${QT_VERSION_MAJOR}::Charts ntcore SingleApplication::SingleApplication)
 
 target_include_directories(QFRCDashboard PRIVATE "$<TARGET_PROPERTY:ntcore,INTERFACE_INCLUDE_DIRECTORIES>")
 target_include_directories(QFRCDashboard PRIVATE include/)
@@ -135,8 +136,8 @@ install(TARGETS QFRCDashboard
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-set(Dashboard_VERSION "1.0.0-beta4")
-set(Dashboard_VERSION_NUMBER "1.0.0.4")
+set(Dashboard_VERSION "1.0.0")
+set(Dashboard_VERSION_NUMBER "1.0.0")
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(QFRCDashboard)

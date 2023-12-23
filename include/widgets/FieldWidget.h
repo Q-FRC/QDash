@@ -17,10 +17,10 @@ protected:
     QVariantList m_value{};
 
     FieldImage *m_imageLabel;
-    Globals::File m_image;
+    Globals::File m_image{":/2023Field.png"};
 
-    double m_width;
-    double m_length;
+    double m_width = 0.5;
+    double m_length = 0.5;
 public:
     FieldWidget(const QString &topic = "", QVariantList defaultValue = QVariantList{}, const QString &title = "");
     ~FieldWidget();

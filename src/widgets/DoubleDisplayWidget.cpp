@@ -4,11 +4,10 @@
 #include <QKeyEvent>
 #include <QApplication>
 
-DoubleDisplayWidget::DoubleDisplayWidget(const QString &topic, const double &defaultValue, const QString &title) : TextWidget(WidgetTypes::DoubleDisplay, topic, QString::number(defaultValue), title)
+DoubleDisplayWidget::DoubleDisplayWidget(const QString &topic, const double &defaultValue, const QString &title, const bool &ready) : TextWidget(WidgetTypes::DoubleDisplay, topic, QString::number(defaultValue), title)
 {
-    m_entry = TopicStore::subscribe(topic.toStdString(), this);
     m_value = defaultValue;
-    setReady(true);
+    setReady(ready);
 }
 
 DoubleDisplayWidget::~DoubleDisplayWidget() {

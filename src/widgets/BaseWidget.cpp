@@ -15,6 +15,7 @@
 #include "widgets/FieldWidget.h"
 #include "widgets/SendableFieldWidget.h"
 #include "widgets/CommandWidget.h"
+#include "widgets/GraphWidget.h"
 
 #include "misc/WidgetDialogGenerator.h"
 
@@ -63,7 +64,7 @@ bool BaseWidget::ready() {
 
 void BaseWidget::setReady(bool ready) {
     m_ready = ready;
-    emit isReady();
+    if (ready) emit isReady();
 }
 
 QFont BaseWidget::titleFont()
@@ -181,6 +182,9 @@ QJsonObject BaseWidget::saveObject() {
         PROPERTY_FUNCTION(QMetaType::QString, writeStringProperty)
         PROPERTY_FUNCTION(QMetaType::QUrl, writeStringProperty)
         PROPERTY_FUNCTION(CustomMetaTypes::FrameShape, writeShapeProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::TopicList, writeTopicListProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::XAxis, writeXAxisProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::TopicColorMap, writeTopicColorMapProperty)
         { // else
             qCritical() << "Bad metatype for property" << property.name() << (QMetaType::Type) id;
             continue;
@@ -219,6 +223,9 @@ WidgetData BaseWidget::fromJson(QJsonObject obj, int tabIdx) {
         PROPERTY_FUNCTION(QMetaType::QString, readStringProperty)
         PROPERTY_FUNCTION(QMetaType::QUrl, readStringProperty)
         PROPERTY_FUNCTION(CustomMetaTypes::FrameShape, readShapeProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::TopicList, readTopicListProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::XAxis, readXAxisProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::TopicColorMap, readTopicColorMapProperty)
         { // else
             qCritical() << "Bad metatype for property" << property.name() << (QMetaType::Type) id;
             continue;
@@ -235,6 +242,8 @@ WidgetData BaseWidget::fromJson(QJsonObject obj, int tabIdx) {
     data.rowSpan = geometry.at(2).toInt(1);
     data.colSpan = geometry.at(3).toInt(1);
 
+    m_ready = true;
+
     return data;
 }
 
@@ -246,34 +255,36 @@ BaseWidget *BaseWidget::defaultWidgetFromTopic(QString ntTopic, WidgetTypes type
     baseWidget = new widget(ntTopic); \
 } else
 
-    REGISTER_WIDGET_TYPE(WidgetTypes::BooleanCheckbox, BooleanCheckboxWidget)
-    REGISTER_WIDGET_TYPE(WidgetTypes::BooleanDisplay, BooleanDisplayWidget)
+REGISTER_WIDGET_TYPE(WidgetTypes::BooleanCheckbox, BooleanCheckboxWidget)
+REGISTER_WIDGET_TYPE(WidgetTypes::BooleanDisplay, BooleanDisplayWidget)
 
-    REGISTER_WIDGET_TYPE(WidgetTypes::DoubleDisplay, DoubleDisplayWidget)
-    REGISTER_WIDGET_TYPE(WidgetTypes::DoubleDial, DoubleDialWidget)
+REGISTER_WIDGET_TYPE(WidgetTypes::DoubleDisplay, DoubleDisplayWidget)
+REGISTER_WIDGET_TYPE(WidgetTypes::DoubleDial, DoubleDialWidget)
 
-    REGISTER_WIDGET_TYPE(WidgetTypes::SendableChooser, StringChooserWidget)
+REGISTER_WIDGET_TYPE(WidgetTypes::SendableChooser, StringChooserWidget)
 
-    REGISTER_WIDGET_TYPE(WidgetTypes::CameraView, CameraViewWidget)
+REGISTER_WIDGET_TYPE(WidgetTypes::CameraView, CameraViewWidget)
 
-    REGISTER_WIDGET_TYPE(WidgetTypes::EnumWidget, EnumWidget)
+REGISTER_WIDGET_TYPE(WidgetTypes::EnumWidget, EnumWidget)
 
-    REGISTER_WIDGET_TYPE(WidgetTypes::IntegerDisplay, IntegerDisplayWidget)
-    REGISTER_WIDGET_TYPE(WidgetTypes::IntegerDial, IntegerDialWidget)
+REGISTER_WIDGET_TYPE(WidgetTypes::IntegerDisplay, IntegerDisplayWidget)
+REGISTER_WIDGET_TYPE(WidgetTypes::IntegerDial, IntegerDialWidget)
 
-    REGISTER_WIDGET_TYPE(WidgetTypes::Field, FieldWidget)
-    REGISTER_WIDGET_TYPE(WidgetTypes::SendableField, SendableFieldWidget)
+REGISTER_WIDGET_TYPE(WidgetTypes::Field, FieldWidget)
+REGISTER_WIDGET_TYPE(WidgetTypes::SendableField, SendableFieldWidget)
 
-    REGISTER_WIDGET_TYPE(WidgetTypes::Command, CommandWidget)
+REGISTER_WIDGET_TYPE(WidgetTypes::Command, CommandWidget)
 
-    // implicit-condition: StringDisplay
-    { // else
-        baseWidget = new StringDisplayWidget(ntTopic);
-    } // else
+REGISTER_WIDGET_TYPE(WidgetTypes::Graph, GraphWidget)
+
+// implicit-condition: StringDisplay
+{ // else
+    baseWidget = new StringDisplayWidget(ntTopic);
+} // else
 
 #undef REGISTER_WIDGET_TYPE
 
-    return baseWidget;
+return baseWidget;
 }
 
 // JSON stuff
@@ -321,8 +332,56 @@ QVariant BaseWidget::readShapeProperty(const QMetaProperty &property, const QJso
             Globals::shapeNameMap.key(property.read(this).value<Globals::FrameShape>()))));
 }
 
-// Write
+QVariant BaseWidget::readTopicListProperty(const QMetaProperty &property, const QJsonValue &value) {
+    QJsonArray array = value.toArray({});
+    QList<Globals::Topic> list{};
 
+    for (QJsonValueRef ref : array) {
+        QJsonObject obj = ref.toObject();
+        Globals::Topic topic{
+            obj.value("name").toString(),
+            (TopicTypes) obj.value("type").toInt()
+        };
+
+        list.append(topic);
+    }
+
+    return QVariant::fromValue<QList<Globals::Topic>>(list);
+}
+
+QVariant BaseWidget::readXAxisProperty(const QMetaProperty &property, const QJsonValue &value) {
+    QJsonObject obj = value.toObject({});
+    Globals::GraphXAxis current = property.read(this).value<Globals::GraphXAxis>();
+
+    return QVariant::fromValue<Globals::GraphXAxis>(
+        Globals::GraphXAxis{
+            obj.value("useTime").toBool(current.useTime),
+                obj.value("topic").toString(current.topic)
+        });
+}
+
+QVariant BaseWidget::readTopicColorMapProperty(const QMetaProperty &property, const QJsonValue &value) {
+    QJsonArray array = value.toArray();
+
+    QHash<Globals::Topic, QColor> map{};
+
+    for (const QJsonValueRef &ref : array) {
+        QJsonObject obj = ref.toObject();
+        QJsonObject topicObj = obj.value("topic").toObject();
+        Globals::Topic topic {
+            topicObj.value("name").toString(),
+            (TopicTypes) topicObj.value("type").toInt()
+        };
+
+        QColor color = obj.value("color").toString("");
+
+        map.insert(topic, color);
+    }
+
+    return QVariant::fromValue(map);
+}
+
+// Write
 QJsonValue BaseWidget::writeDoubleProperty(const QMetaProperty &property) {
     return QJsonValue(property.read(this).toDouble());
 }
@@ -367,6 +426,60 @@ QJsonValue BaseWidget::writeShapeProperty(const QMetaProperty &property) {
     return QJsonValue(Globals::shapeNameMap.key(property.read(this).value<Globals::FrameShape>()));
 }
 
+QJsonValue BaseWidget::writeTopicListProperty(const QMetaProperty &property) {
+    QJsonArray array{};
+    QList<Globals::Topic> list = property.read(this).value<QList<Globals::Topic>>();
+
+    for (const Globals::Topic &topic : list) {
+        array.append(
+            QJsonObject{
+                {"name", topic.name},
+                {"type", (int) topic.type}
+            });
+    }
+
+    return array;
+}
+
+QJsonValue BaseWidget::writeXAxisProperty(const QMetaProperty &property) {
+    Globals::GraphXAxis xAxis = property.read(this).value<Globals::GraphXAxis>();
+
+    return QJsonObject(
+        {
+            {"useTime", xAxis.useTime},
+            {"topic", xAxis.topic}
+        }
+    );
+}
+
+QJsonValue BaseWidget::writeTopicColorMapProperty(const QMetaProperty &property) {
+    QJsonArray array{};
+    QHash<Globals::Topic, QColor> map = property.read(this).value<QHash<Globals::Topic, QColor>>();
+
+    QHashIterator iter(map);
+
+    while (iter.hasNext()) {
+        iter.next();
+
+        Globals::Topic topic = iter.key();
+        QColor color = iter.value();
+
+        QJsonObject obj{};
+        QJsonObject topicObj{
+            {"name", topic.name},
+            {"type", (int) topic.type}
+        };
+
+        obj.insert("topic", topicObj);
+        obj.insert("color", color.name());
+        array.append(obj);
+    }
+
+    return array;
+}
+
+// etc
+
 void BaseWidget::mouseMoveEvent(QMouseEvent *event) {
     QRect rect = this->rect();
     QRect left(rect.topLeft(), rect.bottomLeft());
@@ -377,7 +490,7 @@ void BaseWidget::mouseMoveEvent(QMouseEvent *event) {
     QRect pointerRect = QRect(event->position().toPoint() - QPoint(10, 10), QSize(20, 20));
 
     QCursor qcursor;
-    Qt::CursorShape shape = Qt::SizeAllCursor;
+    Qt::CursorShape shape = Qt::ArrowCursor;
 
     ResizeDirection direction = NONE;
 

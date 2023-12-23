@@ -11,6 +11,8 @@
 
 NewWidgetTreeDialog::NewWidgetTreeDialog(bool emitTopic, QWidget *parent) : QDialog(parent)
 {
+    m_emitTopic = emitTopic;
+
     FilterStore::filterTopics();
     m_layout = new QVBoxLayout(this);
 
@@ -30,10 +32,7 @@ NewWidgetTreeDialog::NewWidgetTreeDialog(bool emitTopic, QWidget *parent) : QDia
     m_layout->addWidget(m_tree);
     m_layout->addWidget(m_buttonBox);
 
-    if (emitTopic) {
-        connect(&Globals::typeStore, &TypeStore::topicSelected, this, &NewWidgetTreeDialog::topicReady);
-        connect(&Globals::typeStore, &TypeStore::topicSelected, this, &NewWidgetTreeDialog::close);
-    } else {
+    if (!emitTopic) {
         connect(&Globals::typeStore, &TypeStore::widgetReady, this, &NewWidgetTreeDialog::widgetReady);
         connect(&Globals::typeStore, &TypeStore::widgetReady, this, &NewWidgetTreeDialog::close);
     }
@@ -48,13 +47,22 @@ void NewWidgetTreeDialog::constructList(QList<Globals::Topic> topics) {
     {
         createTreeIfNotExists(topic);
 
-        QMenu *widgetMenu = Globals::typeStore.generateMenuForTopic(topic);
+        if (m_emitTopic) {
+            connect(m_tree, &QTreeWidget::itemActivated, this, [this, topic](QTreeWidgetItem *item) {
+                if (getParentPath(item) == topic.name) {
+                    emit topicReady(topic);
+                    close();
+                }
+            });
+        } else {
+            QMenu *widgetMenu = Globals::typeStore.generateMenuForTopic(topic);
 
-        connect(m_tree, &QTreeWidget::itemActivated, this, [this, topic, widgetMenu](QTreeWidgetItem *item) {
-            if (getParentPath(item) == topic.name) {
-                widgetMenu->popup(QCursor::pos());
-            }
-        });
+            connect(m_tree, &QTreeWidget::itemActivated, this, [this, topic, widgetMenu](QTreeWidgetItem *item) {
+                if (getParentPath(item) == topic.name) {
+                    widgetMenu->popup(QCursor::pos());
+                }
+            });
+        }
     }
 }
 

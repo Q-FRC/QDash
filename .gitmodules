@@ -1,4 +1,3 @@
 [submodule "SingleApplication"]
 	path = SingleApplication
-    commit = bdbb09b5f21ebea4cd7dfb43b29114a94e04a3a1
 	url = https://github.com/itay-grudev/SingleApplication

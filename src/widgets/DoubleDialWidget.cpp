@@ -3,9 +3,7 @@
 
 #include <QApplication>
 
-DoubleDialWidget::DoubleDialWidget(const QString &topic, const double &defaultValue, const QString &title) : DoubleDisplayWidget(topic, defaultValue, title) {
-    m_entry = TopicStore::subscribe(topic.toStdString(), this);
-
+DoubleDialWidget::DoubleDialWidget(const QString &topic, const double &defaultValue, const QString &title) : DoubleDisplayWidget(topic, defaultValue, title, false) {
     m_dial = new BetterDial(this);
     m_type = WidgetTypes::DoubleDial;
 
@@ -64,6 +62,7 @@ void DoubleDialWidget::setValue(const nt::Value &value) {
         m_fakeValue = m_value * 100;
         setText(QString::number(m_value));
 
+        if (m_dial == nullptr) return;
         if (!m_dial->isDragging()) m_dial->setValue(m_fakeValue);
     }
 }

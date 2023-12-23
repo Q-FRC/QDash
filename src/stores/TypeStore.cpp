@@ -13,7 +13,7 @@ void TypeStore::registerType(TopicTypes topicType, WidgetTypes widgetType, QStri
     m_widgetNameMap.insert(widgetType, displayName);
 }
 
-QList<QAction *> TypeStore::generateActionsForTopic(Globals::Topic topic, bool emitTopic) {
+QList<QAction *> TypeStore::generateActionsForTopic(Globals::Topic topic) {
     QList<QAction *> actions{};
 
     QList<WidgetTypes> widgetTypes = m_typeWidgetMap.values(topic.type);
@@ -23,14 +23,10 @@ QList<QAction *> TypeStore::generateActionsForTopic(Globals::Topic topic, bool e
 
         QAction *action = new QAction(displayName);
 
-        connect(action, &QAction::triggered, action, [this, widgetType, displayName, topic, emitTopic] {
-            if (emitTopic) {
-                emit topicSelected(topic);
-            } else {
-                auto widget = BaseWidget::defaultWidgetFromTopic(topic.name, widgetType);
+        connect(action, &QAction::triggered, action, [this, widgetType, displayName, topic] {
+            auto widget = BaseWidget::defaultWidgetFromTopic(topic.name, widgetType);
 
-                emit widgetReady(widget, WidgetData{0, 0, 0, 1, 1});
-            }
+            emit widgetReady(widget, WidgetData{0, 0, 0, 1, 1});
         });
 
         actions.append(action);
@@ -39,10 +35,10 @@ QList<QAction *> TypeStore::generateActionsForTopic(Globals::Topic topic, bool e
     return actions;
 }
 
-QMenu *TypeStore::generateMenuForTopic(Globals::Topic topic, bool emitTopic) {
+QMenu *TypeStore::generateMenuForTopic(Globals::Topic topic) {
     QMenu *menu = new QMenu((QWidget *) parent());
 
-    menu->addActions(generateActionsForTopic(topic, emitTopic));
+    menu->addActions(generateActionsForTopic(topic));
 
     return menu;
 }

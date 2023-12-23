@@ -22,11 +22,12 @@ private:
 
     QMap<QString, QTreeWidgetItem *> m_itemTableMap;
 
+    bool m_emitTopic = false;
+
     void createTreeIfNotExists(const Globals::Topic &topic);
 
     QString getParentPath(QTreeWidgetItem *item);
 
-    QList<Globals::Topic> filterNumberTypes(QList<Globals::Topic> list);
 public:
     explicit NewWidgetTreeDialog(bool emitTopic = false, QWidget *parent = nullptr);
     virtual ~NewWidgetTreeDialog();
@@ -34,6 +35,7 @@ public:
     void keyPressEvent(QKeyEvent *event);
     void constructList(QList<Globals::Topic> topics);
 
+    static QList<Globals::Topic> filterNumberTypes(QList<Globals::Topic> list);
 signals:
     void widgetReady(BaseWidget *widget, WidgetData data);
     void topicReady(const Globals::Topic &topic);

@@ -20,7 +20,7 @@ jobs:
           - os: ubuntu-20.04
             qt_host: linux
             qt_version: '6.6.0'
-            qt_modules: 'qt6-multimedia-dev qt6-wayland-dev'
+            qt_modules: 'qt6-multimedia-dev qt6-wayland-dev qt6-charts-dev'
 
     runs-on: ${{ matrix.os }}
 
@@ -48,7 +48,7 @@ jobs:
       uses: jurplel/install-qt-action@v3.3.0
       with:
         version: 6.6.0
-        modules: qtmultimedia
+        modules: qtmultimedia qtcharts qtwaylandcompositor
 
     - name: 'Install Python Dependencies (Linux)'
       if: runner.os == 'Linux'
@@ -148,7 +148,7 @@ jobs:
         uses: jurplel/install-qt-action@v3.3.0
         with:
           version: 6.6.0
-          modules: qtmultimedia
+          modules: qtmultimedia qtcharts
 
       - name: Install jinja
         run: |

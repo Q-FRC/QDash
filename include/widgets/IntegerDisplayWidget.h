@@ -14,7 +14,7 @@ protected:
 
     void keyPressEvent(QKeyEvent *event) override;
 public:
-    IntegerDisplayWidget(const QString &topic = "", const int &defaultValue = 0, const QString &title = "");
+    IntegerDisplayWidget(const QString &topic = "", const int &defaultValue = 0, const QString &title = "", const bool &ready = true);
     ~IntegerDisplayWidget();
 
     void setValue(const nt::Value &value) override;

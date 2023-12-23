@@ -4,10 +4,10 @@
 #include <QKeyEvent>
 #include <QApplication>
 
-IntegerDisplayWidget::IntegerDisplayWidget(const QString &topic, const int &defaultValue, const QString &title) : TextWidget(WidgetTypes::IntegerDisplay, topic, QString::number(defaultValue), title)
+IntegerDisplayWidget::IntegerDisplayWidget(const QString &topic, const int &defaultValue, const QString &title, const bool &ready) : TextWidget(WidgetTypes::IntegerDisplay, topic, QString::number(defaultValue), title)
 {
     m_value = defaultValue;
-    setReady(true);
+    setReady(ready);
 }
 
 IntegerDisplayWidget::~IntegerDisplayWidget() {

@@ -39,6 +39,11 @@ private:
     QMetaProperty m_currentProperty;
     BaseWidget *m_currentWidget;
 
+    QPushButton *selectTopicButton();
+    QPushButton *selectColorButton();
+
+    std::tuple<QTableWidget *, QPushButton *, QPushButton *> setupTable(const QStringList &headers);
+
 public:
     WidgetDialogGenerator(BaseWidget *widget, QWidget *parent = nullptr, bool isResize = false, WidgetData data = WidgetData{0, 0, 0, 1, 1});
     ~WidgetDialogGenerator();
@@ -47,6 +52,7 @@ public:
 
     QVariantMap serializeTable(QTableWidget *widget);
     void serializeMap(QVariantMap map, QTableWidget *widget);
+    void serializeMap(QHash<Globals::Topic, QColor> map, QTableWidget *widget);
 
     /** property functions **/
     QWidget *doubleProperty(QMetaProperty property);
@@ -66,8 +72,17 @@ public:
     QWidget *stringProperty(QMetaProperty property);
 
     QWidget *shapeProperty(QMetaProperty property);
+
+    QWidget *topicListProperty(QMetaProperty property);
+
+    QWidget *xAxisProperty(QMetaProperty property);
+
+    QWidget *topicColorMapProperty(QMetaProperty property);
 signals:
     void widgetReady(BaseWidget *widget, WidgetData data);
+
+    void topicSelected(const Globals::Topic &topic, QWidget *receiver);
+    void colorSelected(const QColor &color);
 };
 
 bool operator<(const QMetaProperty a, const QMetaProperty b);

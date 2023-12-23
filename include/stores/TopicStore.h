@@ -26,6 +26,8 @@ public:
 
     static void unsubscribe(std::string ntTopic, BaseWidget *subscriber);
     static void unsubscribe(nt::NetworkTableEntry *entry, BaseWidget *subscriber);
+
+    static double getDoubleFromEntry(nt::NetworkTableEntry *entry);
 };
 
 #endif // TopicStore_H

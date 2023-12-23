@@ -284,3 +284,5 @@ gradle-app.setting
 .vscode/
 
 CMakeLists.txt.user
+appdir
+*.AppImage

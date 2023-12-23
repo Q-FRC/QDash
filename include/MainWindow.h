@@ -58,7 +58,8 @@ private:
     QMap<BaseWidget *, WidgetData> widgetsForTab(int tabIdx);
 
     void relay();
-    WidgetData getWidgetData(BaseWidget *widget);
+
+    void makeNewWidget(WidgetTypes type);
 public:
     MainWindow();
     virtual ~MainWindow();
@@ -82,7 +83,8 @@ public slots:
     // File Actions
     void save();
     void saveAs();
-    void open();
+    void openDialog();
+    void open(QFile &file);
 
     // Tab Actions
     void newTab();
@@ -92,9 +94,6 @@ public slots:
 
     // New Widget
     void newWidgetPopup();
-
-    // Camera View
-    void newCameraView();
 
     // About Menu
     void aboutDialog();

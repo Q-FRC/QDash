@@ -18,8 +18,8 @@ public:
     explicit TypeStore();
 
     void registerType(TopicTypes topicType, WidgetTypes widgetType, QString displayName);
-    QList<QAction *> generateActionsForTopic(Globals::Topic topic, bool emitTopic = false);
-    QMenu *generateMenuForTopic(Globals::Topic topic, bool emitTopic = false);
+    QList<QAction *> generateActionsForTopic(Globals::Topic topic);
+    QMenu *generateMenuForTopic(Globals::Topic topic);
 
     QString widgetDisplayName(WidgetTypes type);
 
@@ -27,7 +27,6 @@ public slots:
     void emitWidget(BaseWidget *widget, WidgetData data);
 signals:
     void widgetReady(BaseWidget *widget, WidgetData data);
-    void topicSelected(const Globals::Topic &topic);
 };
 
 #endif // TYPESTORE_H
