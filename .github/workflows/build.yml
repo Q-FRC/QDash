@@ -67,7 +67,7 @@ jobs:
       run: |
         sudo apt-get install libstdc++-10-dev gcc-10 ninja-build
         git submodule update --init --recursive
-        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/bin/g++-10 -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/bin/g++-10 -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF -DBUILD_SHARED_LIBS=OFF
 
     - name: Build
       run: |
@@ -82,7 +82,7 @@ jobs:
     - name: Package (Linux)
       if: runner.os == 'Linux'
       run: |
-        cmake --install ${{ env.BUILD_DIR }} --prefix ${{ env.INSTALL_DIR }}
+        cmake --install ${{ env.BUILD_DIR }} --prefix ${{ env.INSTALL_DIR }}/usr
 
         cd ${{ env.INSTALL_DIR }}
         tar --owner root --group root -czf ../QFRCDashboard.tar.gz *
@@ -93,9 +93,6 @@ jobs:
       run: |
         sudo apt-get install libxcb-cursor-dev libxcb-cursor0
         mkdir -p ${{ env.INSTALL_APPIMAGE_DIR}}/usr/{lib,bin}
-
-        sudo cmake --install ${{ env.BUILD_DIR }}/_deps/ntcore-build --prefix /usr
-        sudo cmake --install ${{ env.BUILD_DIR }}/_deps/protobuf-build --prefix /usr
 
         cmake --install ${{ env.BUILD_DIR }} --prefix ${{ env.INSTALL_APPIMAGE_DIR }}/usr
 

@@ -16,19 +16,23 @@ option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(USE_SYSTEM_NTCORE "Use system ntcore installation" ON)
 option(USE_SYSTEM_PROTOBUF "Use system protobuf installation" ON)
 
-find_package(ntcore)
-if( NOT ${ntcore_FOUND} )
-    set(USE_SYSTEM_NTCORE OFF)
+if( ${USE_SYSTEM_NTCORE})
+    find_package(ntcore)
+    if( NOT ${ntcore_FOUND} )
+        set(USE_SYSTEM_NTCORE OFF)
+    endif()
 endif()
 
-find_package(Protobuf)
-if( NOT ${Protobuf_FOUND} )
-    set(USE_SYSTEM_PROTOBUF OFF)
+if( ${USE_SYSTEM_PROTOBUF})
+    find_package(Protobuf)
+    if( NOT ${Protobuf_FOUND} )
+        set(USE_SYSTEM_PROTOBUF OFF)
+    endif()
 endif()
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets MultimediaWidgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets MultimediaWidgets)
-add_subdirectory(3rd_party)
+add_subdirectory(3rd_party EXCLUDE_FROM_ALL)
 
 set(PROJECT_SOURCES
         src/main.cpp
