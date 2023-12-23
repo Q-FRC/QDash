@@ -38,8 +38,8 @@ if (NOT USE_SYSTEM_NTCORE)
 
     FetchContent_Declare(
             ntcore
-            GIT_REPOSITORY https://github.com/binex-dsk/allwpilib.git
-            GIT_TAG        0b799b77f18f764847fc51eb4675e198d011b6f5
+            GIT_REPOSITORY https://github.com/wpilibsuite/allwpilib.git
+            GIT_TAG        d1793f077d7bdb6b5ccfc4f046de34453fcf8252
             OVERRIDE_FIND_PACKAGE
     )
     FetchContent_MakeAvailable(ntcore)
