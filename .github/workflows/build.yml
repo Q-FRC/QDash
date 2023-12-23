@@ -67,7 +67,7 @@ jobs:
       run: |
         sudo apt-get install libstdc++-10-dev gcc-10 ninja-build
         git submodule update --init --recursive
-        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/bin/g++-10 -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF -DBUILD_SHARED_LIBS=OFF
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/bin/g++-10 -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF
 
     - name: Build
       run: |
@@ -94,11 +94,8 @@ jobs:
         sudo apt-get install libxcb-cursor-dev libxcb-cursor0
         mkdir -p ${{ env.INSTALL_APPIMAGE_DIR}}/usr/{lib,bin}
 
-        echo "installing ntcore"
         sudo cmake --install ${{ env.BUILD_DIR }}/_deps/ntcore-build --prefix /usr
-        echo "installing protobuf"
         sudo cmake --install ${{ env.BUILD_DIR }}/_deps/protobuf-build --prefix /usr
-        echo "install complete"
 
         cmake --install ${{ env.BUILD_DIR }} --prefix ${{ env.INSTALL_APPIMAGE_DIR }}/usr
 
@@ -121,13 +118,6 @@ jobs:
       with:
         name: QFRCDashboard-${{ runner.os }}-Binary-${{ env.VERSION }}-${{ inputs.build_type }}
         path: QFRCDashboard.tar.gz
-
-    - name: Upload system dir (Linux)
-      if: runner.os == 'Linux'
-      uses: actions/upload-artifact@v3
-      with:
-        name: QFRCDashboard-${{ runner.os }}-System-${{ env.VERSION }}-${{ inputs.build_type }}
-        path: ${{ env.INSTALL_APPIMAGE_DIR }}/**
 
     - name: Upload AppImage (Linux)
       if: runner.os == 'Linux'
