@@ -75,6 +75,7 @@ public:
 
 public slots:
     void newWidget(BaseWidget *widget, WidgetData data);
+    void deleteWidget(BaseWidget *widget);
 
     // NT Settings
     void ntSettingsPopup();
@@ -94,6 +95,8 @@ public slots:
 
     // New Widget
     void newWidgetPopup();
+    void configNewWidget(BaseWidget *widget, WidgetData data);
+    void beginNewWidgetDrag(BaseWidget *widget, WidgetData data);
 
     // About Menu
     void aboutDialog();

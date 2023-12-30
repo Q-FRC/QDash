@@ -326,10 +326,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         });
 
         connect(widgetPressed, &BaseWidget::deleteRequested, this, [this, widgetPressed] {
-            m_widgets.remove(widgetPressed);
-            relay();
-
-            widgetPressed->deleteLater();
+            deleteWidget(widgetPressed);
         });
 
         menu->popup(event->globalPosition().toPoint());
@@ -444,10 +441,10 @@ void MainWindow::dragRelease(QPoint point) {
     relay();
     tab->setHasSelection(false);
 
+    emit dragDone(m_draggedWidget, data);
+
     m_draggedWidget = nullptr;
     m_dragging = false;
-
-    emit dragDone(m_draggedWidget, data);
 }
 
 void MainWindow::resizeStart(QPoint point) {
@@ -606,24 +603,9 @@ void MainWindow::makeNewWidget(WidgetTypes type) {
         }
     } else {
         BaseWidget *widget = BaseWidget::defaultWidgetFromTopic("", type);
-        m_draggedWidget = widget;
+        WidgetData data{0, 0, 0, 1, 1}; // tabIdx set in function
 
-        WidgetData data{m_centralWidget->currentIndex(), 0, 0, 1, 1};
-        m_draggedWidgetData = data;
-
-        dragStart(QCursor::pos(), QPoint(0, 0));
-
-        // ensure connection only occurs once
-        QObject *receiver = new QObject(this);
-        connect(this, &MainWindow::dragDone, receiver, [this, receiver, widget](BaseWidget *, WidgetData data) {
-            receiver->deleteLater();
-
-            WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget, this, false, data);
-            dialog->setWindowTitle("New Widget");
-            dialog->show();
-
-            connect(dialog, &WidgetDialogGenerator::widgetReady, this, &MainWindow::newWidget);
-        });
+        beginNewWidgetDrag(widget, data);
     }
 }
 
@@ -633,6 +615,12 @@ void MainWindow::newWidget(BaseWidget *widget, WidgetData data) {
     data.tabIdx = m_centralWidget->currentIndex();
     m_widgets.insert(widget, data);
     relay();
+}
+
+void MainWindow::deleteWidget(BaseWidget *widget) {
+    m_widgets.remove(widget);
+    relay();
+    widget->deleteLater();
 }
 
 // NT Settings
@@ -822,29 +810,30 @@ void MainWindow::newWidgetPopup() {
         QRect screenSize = qApp->primaryScreen()->geometry();
         listDialog->resize(screenSize.width() / 2., screenSize.height() / 2.);
 
-        QObject *receiver = new QObject(this);
-        connect(listDialog, &NewWidgetTreeDialog::widgetReady, receiver, [this, receiver](BaseWidget *widget, WidgetData data) {
-            receiver->deleteLater();
-            m_draggedWidget = widget;
-            data.tabIdx = m_centralWidget->currentIndex();
-            m_draggedWidgetData = data;
+        connect(listDialog, &NewWidgetTreeDialog::widgetReady, this, &MainWindow::beginNewWidgetDrag, Qt::SingleShotConnection);
 
-            dragStart(QCursor::pos(), QPoint(0, 0));
-
-            // ensure connection only occurs once
-            QObject *receiver2 = new QObject(this);
-            connect(this, &MainWindow::dragDone, receiver2, [this, receiver2, widget](BaseWidget *, WidgetData data) {
-                receiver2->deleteLater();
-
-                WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget, this, false, data);
-                dialog->setWindowTitle("New Widget");
-                dialog->show();
-
-                connect(dialog, &WidgetDialogGenerator::widgetReady, this, &MainWindow::newWidget);
-            });
-        });
         listDialog->show();
     }
+}
+
+void MainWindow::configNewWidget(BaseWidget *widget, WidgetData data) {
+    WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget, this, false, data);
+    dialog->setWindowTitle("New Widget");
+    dialog->show();
+
+    connect(dialog, &WidgetDialogGenerator::widgetReady, this, &MainWindow::newWidget);
+    connect(dialog, &WidgetDialogGenerator::cancelled, this, &MainWindow::deleteWidget);
+}
+
+void MainWindow::beginNewWidgetDrag(BaseWidget *widget, WidgetData data) {
+    m_draggedWidget = widget;
+    data.tabIdx = m_centralWidget->currentIndex();
+    m_draggedWidgetData = data;
+
+    dragStart(QCursor::pos(), QPoint(0, 0));
+
+    // ensure connection only occurs once
+    connect(this, &MainWindow::dragDone, this, &MainWindow::configNewWidget, Qt::SingleShotConnection);
 }
 
 //  Menu

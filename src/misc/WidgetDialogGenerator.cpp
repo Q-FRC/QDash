@@ -66,7 +66,10 @@ WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, QWidget *parent
 
     m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
-    connect(m_buttonBox, &QDialogButtonBox::rejected, this, &QDialog::close);
+    connect(m_buttonBox, &QDialogButtonBox::rejected, this, &WidgetDialogGenerator::reject);
+    connect(this, &WidgetDialogGenerator::rejected, this, [this, widget] {
+        emit cancelled(m_widget);
+    });
 
     // only properties at BaseWidget and above
     int offset = BaseWidget::staticMetaObject.propertyOffset();
@@ -135,7 +138,7 @@ WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, QWidget *parent
 
         m_widget->setReady(true);
         emit widgetReady(m_widget, widgetData);
-        close();
+        accept();
     });
 }
 

@@ -80,6 +80,7 @@ public:
     QWidget *topicColorMapProperty(QMetaProperty property);
 signals:
     void widgetReady(BaseWidget *widget, WidgetData data);
+    void cancelled(BaseWidget *widget);
 
     void topicSelected(const Globals::Topic &topic, QWidget *receiver);
     void colorSelected(const QColor &color);
