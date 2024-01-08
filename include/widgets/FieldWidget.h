@@ -17,7 +17,7 @@ protected:
     QVariantList m_value{};
 
     FieldImage *m_imageLabel;
-    Globals::File m_image{":/2023Field.png"};
+    Globals::File m_image{":/2024Field.png"};
 
     double m_width = 0.5;
     double m_length = 0.5;
@@ -38,3 +38,4 @@ public:
 
     void resizeEvent(QResizeEvent *event);
 };
+

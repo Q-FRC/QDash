@@ -39,7 +39,7 @@ if (NOT USE_SYSTEM_NTCORE)
     FetchContent_Declare(
             ntcore
             GIT_REPOSITORY https://github.com/wpilibsuite/allwpilib.git
-            GIT_TAG        d1793f077d7bdb6b5ccfc4f046de34453fcf8252
+            GIT_TAG        4809f3d0fcaea95115c069d6027694191fca9750
             OVERRIDE_FIND_PACKAGE
     )
     FetchContent_MakeAvailable(ntcore)
