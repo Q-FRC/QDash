@@ -43,6 +43,8 @@ jobs:
 
           tar -czf QFRCDashboard-${{ env.VERSION }}.tar.gz QFRCDashboard-${{ env.VERSION }}
 
+          zip -r QFRCDashboard-Windows-Setup-${{ env.VERSION }}.zip QFRCDashboard-Windows-Setup*/* QFRCDashboard-Windows-Setup-${{ env.VERSION }}.zip
+
           # for d in QFRCDashboard-Windows-*; do
           #   cd "${d}" || continue
           #   PORT="$(echo -n ${d} | grep -o Portable || true)"
@@ -64,3 +66,4 @@ jobs:
             QFRCDashboard-Linux-${{ env.VERSION }}-x86_64.AppImage
             QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip
             QFRCDashboard-${{ env.VERSION }}.tar.gz
+            QFRCDashboard-${{ runner.os }}-Setup-${{ env.VERSION }}.zip

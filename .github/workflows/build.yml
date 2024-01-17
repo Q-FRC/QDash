@@ -20,13 +20,20 @@ jobs:
           - os: ubuntu-20.04
             qt_host: linux
             qt_version: '6.6.0'
-            qt_modules: 'qt6-multimedia-dev qt6-wayland-dev qt6-charts-dev'
+            qt_modules: 'qtmultimedia qtcharts qtwaylandcompositor'
+
+          - os: windows-2022
+            qt_host: windows
+            qt_version: '6.6.0'
+            qt_modules: 'qtmultimedia qtcharts'
 
     runs-on: ${{ matrix.os }}
 
     env:
       INSTALL_DIR: "install"
       INSTALL_APPIMAGE_DIR: "install-appdir"
+      NTCORE_INSTALL_DIR: "install-ntcore"
+      PROTOBUF_INSTALL_DIR: "install-protobuf"
       BUILD_DIR: "build"
       VERSION: "1.0.0"
 
@@ -45,15 +52,21 @@ jobs:
     - name: Install CMake
       uses: lukka/get-cmake@v3.28.1
 
-    - name: 'Install Qt 6.6.0'
-      if: runner.os == 'Linux'
+    - uses: ilammy/msvc-dev-cmd@v1
+      if: runner.os == 'Windows'
+
+    - uses: repolevedavaj/install-nsis@v1.0.1
+      if: runner.os == 'Windows'
+      with:
+        nsis-version: 3.08
+
+    - name: Install Qt
       uses: jurplel/install-qt-action@v3.3.0
       with:
         version: 6.6.0
-        modules: qtmultimedia qtcharts qtwaylandcompositor
+        modules: ${{ matrix.qt_modules }}
 
-    - name: 'Install Python Dependencies (Linux)'
-      if: runner.os == 'Linux'
+    - name: Install Python Dependencies
       run: |
         pip install jinja2
 
@@ -71,9 +84,15 @@ jobs:
         git submodule update --init --recursive
         cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/bin/g++-10 -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF -DBUILD_SHARED_LIBS=OFF
 
+    - name: Configure CMake (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        git submodule update --init --recursive
+        cmake -S . -B ${{ env.BUILD_DIR }} -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF
+
     - name: Build
       run: |
-        cmake --build ${{ env.BUILD_DIR }} --parallel $(nproc)
+        cmake --build ${{ env.BUILD_DIR }} --parallel $(nproc) --config ${{ inputs.build_type }}
 
     # - name: Test
     #   working-directory: ${{ steps.strings.outputs.build-output-dir }}
@@ -111,6 +130,38 @@ jobs:
 
         ./linuxdeploy-x86_64.AppImage --appdir ${{ env.INSTALL_APPIMAGE_DIR }} --output appimage --plugin qt
 
+    - name: Package (Windows, Portable)
+      if: runner.os == 'Windows'
+      shell: cmd
+      run: |
+        cmake --install ${{ env.BUILD_DIR }}\_deps\ntcore-build --prefix ${{ env.NTCORE_INSTALL_DIR }}
+        cmake --install ${{ env.BUILD_DIR }}\_deps\protobuf-build --prefix ${{ env.PROTOBUF_INSTALL_DIR }}
+
+        mkdir ${{ env.INSTALL_DIR }}
+        set PATH=%PATH%;"${{ runner.workspace }}\Qt\6.6.0\msvc2019_64\bin"
+
+        windeployqt ${{ env.BUILD_DIR }}\QFRCDashboard.exe --dir ${{ env.INSTALL_DIR }}
+        cp ${{ env.BUILD_DIR }}\QFRCDashboard.exe ${{ env.INSTALL_DIR }}
+
+        if "${{ inputs.build_type }}" == "Debug" (
+          cp C:\Windows\System32\ucrtbased.dll ${{ env.INSTALL_DIR }}
+        ) else (
+          cp C:\Windows\System32\ucrtbase.dll ${{ env.INSTALL_DIR }}
+        )
+
+        cp ${{ env.PROTOBUF_INSTALL_DIR }}\bin\abseil_dll.dll ${{ env.INSTALL_DIR }}
+
+    - name: Package (Windows, Installer)
+      if: runner.os == 'Windows'
+      shell: cmd
+      run: |
+        cd ${{ env.INSTALL_DIR }}
+        makensis -NOCD "${{ github.workspace }}/${{ env.BUILD_DIR }}/program_info/win_install.nsi"
+
+    ##
+    # UPLOAD
+    ##
+
     - name: Upload portable tarball (Linux)
       if: runner.os == 'Linux'
       uses: actions/upload-artifact@v3
@@ -125,85 +176,16 @@ jobs:
         name: QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}-x86_64.AppImage
         path: QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}-x86_64.AppImage
 
+    - name: Upload binary zip (Windows, portable)
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v3
+      with:
+        name: QFRCDashboard-Windows-Portable-${{ env.VERSION }}-${{ inputs.build_type }}
+        path: ${{ env.INSTALL_DIR }}/**
 
-  build-windows:
-    name: "Build - Windows"
-    runs-on: windows-2022
-
-    env:
-      VERSION: "1.0.0"
-      BUILD_WIN_DIR: "winbuild"
-      INSTALL_WIN_DIR: "install-win"
-      NTCORE_INSTALL_DIR: "install-ntcore"
-      PROTOBUF_INSTALL_DIR: "install-protobuf"
-
-    steps:
-      - uses: ilammy/msvc-dev-cmd@v1
-
-      - name: Install CMake
-        uses: lukka/get-cmake@v3.28.1
-
-      - name: Run sccache-cache
-        uses: mozilla-actions/sccache-action@v0.0.3
-
-      - name: 'Install Qt (Windows)'
-        uses: jurplel/install-qt-action@v3.3.0
-        with:
-          version: 6.6.0
-          modules: qtmultimedia qtcharts
-
-      - name: Install jinja
-        run: |
-         python -m ensurepip
-         python -m pip install jinja2
-
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: 'Build (Windows)'
-        run: |
-          git submodule update --init --recursive
-          cmake -S . -B ${{ env.BUILD_WIN_DIR }} -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF
-
-          cmake --build ${{ env.BUILD_WIN_DIR }} --config ${{ inputs.build_type }} --parallel $(nproc)
-        env:
-          SCCACHE_GHA_ENABLED: "true"
-
-      - name: Package (Windows)
-        shell: cmd
-        run: |
-          cmake --install ${{ env.BUILD_WIN_DIR }}\_deps\ntcore-build --prefix ${{ env.NTCORE_INSTALL_DIR }}
-          cmake --install ${{ env.BUILD_WIN_DIR }}\_deps\protobuf-build --prefix ${{ env.PROTOBUF_INSTALL_DIR }}
-
-          mkdir ${{ env.INSTALL_WIN_DIR }}
-          set PATH=%PATH%;"${{ runner.workspace }}\Qt\6.6.0\msvc2019_64\bin"
-
-          windeployqt ${{ env.BUILD_WIN_DIR }}\QFRCDashboard.exe --dir ${{ env.INSTALL_WIN_DIR }}
-          cp ${{ env.BUILD_WIN_DIR }}\QFRCDashboard.exe ${{ env.INSTALL_WIN_DIR }}
-
-          if "${{ inputs.build_type }}" == "Debug" (
-            cp ${{ env.NTCORE_INSTALL_DIR }}\bin\ntcored.dll ${{ env.INSTALL_WIN_DIR }}
-            cp ${{ env.NTCORE_INSTALL_DIR }}\bin\wpinetd.dll ${{ env.INSTALL_WIN_DIR }}
-            cp ${{ env.NTCORE_INSTALL_DIR }}\bin\wpiutild.dll ${{ env.INSTALL_WIN_DIR }}
-            cp ${{ env.PROTOBUF_INSTALL_DIR }}\bin\libprotobufd.dll ${{ env.INSTALL_WIN_DIR }}
-            cp C:\Windows\System32\ucrtbased.dll ${{ env.INSTALL_WIN_DIR }}
-          ) else (
-            cp ${{ env.NTCORE_INSTALL_DIR }}\bin\ntcore.dll ${{ env.INSTALL_WIN_DIR }}
-            cp ${{ env.NTCORE_INSTALL_DIR }}\bin\wpinet.dll ${{ env.INSTALL_WIN_DIR }}
-            cp ${{ env.NTCORE_INSTALL_DIR }}\bin\wpiutil.dll ${{ env.INSTALL_WIN_DIR }}
-            cp ${{ env.PROTOBUF_INSTALL_DIR }}\bin\libprotobuf.dll ${{ env.INSTALL_WIN_DIR }}
-            cp C:\Windows\System32\ucrtbase.dll ${{ env.INSTALL_WIN_DIR }}
-          )
-
-          cp ${{ env.PROTOBUF_INSTALL_DIR }}\bin\abseil_dll.dll ${{ env.INSTALL_WIN_DIR }}
-
-      ##
-      # UPLOAD BUILDS
-      ##
-
-      - name: Upload binary zip (Windows, portable)
-        uses: actions/upload-artifact@v3
-        with:
-          name: QFRCDashboard-Windows-Portable-${{ env.VERSION }}-${{ inputs.build_type }}
-          path: ${{ env.INSTALL_WIN_DIR }}/**
+    - name: Upload installer (Windows)
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v3
+      with:
+        name: QFRCDashboard-${{ runner.os }}-Setup-${{ env.VERSION }}-${{ inputs.build_type }}
+        path: QFRCDashboard-Setup.exe

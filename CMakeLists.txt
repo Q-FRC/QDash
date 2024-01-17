@@ -123,7 +123,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         include/misc/ChartView.h src/misc/ChartView.cpp
         include/stores/CameraStore.h src/stores/CameraStore.cpp
-
     )
 endif()
 
@@ -143,6 +142,14 @@ message(STATUS "Git tag: ${Dashboard_GIT_TAG}")
 message(STATUS "Git refspec: ${Dashboard_GIT_REFSPEC}")
 
 string(REPLACE "-beta" "." Dashboard_GIT_TAG_NUMERO ${Dashboard_GIT_TAG})
+
+string(REPLACE "." " " Dashboard_SPLIT_VERSION ${Dashboard_GIT_TAG_NUMERO})
+
+separate_arguments(Dashboard_SPLIT_VERSION)
+
+list(GET Dashboard_SPLIT_VERSION 0 Dashboard_VERSION_MAJOR)
+list(GET Dashboard_SPLIT_VERSION 1 Dashboard_VERSION_MINOR)
+list(GET Dashboard_SPLIT_VERSION 2 Dashboard_VERSION_HOTFIX)
 
 # Build Date
 string(TIMESTAMP TODAY "%Y-%m-%d")
@@ -164,6 +171,11 @@ install(TARGETS QFRCDashboard
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(
+    CODE "file(WRITE \"\${CMAKE_INSTALL_PREFIX}/qt.conf\" \" \")"
+    COMPONENT Runtime
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)

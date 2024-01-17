@@ -1,0 +1,148 @@
+!include "FileFunc.nsh"
+!include "LogicLib.nsh"
+!include "MUI2.nsh"
+
+Unicode true
+
+Name "@Dashboard_APP_NAME@"
+InstallDir "$LOCALAPPDATA\Programs\@Dashboard_APP_NAME@"
+InstallDirRegKey HKCU "Software\@Dashboard_APP_NAME@" "InstallDir"
+RequestExecutionLevel user
+OutFile "../@Dashboard_APP_NAME@-Setup.exe"
+
+!define MUI_ICON "../program_info/@Dashboard_APP_NAME@.ico"
+
+;--------------------------------
+
+; Pages
+
+!insertmacro MUI_PAGE_WELCOME
+!define MUI_COMPONENTSPAGE_NODESC
+!insertmacro MUI_PAGE_COMPONENTS
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+!define MUI_FINISHPAGE_RUN "$InstDir\@Dashboard_APP_NAME@.exe"
+!insertmacro MUI_PAGE_FINISH
+
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+
+;--------------------------------
+
+; Languages
+
+!insertmacro MUI_LANGUAGE "English"
+
+;--------------------------------
+
+; Version info
+VIProductVersion "@Dashboard_VERSION_WIN@"
+VIFileVersion "@Dashboard_VERSION_WIN@"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "@Dashboard_APP_NAME@"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "@Dashboard_APP_NAME@ Installer"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Carson Rueter"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "@Dashboard_GIT_TAG@"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "@Dashboard_GIT_TAG@"
+
+;--------------------------------
+
+; The stuff to install
+Section "@Dashboard_APP_NAME@"
+
+  SectionIn RO
+
+  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @Dashboard_APP_NAME@.exe /F'
+
+  SetOutPath $INSTDIR
+
+  File "@Dashboard_APP_NAME@.exe"
+  File *.dll
+  File /r "iconengines"
+  File /r "imageformats"
+  File /r "multimedia"
+  File /r "platforms"
+  File /r "styles"
+  File /r "tls"
+
+  ; Write the installation path into the registry
+  WriteRegStr HKCU Software\@Dashboard_APP_NAME@ "InstallDir" "$INSTDIR"
+
+  ; Write the uninstall keys for Windows
+  ${GetParameters} $R0
+  ${GetOptions} $R0 "/NoUninstaller" $R1
+  ${If} ${Errors}
+    !define UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\@Dashboard_APP_NAME@"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayName" "@Dashboard_APP_NAME@"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayIcon" "$INSTDIR\@Dashboard_APP_NAME@.exe"
+    WriteRegStr HKCU "${UNINST_KEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
+    WriteRegStr HKCU "${UNINST_KEY}" "QuietUninstallString" '"$INSTDIR\uninstall.exe" /S'
+    WriteRegStr HKCU "${UNINST_KEY}" "InstallLocation" "$INSTDIR"
+    WriteRegStr HKCU "${UNINST_KEY}" "Publisher" "@Dashboard_APP_NAME@ Contributors"
+    WriteRegStr HKCU "${UNINST_KEY}" "Version" "@Dashboard_GIT_TAG@"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayVersion" "@Dashboard_GIT_TAG@"
+    WriteRegStr HKCU "${UNINST_KEY}" "VersionMajor" "@Dashboard_VERSION_MAJOR@"
+    WriteRegStr HKCU "${UNINST_KEY}" "VersionMinor" "@Dashboard_VERSION_MINOR@"
+    ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
+    IntFmt $0 "0x%08X" $0
+    WriteRegDWORD HKCU "${UNINST_KEY}" "EstimatedSize" "$0"
+    WriteRegDWORD HKCU "${UNINST_KEY}" "NoModify" 1
+    WriteRegDWORD HKCU "${UNINST_KEY}" "NoRepair" 1
+    WriteUninstaller "$INSTDIR\uninstall.exe"
+  ${EndIf}
+
+SectionEnd
+
+Section "Start Menu Shortcut" SM_SHORTCUTS
+
+  CreateShortcut "$SMPROGRAMS\@Dashboard_APP_NAME@.lnk" "$INSTDIR\@Dashboard_APP_NAME@.exe" "" "$INSTDIR\@Dashboard_APP_NAME@.exe" 0
+
+SectionEnd
+
+Section /o "Desktop Shortcut" DESKTOP_SHORTCUTS
+
+  CreateShortcut "$DESKTOP\@Dashboard_APP_NAME@.lnk" "$INSTDIR\@Dashboard_APP_NAME@.exe" "" "$INSTDIR\@Dashboard_APP_NAME@.exe" 0
+
+SectionEnd
+
+;--------------------------------
+
+; Uninstaller
+
+Section "Uninstall"
+
+  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @Dashboard_APP_NAME@.exe /F'
+
+  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\@Dashboard_APP_NAME@"
+  DeleteRegKey HKCU SOFTWARE\@Dashboard_APP_NAME@
+
+  Delete $INSTDIR\@Dashboard_APP_NAME@.exe
+  Delete $INSTDIR\qt.conf
+  Delete $INSTDIR\*.dll
+
+  Delete $INSTDIR\uninstall.exe
+
+  RMDir /r $INSTDIR\iconengines
+  RMDir /r $INSTDIR\imageformats
+  RMDir /r $INSTDIR\platforms
+  RMDir /r $INSTDIR\styles
+
+  Delete "$SMPROGRAMS\@Dashboard_APP_NAME@.lnk"
+  Delete "$DESKTOP\@Dashboard_APP_NAME@.lnk"
+
+  RMDir "$INSTDIR"
+
+SectionEnd
+
+;--------------------------------
+
+; Extra command line parameters
+
+Function .onInit
+${GetParameters} $R0
+${GetOptions} $R0 "/NoShortcuts" $R1
+${IfNot} ${Errors}
+${OrIf} ${FileExists} "$InstDir\@Dashboard_APP_NAME@.exe"
+  !insertmacro UnselectSection ${SM_SHORTCUTS}
+  !insertmacro UnselectSection ${DESKTOP_SHORTCUTS}
+${EndIf}
+FunctionEnd
