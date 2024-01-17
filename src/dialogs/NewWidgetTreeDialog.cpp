@@ -1,4 +1,4 @@
-#include "misc/NewWidgetTreeDialog.h"
+#include "dialogs/NewWidgetTreeDialog.h"
 
 #include "stores/TypeStore.h"
 #include "stores/FilterStore.h"

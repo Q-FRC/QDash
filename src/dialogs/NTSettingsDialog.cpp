@@ -1,4 +1,4 @@
-#include "misc/NTSettingsDialog.h"
+#include "dialogs/NTSettingsDialog.h"
 
 #include <QIntValidator>
 

@@ -61,6 +61,9 @@ public slots:
     void configNewWidget(BaseWidget *widget, WidgetData data);
     void beginNewWidgetDrag(BaseWidget *widget, WidgetData data);
 
+    // Camera
+    void cameraServerPopup();
+
     // About Menu
     void aboutDialog();
 };

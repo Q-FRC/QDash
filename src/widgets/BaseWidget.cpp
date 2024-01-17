@@ -17,7 +17,7 @@
 #include "widgets/CommandWidget.h"
 #include "widgets/GraphWidget.h"
 
-#include "misc/WidgetDialogGenerator.h"
+#include "dialogs/WidgetDialogGenerator.h"
 
 #include <QMenu>
 #include <QFontDialog>

@@ -1,4 +1,4 @@
-#include "misc/TabMaxSizeDialog.h"
+#include "dialogs/TabMaxSizeDialog.h"
 
 TabMaxSizeDialog::TabMaxSizeDialog(QWidget *parent, const QPoint &maxSize) : QDialog(parent)
 {

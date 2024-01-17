@@ -1,6 +1,6 @@
-#include "misc/WidgetDialogGenerator.h"
+#include "dialogs/WidgetDialogGenerator.h"
 
-#include "misc/NewWidgetTreeDialog.h"
+#include "dialogs/NewWidgetTreeDialog.h"
 
 #include "qscreen.h"
 #include "stores/FilterStore.h"
@@ -36,7 +36,7 @@ WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, QWidget *parent
 
     QFormLayout *m_layout = new QFormLayout(this);
 
-    m_nameInput = new QLineEdit(isResize ? widget->title() : "", this);
+    m_nameInput = new QLineEdit(widget->title(), this);
 
     m_layout->addRow("Name:", m_nameInput);
 
