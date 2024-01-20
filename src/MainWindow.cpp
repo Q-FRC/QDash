@@ -3,6 +3,7 @@
 
 #include "dialogs/NewWidgetTreeDialog.h"
 #include "dialogs/NTSettingsDialog.h"
+#include "dialogs/PreferencesDialog.h"
 #include "dialogs/WidgetDialogGenerator.h"
 #include "dialogs/TabMaxSizeDialog.h"
 #include "dialogs/CameraSelectionDialog.h"
@@ -25,6 +26,7 @@
 #include <QMetaProperty>
 #include <QShortcut>
 #include <QDrag>
+#include <QSettings>
 
 #include <BuildConfig.h>
 
@@ -39,9 +41,17 @@ MainWindow::MainWindow()
     addToolBar(Qt::ToolBarArea::BottomToolBarArea, m_toolbar);
 
     m_menubar = menuBar();
+    // Preferences
+    {
+        QAction *preferencesAction = new QAction("&Preferences", this);
+        preferencesAction->setShortcut(QKeySequence("Ctrl+,"));
+        connect(preferencesAction, &QAction::triggered, this, &MainWindow::preferences);
+
+        m_menubar->addAction(preferencesAction);
+    }
     // NT Settings
     {
-        QAction *ntServerAction = new QAction("NT &Server");
+        QAction *ntServerAction = new QAction("NT &Server", this);
         connect(ntServerAction, &QAction::triggered, this, &MainWindow::ntSettingsPopup);
 
         m_menubar->addAction(ntServerAction);
@@ -122,7 +132,7 @@ MainWindow::MainWindow()
     } // End Standalone Widgets
 
     { // About
-        QMenu *aboutMenu = new QMenu("&About");
+        QMenu *aboutMenu = new QMenu("&About", this);
 
         QAction *aboutAction = new QAction("About " + BuildConfig.APP_NAME, aboutMenu);
         connect(aboutAction, &QAction::triggered, this, &MainWindow::aboutDialog);
@@ -231,6 +241,20 @@ void MainWindow::makeNewWidget(WidgetTypes type) {
 }
 
 /* Slots */
+
+// Preferences
+void MainWindow::preferences() {
+    PreferencesDialog *dialog = new PreferencesDialog(this);
+
+    dialog->show();
+
+    connect(dialog, &PreferencesDialog::styleSheetSet, this, [](QString styleSheet) {
+        setAppStyleSheet(styleSheet);
+
+        QSettings settings(qApp);
+        settings.setValue("styleSheet", styleSheet);
+    });
+}
 
 // NT Settings
 void MainWindow::ntSettingsPopup() {

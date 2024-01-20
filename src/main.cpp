@@ -16,6 +16,8 @@
 int main(int argc, char **argv) {
     SingleApplication app(argc, argv);
 
+    Q_INIT_RESOURCE(breeze);
+
     app.setOrganizationName(BuildConfig.ORG_NAME);
     app.setApplicationName(BuildConfig.APP_NAME);
     app.setApplicationVersion(BuildConfig.versionString());
@@ -117,6 +119,15 @@ int main(int argc, char **argv) {
                      "or even change their fonts--by right clicking any widget.")
                  .arg(BuildConfig.APP_NAME));
     }
+
+    bool hasStyleSheet = settings.contains("styleSheet");
+    QString styleSheet = hasStyleSheet ? settings.value("styleSheet").toString() : ":/light/stylesheet.qss";
+
+    if (!hasStyleSheet) {
+        settings.setValue("styleSheet", styleSheet);
+    }
+
+    setAppStyleSheet(styleSheet);
 
     Globals::inst.AddListener({{""}}, nt::EventFlags::kTopic, [window] (const nt::Event &event) {
         std::string topicName(event.GetTopicInfo()->name);

@@ -119,10 +119,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(QFRCDashboard
         MANUAL_FINALIZATION
         fields.qrc
+        theme/qrc/breeze.qrc
         ${RCS_FILE}
         ${PROJECT_SOURCES}
         include/misc/ChartView.h src/misc/ChartView.cpp
         include/stores/CameraStore.h src/stores/CameraStore.cpp
+        include/dialogs/PreferencesDialog.h src/dialogs/PreferencesDialog.cpp
     )
 endif()
 

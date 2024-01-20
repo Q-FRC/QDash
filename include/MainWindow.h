@@ -40,6 +40,9 @@ public:
     void loadObject(const QJsonDocument &doc);
 
 public slots:
+    // Preferences
+    void preferences();
+
     // NT Settings
     void ntSettingsPopup();
     void setNtSettings(ServerData data);

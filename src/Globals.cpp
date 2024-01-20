@@ -1,4 +1,5 @@
 #include "Globals.h"
+#include "qapplication.h"
 #include "stores/TypeStore.h"
 
 #include <QStringList>
@@ -37,4 +38,11 @@ QMap<QString, Globals:: FrameShape> Globals::shapeNameMap = {
     {"Rectangle", Globals::FrameShape::Rectangle},
     {"Hexagon", Globals::FrameShape::Hexagon}
 };
+
+void setAppStyleSheet(QString styleSheet) {
+    QFile file(styleSheet);
+    file.open(QFile::ReadOnly | QFile::Text);
+    QTextStream stream(&file);
+    qApp->setStyleSheet(stream.readAll());
+}
 

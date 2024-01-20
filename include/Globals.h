@@ -118,3 +118,5 @@ static const int TopicColorMap = qMetaTypeId<QHash<Globals::Topic, QColor>>();
 
 extern bool operator==(const WidgetData &a, const WidgetData &b);
 // extern bool operator==(const Globals::Topic &a, const Globals::Topic &b);
+
+extern void setAppStyleSheet(QString styleSheet);
