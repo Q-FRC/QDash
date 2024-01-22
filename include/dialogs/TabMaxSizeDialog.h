@@ -6,19 +6,17 @@
 #include <QFormLayout>
 #include <QDialogButtonBox>
 
-class TabMaxSizeDialog : public QDialog
+#include "ui_TabMaxSizeDialog.h"
+
+class TabMaxSizeDialog : public QDialog, Ui::TabMaxSizeDialog
 {
     Q_OBJECT
-private:
-    QSpinBox *m_xBox;
-    QSpinBox *m_yBox;
-
-    QDialogButtonBox *m_buttonBox;
-
-    QFormLayout *m_layout;
 public:
     TabMaxSizeDialog(QWidget *parent = nullptr, const QPoint &maxSize = QPoint());
     ~TabMaxSizeDialog();
+
+public slots:
+    void emitData();
 signals:
     void dataReady(QPoint point);
 };

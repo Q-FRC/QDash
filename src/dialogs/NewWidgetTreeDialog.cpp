@@ -9,28 +9,14 @@
 
 #include "Globals.h"
 
-NewWidgetTreeDialog::NewWidgetTreeDialog(bool emitTopic, QWidget *parent) : QDialog(parent)
+NewWidgetTreeDialog::NewWidgetTreeDialog(bool emitTopic, QWidget *parent) : QDialog(parent), Ui::NewWidgetTreeDialog()
 {
+    setupUi(this);
     m_emitTopic = emitTopic;
 
+    tree->header()->setSectionResizeMode(0, QHeaderView::Stretch);
+
     FilterStore::filterTopics();
-    m_layout = new QVBoxLayout(this);
-
-    m_tree = new QTreeWidget(this);
-    m_tree->setColumnCount(2);
-    m_tree->header()->setStretchLastSection(false);
-    m_tree->header()->setSectionResizeMode(0, QHeaderView::Stretch);
-
-    QStringList headerLabels{};
-    headerLabels << "Topic" << "Type";
-    m_tree->setHeaderLabels(headerLabels);
-
-    m_buttonBox = new QDialogButtonBox(QDialogButtonBox::StandardButton::Cancel);
-
-    connect(m_buttonBox, &QDialogButtonBox::rejected, this, &QDialog::close);
-
-    m_layout->addWidget(m_tree);
-    m_layout->addWidget(m_buttonBox);
 
     if (!emitTopic) {
         connect(&Globals::typeStore, &TypeStore::widgetReady, this, &NewWidgetTreeDialog::widgetReady);
@@ -41,14 +27,14 @@ NewWidgetTreeDialog::NewWidgetTreeDialog(bool emitTopic, QWidget *parent) : QDia
 NewWidgetTreeDialog::~NewWidgetTreeDialog() {}
 
 void NewWidgetTreeDialog::constructList(QList<Globals::Topic> topics) {
-    m_tree->clear();
+    tree->clear();
 
     for (const Globals::Topic & topic : topics)
     {
         createTreeIfNotExists(topic);
 
         if (m_emitTopic) {
-            connect(m_tree, &QTreeWidget::itemActivated, this, [this, topic](QTreeWidgetItem *item) {
+            connect(tree, &QTreeWidget::itemActivated, this, [this, topic](QTreeWidgetItem *item) {
                 if (getParentPath(item) == topic.name) {
                     emit topicReady(topic);
                     close();
@@ -57,7 +43,7 @@ void NewWidgetTreeDialog::constructList(QList<Globals::Topic> topics) {
         } else {
             QMenu *widgetMenu = Globals::typeStore.generateMenuForTopic(topic);
 
-            connect(m_tree, &QTreeWidget::itemActivated, this, [this, topic, widgetMenu](QTreeWidgetItem *item) {
+            connect(tree, &QTreeWidget::itemActivated, this, [this, topic, widgetMenu](QTreeWidgetItem *item) {
                 if (getParentPath(item) == topic.name) {
                     widgetMenu->popup(QCursor::pos());
                 }
@@ -89,7 +75,7 @@ void NewWidgetTreeDialog::createTreeIfNotExists(const Globals::Topic &topic) {
 
         if (i == 1) {
             m_itemTableMap.insert("/" + tablePath.at(1), item);
-            m_tree->addTopLevelItem(item);
+            tree->addTopLevelItem(item);
 
             continue;
         }
@@ -112,10 +98,11 @@ void NewWidgetTreeDialog::createTreeIfNotExists(const Globals::Topic &topic) {
     columns << topicEnd << Globals::topicTypeDisplayNames.value(topic.type);
 
     QTreeWidgetItem *item = new QTreeWidgetItem(columns);
+    item->setToolTip(1, columns.at(1));
     item->setFirstColumnSpanned(true);
 
     if (superTable.isEmpty()) {
-        m_tree->addTopLevelItem(item);
+        tree->addTopLevelItem(item);
         return;
     }
 

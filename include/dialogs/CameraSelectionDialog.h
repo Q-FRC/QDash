@@ -7,17 +7,16 @@
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 
-class CameraSelectionDialog : public QDialog
+#include "ui_CameraSelectionDialog.h"
+
+class CameraSelectionDialog : public QDialog, Ui::CameraSelectionDialog
 {
     Q_OBJECT
-private:
-    QListWidget *m_list;
-    QDialogButtonBox *m_buttonBox;
-
-    QVBoxLayout *m_layout;
 public:
     CameraSelectionDialog(QWidget *parent = nullptr);
 
+public slots:
+    void emitCamera();
 signals:
     void selectedCamera(Camera camera);
 };

@@ -8,13 +8,16 @@
 
 #include "Globals.h"
 #include "widgets/BaseWidget.h"
+#include "misc/GridLineWidget.h"
 
 class TabWidget : public QWidget
 {
     Q_OBJECT
 private:
     QGridLayout *m_layout;
-    
+
+    GridLineWidget *m_gridLine;
+
     QPoint m_maxSize;
     WidgetData m_selectedIndex;
 
@@ -47,8 +50,6 @@ private:
     void resizeRelease(QPoint point);
 
     // Events
-    void paintEvent(QPaintEvent *event) override;
-
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
@@ -70,15 +71,6 @@ public:
 
     QPoint maxSize();
     void setMaxSize(const QPoint &maxSize);
-
-    WidgetData selectedIndex();
-    void setSelectedIndex(const WidgetData &selectedIndex);
-
-    bool hasSelection();
-    void setHasSelection(const bool &hasSelection);
-
-    bool isValidSelection();
-    void setValidSelection(const bool &isValidSelection);
 
     QJsonObject saveObject();
     void loadObject(const QJsonObject &object);

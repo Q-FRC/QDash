@@ -1,8 +1,5 @@
 #include "widgets/TabWidget.h"
-#include "qpainterpath.h"
 
-#include <QPaintEvent>
-#include <QPainter>
 #include <QJsonArray>
 #include <QApplication>
 #include <QMenu>
@@ -10,6 +7,10 @@
 TabWidget::TabWidget(const QPoint &maxSize, QWidget *parent) : QWidget(parent)
 {
     m_layout = new QGridLayout(this);
+    m_gridLine = new GridLineWidget(this);
+    m_gridLine->lower();
+
+    m_layout->addWidget(m_gridLine, 0, 0, -1, -1);
 
     setMaxSize(maxSize);
 }
@@ -28,6 +29,7 @@ void TabWidget::addWidget(BaseWidget *widget, WidgetData data) {
         widget->setParent(this);
     }
     m_layout->addWidget(widget, data.row, data.col, data.rowSpan, data.colSpan);
+    m_gridLine->lower();
 }
 
 void TabWidget::deleteWidget(BaseWidget *widget) {
@@ -52,12 +54,20 @@ WidgetData TabWidget::widgetData(BaseWidget *widget) {
 }
 
 bool TabWidget::widgetAtPoint(WidgetData data) {
-    for (int i = 0; i < data.rowSpan; ++i) {
-        for (int j = 0; j < data.colSpan; ++j) {
-            int row = data.row + i;
-            int col = data.col + j;
+    // this is mild cancer but idrc
 
-            if (m_layout->itemAtPosition(row, col)) return true;
+    for (int i = 0; i < m_layout->count(); ++i) {
+        QLayoutItem *item = m_layout->itemAt(i);
+        if (item->widget() == m_gridLine) continue;
+
+        int row, col, rowSpan, colSpan;
+        m_layout->getItemPosition(i, &row, &col, &rowSpan, &colSpan);
+
+        QRect dataRect = QRect(data.row, data.col, data.rowSpan, data.colSpan);
+        QRect itemRect = QRect(row, col, rowSpan, colSpan);
+
+        if (dataRect.intersects(itemRect)) {
+            return true;
         }
     }
 
@@ -86,6 +96,8 @@ void TabWidget::setMaxSize(const QPoint &maxSize) {
     QPoint lastMax = m_maxSize;
     m_maxSize = maxSize;
 
+    m_gridLine->setSize(maxSize);
+
     if (lastMax.x() > maxSize.x()) {
         for (int x = maxSize.x(); x < lastMax.x(); ++x) {
             m_layout->setColumnStretch(x, 0);
@@ -105,35 +117,6 @@ void TabWidget::setMaxSize(const QPoint &maxSize) {
             m_layout->setRowStretch(y, 1);
         }
     }
-}
-
-WidgetData TabWidget::selectedIndex() {
-    return m_selectedIndex;
-}
-
-void TabWidget::setSelectedIndex(const WidgetData &selectedIndex) {
-    bool doUpdate = m_selectedIndex != selectedIndex;
-
-    m_selectedIndex = selectedIndex;
-    setHasSelection(true);
-
-    if (doUpdate) update();
-}
-
-bool TabWidget::hasSelection() {
-    return m_hasSelection;
-}
-
-void TabWidget::setHasSelection(const bool &hasSelection) {
-    m_hasSelection = hasSelection;
-}
-
-bool TabWidget::isValidSelection() {
-    return m_isValidSelection;
-}
-
-void TabWidget::setValidSelection(const bool &isValidSelection) {
-    m_isValidSelection = isValidSelection;
 }
 
 QJsonObject TabWidget::saveObject() {
@@ -180,59 +163,6 @@ void TabWidget::loadObject(const QJsonObject &object) {
         addWidget(widget, data);
     } // widgets
 }
-
-void TabWidget::paintEvent(QPaintEvent *event) {
-    QWidget::paintEvent(event);
-
-    QPainter painter(this);
-    QPen pen;
-    pen.setColor(Qt::gray);
-    pen.setWidth(1);
-    painter.setPen(pen);
-
-    for (int x = 0; x < m_maxSize.x(); ++x) {
-        double xPos = width() / m_maxSize.x() * x;
-        painter.drawLine(QLine(
-            QPoint(xPos, 0),
-            QPoint(xPos, height())));
-    }
-
-    for (int y = 0; y < m_maxSize.y(); ++y) {
-        double yPos = height() / m_maxSize.y() * y;
-        painter.drawLine(QLine(
-            QPoint(0, yPos),
-            QPoint(width(), yPos)));
-    }
-
-    if (m_hasSelection) {
-        int row = m_selectedIndex.row;
-        int col = m_selectedIndex.col;
-        int rowSpan = m_selectedIndex.rowSpan;
-        int colSpan = m_selectedIndex.colSpan;
-
-        double w = this->width() / m_maxSize.x();
-        double h = this->height() / m_maxSize.y();
-
-        double x = w * col;
-        double y = h * row;
-
-        pen.setColor(m_isValidSelection ? Qt::green : Qt::red);
-        pen.setWidth(6);
-
-        painter.setPen(pen);
-
-        QPainterPath path;
-
-        path.addRect(QRect(
-            x, y, w * colSpan, h * rowSpan));
-
-        painter.drawPath(path);
-    }
-}
-
-
-
-
 
 /* DRAG AND DROP */
 
@@ -297,25 +227,27 @@ void TabWidget::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void TabWidget::mouseReleaseEvent(QMouseEvent *event) {
-    if (!hasSelection()) return;
+    if (!m_gridLine->hasSelection()) goto end;
 
-    if (isValidSelection()) {
-        m_draggedWidgetData = selectedIndex();
+    if (m_gridLine->isValidSelection()) {
+        m_draggedWidgetData = m_gridLine->selection();
     }
 
     if (m_dragging) {
         emit dragDone(m_draggedWidget, m_draggedWidgetData);
     } else if (!m_resizing) {
-        return;
+        goto end;
     }
 
     addWidget(m_draggedWidget,
               m_draggedWidgetData);
 
+end:
     m_dragging = false;
     m_resizing = false;
-    setHasSelection(false);
     m_draggedWidget = nullptr;
+
+    m_gridLine->setHasSelection(false);
 }
 
 void TabWidget::setDragData(BaseWidget *widget, WidgetData data) {
@@ -337,7 +269,7 @@ void TabWidget::dragMove(QPoint point) {
         QPoint offset = point - m_dragOffset;
         m_draggedWidget->move(offset);
 
-        if (!hasSelection()) {
+        if (!m_gridLine->hasSelection()) {
             m_layout->removeWidget(m_draggedWidget);
             m_widgets.removeAll(m_draggedWidget);
         }
@@ -351,13 +283,13 @@ void TabWidget::dragMove(QPoint point) {
 
     WidgetData data{row, col, rowSpan, colSpan};
 
-    setValidSelection(!widgetAtPoint(data) &&
-                      (row + rowSpan - 1 < m_maxSize.x()) &&
-                      (row >= 0) &&
-                      (col + colSpan - 1 < m_maxSize.y()) &&
-                      (col >= 0));
+    m_gridLine->setValidSelection(!widgetAtPoint(data) &&
+                                  (row + rowSpan <= m_maxSize.y()) &&
+                                  (row >= 0) &&
+                                  (col + colSpan <= m_maxSize.x()) &&
+                                  (col >= 0));
 
-    setSelectedIndex(data);
+    m_gridLine->setSelection(data);
 }
 
 void TabWidget::resizeStart(QPoint point) {
@@ -372,7 +304,7 @@ void TabWidget::resizeMove(QPoint point) {
     if (m_initialSize == QRect())
         return;
 
-    if (!hasSelection()) {
+    if (!m_gridLine->hasSelection()) {
         layout()->removeWidget(m_draggedWidget);
         m_widgets.removeAll(m_draggedWidget);
     }
@@ -438,9 +370,11 @@ void TabWidget::resizeMove(QPoint point) {
         m_initialSize.height() + dh);
 
     WidgetData data{row, col, rowSpan, colSpan};
-    setSelectedIndex(data);
+    m_gridLine->setSelection(data);
 
-    setValidSelection(!widgetAtPoint(data) &&
-                           (row + rowSpan - 1 < m_maxSize.x() && (col + colSpan - 1) < m_maxSize.y()));
-
+    m_gridLine->setValidSelection(!widgetAtPoint(data) &&
+                                  (row + rowSpan <= m_maxSize.y()) &&
+                                  (row >= 0) &&
+                                  (col + colSpan <= m_maxSize.x()) &&
+                                  (col >= 0));
 }

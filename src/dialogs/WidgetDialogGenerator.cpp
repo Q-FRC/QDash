@@ -29,40 +29,17 @@ bool operator<(QMetaProperty a, QMetaProperty b) {
     return a.name() < b.name();
 }
 
-WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, QWidget *parent, bool isResize, WidgetData data) : QDialog(parent)
+WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, QWidget *parent, bool isResize, WidgetData data) : QDialog(parent), Ui::WidgetDialogGenerator()
 {
+    setupUi(this);
     m_widget = widget;
     m_isResize = isResize;
 
-    QFormLayout *m_layout = new QFormLayout(this);
-
-    m_nameInput = new QLineEdit(widget->title(), this);
-
-    m_layout->addRow("Name:", m_nameInput);
-
-    m_rowInput = new QSpinBox(this);
-    m_rowInput->setRange(0, 1000);
-    m_rowInput->setValue(data.row);
-
-    m_layout->addRow("Row:", m_rowInput);
-
-    m_columnInput = new QSpinBox(this);
-    m_columnInput->setRange(0, 1000);
-    m_columnInput->setValue(data.col);
-
-    m_layout->addRow("Column:", m_columnInput);
-
-    m_rowSpanInput = new QSpinBox(this);
-    m_rowSpanInput->setRange(0, 1000);
-    m_rowSpanInput->setValue((data.rowSpan == 0 ? 1 : data.rowSpan));
-
-    m_layout->addRow("Row Span:", m_rowSpanInput);
-
-    m_columnSpanInput = new QSpinBox(this);
-    m_columnSpanInput->setRange(0, 1000);
-    m_columnSpanInput->setValue((data.colSpan == 0 ? 1 : data.colSpan));
-
-    m_layout->addRow("Column Span:", m_columnSpanInput);
+    nameInput->setText(widget->title());
+    rowInput->setValue(data.row);
+    colInput->setValue(data.col);
+    rowSpanInput->setValue((data.rowSpan == 0 ? 1 : data.rowSpan));
+    colSpanInput->setValue((data.colSpan == 0 ? 1 : data.colSpan));
 
     m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
@@ -107,21 +84,21 @@ WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, QWidget *parent
 
 #undef PROPERTY_FUNCTION
 
-        m_layout->addRow(QString(property.name()).replace('_', ' '), widgetToAdd);
+        formLayout->addRow(QString(property.name()).replace('_', ' '), widgetToAdd);
     }
 
-    m_layout->addRow(m_buttonBox);
+    formLayout->addRow(m_buttonBox);
 
     connect(m_buttonBox, &QDialogButtonBox::accepted, this, [this] {
         // preset values
-        QString name = m_nameInput->text();
+        QString name = nameInput->text();
 
         WidgetData widgetData;
 
-        widgetData.row = m_rowInput->value();
-        widgetData.col = m_columnInput->value();
-        widgetData.rowSpan = m_rowSpanInput->value();
-        widgetData.colSpan = m_columnSpanInput->value();
+        widgetData.row = rowInput->value();
+        widgetData.col = colInput->value();
+        widgetData.rowSpan = rowSpanInput->value();
+        widgetData.colSpan = colSpanInput->value();
 
         m_widget->setTitle(name);
 

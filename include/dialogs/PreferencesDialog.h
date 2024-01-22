@@ -6,17 +6,18 @@
 #include <QDialogButtonBox>
 #include <QFormLayout>
 
+#include "ui_PreferencesDialog.h"
+
 extern QMap<QString, QString> StyleSheetMap;
 
-class PreferencesDialog : public QDialog
+class PreferencesDialog : public QDialog, Ui::PreferencesDialog
 {
     Q_OBJECT
-private:
-    QFormLayout *m_layout;
-    QComboBox *m_choices;
-    QDialogButtonBox *m_buttonBox;
+
 public:
     PreferencesDialog(QWidget *parent);
+public slots:
+    void emitSheet();
 signals:
     void styleSheetSet(QString styleSheet);
 };

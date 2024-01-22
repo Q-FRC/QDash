@@ -10,27 +10,17 @@
 #include <QCheckBox>
 #include <QDialogButtonBox>
 
-class NTSettingsDialog : public QDialog
+#include "ui_NTSettingsDialog.h"
+
+class NTSettingsDialog : public QDialog, Ui::NTSettingsDialog
 {
     Q_OBJECT
-private:
-    QFormLayout *m_layout;
-
-    QLabel *m_addressLabel;
-    QLineEdit *m_addressEdit;
-
-    QLabel *m_numberLabel;
-    QCheckBox *m_numberBox;
-
-    QLabel *m_portLabel;
-    QLineEdit *m_portEdit;
-
-    QDialogButtonBox *m_buttonBox;
-
 public:
     NTSettingsDialog(QWidget *parent = nullptr);
     virtual ~NTSettingsDialog();
 
+public slots:
+    void serializeData();
 signals:
     void dataReady(ServerData data);
 };

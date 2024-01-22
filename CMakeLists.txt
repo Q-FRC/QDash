@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.25)
 
 project(QFRCDashboard VERSION 1.0.0 LANGUAGES CXX)
 
+set(CMAKE_AUTOUIC_SEARCH_PATHS "ui/")
+
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -58,17 +60,20 @@ set(PROJECT_SOURCES
         src/misc/ShapedFrame.cpp
         src/misc/BetterDial.cpp
         src/misc/FieldImage.cpp
-        src/dialogs/TabMaxSizeDialog.cpp
+        src/misc/ChartView.cpp
+        src/misc/GridLineWidget.cpp
 
         src/stores/TopicStore.cpp
         src/stores/TypeStore.cpp
         src/stores/FilterStore.cpp
+        src/stores/CameraStore.cpp
 
         src/dialogs/CameraSelectionDialog.cpp
         src/dialogs/NewWidgetTreeDialog.cpp
         src/dialogs/NTSettingsDialog.cpp
         src/dialogs/WidgetDialogGenerator.cpp
         src/dialogs/TabMaxSizeDialog.cpp
+        src/dialogs/PreferencesDialog.cpp
 
         # =======================================
 
@@ -96,16 +101,29 @@ set(PROJECT_SOURCES
         include/misc/ShapedFrame.h
         include/misc/BetterDial.h
         include/misc/FieldImage.h
+        include/misc/ChartView.h
+        include/misc/GridLineWidget.h
 
         include/stores/TopicStore.h
         include/stores/TypeStore.h
         include/stores/FilterStore.h
+        include/stores/CameraStore.h
 
         include/dialogs/CameraSelectionDialog.h
         include/dialogs/NewWidgetTreeDialog.h
         include/dialogs/NTSettingsDialog.h
         include/dialogs/WidgetDialogGenerator.h
         include/dialogs/TabMaxSizeDialog.h
+        include/dialogs/PreferencesDialog.h
+
+        # ==================================
+        ui/MainWindow.ui
+        ui/NTSettingsDialog.ui
+        ui/WidgetDialogGenerator.ui
+        ui/NewWidgetTreeDialog.ui
+        ui/CameraSelectionDialog.ui
+        ui/TabMaxSizeDialog.ui
+        ui/PreferencesDialog.ui
 )
 
 if(WIN32)
@@ -122,9 +140,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         theme/qrc/breeze.qrc
         ${RCS_FILE}
         ${PROJECT_SOURCES}
-        include/misc/ChartView.h src/misc/ChartView.cpp
-        include/stores/CameraStore.h src/stores/CameraStore.cpp
-        include/dialogs/PreferencesDialog.h src/dialogs/PreferencesDialog.cpp
     )
 endif()
 
@@ -166,6 +181,7 @@ add_subdirectory("buildconfig")
 target_link_libraries(QFRCDashboard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::MultimediaWidgets Qt${QT_VERSION_MAJOR}::Charts ntcore SingleApplication::SingleApplication BuildConfig)
 
 target_include_directories(QFRCDashboard PRIVATE "$<TARGET_PROPERTY:ntcore,INTERFACE_INCLUDE_DIRECTORIES>")
+target_include_directories(QFRCDashboard PRIVATE ui/)
 target_include_directories(QFRCDashboard PRIVATE include/)
 
 include(GNUInstallDirs)

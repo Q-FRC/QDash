@@ -9,26 +9,17 @@
 #include <QMetaProperty>
 
 #include "Globals.h"
+#include "ui_WidgetDialogGenerator.h"
 
 typedef std::function<QVariant()> Getter;
 class BaseWidget;
 
-class WidgetDialogGenerator : public QDialog
+class WidgetDialogGenerator : public QDialog, Ui::WidgetDialogGenerator
 {
     Q_OBJECT
 private:
     BaseWidget *m_widget;
     bool m_isResize;
-
-    QFormLayout *m_layout;
-
-    QLineEdit *m_nameInput;
-
-    QSpinBox *m_rowInput;
-    QSpinBox *m_columnInput;
-
-    QSpinBox *m_rowSpanInput;
-    QSpinBox *m_columnSpanInput;
 
     QDialogButtonBox *m_buttonBox;
 

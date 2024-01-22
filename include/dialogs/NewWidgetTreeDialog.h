@@ -10,16 +10,12 @@
 
 #include "Globals.h"
 #include "widgets/BaseWidget.h"
+#include "ui_NewWidgetTreeDialog.h"
 
-class NewWidgetTreeDialog : public QDialog
+class NewWidgetTreeDialog : public QDialog, Ui::NewWidgetTreeDialog
 {
     Q_OBJECT
 private:
-    QVBoxLayout *m_layout;
-    QTreeWidget *m_tree;
-
-    QDialogButtonBox *m_buttonBox;
-
     QMap<QString, QTreeWidgetItem *> m_itemTableMap;
 
     bool m_emitTopic = false;
