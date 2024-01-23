@@ -3,6 +3,7 @@
 #include <QJsonArray>
 #include <QApplication>
 #include <QMenu>
+#include <QShortcut>
 
 TabWidget::TabWidget(const QPoint &maxSize, QWidget *parent) : QWidget(parent)
 {
@@ -11,6 +12,13 @@ TabWidget::TabWidget(const QPoint &maxSize, QWidget *parent) : QWidget(parent)
     m_gridLine->lower();
 
     m_layout->addWidget(m_gridLine, 0, 0, -1, -1);
+
+    // shortcuts
+    {
+        new QShortcut(QKeySequence(Qt::Key_Escape), this, [this] {
+            cancelDrags();
+        });
+    }
 
     setMaxSize(maxSize);
 }
@@ -36,12 +44,16 @@ void TabWidget::deleteWidget(BaseWidget *widget) {
     if (m_widgets.contains(widget)) {
         m_widgets.removeAll(widget);
         m_layout->removeWidget(widget);
-        delete widget;
+        widget->deleteLater();
     }
 }
 
 WidgetData TabWidget::widgetData(BaseWidget *widget) {
     int idx = m_layout->indexOf(widget);
+    if (idx == 0) {
+        return WidgetData(0, 0, 0, 0);
+    }
+
     WidgetData data;
 
     m_layout->getItemPosition(idx,
@@ -243,16 +255,24 @@ void TabWidget::mouseReleaseEvent(QMouseEvent *event) {
               m_draggedWidgetData);
 
 end:
+    cancelDrags();
+}
+
+void TabWidget::setDragData(BaseWidget *widget, WidgetData data) {
+    emit dragCancelled(m_draggedWidget);
+
+    cancelDrags();
+
+    m_draggedWidget = widget;
+    m_draggedWidgetData = data;
+}
+
+void TabWidget::cancelDrags() {
     m_dragging = false;
     m_resizing = false;
     m_draggedWidget = nullptr;
 
     m_gridLine->setHasSelection(false);
-}
-
-void TabWidget::setDragData(BaseWidget *widget, WidgetData data) {
-    m_draggedWidget = widget;
-    m_draggedWidgetData = data;
 }
 
 void TabWidget::dragStart(QPoint point, QPoint offset) {
@@ -370,6 +390,7 @@ void TabWidget::resizeMove(QPoint point) {
         m_initialSize.height() + dh);
 
     WidgetData data{row, col, rowSpan, colSpan};
+
     m_gridLine->setSelection(data);
 
     m_gridLine->setValidSelection(!widgetAtPoint(data) &&
@@ -377,4 +398,8 @@ void TabWidget::resizeMove(QPoint point) {
                                   (row >= 0) &&
                                   (col + colSpan <= m_maxSize.x()) &&
                                   (col >= 0));
+}
+
+bool TabWidget::hasWidget(BaseWidget *widget) {
+    return (widgetData(widget) != WidgetData(0, 0, 0, 0));
 }

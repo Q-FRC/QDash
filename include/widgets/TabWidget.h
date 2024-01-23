@@ -79,11 +79,16 @@ public:
     void setDragData(BaseWidget *widget, WidgetData data);
     void dragStart(QPoint point, QPoint offset);
 
+    // awesome
+    bool hasWidget(BaseWidget *widget);
+    void cancelDrags();
+
 public slots:
     void addWidget(BaseWidget *widget, WidgetData data);
     void deleteWidget(BaseWidget *widget);
 
 signals:
     void dragDone(BaseWidget *widget, WidgetData data);
+    void dragCancelled(BaseWidget *widget);
 
 };

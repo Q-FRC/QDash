@@ -316,6 +316,8 @@ void MainWindow::newWidgetPopup() {
 }
 
 void MainWindow::configNewWidget(BaseWidget *widget, WidgetData data) {
+    if (widget == nullptr) return;
+
     WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget, this, false, data);
     dialog->setWindowTitle("New Widget");
     dialog->show();
@@ -330,8 +332,16 @@ void MainWindow::beginNewWidgetDrag(BaseWidget *widget, WidgetData data) {
     tab->setDragData(widget, data);
     tab->dragStart(QCursor::pos(), QPoint(0, 0));
 
-    // ensure connection only occurs once
-    connect(tab, &TabWidget::dragDone, this, &MainWindow::configNewWidget, Qt::SingleShotConnection);
+    QMetaObject::Connection *conn = new QMetaObject::Connection;
+    *conn = connect(tab, &TabWidget::dragDone, this, &MainWindow::configNewWidget, Qt::SingleShotConnection);
+
+    connect(tab, &TabWidget::dragCancelled, this, [this, conn, widget, tab](BaseWidget *draggedWidget) {
+            if (widget == draggedWidget) {
+                disconnect(*conn);
+                delete conn;
+                delete widget;
+            }
+        }, Qt::SingleShotConnection);
 }
 
 void MainWindow::newCameraView() {
