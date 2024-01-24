@@ -29,11 +29,14 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
         nt::Value value = entry->GetValue();
 
         // ensure thread-safety
+        // this is mild anal cancer
         if (value.IsValid())
             QMetaObject::invokeMethod(subscriber, [subscriber, value] {
                 if (subscriber->ready()) {
-                    subscriber->setValue(value);
-                    subscriber->update();
+                    if (subscriber->isVisible()) {
+                        subscriber->setValue(value);
+                        subscriber->update();
+                    }
                 } else {
                     connect(subscriber, &BaseWidget::isReady, subscriber, [subscriber, value] {
                         subscriber->setValue(value);

@@ -46,7 +46,8 @@ MainWindow::MainWindow() : QMainWindow(), Ui::MainWindow()
         });
     }
 
-    update();
+    // this isn't available in the ui lol
+    connect(centralwidget->tabBar(), &QTabBar::tabMoved, this, &MainWindow::moveTab);
 }
 
 MainWindow::~MainWindow() {
@@ -124,6 +125,17 @@ void MainWindow::makeNewWidget(WidgetTypes type) {
 }
 
 /* Slots */
+
+// Internal Stuff
+void MainWindow::forceUpdateTab(int idx) {
+    for (BaseWidget *widget : m_tabs.at(idx)->widgets()) {
+        widget->forceUpdate();
+    }
+}
+
+void MainWindow::moveTab(int from, int to) {
+    m_tabs.move(from, to);
+}
 
 // Preferences
 void MainWindow::preferences() {

@@ -34,6 +34,10 @@ public:
     void loadObject(const QJsonDocument &doc);
 
 public slots:
+    // Internal Stuff
+    void forceUpdateTab(int idx);
+    void moveTab(int from, int to);
+
     // Preferences
     void preferences();
 

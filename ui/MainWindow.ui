@@ -20,6 +20,9 @@
    <property name="mouseTracking">
     <bool>true</bool>
    </property>
+   <property name="movable">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -430,6 +433,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>centralwidget</sender>
+   <signal>tabBarClicked(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>forceUpdateTab(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>399</x>
+     <y>310</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>ntSettingsPopup()</slot>
@@ -448,5 +467,6 @@
   <slot>cameraServerPopup()</slot>
   <slot>preferences()</slot>
   <slot>refreshRecentFiles()</slot>
+  <slot>forceUpdateTab(int)</slot>
  </slots>
 </ui>

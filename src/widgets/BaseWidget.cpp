@@ -146,6 +146,11 @@ QMenu *BaseWidget::constructContextMenu(WidgetData data) {
 
 void BaseWidget::setValue(const nt::Value &value) {}
 
+void BaseWidget::forceUpdate() {
+    setValue(m_entry->GetValue());
+    update();
+}
+
 void BaseWidget::paintEvent(QPaintEvent *event) {
     QStyleOption opt;
     opt.initFrom(this);
