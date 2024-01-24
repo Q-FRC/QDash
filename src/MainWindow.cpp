@@ -427,7 +427,7 @@ void MainWindow::cameraServerPopup() {
 
         connect(dialog, &CameraSelectionDialog::selectedCamera, this, [this](Camera camera) {
             QUrl url;
-            if (camera.Urls.isEmpty() || camera.Urls.at(0).isValid()) {
+            if (camera.Urls.isEmpty() || !camera.Urls.at(0).isValid()) {
                 QMessageBox::critical(this,
                                       "Invalid Stream",
                                       "This camera contains an invalid or nonexistent stream "
