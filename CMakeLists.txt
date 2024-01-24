@@ -140,6 +140,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         theme/qrc/breeze.qrc
         ${RCS_FILE}
         ${PROJECT_SOURCES}
+        include/Constants.h src/Constants.cpp
+
     )
 endif()
 

@@ -34,9 +34,15 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <widget class="QMenu" name="menuRecent_Files">
+     <property name="title">
+      <string>&amp;Recent Files</string>
+     </property>
+    </widget>
     <addaction name="actionSave"/>
     <addaction name="actionSave_As"/>
     <addaction name="actionOpen"/>
+    <addaction name="menuRecent_Files"/>
    </widget>
    <widget class="QMenu" name="menu_Tab">
     <property name="title">
@@ -441,5 +447,6 @@
   <slot>aboutQt()</slot>
   <slot>cameraServerPopup()</slot>
   <slot>preferences()</slot>
+  <slot>refreshRecentFiles()</slot>
  </slots>
 </ui>

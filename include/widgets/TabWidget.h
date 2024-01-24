@@ -21,9 +21,6 @@ private:
     QPoint m_maxSize;
     WidgetData m_selectedIndex;
 
-    bool m_hasSelection = false;
-    bool m_isValidSelection = true;
-
     QString m_name;
 
     QList<BaseWidget *> m_widgets;

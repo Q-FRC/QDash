@@ -47,6 +47,9 @@ public slots:
     void openDialog();
     void open(QFile &file);
 
+    void refreshRecentFiles();
+    void addRecentFile(QFile &file);
+
     // Tab Actions
     void newTab();
     void closeTab();

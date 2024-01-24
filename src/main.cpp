@@ -1,7 +1,6 @@
 #include <QApplication>
 #include <QTimer>
 #include <QRadioButton>
-#include <QSettings>
 #include <QMessageBox>
 #include <QCommandLineParser>
 
@@ -9,6 +8,8 @@
 #include "Globals.h"
 #include "stores/FilterStore.h"
 #include "stores/TypeStore.h"
+
+#include "Constants.h"
 
 #include <SingleApplication>
 #include <BuildConfig.h>
@@ -96,13 +97,11 @@ int main(int argc, char **argv) {
 
 #undef REGISTER_TYPE
 
-    QSettings settings(&app);
-
     // settings dont exist or firstrun is true
-    bool firstRun = !settings.contains("firstRun") || settings.value("firstRun").toBool();
+    bool firstRun = Settings::FirstRun.value().toBool();
 
     if (firstRun) {
-        settings.setValue("firstRun", false);
+        Settings::FirstRun.setValue(false);
 
         QMessageBox::information
             (window, QString("Welcome to %1!").arg(BuildConfig.APP_NAME),
@@ -120,14 +119,11 @@ int main(int argc, char **argv) {
                  .arg(BuildConfig.APP_NAME));
     }
 
-    bool hasStyleSheet = settings.contains("styleSheet");
-    QString styleSheet = hasStyleSheet ? settings.value("styleSheet").toString() : ":/light/stylesheet.qss";
-
-    if (!hasStyleSheet) {
-        settings.setValue("styleSheet", styleSheet);
-    }
+    QString styleSheet = Settings::StyleSheet.value().toString();
 
     setAppStyleSheet(styleSheet);
+
+    window->refreshRecentFiles();
 
     Globals::inst.AddListener({{""}}, nt::EventFlags::kTopic, [window] (const nt::Event &event) {
         std::string topicName(event.GetTopicInfo()->name);
@@ -152,6 +148,15 @@ int main(int argc, char **argv) {
     if (!args.isEmpty()) {
         QFile file(args.at(0));
         window->open(file);
+    } else {
+        bool loadRecent = Settings::LoadRecent.value().toBool();
+        if (loadRecent) {
+            QStringList recent = Settings::RecentFiles.value().toStringList();
+            if (!recent.empty()) {
+                QFile file(recent.first());
+                window->open(file);
+            }
+        }
     }
 
     return app.exec();

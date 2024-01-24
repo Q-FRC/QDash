@@ -28,11 +28,18 @@ Camera Camera::fromTable(std::shared_ptr<nt::NetworkTable> table) {
     camera.Name = QString::fromStdString(table->GetEntry("description").GetString(""));
     camera.Source = QString::fromStdString(table->GetEntry("source").GetString(""));
 
+    if (camera.Name.isEmpty()) {
+        std::string path{table->GetPath()};
+        QString qpath = QString::fromStdString(path);
+        camera.Name = qpath.split("/").last();
+    }
+
     std::vector<std::string> streams = table->GetEntry("streams").GetStringArray({});
 
     for (const std::string &stream : streams) {
+        static QRegularExpression re("^(mjpe?g|ip|usb):");
         QString qstream = QString::fromStdString(stream);
-        qstream.replace(QRegularExpression("^(mjpe?g|ip|usb):"), "");
+        qstream.replace(re, "");
         qstream.replace("/?action=stream", "/stream.mjpg?");
 
         camera.Urls.append(QUrl(qstream));

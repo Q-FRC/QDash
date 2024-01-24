@@ -17,6 +17,11 @@ TabWidget::TabWidget(const QPoint &maxSize, QWidget *parent) : QWidget(parent)
     {
         new QShortcut(QKeySequence(Qt::Key_Escape), this, [this] {
             cancelDrags();
+            m_gridLine->setHasSelection(false);
+            m_gridLine->setValidSelection(false);
+            m_gridLine->update();
+
+            emit dragCancelled(m_draggedWidget);
         });
     }
 
@@ -50,7 +55,7 @@ void TabWidget::deleteWidget(BaseWidget *widget) {
 
 WidgetData TabWidget::widgetData(BaseWidget *widget) {
     int idx = m_layout->indexOf(widget);
-    if (idx == 0) {
+    if (idx == -1) {
         return WidgetData(0, 0, 0, 0);
     }
 
@@ -260,7 +265,6 @@ end:
 
 void TabWidget::setDragData(BaseWidget *widget, WidgetData data) {
     emit dragCancelled(m_draggedWidget);
-
     cancelDrags();
 
     m_draggedWidget = widget;
@@ -268,8 +272,16 @@ void TabWidget::setDragData(BaseWidget *widget, WidgetData data) {
 }
 
 void TabWidget::cancelDrags() {
+    if (
+        (m_dragging || m_resizing) &&
+        (hasWidget(m_draggedWidget) || m_draggedWidget->isVisible())) {
+        addWidget(m_draggedWidget,
+                  m_draggedWidgetData);
+    }
+
     m_dragging = false;
     m_resizing = false;
+
     m_draggedWidget = nullptr;
 
     m_gridLine->setHasSelection(false);

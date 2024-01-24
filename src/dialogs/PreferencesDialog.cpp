@@ -1,4 +1,5 @@
 #include "dialogs/PreferencesDialog.h"
+#include "Constants.h"
 
 QMap<QString, QString> StyleSheetMap = {
     {"Dark", ":/dark/stylesheet.qss"},
@@ -9,9 +10,14 @@ QMap<QString, QString> StyleSheetMap = {
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent), Ui::PreferencesDialog() {
     setupUi(this);
+
+    lastLoaded->setChecked(Settings::LoadRecent.value().toBool());
+    choices->setCurrentText(StyleSheetMap.key(Settings::StyleSheet.value().toString()));
 }
 
-void PreferencesDialog::emitSheet() {
-    emit styleSheetSet(StyleSheetMap.value(choices->currentText(), ":/light/stylesheet.qss"));
+void PreferencesDialog::emitData() {
+    emit dataReady(
+        StyleSheetMap.value(choices->currentText(), ":/light/stylesheet.qss"),
+        lastLoaded->isChecked());
     accept();
 }

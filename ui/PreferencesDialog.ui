@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>288</width>
-    <height>74</height>
+    <width>388</width>
+    <height>97</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -45,13 +45,27 @@
      </item>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2">
+   <item row="2" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Default to last loaded file?</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QCheckBox" name="lastLoaded">
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </item>
@@ -63,7 +77,7 @@
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
    <receiver>PreferencesDialog</receiver>
-   <slot>emitSheet()</slot>
+   <slot>emitData()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>248</x>
@@ -93,6 +107,6 @@
   </connection>
  </connections>
  <slots>
-  <slot>emitSheet()</slot>
+  <slot>emitData()</slot>
  </slots>
 </ui>

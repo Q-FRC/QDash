@@ -26,11 +26,11 @@
 #include <QMetaProperty>
 #include <QShortcut>
 #include <QDrag>
-#include <QSettings>
 
 #include <BuildConfig.h>
 
-#include "../ui/ui_MainWindow.h"
+#include "Constants.h"
+#include "ui_MainWindow.h"
 
 MainWindow::MainWindow() : QMainWindow(), Ui::MainWindow()
 {
@@ -131,11 +131,11 @@ void MainWindow::preferences() {
 
     dialog->show();
 
-    connect(dialog, &PreferencesDialog::styleSheetSet, this, [](QString styleSheet) {
+    connect(dialog, &PreferencesDialog::dataReady, this, [](QString styleSheet, bool loadRecent) {
         setAppStyleSheet(styleSheet);
 
-        QSettings settings(qApp);
-        settings.setValue("styleSheet", styleSheet);
+        Settings::StyleSheet.setValue(styleSheet);
+        Settings::LoadRecent.setValue(loadRecent);
     });
 }
 
@@ -228,6 +228,8 @@ void MainWindow::open(QFile &file) {
 
     m_filename = file.fileName();
 
+    addRecentFile(file);
+
     QTextStream stream(&file);
     QByteArray data = stream.readAll().toUtf8();
 
@@ -235,6 +237,46 @@ void MainWindow::open(QFile &file) {
 
     loadObject(doc);
     file.close();
+}
+
+void MainWindow::refreshRecentFiles() {
+    menuRecent_Files->clear();
+    QStringList recentFiles = Settings::RecentFiles.value().toStringList();
+    size_t i = 0;
+
+    for (const QString &file : recentFiles) {
+        ++i;
+        QString actionName = QString(
+                                 "&%1. %2"
+                                 ).arg(QString::number(i), file);
+        QAction *action = new QAction(actionName, menuRecent_Files);
+        connect(action, &QAction::triggered, this, [this, file]() {
+            QFile qfile(file);
+            open(qfile);
+        });
+
+        menuRecent_Files->addAction(action);
+    }
+}
+
+void MainWindow::addRecentFile(QFile &file) {
+    QStringList recentFiles = Settings::RecentFiles.value().toStringList();
+
+    QString fileName = file.fileName();
+    int index = recentFiles.indexOf(fileName);
+
+    if (index != -1) {
+        recentFiles.move(index, 0);
+    } else {
+        recentFiles.prepend(fileName);
+    }
+
+    if (recentFiles.length() > 5) {
+        recentFiles.removeLast();
+    }
+
+    Settings::RecentFiles.setValue(recentFiles);
+    refreshRecentFiles();
 }
 
 // Tab Actions
@@ -332,15 +374,24 @@ void MainWindow::beginNewWidgetDrag(BaseWidget *widget, WidgetData data) {
     tab->setDragData(widget, data);
     tab->dragStart(QCursor::pos(), QPoint(0, 0));
 
-    QMetaObject::Connection *conn = new QMetaObject::Connection;
-    *conn = connect(tab, &TabWidget::dragDone, this, &MainWindow::configNewWidget, Qt::SingleShotConnection);
+    QMetaObject::Connection *doneConn = new QMetaObject::Connection;
+    QMetaObject::Connection *cancelConn = new QMetaObject::Connection;
+    *doneConn = connect(tab, &TabWidget::dragDone, this, [this, cancelConn, doneConn](BaseWidget *widget, WidgetData data) {
+            configNewWidget(widget, data);
+            disconnect(*doneConn);
+            delete doneConn;
 
-    connect(tab, &TabWidget::dragCancelled, this, [this, conn, widget, tab](BaseWidget *draggedWidget) {
-            if (widget == draggedWidget) {
-                disconnect(*conn);
-                delete conn;
-                delete widget;
-            }
+            disconnect(*cancelConn);
+            delete cancelConn;
+        }, Qt::SingleShotConnection);
+
+    *cancelConn = connect(tab, &TabWidget::dragCancelled, this, [this, doneConn, cancelConn, widget](BaseWidget *draggedWidget) {
+            disconnect(*doneConn);
+            delete doneConn;
+            disconnect(*cancelConn);
+            delete cancelConn;
+
+            delete widget;
         }, Qt::SingleShotConnection);
 }
 
@@ -363,8 +414,20 @@ void MainWindow::cameraServerPopup() {
         dialog->show();
 
         connect(dialog, &CameraSelectionDialog::selectedCamera, this, [this](Camera camera) {
+            QUrl url;
+            if (camera.Urls.isEmpty() || camera.Urls.at(0).isValid()) {
+                QMessageBox::critical(this,
+                                      "Invalid Stream",
+                                      "This camera contains an invalid or nonexistent stream "
+                                      "URL. Please manually enter the correct URL if it "
+                                      "exists.");
+                url = QUrl(camera.Source);
+            } else {
+                url = camera.Urls.at(0);
+            }
+
             CameraViewWidget *widget = new CameraViewWidget(
-                QString("%1 (%2)").arg(camera.Name, camera.Source), camera.Urls.at(0));
+                QString("%1 (%2)").arg(camera.Name, camera.Source), url);
             WidgetData data{0, 0, 1, 1};
 
             beginNewWidgetDrag(widget, data);

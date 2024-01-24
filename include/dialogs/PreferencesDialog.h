@@ -17,9 +17,9 @@ class PreferencesDialog : public QDialog, Ui::PreferencesDialog
 public:
     PreferencesDialog(QWidget *parent);
 public slots:
-    void emitSheet();
+    void emitData();
 signals:
-    void styleSheetSet(QString styleSheet);
+    void dataReady(QString styleSheet, bool loadRecent);
 };
 
 #endif // PREFERENCESDIALOG_H
