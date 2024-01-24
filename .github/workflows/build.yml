@@ -35,19 +35,17 @@ jobs:
       NTCORE_INSTALL_DIR: "install-ntcore"
       PROTOBUF_INSTALL_DIR: "install-protobuf"
       BUILD_DIR: "build"
-      VERSION: "1.0.0"
 
     steps:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
-    - name: Set reusable strings
-      # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
-      id: strings
+    - name: Grab and store version
       shell: bash
       run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        tag_name=$(git describe --tags --abbrev=0)
+        echo "VERSION=$tag_name" >> $GITHUB_ENV
 
     - name: Install CMake
       uses: lukka/get-cmake@v3.28.1

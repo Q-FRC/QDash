@@ -38,6 +38,7 @@ set(PROJECT_SOURCES
         src/main.cpp
         src/Globals.cpp
         src/MainWindow.cpp
+        src/Constants.cpp
 
         src/widgets/BaseWidget.cpp
         src/widgets/DoubleDisplayWidget.cpp
@@ -79,6 +80,8 @@ set(PROJECT_SOURCES
 
         include/Globals.h
         include/MainWindow.h
+        include/Constants.h
+
 
         include/widgets/BaseWidget.h
         include/widgets/DoubleDisplayWidget.h
@@ -140,8 +143,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         theme/qrc/breeze.qrc
         ${RCS_FILE}
         ${PROJECT_SOURCES}
-        include/Constants.h src/Constants.cpp
-
     )
 endif()
 
@@ -169,6 +170,8 @@ separate_arguments(Dashboard_SPLIT_VERSION)
 list(GET Dashboard_SPLIT_VERSION 0 Dashboard_VERSION_MAJOR)
 list(GET Dashboard_SPLIT_VERSION 1 Dashboard_VERSION_MINOR)
 list(GET Dashboard_SPLIT_VERSION 2 Dashboard_VERSION_HOTFIX)
+
+project(QFRCDashboard VERSION ${Dashboard_GIT_TAG_NUMERO} LANGUAGES CXX)
 
 # Build Date
 string(TIMESTAMP TODAY "%Y-%m-%d")
