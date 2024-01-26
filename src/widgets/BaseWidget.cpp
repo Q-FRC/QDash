@@ -147,8 +147,11 @@ QMenu *BaseWidget::constructContextMenu(WidgetData data) {
 void BaseWidget::setValue(const nt::Value &value) {}
 
 void BaseWidget::forceUpdate() {
-    setValue(m_entry->GetValue());
-    update();
+    auto value = m_entry->GetValue();
+    if (value.IsValid() && m_entry->Exists()) {
+        setValue(m_entry->GetValue());
+        update();
+    }
 }
 
 void BaseWidget::paintEvent(QPaintEvent *event) {

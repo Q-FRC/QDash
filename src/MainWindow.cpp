@@ -188,7 +188,8 @@ void MainWindow::setNtSettings(ServerData data) {
 // File Actions
 void MainWindow::save() {
     if (m_filename.isEmpty()) {
-        return saveAs();
+        m_filename = QFileDialog::getSaveFileName(
+            this, "Save File", QDir::homePath(), "JSON Files (*.json);;All Files (*)");
     }
 
     QFile file(m_filename);
@@ -200,27 +201,17 @@ void MainWindow::save() {
         return;
     }
 
+    addRecentFile(file);
+    refreshRecentFiles();
+
     QTextStream stream(&file);
     stream << saveObject().toJson();
     file.close();
 }
 
 void MainWindow::saveAs() {
-    QFile file(QFileDialog::getSaveFileName(
-        this, "Save File", QDir::homePath(), "JSON Files (*.json);;All Files (*)"));
-
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QMessageBox::critical(this, "Save Failed!", "Failed to open file for writing. "
-                                                    "Directory may not exist or may be read-only.",
-                              QMessageBox::StandardButton::Ok);
-        return;
-    }
-
-    m_filename = file.fileName();
-
-    QTextStream stream(&file);
-    stream << saveObject().toJson();
-    file.close();
+    m_filename = "";
+    save();
 }
 
 void MainWindow::openDialog() {
@@ -241,6 +232,7 @@ void MainWindow::open(QFile &file) {
     m_filename = file.fileName();
 
     addRecentFile(file);
+    refreshRecentFiles();
 
     QTextStream stream(&file);
     QByteArray data = stream.readAll().toUtf8();

@@ -29,23 +29,22 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    env:
-      INSTALL_DIR: "install"
-      INSTALL_APPIMAGE_DIR: "install-appdir"
-      NTCORE_INSTALL_DIR: "install-ntcore"
-      PROTOBUF_INSTALL_DIR: "install-protobuf"
-      BUILD_DIR: "build"
-
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+        submodules: 'recursive'
 
     - name: Grab and store version
       shell: bash
       run: |
         tag_name=$(git describe --tags --abbrev=0)
         echo "VERSION=$tag_name" >> $GITHUB_ENV
+        echo "BUILD_DIR=${{ github.workspace }}/build" >> $GITHUB_ENV
+        echo "INSTALL_DIR=${{ github.workspace }}/install" >> $GITHUB_ENV
+        echo "INSTALL_APPIMAGE_DIR=${{ github.workspace }}/install-appdir" >> $GITHUB_ENV
+        echo "NTCORE_INSTALL_DIR=${{ github.workspace }}/install-ntcore" >> $GITHUB_ENV
+        echo "PROTOBUF_INSTALL_DIR=${{ github.workspace }}/install-protobuf" >> $GITHUB_ENV
 
     - name: Install CMake
       uses: lukka/get-cmake@v3.28.1
@@ -75,18 +74,26 @@ jobs:
         wget "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage"
         wget "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
 
+    - name: Setup CCache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: ${{ runner.os }}-${{ inputs.build_type }}
+
     - name: Configure CMake (Linux)
       if: runner.os == 'Linux'
       run: |
         sudo apt-get install libstdc++-10-dev gcc-10 ninja-build
-        git submodule update --init --recursive
-        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/bin/g++-10 -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF -DBUILD_SHARED_LIBS=OFF
+
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
+
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF -DBUILD_SHARED_LIBS=OFF
 
     - name: Configure CMake (Windows)
       if: runner.os == 'Windows'
+      shell: cmd
       run: |
-        git submodule update --init --recursive
-        cmake -S . -B ${{ env.BUILD_DIR }} -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF
+        cmake -S . -B ${{ env.BUILD_DIR }} -G Ninja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF
 
     - name: Build
       run: |
@@ -154,7 +161,7 @@ jobs:
       shell: cmd
       run: |
         cd ${{ env.INSTALL_DIR }}
-        makensis -NOCD "${{ github.workspace }}/${{ env.BUILD_DIR }}/program_info/win_install.nsi"
+        makensis -NOCD "${{ env.BUILD_DIR }}/program_info/win_install.nsi"
 
     ##
     # UPLOAD

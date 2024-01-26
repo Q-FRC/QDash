@@ -29,7 +29,9 @@ Windows and Linux builds are available via GitHub Actions. Currently, all use WP
 
 [![Release](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_release.yml/badge.svg)](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_release.yml)
 
-Development/debug builds are also available on a per-commit basis. These builds are generally unstable and also have far larger executable sizes, but are useful for users who wish to have the latest features or for developers who want to contribute and test.
+NOTE: Windows Release builds require the Visual C++ runtime to be installed. For convenience, an executable has been included to install the runtime.
+
+Development/debug builds are also available on a per-commit basis. These builds are generally unstable, have far larger executable sizes, and will perform slower, but are useful for users who wish to have the latest features or for developers who want to contribute and test.
 
 [![Debug](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_builds.yml/badge.svg)](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_builds.yml)
 
@@ -76,7 +78,7 @@ cmake -S . -B build -DUSE_SYSTEM_NTCORE=OFF
 cmake -S . -B build -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF
 ```
 
-Though you can use the system ntcore with the bundled protobuf, this is not recommended and is entirely untested.
+Using the system ntcore with the bundled protobuf is unnecessary and will break things. If you have ntcore installed to the system, protobuf will also be installed.
 
 ### Ubuntu
 ```bash
