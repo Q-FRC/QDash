@@ -15,7 +15,7 @@ if (NOT USE_SYSTEM_PROTOBUF)
     FetchContent_Declare(
             protobuf
             GIT_REPOSITORY https://github.com/protocolbuffers/protobuf.git
-            GIT_TAG        7f94235e552599141950d7a4a3eaf93bc87d1b22 # 25.1
+            GIT_TAG        a9b006bddd52e289029f16aa77b77e8e0033d9ee # 25.2
             OVERRIDE_FIND_PACKAGE
     )
     FetchContent_MakeAvailable(Protobuf)
@@ -41,7 +41,7 @@ if (NOT USE_SYSTEM_NTCORE)
     FetchContent_Declare(
             ntcore
             GIT_REPOSITORY https://github.com/wpilibsuite/allwpilib.git
-            GIT_TAG        4809f3d0fcaea95115c069d6027694191fca9750
+            GIT_TAG        9206b47d6708cbae61506e962c633d722884a26f # 2024.2.1
             OVERRIDE_FIND_PACKAGE
     )
     FetchContent_MakeAvailable(ntcore)
