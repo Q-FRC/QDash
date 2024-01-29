@@ -38,6 +38,11 @@ public:
     void setStartingAngle(double angle);
 
     void setValue(const nt::Value &value) override;
+
+    inline static WidgetTypes WidgetType = WidgetTypes::IntegerDial;
+    inline static TopicTypes TopicType = TopicTypes::Int;
+    inline static QString SendableName = "";
+    inline static QString DisplayName = "Dial";
 };
 
 #endif // IntegerDialWIDGET_H

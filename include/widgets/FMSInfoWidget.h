@@ -74,6 +74,11 @@ public:
     void forceUpdate() override;
 
     void setValue(const nt::Value &value) override;
+
+    inline static WidgetTypes WidgetType = WidgetTypes::FMSInfo;
+    inline static TopicTypes TopicType = TopicTypes::FMSInfo;
+    inline static QString SendableName = "FMSInfo";
+    inline static QString DisplayName = "FMSInfo";
 };
 
 #endif // FMSINFOWIDGET_H

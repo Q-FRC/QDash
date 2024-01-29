@@ -79,6 +79,11 @@ public:
 
     QMenu *constructContextMenu(WidgetData data) override;
 
+    inline static WidgetTypes WidgetType = WidgetTypes::Graph;
+    inline static TopicTypes TopicType = TopicTypes::None;
+    inline static QString SendableName = "";
+    inline static QString DisplayName = "Graph";
+
 public slots:
     void updateGraph();
 

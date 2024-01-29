@@ -24,6 +24,11 @@ public:
     void setCheckboxSize(int size);
 
     void setValue(const nt::Value &value) override;
+
+    inline static WidgetTypes WidgetType = WidgetTypes::BooleanCheckbox;
+    inline static TopicTypes TopicType = TopicTypes::Boolean;
+    inline static QString SendableName = "";
+    inline static QString DisplayName = "Checkbox";
 };
 
 #endif // BOOLEANCHECKBOXWIDGET_H

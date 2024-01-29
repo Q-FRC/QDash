@@ -16,4 +16,9 @@ public:
     ~StringDisplayWidget();
 
     void setValue(const nt::Value &value) override;
+
+    inline static WidgetTypes WidgetType = WidgetTypes::StringDisplay;
+    inline static TopicTypes TopicType = TopicTypes::String;
+    inline static QString SendableName = "";
+    inline static QString DisplayName = "String Display";
 };

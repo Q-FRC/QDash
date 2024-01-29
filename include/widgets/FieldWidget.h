@@ -36,6 +36,11 @@ public:
 
     void setValue(const nt::Value &value) override;
 
-    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
+
+    inline static WidgetTypes WidgetType = WidgetTypes::Field;
+    inline static TopicTypes TopicType = TopicTypes::DoubleArray;
+    inline static QString SendableName = "";
+    inline static QString DisplayName = "Field2d";
 };
 

@@ -20,4 +20,9 @@ public:
     ~DoubleDisplayWidget();
 
     void setValue(const nt::Value &value) override;
+
+    inline static WidgetTypes WidgetType = WidgetTypes::DoubleDisplay;
+    inline static TopicTypes TopicType = TopicTypes::Double;
+    inline static QString SendableName = "";
+    inline static QString DisplayName = "Double Display";
 };

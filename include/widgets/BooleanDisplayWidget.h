@@ -33,4 +33,9 @@ public:
     void setShape(Globals::FrameShape shape);
 
     void setValue(const nt::Value &value) override;
+
+    inline static WidgetTypes WidgetType = WidgetTypes::BooleanDisplay;
+    inline static TopicTypes TopicType = TopicTypes::Boolean;
+    inline static QString SendableName = "";
+    inline static QString DisplayName = "Boolean Display";
 };

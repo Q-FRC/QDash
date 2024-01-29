@@ -11,6 +11,7 @@
 
 // ENUMS //
 enum class WidgetTypes {
+    None = 65535,
     BooleanCheckbox = 0,
     BooleanDisplay = 1,
     StringDisplay = 2,
@@ -29,6 +30,7 @@ enum class WidgetTypes {
 };
 
 enum class TopicTypes {
+    None = 65535,
     Double = 0,
     DoubleArray = 1,
     String = 2,

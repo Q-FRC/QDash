@@ -23,6 +23,11 @@ public:
 
     QUrl url();
     void setUrl(const QUrl &url);
+
+    inline static WidgetTypes WidgetType = WidgetTypes::CameraView;
+    inline static TopicTypes TopicType = TopicTypes::None;
+    inline static QString SendableName = "";
+    inline static QString DisplayName = "Camera View";
 };
 
 #endif // CAMERAVIEWWIDGET_H

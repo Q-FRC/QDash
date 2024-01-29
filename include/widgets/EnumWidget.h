@@ -28,4 +28,9 @@ public:
     void setShape(Globals::FrameShape shape);
 
     void setValue(const nt::Value &value) override;
+
+    inline static WidgetTypes WidgetType = WidgetTypes::EnumWidget;
+    inline static TopicTypes TopicType = TopicTypes::String;
+    inline static QString SendableName = "";
+    inline static QString DisplayName = "Enum";
 };

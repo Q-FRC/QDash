@@ -18,4 +18,9 @@ public:
     ~IntegerDisplayWidget();
 
     void setValue(const nt::Value &value) override;
+
+    inline static WidgetTypes WidgetType = WidgetTypes::IntegerDisplay;
+    inline static TopicTypes TopicType = TopicTypes::Int;
+    inline static QString SendableName = "";
+    inline static QString DisplayName = "Int Display";
 };

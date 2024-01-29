@@ -47,6 +47,11 @@ public:
     void setStartingAngle(double angle);
 
     void setValue(const nt::Value &value) override;
+
+    inline static WidgetTypes WidgetType = WidgetTypes::DoubleDial;
+    inline static TopicTypes TopicType = TopicTypes::Double;
+    inline static QString SendableName = "";
+    inline static QString DisplayName = "Dial";
 };
 
 #endif // DOUBLEDIALWIDGET_H

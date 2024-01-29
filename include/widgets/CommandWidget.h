@@ -16,9 +16,14 @@ public:
     CommandWidget(const QString &topic = "", const QString &title = "");
     ~CommandWidget();
 
-    void setTopic(const QString &topic);
+    void setTopic(const QString &topic) override;
 
     void setValue(const nt::Value &value) override;
+
+    inline static WidgetTypes WidgetType = WidgetTypes::Command;
+    inline static TopicTypes TopicType = TopicTypes::Command;
+    inline static QString SendableName = "Command";
+    inline static QString DisplayName = "Command";
 };
 
 #endif // CommandWidget_H

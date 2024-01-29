@@ -261,45 +261,37 @@ WidgetData BaseWidget::fromJson(QJsonObject obj) {
 }
 
 BaseWidget *BaseWidget::defaultWidgetFromTopic(QString ntTopic, WidgetTypes type) {
+    // wahoo
+    auto register_widget_types = [&ntTopic, &type]<typename... Widget>() -> BaseWidget * {
+        BaseWidget *result = nullptr;
+        auto try_widget_type = [&]<typename WidgetType>() -> bool {
+            if (WidgetType::WidgetType == type)
+            {
+                result = new WidgetType(ntTopic);
+                return true;
+            }
+            return false;
+        };
+        (try_widget_type.template operator()<Widget>() || ...);
+        return (result ? result : new StringDisplayWidget(ntTopic));
+    };
 
-    BaseWidget *baseWidget;
+    auto widget = register_widget_types.template operator()<BooleanCheckboxWidget,
+                                                            BooleanDisplayWidget,
+                                                            DoubleDisplayWidget,
+                                                            DoubleDialWidget,
+                                                            StringChooserWidget,
+                                                            CameraViewWidget,
+                                                            EnumWidget,
+                                                            IntegerDisplayWidget,
+                                                            IntegerDialWidget,
+                                                            FieldWidget,
+                                                            SendableFieldWidget,
+                                                            CommandWidget,
+                                                            GraphWidget,
+                                                            FMSInfoWidget>();
 
-#define REGISTER_WIDGET_TYPE(widgetType, widget) if (widgetType == type) { \
-    baseWidget = new widget(ntTopic); \
-} else
-
-REGISTER_WIDGET_TYPE(WidgetTypes::BooleanCheckbox, BooleanCheckboxWidget)
-REGISTER_WIDGET_TYPE(WidgetTypes::BooleanDisplay, BooleanDisplayWidget)
-
-REGISTER_WIDGET_TYPE(WidgetTypes::DoubleDisplay, DoubleDisplayWidget)
-REGISTER_WIDGET_TYPE(WidgetTypes::DoubleDial, DoubleDialWidget)
-
-REGISTER_WIDGET_TYPE(WidgetTypes::SendableChooser, StringChooserWidget)
-
-REGISTER_WIDGET_TYPE(WidgetTypes::CameraView, CameraViewWidget)
-
-REGISTER_WIDGET_TYPE(WidgetTypes::EnumWidget, EnumWidget)
-
-REGISTER_WIDGET_TYPE(WidgetTypes::IntegerDisplay, IntegerDisplayWidget)
-REGISTER_WIDGET_TYPE(WidgetTypes::IntegerDial, IntegerDialWidget)
-
-REGISTER_WIDGET_TYPE(WidgetTypes::Field, FieldWidget)
-REGISTER_WIDGET_TYPE(WidgetTypes::SendableField, SendableFieldWidget)
-
-REGISTER_WIDGET_TYPE(WidgetTypes::Command, CommandWidget)
-
-REGISTER_WIDGET_TYPE(WidgetTypes::Graph, GraphWidget)
-
-REGISTER_WIDGET_TYPE(WidgetTypes::FMSInfo, FMSInfoWidget)
-
-// implicit-condition: StringDisplay
-{ // else
-    baseWidget = new StringDisplayWidget(ntTopic);
-} // else
-
-#undef REGISTER_WIDGET_TYPE
-
-return baseWidget;
+    return widget;
 }
 
 // JSON stuff
@@ -371,7 +363,7 @@ QVariant BaseWidget::readXAxisProperty(const QMetaProperty &property, const QJso
     return QVariant::fromValue<Globals::GraphXAxis>(
         Globals::GraphXAxis{
             obj.value("useTime").toBool(current.useTime),
-                obj.value("topic").toString(current.topic)
+            obj.value("topic").toString(current.topic)
         });
 }
 
@@ -464,7 +456,7 @@ QJsonValue BaseWidget::writeXAxisProperty(const QMetaProperty &property) {
             {"useTime", xAxis.useTime},
             {"topic", xAxis.topic}
         }
-    );
+        );
 }
 
 QJsonValue BaseWidget::writeTopicColorMapProperty(const QMetaProperty &property) {

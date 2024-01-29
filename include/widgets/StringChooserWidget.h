@@ -30,6 +30,11 @@ public:
     void setTopic(const QString &topic) override;
 
     void setValue(const nt::Value &value) override;
+
+    inline static WidgetTypes WidgetType = WidgetTypes::SendableChooser;
+    inline static TopicTypes TopicType = TopicTypes::SendableChooser;
+    inline static QString SendableName = "String Chooser";
+    inline static QString DisplayName = "Sendable Chooser";
 };
 
 #endif // STRINGCHOOSERWIDGET_H

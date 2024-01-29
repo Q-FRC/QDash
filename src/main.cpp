@@ -4,6 +4,22 @@
 #include <QMessageBox>
 #include <QCommandLineParser>
 
+#include "widgets/BooleanCheckboxWidget.h"
+#include "widgets/BooleanDisplayWidget.h"
+#include "widgets/CameraViewWidget.h"
+#include "widgets/DoubleDialWidget.h"
+#include "widgets/EnumWidget.h"
+#include "widgets/DoubleDisplayWidget.h"
+#include "widgets/StringChooserWidget.h"
+#include "widgets/StringDisplayWidget.h"
+#include "widgets/IntegerDisplayWidget.h"
+#include "widgets/IntegerDialWidget.h"
+#include "widgets/FieldWidget.h"
+#include "widgets/SendableFieldWidget.h"
+#include "widgets/CommandWidget.h"
+#include "widgets/GraphWidget.h"
+#include "widgets/FMSInfoWidget.h"
+
 #include "MainWindow.h"
 #include "Globals.h"
 #include "stores/FilterStore.h"
@@ -51,53 +67,52 @@ int main(int argc, char **argv) {
     Globals::inst.StartClient4(BuildConfig.APP_NAME.toStdString());
     Globals::inst.SetServer(Globals::server.server.c_str(), NT_DEFAULT_PORT4);
 
-// NT REGISTRATION
-#define REGISTER_NT(ntType, topicType, displayName) FilterStore::registerNTType(ntType, topicType, displayName);
+    // NT REGISTRATION
 
-    REGISTER_NT(nt::NetworkTableType::kBoolean, TopicTypes::Boolean, "Boolean")
-    REGISTER_NT(nt::NetworkTableType::kString, TopicTypes::String, "String")
-    REGISTER_NT(nt::NetworkTableType::kDouble, TopicTypes::Double, "Double")
-    REGISTER_NT(nt::NetworkTableType::kDoubleArray, TopicTypes::DoubleArray, "Double Array")
-    REGISTER_NT(nt::NetworkTableType::kInteger, TopicTypes::Int, "Integer")
+    FilterStore::registerNTType(nt::NetworkTableType::kBoolean, TopicTypes::Boolean, "Boolean");
+    FilterStore::registerNTType(nt::NetworkTableType::kString, TopicTypes::String, "String");
+    FilterStore::registerNTType(nt::NetworkTableType::kDouble, TopicTypes::Double, "Double");
+    FilterStore::registerNTType(nt::NetworkTableType::kDoubleArray, TopicTypes::DoubleArray, "Double Array");
+    FilterStore::registerNTType(nt::NetworkTableType::kInteger, TopicTypes::Int, "Integer");
 
-#undef REGISTER_NT
+    // NT REGISTRATION
 
-// SENDABLE REGISTRATION
-#define REGISTER_SENDABLE(typeString, topicType) FilterStore::registerSendable(typeString, topicType);
+    // Funky
+    auto register_widget_types = []<typename... Widget>() {
+        auto register_widget = [&]<typename WidgetType>() -> bool {
+            auto topic = WidgetType::TopicType;
+            auto widget = WidgetType::WidgetType;
+            auto sendable = WidgetType::SendableName;
+            auto name = WidgetType::DisplayName;
 
-    REGISTER_SENDABLE("String Chooser", TopicTypes::SendableChooser)
-    REGISTER_SENDABLE("Field2d", TopicTypes::Field2d)
-    REGISTER_SENDABLE("Command", TopicTypes::Command)
-    REGISTER_SENDABLE("FMSInfo", TopicTypes::FMSInfo)
+            if (widget != WidgetTypes::None && topic != TopicTypes::None) {
+                Globals::typeStore.registerType(topic, widget, name);
+            }
 
-#undef REGISTER_SENDABLE
+            if (!sendable.isEmpty()) {
+                FilterStore::registerSendable(sendable.toStdString(), topic);
+            }
 
-// WIDGET REGISTRATION
-#define REGISTER_TYPE(topic, widget, name) Globals::typeStore.registerType(topic, widget, name);
+            return false;
+        };
+        (register_widget.template operator()<Widget>() || ...);
+    };
 
-    REGISTER_TYPE(TopicTypes::Boolean, WidgetTypes::BooleanCheckbox, "Checkbox")
-    REGISTER_TYPE(TopicTypes::Boolean, WidgetTypes::BooleanDisplay, "Color Display")
-
-    REGISTER_TYPE(TopicTypes::Double, WidgetTypes::DoubleDial, "Dial")
-    REGISTER_TYPE(TopicTypes::Double, WidgetTypes::DoubleDisplay, "Double Display")
-
-    REGISTER_TYPE(TopicTypes::DoubleArray, WidgetTypes::Field, "Field2d")
-
-    REGISTER_TYPE(TopicTypes::String, WidgetTypes::StringDisplay, "Text Display")
-    REGISTER_TYPE(TopicTypes::String, WidgetTypes::EnumWidget, "Enum")
-
-    REGISTER_TYPE(TopicTypes::Int, WidgetTypes::IntegerDisplay, "Integer Display")
-    REGISTER_TYPE(TopicTypes::Int, WidgetTypes::IntegerDial, "Dial")
-
-    REGISTER_TYPE(TopicTypes::SendableChooser, WidgetTypes::SendableChooser, "Sendable Chooser");
-
-    REGISTER_TYPE(TopicTypes::Field2d, WidgetTypes::SendableField, "Field2d");
-
-    REGISTER_TYPE(TopicTypes::Command, WidgetTypes::Command, "Command");
-
-    REGISTER_TYPE(TopicTypes::FMSInfo, WidgetTypes::FMSInfo, "FMSInfo");
-
-#undef REGISTER_TYPE
+    register_widget_types.template operator()<BooleanCheckboxWidget,
+                                              BooleanDisplayWidget,
+                                              DoubleDisplayWidget,
+                                              StringDisplayWidget,
+                                              DoubleDialWidget,
+                                              StringChooserWidget,
+                                              CameraViewWidget,
+                                              EnumWidget,
+                                              IntegerDisplayWidget,
+                                              IntegerDialWidget,
+                                              FieldWidget,
+                                              SendableFieldWidget,
+                                              CommandWidget,
+                                              GraphWidget,
+                                              FMSInfoWidget>();
 
     // settings dont exist or firstrun is true
     bool firstRun = Settings::FirstRun.value().toBool();

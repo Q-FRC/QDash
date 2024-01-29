@@ -71,6 +71,11 @@ public:
 
     static BaseWidget *defaultWidgetFromTopic(QString ntTopic, WidgetTypes type);
 
+    inline static WidgetTypes WidgetType = WidgetTypes::None;
+    inline static TopicTypes TopicType = TopicTypes::None;
+    inline static QString SendableName = "";
+    inline static QString DisplayName = "";
+
 signals:
     void reconfigRequested(BaseWidget *widget, WidgetData data);
     void deleteRequested();
