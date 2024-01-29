@@ -264,16 +264,18 @@ BaseWidget *BaseWidget::defaultWidgetFromTopic(QString ntTopic, WidgetTypes type
     // wahoo
     auto register_widget_types = [&ntTopic, &type]<typename... Widget>() -> BaseWidget * {
         BaseWidget *result = nullptr;
+        QString topLevel = ntTopic.split("/").last();
         auto try_widget_type = [&]<typename WidgetType>() -> bool {
             if (WidgetType::WidgetType == type)
             {
                 result = new WidgetType(ntTopic);
+                result->setTitle(topLevel);
                 return true;
             }
             return false;
         };
         (try_widget_type.template operator()<Widget>() || ...);
-        return (result ? result : new StringDisplayWidget(ntTopic));
+        return (result ? result : new StringDisplayWidget(ntTopic, "", topLevel));
     };
 
     auto widget = register_widget_types.template operator()<BooleanCheckboxWidget,

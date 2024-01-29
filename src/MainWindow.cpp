@@ -356,17 +356,6 @@ void MainWindow::newWidgetPopup() {
     }
 }
 
-void MainWindow::configNewWidget(BaseWidget *widget, WidgetData data) {
-    if (widget == nullptr) return;
-
-    WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget, this, false, data);
-    dialog->setWindowTitle("New Widget");
-    dialog->show();
-
-    connect(dialog, &WidgetDialogGenerator::widgetReady, currentTab(), &TabWidget::addWidget);
-    connect(dialog, &WidgetDialogGenerator::cancelled, currentTab(), &TabWidget::deleteWidget);
-}
-
 void MainWindow::beginNewWidgetDrag(BaseWidget *widget, WidgetData data) {
     TabWidget *tab = currentTab();
 
@@ -376,7 +365,6 @@ void MainWindow::beginNewWidgetDrag(BaseWidget *widget, WidgetData data) {
     QMetaObject::Connection *doneConn = new QMetaObject::Connection;
     QMetaObject::Connection *cancelConn = new QMetaObject::Connection;
     *doneConn = connect(tab, &TabWidget::dragDone, this, [this, cancelConn, doneConn](BaseWidget *widget, WidgetData data) {
-            configNewWidget(widget, data);
             disconnect(*doneConn);
             delete doneConn;
 
@@ -442,7 +430,7 @@ void MainWindow::about() {
                 << "Build Date: " + BuildConfig.BUILD_DATE
                 << "Git Repo: " + BuildConfig.GIT_REPO
                 << "Author: Carson Rueter <swurl@swurl.xyz>"
-                << "Contributors: Ashley Hawkins"
+                << "Contributors: Ashley Hawkins <awhawkins@proton.me>"
                 << "Copyleft 2023-2024 Carson Rueter"
                 << "Enjoy :)";
     QMessageBox::about(this, "About " + BuildConfig.APP_NAME, aboutString.join("\n"));
