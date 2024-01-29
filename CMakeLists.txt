@@ -11,6 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+enable_testing()
+
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 option(USE_SYSTEM_NTCORE "Use system wpilib installation" ON)

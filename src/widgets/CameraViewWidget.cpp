@@ -14,7 +14,9 @@ CameraViewWidget::CameraViewWidget(const QString &title, const QUrl &url) : Base
     setReady(true);
 }
 
-CameraViewWidget::~CameraViewWidget() {}
+CameraViewWidget::~CameraViewWidget() {
+    m_player->stop();
+}
 
 QUrl CameraViewWidget::url() {
     return m_player->source();
@@ -24,3 +26,5 @@ void CameraViewWidget::setUrl(const QUrl &url) {
     m_player->setSource(url);
     m_player->play();
 }
+
+void CameraViewWidget::forceUpdate() {}
