@@ -4,7 +4,7 @@
 
 #include <QApplication>
 
-CommandWidget::CommandWidget(const QString &topic, const QString &title) : BaseWidget(WidgetTypes::Command, title, topic)
+CommandWidget::CommandWidget(const QString &topic, const QString &title) : BaseWidget(WidgetTypes::Command, title, topic, true)
 {
     m_name = TopicStore::subscribe(topic.toStdString() + "/.name", this);
     m_running = TopicStore::subscribeWriteOnly(topic.toStdString() + "/running", this);

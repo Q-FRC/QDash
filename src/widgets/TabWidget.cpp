@@ -297,7 +297,7 @@ void TabWidget::dragStart(QPoint point, QPoint offset) {
 }
 
 void TabWidget::dragMove(QPoint point) {
-    if (m_draggedWidget->isVisible()) {
+    if (m_draggedWidget->isVisible() && m_draggedWidget->isEnabled()) {
         QPoint offset = point - m_dragOffset;
         m_draggedWidget->move(offset);
 

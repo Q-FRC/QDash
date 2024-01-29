@@ -1,6 +1,6 @@
  #include "widgets/CameraViewWidget.h"
 
-CameraViewWidget::CameraViewWidget(const QString &title, const QUrl &url) : BaseWidget(WidgetTypes::CameraView, title, "")
+CameraViewWidget::CameraViewWidget(const QString &title, const QUrl &url) : BaseWidget(WidgetTypes::CameraView, title, "", true)
 {
     m_videoWidget = new QVideoWidget(this);
 

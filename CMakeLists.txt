@@ -143,6 +143,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         theme/qrc/breeze.qrc
         ${RCS_FILE}
         ${PROJECT_SOURCES}
+        include/widgets/FMSInfoWidget.h src/widgets/FMSInfoWidget.cpp
+        icons.qrc
     )
 endif()
 

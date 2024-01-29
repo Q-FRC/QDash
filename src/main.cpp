@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
     REGISTER_SENDABLE("String Chooser", TopicTypes::SendableChooser)
     REGISTER_SENDABLE("Field2d", TopicTypes::Field2d)
     REGISTER_SENDABLE("Command", TopicTypes::Command)
-
+    REGISTER_SENDABLE("FMSInfo", TopicTypes::FMSInfo)
 
 #undef REGISTER_SENDABLE
 
@@ -94,6 +94,8 @@ int main(int argc, char **argv) {
     REGISTER_TYPE(TopicTypes::Field2d, WidgetTypes::SendableField, "Field2d");
 
     REGISTER_TYPE(TopicTypes::Command, WidgetTypes::Command, "Command");
+
+    REGISTER_TYPE(TopicTypes::FMSInfo, WidgetTypes::FMSInfo, "FMSInfo");
 
 #undef REGISTER_TYPE
 

@@ -4,7 +4,7 @@
 
 #include <QApplication>
 
-StringChooserWidget::StringChooserWidget(const QString &topic, const QString &defaultValue, const QString &title) : BaseWidget(WidgetTypes::SendableChooser, title, topic),
+StringChooserWidget::StringChooserWidget(const QString &topic, const QString &defaultValue, const QString &title) : BaseWidget(WidgetTypes::SendableChooser, title, topic, true),
     m_active(TopicStore::subscribe(topic.toStdString() + "/active", this)),
     m_default(TopicStore::subscribeWriteOnly(topic.toStdString() + "/default", this)),
     m_choices(TopicStore::subscribe(topic.toStdString() + "/options", this)),

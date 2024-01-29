@@ -435,7 +435,7 @@
   </connection>
   <connection>
    <sender>centralwidget</sender>
-   <signal>tabBarClicked(int)</signal>
+   <signal>currentChanged(int)</signal>
    <receiver>MainWindow</receiver>
    <slot>forceUpdateTab(int)</slot>
    <hints>

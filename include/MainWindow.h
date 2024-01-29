@@ -28,6 +28,7 @@ public:
     virtual ~MainWindow();
 
     TabWidget *currentTab();
+    int currentTabIdx();
 
     // File I/O
     QJsonDocument saveObject();

@@ -10,7 +10,7 @@
 #include <QMessageBox>
 
 GraphWidget::GraphWidget(const QString &topic, const QString &title)
-    : BaseWidget(WidgetTypes::Graph, title, topic) {
+    : BaseWidget(WidgetTypes::Graph, title, topic, true) {
 
     QChart *chart = new QChart();
     m_timer = new QTimer(this);

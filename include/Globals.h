@@ -24,7 +24,8 @@ enum class WidgetTypes {
     SendableField = 10, // UNUSED BY SAVE/LOAD
     Field = 11,
     Command = 12,
-    Graph = 13
+    Graph = 13,
+    FMSInfo = 14
 };
 
 enum class TopicTypes {
@@ -36,7 +37,8 @@ enum class TopicTypes {
 
     SendableChooser = 5,
     Field2d = 6,
-    Command = 7
+    Command = 7,
+    FMSInfo = 8
 };
 
 // STRUCTS //

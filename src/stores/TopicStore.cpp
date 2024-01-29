@@ -33,7 +33,7 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
         if (value.IsValid())
             QMetaObject::invokeMethod(subscriber, [subscriber, value] {
                 if (subscriber->ready()) {
-                    if (subscriber->isVisible()) {
+                    if (true) {
                         subscriber->setValue(value);
                         subscriber->update();
                     }

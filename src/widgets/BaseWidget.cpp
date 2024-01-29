@@ -16,6 +16,7 @@
 #include "widgets/SendableFieldWidget.h"
 #include "widgets/CommandWidget.h"
 #include "widgets/GraphWidget.h"
+#include "widgets/FMSInfoWidget.h"
 
 #include "dialogs/WidgetDialogGenerator.h"
 
@@ -27,10 +28,11 @@
 #include <QApplication>
 #include <QMouseEvent>
 
-BaseWidget::BaseWidget(const WidgetTypes &type, const QString &title, const QString &topic)
+BaseWidget::BaseWidget(const WidgetTypes &type, const QString &title, const QString &topic, const bool sendable)
 {
     m_type = type;
     m_topic = topic;
+    m_sendable = sendable;
 
     m_layout = new QGridLayout(this);
     m_title = new QLineEdit(title, this);
@@ -147,9 +149,12 @@ QMenu *BaseWidget::constructContextMenu(WidgetData data) {
 void BaseWidget::setValue(const nt::Value &value) {}
 
 void BaseWidget::forceUpdate() {
+    if (m_sendable) return;
     auto value = m_entry->GetValue();
-    if (value.IsValid() && m_entry->Exists()) {
-        setValue(m_entry->GetValue());
+    if (m_entry &&
+        m_entry->Exists()
+        && value.IsValid() ) {
+        setValue(value);
         update();
     }
 }
@@ -284,6 +289,8 @@ REGISTER_WIDGET_TYPE(WidgetTypes::SendableField, SendableFieldWidget)
 REGISTER_WIDGET_TYPE(WidgetTypes::Command, CommandWidget)
 
 REGISTER_WIDGET_TYPE(WidgetTypes::Graph, GraphWidget)
+
+REGISTER_WIDGET_TYPE(WidgetTypes::FMSInfo, FMSInfoWidget)
 
 // implicit-condition: StringDisplay
 { // else
