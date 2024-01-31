@@ -286,3 +286,4 @@ gradle-app.setting
 CMakeLists.txt.user
 appdir
 *.AppImage
+build*

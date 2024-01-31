@@ -99,11 +99,12 @@ jobs:
       run: |
         cmake --build ${{ env.BUILD_DIR }} --parallel $(nproc) --config ${{ inputs.build_type }}
 
-    # - name: Test
-    #   working-directory: ${{ steps.strings.outputs.build-output-dir }}
-    #   # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-    #   # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-    #   run: ctest --build-config ${{ matrix.build_type }}
+    - name: Test
+      working-directory: ${{ env.BUILD_DIR }}/tests
+      shell: bash
+      run: |
+        export QT_QPA_PLATFORM=minimal
+        ctest --build-config ${{ inputs.build_type }} --verbose
 
     - name: Package (Linux)
       if: runner.os == 'Linux'

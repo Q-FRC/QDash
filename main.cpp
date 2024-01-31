@@ -66,6 +66,7 @@ int main(int argc, char **argv) {
 
     Globals::inst.StartClient4(BuildConfig.APP_NAME.toStdString());
     Globals::inst.SetServer(Globals::server.server.c_str(), NT_DEFAULT_PORT4);
+    Globals::inst.StartDSClient();
 
     // NT REGISTRATION
 

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 project(QFRCDashboard VERSION 1.0.0 LANGUAGES CXX)
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS "ui/")
+set(CMAKE_AUTOUIC_SEARCH_PATHS "lib/ui/")
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -11,150 +11,29 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-enable_testing()
-
-option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
-
-option(USE_SYSTEM_NTCORE "Use system wpilib installation" ON)
-option(USE_SYSTEM_PROTOBUF "Use system protobuf installation" ON)
-
-if( ${USE_SYSTEM_NTCORE})
-    find_package(ntcore)
-    if( NOT ${ntcore_FOUND} )
-        set(USE_SYSTEM_NTCORE OFF)
-    endif()
-endif()
-
-if( ${USE_SYSTEM_PROTOBUF})
-    find_package(Protobuf)
-    if( NOT ${Protobuf_FOUND} )
-        set(USE_SYSTEM_PROTOBUF OFF)
-    endif()
-endif()
-
-find_package(QT NAMES Qt6 REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets MultimediaWidgets Charts)
-add_subdirectory(3rd_party EXCLUDE_FROM_ALL)
-
-set(PROJECT_SOURCES
-        src/main.cpp
-        src/Globals.cpp
-        src/MainWindow.cpp
-        src/Constants.cpp
-
-        src/widgets/BaseWidget.cpp
-        src/widgets/DoubleDisplayWidget.cpp
-        src/widgets/TabWidget.cpp
-        src/widgets/BooleanDisplayWidget.cpp
-        src/widgets/StringDisplayWidget.cpp
-        src/widgets/TextWidget.cpp
-        src/widgets/BooleanCheckboxWidget.cpp
-        src/widgets/DoubleDialWidget.cpp
-        src/widgets/StringChooserWidget.cpp
-        src/widgets/CameraViewWidget.cpp
-        src/widgets/EnumWidget.cpp
-        src/widgets/IntegerDisplayWidget.cpp
-        src/widgets/IntegerDialWidget.cpp
-        src/widgets/FieldWidget.cpp
-        src/widgets/SendableFieldWidget.cpp
-        src/widgets/CommandWidget.cpp
-        src/widgets/GraphWidget.cpp
-
-        src/misc/ShapedFrame.cpp
-        src/misc/BetterDial.cpp
-        src/misc/FieldImage.cpp
-        src/misc/ChartView.cpp
-        src/misc/GridLineWidget.cpp
-
-        src/stores/TopicStore.cpp
-        src/stores/TypeStore.cpp
-        src/stores/FilterStore.cpp
-        src/stores/CameraStore.cpp
-
-        src/dialogs/CameraSelectionDialog.cpp
-        src/dialogs/NewWidgetTreeDialog.cpp
-        src/dialogs/NTSettingsDialog.cpp
-        src/dialogs/WidgetDialogGenerator.cpp
-        src/dialogs/TabMaxSizeDialog.cpp
-        src/dialogs/PreferencesDialog.cpp
-
-        # =======================================
-
-        include/Globals.h
-        include/MainWindow.h
-        include/Constants.h
-
-
-        include/widgets/BaseWidget.h
-        include/widgets/DoubleDisplayWidget.h
-        include/widgets/TabWidget.h
-        include/widgets/BooleanDisplayWidget.h
-        include/widgets/StringDisplayWidget.h
-        include/widgets/TextWidget.h
-        include/widgets/BooleanCheckboxWidget.h
-        include/widgets/DoubleDialWidget.h
-        include/widgets/StringChooserWidget.h
-        include/widgets/CameraViewWidget.h
-        include/widgets/EnumWidget.h
-        include/widgets/IntegerDisplayWidget.h
-        include/widgets/IntegerDialWidget.h
-        include/widgets/FieldWidget.h
-        include/widgets/SendableFieldWidget.h
-        include/widgets/CommandWidget.h
-        include/widgets/GraphWidget.h
-
-        include/misc/ShapedFrame.h
-        include/misc/BetterDial.h
-        include/misc/FieldImage.h
-        include/misc/ChartView.h
-        include/misc/GridLineWidget.h
-
-        include/stores/TopicStore.h
-        include/stores/TypeStore.h
-        include/stores/FilterStore.h
-        include/stores/CameraStore.h
-
-        include/dialogs/CameraSelectionDialog.h
-        include/dialogs/NewWidgetTreeDialog.h
-        include/dialogs/NTSettingsDialog.h
-        include/dialogs/WidgetDialogGenerator.h
-        include/dialogs/TabMaxSizeDialog.h
-        include/dialogs/PreferencesDialog.h
-
-        # ==================================
-        ui/MainWindow.ui
-        ui/NTSettingsDialog.ui
-        ui/WidgetDialogGenerator.ui
-        ui/NewWidgetTreeDialog.ui
-        ui/CameraSelectionDialog.ui
-        ui/TabMaxSizeDialog.ui
-        ui/PreferencesDialog.ui
-)
-
 if(WIN32)
-    set(RCS_FILE ${CMAKE_CURRENT_BINARY_DIR}/program_info/QFRCDashboard.rc)
+    set(RCS_FILE ${CMAKE_CURRENT_BINARY_DIR}/program_info/${Dashboard_APP_NAME}.rc)
     set(Dashboard_BUILD_PLATFORM "win32")
 else()
     set(Dashboard_BUILD_PLATFORM "lin64")
 endif()
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(QFRCDashboard
-        MANUAL_FINALIZATION
-        fields.qrc
-        theme/qrc/breeze.qrc
-        ${RCS_FILE}
-        ${PROJECT_SOURCES}
-        include/widgets/FMSInfoWidget.h src/widgets/FMSInfoWidget.cpp
-        icons.qrc
-    )
+option(WITH_TESTS "Build tests" ON)
+
+set(QTCOMPONENTS Widgets MultimediaWidgets Charts)
+
+if(WITH_TESTS)
+    set(QTCOMPONENTS ${QTCOMPONENTS} Test)
 endif()
 
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
+find_package(QT NAMES Qt6 REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS ${QTCOMPONENTS})
 
 set(Dashboard_ORG_NAME "binex-dsk")
 set(Dashboard_APP_NAME "QFRCDashboard")
 set(Dashboard_GIT_REPO "https://github.com/binex-dsk/QFRCDashboard")
+
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
 # Git
 include(GetGitRevisionDescription)
@@ -181,17 +60,31 @@ project(QFRCDashboard VERSION ${Dashboard_GIT_TAG_NUMERO} LANGUAGES CXX)
 string(TIMESTAMP TODAY "%Y-%m-%d")
 set(Dashboard_BUILD_TIMESTAMP "${TODAY}")
 
+add_subdirectory("program_info")
+add_subdirectory(lib)
+find_package(ntcore)
+find_package(Protobuf)
+
 set(QAPPLICATION_CLASS QApplication)
 add_subdirectory("SingleApplication")
 
-add_subdirectory("program_info")
-add_subdirectory("buildconfig")
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_add_executable(QFRCDashboard
+        MANUAL_FINALIZATION
+        main.cpp
+        lib/fields.qrc
+        lib/theme/qrc/breeze.qrc
+        lib/icons.qrc
+    )
+endif()
 
-target_link_libraries(QFRCDashboard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::MultimediaWidgets Qt${QT_VERSION_MAJOR}::Charts ntcore SingleApplication::SingleApplication BuildConfig)
+target_link_libraries(QFRCDashboard PRIVATE QFRCDashboardLib SingleApplication::SingleApplication Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::MultimediaWidgets Qt${QT_VERSION_MAJOR}::Charts ntcore BuildConfig)
 
 target_include_directories(QFRCDashboard PRIVATE "$<TARGET_PROPERTY:ntcore,INTERFACE_INCLUDE_DIRECTORIES>")
-target_include_directories(QFRCDashboard PRIVATE ui/)
-target_include_directories(QFRCDashboard PRIVATE include/)
+target_include_directories(QFRCDashboard PRIVATE lib/ui/)
+target_include_directories(QFRCDashboard PRIVATE lib/include)
+target_include_directories(QFRCDashboard PRIVATE ${_Dashboard_AUTOGEN}/include)
+target_include_directories(QFRCDashboard PRIVATE lib/)
 
 include(GNUInstallDirs)
 install(TARGETS QFRCDashboard
@@ -204,6 +97,8 @@ install(
     CODE "file(WRITE \"\${CMAKE_INSTALL_PREFIX}/qt.conf\" \" \")"
     COMPONENT Runtime
 )
+
+add_subdirectory(tests)
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(QFRCDashboard)
