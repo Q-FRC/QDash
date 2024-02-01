@@ -31,7 +31,9 @@ public:
     void keyPressEvent(QKeyEvent *event);
     void constructList(QList<Globals::Topic> topics);
 
+    static QList<Globals::Topic> filterTopicTypes(QList<Globals::Topic> list, QList<TopicTypes> acceptableTypes);
     static QList<Globals::Topic> filterNumberTypes(QList<Globals::Topic> list);
+    static QList<Globals::Topic> filterStringTypes(QList<Globals::Topic> list);
 signals:
     void widgetReady(BaseWidget *widget, WidgetData data);
     void topicReady(const Globals::Topic &topic);

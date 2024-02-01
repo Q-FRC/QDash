@@ -30,6 +30,9 @@ public:
     TabWidget *currentTab();
     int currentTabIdx();
 
+    TabWidget *tabNamed(QString name);
+    void selectTab(TabWidget *tab);
+
     // File I/O
     QJsonDocument saveObject();
     void loadObject(const QJsonDocument &doc);
@@ -73,4 +76,7 @@ public slots:
     // About Menu
     void about();
     void aboutQt();
+
+signals:
+    void switchTopicChanged();
 };

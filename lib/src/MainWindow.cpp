@@ -51,6 +51,21 @@ int MainWindow::currentTabIdx() {
     return centralwidget->currentIndex();
 }
 
+TabWidget *MainWindow::tabNamed(QString name) {
+    for (TabWidget *tab : m_tabs) {
+        if (tab->name() == name) {
+            return tab;
+        }
+    }
+
+    return nullptr;
+}
+
+void MainWindow::selectTab(TabWidget *tab) {
+    int idx = m_tabs.indexOf(tab);
+    if (idx != -1) centralwidget->setCurrentIndex(idx);
+}
+
 /* File I/O */
 
 QJsonDocument MainWindow::saveObject() {
@@ -67,6 +82,7 @@ QJsonDocument MainWindow::saveObject() {
     serverObj.insert("useTeamNumber", Globals::server.teamNumber);
     serverObj.insert("address", QString::fromStdString(Globals::server.server));
     serverObj.insert("port", Globals::server.port);
+    serverObj.insert("topic", Globals::server.switchTopic);
 
     topObject.insert("server", serverObj);
     topObject.insert("tabs", tabs);
@@ -84,7 +100,8 @@ void MainWindow::loadObject(const QJsonDocument &doc) {
     ServerData server = ServerData{
         serverObj.value("useTeamNumber").toBool(false),
         serverObj.value("address").toString("0.0.0.0").toStdString(),
-        serverObj.value("port").toInt(NT_DEFAULT_PORT4)
+        serverObj.value("port").toInt(NT_DEFAULT_PORT4),
+        serverObj.value("topic").toString("")
     };
 
     setNtSettings(server);
@@ -122,7 +139,7 @@ void MainWindow::makeNewWidget(WidgetTypes type) {
 
 // Internal Stuff
 void MainWindow::forceUpdateTab(int idx) {
-    if (m_tabs.length() <= idx) return;
+    if (m_tabs.length() <= idx || idx == -1) return;
     for (BaseWidget *widget : m_tabs.at(idx)->widgets()) {
         widget->forceUpdate();
     }
@@ -159,6 +176,7 @@ void MainWindow::setNtSettings(ServerData data) {
     std::string server = data.server;
     bool isTeamNumber = data.teamNumber;
     int port = data.port;
+    QString switchTopic = data.switchTopic;
 
     if (server.empty()) return;
 
@@ -176,8 +194,19 @@ void MainWindow::setNtSettings(ServerData data) {
         Globals::inst.SetServer(server.c_str(), port);
     }
 
+    if (Globals::server.server != data.server ||
+        Globals::server.teamNumber != data.teamNumber ||
+        Globals::server.port != data.port) {
+        Globals::inst.Disconnect();
+    }
+
+    QString serverTopic = Globals::server.switchTopic;
+
     Globals::server = data;
-    Globals::inst.Disconnect();
+
+    if (serverTopic != switchTopic) {
+        emit switchTopicChanged();
+    }
 }
 
 // File Actions

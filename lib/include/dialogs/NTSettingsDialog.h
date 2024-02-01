@@ -21,6 +21,7 @@ public:
 
 public slots:
     void serializeData();
+    void putTopic();
 signals:
     void dataReady(ServerData data);
 };

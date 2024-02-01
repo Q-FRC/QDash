@@ -129,14 +129,8 @@ QString NewWidgetTreeDialog::getParentPath(QTreeWidgetItem *item) {
     return "/" + list.join('/');
 }
 
-QList<Globals::Topic> NewWidgetTreeDialog::filterNumberTypes(QList<Globals::Topic> list) {
+QList<Globals::Topic> NewWidgetTreeDialog::filterTopicTypes(QList<Globals::Topic> list, QList<TopicTypes> acceptableTypes) {
     QList<Globals::Topic> newList{};
-
-    QList<TopicTypes> acceptableTypes = {
-        TopicTypes::Int,
-        TopicTypes::Double,
-        TopicTypes::Boolean
-    };
 
     for (const Globals::Topic &topic : list) {
         if (acceptableTypes.contains(topic.type)) {
@@ -145,6 +139,24 @@ QList<Globals::Topic> NewWidgetTreeDialog::filterNumberTypes(QList<Globals::Topi
     }
 
     return newList;
+}
+
+QList<Globals::Topic> NewWidgetTreeDialog::filterNumberTypes(QList<Globals::Topic> list) {
+    QList<TopicTypes> acceptableTypes = {
+        TopicTypes::Int,
+        TopicTypes::Double,
+        TopicTypes::Boolean
+    };
+
+    return filterTopicTypes(list, acceptableTypes);
+}
+
+QList<Globals::Topic> NewWidgetTreeDialog::filterStringTypes(QList<Globals::Topic> list) {
+    QList<TopicTypes> acceptableTypes = {
+        TopicTypes::String
+    };
+
+    return filterTopicTypes(list, acceptableTypes);
 }
 
 void NewWidgetTreeDialog::keyPressEvent(QKeyEvent *event) {

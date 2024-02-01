@@ -1,91 +1,92 @@
 {
-  "server": {
-    "address": "0.0.0.0",
-    "port": 5810,
-    "useTeamNumber": false
-  },
-  "tabs": [
-    {
-      "maxSize": [
-        3,
-        3
-      ],
-      "tabName": "a",
-      "widgets": [
+    "server": {
+        "address": "0.0.0.0",
+        "port": 5810,
+        "topic": "",
+        "useTeamNumber": false
+    },
+    "tabs": [
         {
-          "False_Color": "#ff0000",
-          "Shape": "Hexagon",
-          "Topic": "/test",
-          "True_Color": "#00ff00",
-          "geometry": [
-            2,
-            0,
-            1,
-            1
-          ],
-          "title": "Game Piece?",
-          "value": true,
-          "widgetType": 1
-        },
-        {
-          "Topic": "/epic/bruh/numero",
-          "geometry": [
-            2,
-            1,
-            1,
-            2
-          ],
-          "title": "Arm Position",
-          "value": 10.3444433,
-          "widgetType": 3
-        },
-        {
-          "Maximum": 100,
-          "Minimum": 0,
-          "Starting_Angle": 0,
-          "Topic": "/pitbull named gothmog destroyer of worlds",
-          "geometry": [
-            1,
-            2,
-            1,
-            1
-          ],
-          "title": "Shooter Index",
-          "value": 100,
-          "widgetType": 9
-        },
-        {
-          "Image": ":/2023Field.png",
-          "Robot_Length": 0.5,
-          "Robot_Width": 0.5,
-          "Topic": "/SmartDashboard/Field/Robot",
-          "geometry": [
-            0,
-            0,
-            2,
-            2
-          ],
-          "title": "Field",
-          "value": [
-            1,
-            7,
-            90
-          ],
-          "widgetType": 11
-        },
-        {
-          "Topic": "/SmartDashboard/epic chooser",
-          "geometry": [
-            0,
-            2,
-            1,
-            1
-          ],
-          "title": "Autons",
-          "value": "hi",
-          "widgetType": 5
+            "maxSize": [
+                3,
+                3
+            ],
+            "tabName": "a",
+            "widgets": [
+                {
+                    "False_Color": "#ff0000",
+                    "Shape": "Hexagon",
+                    "Topic": "/test",
+                    "True_Color": "#00ff00",
+                    "geometry": [
+                        2,
+                        0,
+                        1,
+                        1
+                    ],
+                    "title": "Game Piece?",
+                    "value": true,
+                    "widgetType": 1
+                },
+                {
+                    "Topic": "/epic/bruh/numero",
+                    "geometry": [
+                        2,
+                        1,
+                        1,
+                        2
+                    ],
+                    "title": "Arm Position",
+                    "value": 10.3444433,
+                    "widgetType": 3
+                },
+                {
+                    "Maximum": 100,
+                    "Minimum": 0,
+                    "Starting_Angle": 0,
+                    "Topic": "/pitbull named gothmog destroyer of worlds",
+                    "geometry": [
+                        1,
+                        2,
+                        1,
+                        1
+                    ],
+                    "title": "Shooter Index",
+                    "value": 100,
+                    "widgetType": 9
+                },
+                {
+                    "Image": ":/2023Field.png",
+                    "Robot_Length": 0.5,
+                    "Robot_Width": 0.5,
+                    "Topic": "/SmartDashboard/Field/Robot",
+                    "geometry": [
+                        0,
+                        0,
+                        2,
+                        2
+                    ],
+                    "title": "Field",
+                    "value": [
+                        1,
+                        7,
+                        90
+                    ],
+                    "widgetType": 11
+                },
+                {
+                    "Topic": "/SmartDashboard/epic chooser",
+                    "geometry": [
+                        0,
+                        2,
+                        1,
+                        1
+                    ],
+                    "title": "Autons",
+                    "value": "hi",
+                    "widgetType": 5
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

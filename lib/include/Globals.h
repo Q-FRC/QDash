@@ -48,6 +48,7 @@ typedef struct {
     bool teamNumber;
     std::string server;
     int port;
+    QString switchTopic;
 } ServerData;
 
 typedef struct {

@@ -26,7 +26,12 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
     nt::NetworkTableEntry *entry = topicEntryMap.value(ntTopic);
 
     nt::ListenerCallback updateWidget = [entry, subscriber](const nt::Event &event = nt::Event()) {
-        nt::Value value = entry->GetValue();
+        nt::Value value;
+        if (!event.Is(nt::EventFlags::kValueAll)) {
+            value = entry->GetValue();
+        } else {
+            value = event.GetValueEventData()->value;
+        }
 
         // ensure thread-safety
         // this is mild anal cancer

@@ -148,11 +148,11 @@ int main(int argc, char **argv) {
 
         if (event.Is(nt::EventFlags::kPublish)) {
             Globals::ntTopics.append(QString::fromStdString(topicName));
+            FilterStore::filterTopics();
         } else if (event.Is(nt::EventFlags::kUnpublish)) {
             Globals::ntTopics.removeOne(QString::fromStdString(topicName));
+            FilterStore::filterTopics();
         }
-
-        FilterStore::filterTopics();
     });
 
     QObject::connect(
@@ -176,6 +176,25 @@ int main(int argc, char **argv) {
             }
         }
     }
+
+    auto makeListener = [window]() -> auto {
+        std::string topic = Globals::server.switchTopic.toStdString();
+
+        return Globals::inst.AddListener(Globals::inst.GetEntry(topic), nt::EventFlags::kValueAll, [window](const nt::Event &event) {
+            std::string value = std::string{event.GetValueEventData()->value.GetString()};
+            TabWidget *tab = window->tabNamed(QString::fromStdString(value));
+            if (tab != nullptr) {
+                window->selectTab(tab);
+            }
+        });
+    };
+
+    NT_Listener listener = makeListener();
+
+    QObject::connect(window, &MainWindow::switchTopicChanged, &app, [listener, makeListener]() mutable {
+        Globals::inst.RemoveListener(listener);
+        listener = makeListener();
+    });
 
     return app.exec();
 }

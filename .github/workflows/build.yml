@@ -49,6 +49,11 @@ jobs:
     - name: Install CMake
       uses: lukka/get-cmake@v3.28.1
 
+    - name: Setup CCache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: ${{ runner.os }}-${{ inputs.build_type }}
+
     - uses: ilammy/msvc-dev-cmd@v1
       if: runner.os == 'Windows'
 
@@ -62,6 +67,7 @@ jobs:
       with:
         version: 6.6.0
         modules: ${{ matrix.qt_modules }}
+        cache: true
 
     - name: Install Python Dependencies
       run: |
@@ -74,12 +80,7 @@ jobs:
         wget "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage"
         wget "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
 
-    - name: Setup CCache
-      uses: hendrikmuhs/ccache-action@v1.2
-      with:
-        key: ${{ runner.os }}-${{ inputs.build_type }}
-
-    - name: Configure CMake (Linux)
+    - name: Install Build Dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
         sudo apt-get install libstdc++-10-dev gcc-10 ninja-build
@@ -87,13 +88,9 @@ jobs:
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
 
-        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF -DBUILD_SHARED_LIBS=OFF
-
-    - name: Configure CMake (Windows)
-      if: runner.os == 'Windows'
-      shell: cmd
+    - name: Configure CMake
       run: |
-        cmake -S . -B ${{ env.BUILD_DIR }} -G Ninja -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF -DBUILD_SHARED_LIBS=OFF
 
     - name: Build
       run: |

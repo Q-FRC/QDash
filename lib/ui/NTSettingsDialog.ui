@@ -6,21 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>440</width>
-    <height>129</height>
+    <width>433</width>
+    <height>152</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>NetworkTables Settings</string>
   </property>
   <layout class="QFormLayout" name="formLayout">
-   <item row="3" column="0">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
@@ -46,7 +39,7 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QSpinBox" name="spinBox">
+    <widget class="QSpinBox" name="port">
      <property name="minimum">
       <number>1</number>
      </property>
@@ -59,18 +52,46 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QCheckBox" name="checkBox">
+    <widget class="QCheckBox" name="teamNumber">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLineEdit" name="server">
      <property name="text">
       <string>0.0.0.0</string>
      </property>
     </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Tab Selection Topic:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="2">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="topic"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="topicSelect">
+       <property name="text">
+        <string>Select Topic...</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -124,9 +145,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>topicSelect</sender>
+   <signal>clicked()</signal>
+   <receiver>NTSettingsDialog</receiver>
+   <slot>putTopic()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>380</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>216</x>
+     <y>75</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>dataReady(ServerData)</signal>
   <slot>serializeData()</slot>
+  <slot>putTopic()</slot>
  </slots>
 </ui>
