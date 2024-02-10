@@ -11,13 +11,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if(WIN32)
-    set(RCS_FILE ${CMAKE_CURRENT_BINARY_DIR}/program_info/${Dashboard_APP_NAME}.rc)
-    set(Dashboard_BUILD_PLATFORM "win32")
-else()
-    set(Dashboard_BUILD_PLATFORM "lin64")
-endif()
-
 option(WITH_TESTS "Build tests" ON)
 
 set(QTCOMPONENTS Widgets MultimediaWidgets Charts)
@@ -32,6 +25,13 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS ${QTCOMPONENTS})
 set(Dashboard_ORG_NAME "binex-dsk")
 set(Dashboard_APP_NAME "QFRCDashboard")
 set(Dashboard_GIT_REPO "https://github.com/binex-dsk/QFRCDashboard")
+
+if(WIN32)
+    set(RCS_FILE ${CMAKE_CURRENT_BINARY_DIR}/program_info/${Dashboard_APP_NAME}.rc)
+    set(Dashboard_BUILD_PLATFORM "win32")
+else()
+    set(Dashboard_BUILD_PLATFORM "lin64")
+endif()
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
@@ -72,6 +72,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(QFRCDashboard
         MANUAL_FINALIZATION
         main.cpp
+        ${RCS_FILE}
         lib/fields.qrc
         lib/theme/qrc/breeze.qrc
         lib/icons.qrc

@@ -30,7 +30,7 @@ private:
     // Dragging
     QPoint m_dragStart;
     QPoint m_dragOffset;
-    BaseWidget *m_draggedWidget;
+    BaseWidget *m_draggedWidget = nullptr;
     WidgetData m_draggedWidgetData;
     bool m_dragging = false;
 

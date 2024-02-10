@@ -264,14 +264,15 @@ end:
 }
 
 void TabWidget::setDragData(BaseWidget *widget, WidgetData data) {
-    emit dragCancelled(m_draggedWidget);
     cancelDrags();
+    emit dragCancelled(m_draggedWidget);
 
     m_draggedWidget = widget;
     m_draggedWidgetData = data;
 }
 
 void TabWidget::cancelDrags() {
+    // bunch of ways to ensure the widget is actually there
     if (
         (m_dragging || m_resizing) &&
         (hasWidget(m_draggedWidget) || m_draggedWidget->isVisible())) {
@@ -297,7 +298,7 @@ void TabWidget::dragStart(QPoint point, QPoint offset) {
 }
 
 void TabWidget::dragMove(QPoint point) {
-    if (m_draggedWidget->isVisible() && m_draggedWidget->isEnabled()) {
+    if (m_draggedWidget && m_draggedWidget->isVisible() && m_draggedWidget->isEnabled()) {
         QPoint offset = point - m_dragOffset;
         m_draggedWidget->move(offset);
 
