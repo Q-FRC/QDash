@@ -27,6 +27,11 @@ jobs:
             qt_version: '6.6.0'
             qt_modules: 'qtmultimedia qtcharts'
 
+          - os: macOS-12
+            qt_host: mac
+            qt_version: '6.6.0'
+            qt_modules: 'qtmultimedia qtcharts'
+
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -45,6 +50,7 @@ jobs:
         echo "INSTALL_APPIMAGE_DIR=${{ github.workspace }}/install-appdir" >> $GITHUB_ENV
         echo "NTCORE_INSTALL_DIR=${{ github.workspace }}/install-ntcore" >> $GITHUB_ENV
         echo "PROTOBUF_INSTALL_DIR=${{ github.workspace }}/install-protobuf" >> $GITHUB_ENV
+        echo "DATE=$(/bin/date -u "+%Y%m%d")" >> $GITHUB_ENV
 
     - name: Install CMake
       uses: lukka/get-cmake@v3.28.1
@@ -53,6 +59,12 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1.2
       with:
         key: ${{ runner.os }}-${{ inputs.build_type }}
+
+    - name: Cache Build Deps
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.BUILD_DIR }}/_deps/*-src
+        key: QFRCDashboard
 
     - uses: ilammy/msvc-dev-cmd@v1
       if: runner.os == 'Windows'
@@ -68,6 +80,13 @@ jobs:
         version: 6.6.0
         modules: ${{ matrix.qt_modules }}
         cache: true
+
+    - name: Set up Python 3.8 (macOS)
+      if: runner.os == 'macOS'
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.8
+        cache: 'pip'
 
     - name: Install Python Dependencies
       run: |
@@ -87,6 +106,12 @@ jobs:
 
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
+
+    - name: Install Build Dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew update
+        brew install llvm ninja
 
     - name: Configure CMake
       run: |
@@ -133,6 +158,20 @@ jobs:
 
         ./linuxdeploy-x86_64.AppImage --appdir ${{ env.INSTALL_APPIMAGE_DIR }} --output appimage --plugin qt
 
+    - name: Package (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        export PATH="$PATH;${{ runner.workspace }}/Qt/6.6.0/*/bin"
+
+        cd ${{ env.BUILD_DIR }}
+        macdeployqt QFRCDashboard.app
+        ls
+
+        sudo codesign --sign - --deep --force --entitlements ../program_info/App.entitlements --options runtime QFRCDashboard.app/Contents/MacOS/QFRCDashboard
+        chmod a+x QFRCDashboard.app/Contents/MacOS/QFRCDashboard
+        cp ../program_info/QFRCDashboard.icns QFRCDashboard.app/Contents/Resources
+        tar czf ../QFRCDashboard.tar.gz QFRCDashboard.app
+
     - name: Package (Windows, Portable)
       if: runner.os == 'Windows'
       shell: cmd
@@ -151,6 +190,10 @@ jobs:
         ) else (
           cp C:\Windows\System32\ucrtbase.dll ${{ env.INSTALL_DIR }}
         )
+
+        ls ${{ env.BUILD_DIR }}
+
+        cp ${{ env.BUILD_DIR }}\QFRCDashboard.pdb ${{ env.INSTALL_DIR }}
 
         cp ${{ env.PROTOBUF_INSTALL_DIR }}\bin\abseil_dll.dll ${{ env.INSTALL_DIR }}
 
@@ -178,6 +221,13 @@ jobs:
       with:
         name: QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}-x86_64.AppImage
         path: QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}-x86_64.AppImage
+
+    - name: Upload tarball (macOS)
+      if: runner.os == 'macOS'
+      uses: actions/upload-artifact@v3
+      with:
+        name: QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}
+        path: QFRCDashboard.tar.gz
 
     - name: Upload binary zip (Windows, portable)
       if: runner.os == 'Windows'

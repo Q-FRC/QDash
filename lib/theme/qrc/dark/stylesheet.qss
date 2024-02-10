@@ -143,7 +143,6 @@ QWidget:disabled
 QCheckBox
 {
     spacing: 0.23em;
-    outline: none;
     color: #eff0f1;
     margin-bottom: 0.09em;
     opacity: 200;

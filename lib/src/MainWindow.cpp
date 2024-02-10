@@ -356,7 +356,7 @@ void MainWindow::setMaxSize() {
     TabMaxSizeDialog *dialog = new TabMaxSizeDialog(this, tab->maxSize());
     dialog->show();
 
-    connect(dialog, &TabMaxSizeDialog::dataReady, this, [this, tab](QPoint point) {
+    connect(dialog, &TabMaxSizeDialog::dataReady, this, [tab](QPoint point) {
         tab->setMaxSize(point);
     });
 }
@@ -393,7 +393,7 @@ void MainWindow::beginNewWidgetDrag(BaseWidget *widget, WidgetData data) {
 
     QMetaObject::Connection *doneConn = new QMetaObject::Connection;
     QMetaObject::Connection *cancelConn = new QMetaObject::Connection;
-    *doneConn = connect(tab, &TabWidget::dragDone, this, [this, cancelConn, doneConn](BaseWidget *widget, WidgetData data) {
+    *doneConn = connect(tab, &TabWidget::dragDone, this, [cancelConn, doneConn](BaseWidget *widget, WidgetData data) {
             disconnect(*doneConn);
             delete doneConn;
 
@@ -401,7 +401,7 @@ void MainWindow::beginNewWidgetDrag(BaseWidget *widget, WidgetData data) {
             delete cancelConn;
         }, Qt::SingleShotConnection);
 
-    *cancelConn = connect(tab, &TabWidget::dragCancelled, this, [this, doneConn, cancelConn, widget](BaseWidget *draggedWidget) {
+    *cancelConn = connect(tab, &TabWidget::dragCancelled, this, [doneConn, cancelConn, widget](BaseWidget *draggedWidget) {
             disconnect(*doneConn);
             delete doneConn;
             disconnect(*cancelConn);

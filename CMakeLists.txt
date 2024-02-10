@@ -119,6 +119,25 @@ if(WITH_TESTS)
     add_subdirectory(tests)
 endif()
 
+set_target_properties(QFRCDashboard PROPERTIES
+    MACOSX_BUNDLE TRUE
+)
+
+if(UNIX AND APPLE)
+    # Mac bundle settings
+    set(MACOSX_BUNDLE_BUNDLE_NAME "${Dashboard_APP_NAME}")
+    set(MACOSX_BUNDLE_INFO_STRING "${Dashboard_APP_NAME}: A high-performance, reliable dashboard for FRC use.")
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER "org.${Dashboard_ORG_NAME}.${Dashboard_APP_NAME}")
+    set(MACOSX_BUNDLE_BUNDLE_VERSION "${Dashboard_GIT_TAG_NUMERO}")
+    set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${Dashboard_GIT_TAG_NUMERO}")
+    set(MACOSX_BUNDLE_LONG_VERSION_STRING "${Dashboard_GIT_TAG_NUMERO}")
+    set(MACOSX_BUNDLE_ICON_FILE ${Dashboard_APP_NAME}.icns)
+    set(MACOSX_BUNDLE_COPYRIGHT "Copyleft 2023-2024 ${Dashboard_ORG_NAME}")
+
+    # install as bundle
+    set(INSTALL_BUNDLE "full")
+endif()
+
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(QFRCDashboard)
 endif()

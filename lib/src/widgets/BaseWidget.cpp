@@ -29,6 +29,7 @@
 #include <QMouseEvent>
 
 BaseWidget::BaseWidget(const WidgetTypes &type, const QString &title, const QString &topic, const bool sendable)
+    : QFrame()
 {
     m_type = type;
     m_topic = topic;

@@ -12,3 +12,4 @@ configure_file(${Dashboard_APP_NAME}.manifest.in ${Dashboard_APP_NAME}.manifest 
 configure_file(${Dashboard_APP_NAME}.desktop.in ${Dashboard_APP_NAME}.desktop)
 configure_file(${Dashboard_APP_NAME}.ico ${Dashboard_APP_NAME}.ico COPYONLY)
 configure_file(win_install.nsi.in win_install.nsi @ONLY)
+configure_file(${Dashboard_APP_NAME}.icns ${Dashboard_APP_NAME}.icns COPYONLY)

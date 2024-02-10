@@ -12,3 +12,9 @@ inkscape -w 128 -h 128 -o QFRCDashboard_128.png QFRCDashboard.svg
 convert QFRCDashboard_128.png QFRCDashboard_64.png QFRCDashboard_48.png QFRCDashboard_32.png QFRCDashboard_24.png QFRCDashboard_16.png QFRCDashboard.ico
 
 rm -f QFRCDashboard_*.png
+
+inkscape -w 1024 -h 1024 -o QFRCDashboard_1024.png QFRCDashboard.svg
+
+png2icns QFRCDashboard.icns QFRCDashboard_1024.png
+
+rm -f QFRCDashboard_*.png

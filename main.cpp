@@ -3,6 +3,7 @@
 #include <QRadioButton>
 #include <QMessageBox>
 #include <QCommandLineParser>
+#include <QStyleFactory>
 
 #include "widgets/BooleanCheckboxWidget.h"
 #include "widgets/BooleanDisplayWidget.h"
@@ -46,6 +47,10 @@ int main(int argc, char **argv) {
     parser.addPositionalArgument("file", "JSON file to open");
 
     parser.process(app);
+    // i hate macos
+#ifdef Q_OS_MACOS
+    app.setStyle(QStyleFactory::create("Fusion"));
+#endif
 
     MainWindow *window = new MainWindow();
     window->show();

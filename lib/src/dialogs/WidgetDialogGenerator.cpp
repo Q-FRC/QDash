@@ -44,7 +44,7 @@ WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, QWidget *parent
     m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
     connect(m_buttonBox, &QDialogButtonBox::rejected, this, &WidgetDialogGenerator::reject);
-    connect(this, &WidgetDialogGenerator::rejected, this, [this, widget] {
+    connect(this, &WidgetDialogGenerator::rejected, this, [this] {
         emit cancelled(m_widget);
     });
 
@@ -280,9 +280,11 @@ QWidget *WidgetDialogGenerator::colorProperty(QMetaProperty property) {
 }
 
 QWidget *WidgetDialogGenerator::mapProperty(QMetaProperty property) {
-    // Table setup
-    // An insert button for certain types as well.
-    auto [table, addButton, removeButton] = setupTable({"Key", "Value"});
+    // macos sucks
+    auto tableVars = setupTable({"Topic", "Color"});
+    auto table = std::get<0>(tableVars);
+    auto addButton = std::get<1>(tableVars);
+    auto removeButton = std::get<2>(tableVars);
 
     serializeMap(property.read(m_widget).toMap(), table);
 
@@ -347,7 +349,7 @@ QWidget *WidgetDialogGenerator::fileProperty(QMetaProperty property) {
     }
 
     // re-lay each time for a smooth transition
-    auto updateLayout = [builtinBox, customEdit, fileButton, switchBox, layout, this](bool checked) {
+    auto updateLayout = [builtinBox, customEdit, fileButton, switchBox, layout](bool checked) {
         layout->removeWidget(switchBox);
         if (checked) {
             layout->removeWidget(customEdit);
@@ -439,7 +441,7 @@ QWidget *WidgetDialogGenerator::topicListProperty(QMetaProperty property) {
     list->addItems(names);
 
     QPushButton *topicButton = selectTopicButton();
-    connect(this, &WidgetDialogGenerator::topicSelected, this, [this, list](const Globals::Topic &topic, QWidget *) {
+    connect(this, &WidgetDialogGenerator::topicSelected, this, [list](const Globals::Topic &topic, QWidget *) {
         list->addItem(topic.name);
     });
 
@@ -507,7 +509,7 @@ QWidget *WidgetDialogGenerator::xAxisProperty(QMetaProperty property) {
     lineEdit->setText(xAxis.topic);
 
     QPushButton *topicButton = selectTopicButton();
-    connect(this, &WidgetDialogGenerator::topicSelected, this, [this, lineEdit, topicButton](const Globals::Topic &topic, QWidget *receiver) {
+    connect(this, &WidgetDialogGenerator::topicSelected, this, [lineEdit, topicButton](const Globals::Topic &topic, QWidget *receiver) {
         if (topicButton == receiver) lineEdit->setText(topic.name);
     });
 
@@ -537,7 +539,11 @@ QWidget *WidgetDialogGenerator::xAxisProperty(QMetaProperty property) {
 }
 
 QWidget *WidgetDialogGenerator::topicColorMapProperty(QMetaProperty property) {
-    auto [table, addButton, removeButton] = setupTable({"Topic", "Color"});
+    // macos sucks
+    auto tableVars = setupTable({"Topic", "Color"});
+    auto table = std::get<0>(tableVars);
+    auto addButton = std::get<1>(tableVars);
+    auto removeButton = std::get<2>(tableVars);
 
     serializeMap(property.read(m_widget).value<QHash<Globals::Topic, QColor>>(), table);
 
@@ -586,7 +592,7 @@ QWidget *WidgetDialogGenerator::topicColorMapProperty(QMetaProperty property) {
     tableLayout->addWidget(table);
     tableLayout->addLayout(buttons);
 
-    auto func = [this, table]() -> QVariant {
+    auto func = [table]() -> QVariant {
         QHash<Globals::Topic, QColor> map{};
 
         for (int i = 0; i < table->rowCount(); ++i) {

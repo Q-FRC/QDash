@@ -56,7 +56,7 @@ void TabWidget::deleteWidget(BaseWidget *widget) {
 WidgetData TabWidget::widgetData(BaseWidget *widget) {
     int idx = m_layout->indexOf(widget);
     if (idx == -1) {
-        return WidgetData(0, 0, 0, 0);
+        return WidgetData{0, 0, 0, 0};
     }
 
     WidgetData data;
@@ -414,5 +414,5 @@ void TabWidget::resizeMove(QPoint point) {
 }
 
 bool TabWidget::hasWidget(BaseWidget *widget) {
-    return (widgetData(widget) != WidgetData(0, 0, 0, 0));
+    return (widgetData(widget) != WidgetData{0, 0, 0, 0});
 }

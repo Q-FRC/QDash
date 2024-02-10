@@ -43,6 +43,7 @@ jobs:
           mv QFRCDashboard-Linux-Binary*/QFRCDashboard.tar.gz QFRCDashboard-Linux-Binary-${{ env.VERSION }}.tar.gz
           mv QFRCDashboard-*.AppImage/QFRCDashboard-*.AppImage QFRCDashboard-Linux-${{ env.VERSION }}-x86_64.AppImage
           mv QFRCDashboard-Windows-Setup*/QFRCDashboard* QFRCDashboard-Windows-Setup-${{ env.VERSION }}.exe
+          mv QFRCDashboard-macOS*/QFRCDashboard.app QFRCDashboard-macOS-${{ env.VERSION }}.app
 
           zip -r QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip QFRCDashboard-Windows-Portable*/* QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip
 
@@ -70,3 +71,4 @@ jobs:
             QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip
             QFRCDashboard-${{ env.VERSION }}.tar.gz
             QFRCDashboard-Windows-Setup-${{ env.VERSION }}.exe
+            QFRCDashboard-macOS-${{ env.VERSION }}.app

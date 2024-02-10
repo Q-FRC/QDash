@@ -15,7 +15,7 @@ if (NOT USE_SYSTEM_PROTOBUF)
     FetchContent_Declare(
             protobuf
             GIT_REPOSITORY https://github.com/protocolbuffers/protobuf.git
-            GIT_TAG        a9b006bddd52e289029f16aa77b77e8e0033d9ee # 25.2
+            GIT_TAG        d00db12f9497e93898b9850a8f4d67ac6cc20917 # 26.0
             OVERRIDE_FIND_PACKAGE
     )
     FetchContent_MakeAvailable(Protobuf)
