@@ -181,7 +181,7 @@ QPushButton *WidgetDialogGenerator::selectTopicButton() {
         dialog->show();
 
         connect(dialog, &NewWidgetTreeDialog::topicReady, this, [this, topicButton](const Globals::Topic &topic) {
-            emit topicSelected(topic, topicButton);
+                emit topicSelected(topic, topicButton);
             }, Qt::SingleShotConnection);
     });
 
@@ -328,7 +328,8 @@ QWidget *WidgetDialogGenerator::fileProperty(QMetaProperty property) {
 
     for(const QString &image : QDir(":").entryList())
     {
-        builtinBox->addItem(image);
+        if (image.endsWith(".png"))
+            builtinBox->addItem(image);
     }
 
     QLineEdit *customEdit = new QLineEdit(this);

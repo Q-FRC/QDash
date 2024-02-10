@@ -15,6 +15,8 @@ FieldWidget::FieldWidget(const QString &topic, QVariantList defaultValue, const 
 
     m_layout->addWidget(m_imageLabel, 1, 0, 3, 1);
 
+    setImage(m_image);
+
     setReady(true);
 }
 

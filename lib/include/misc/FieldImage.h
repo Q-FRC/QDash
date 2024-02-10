@@ -8,14 +8,21 @@ class FieldImage : public QLabel
 {
     Q_OBJECT
 private:
-    std::span<const double> m_value;
-    double m_width;
-    double m_length;
+    double m_width = 0.5;
+    double m_length = 0.5;
+
+    double m_x = 0.;
+    double m_y = 0.;
+    double m_theta = 0.;
 
     double m_imageWidth;
     double m_imageHeight;
 
-    Globals::File m_image;
+    Globals::File m_image{":/2024Field.png"};
+
+    QRect m_lastRect{};
+    QPixmap m_pixmap{};
+    bool m_imageChanged = false;
 public:
     FieldImage(QWidget *parent = nullptr);
 

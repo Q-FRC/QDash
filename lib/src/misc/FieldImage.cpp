@@ -10,8 +10,12 @@ static double FieldLength = 8.2296 * 2.;
 FieldImage::FieldImage(QWidget *parent) : QLabel(parent) {}
 
 void FieldImage::setValue(std::span<const double> value) {
-    m_value = value;
-    setImage(m_image); // ensure proper scaling and whatnot
+    if (value.size() > 0)
+        m_x = value[0];
+    if (value.size() > 1)
+        m_y = value[1];
+    if (value.size() > 2)
+        m_theta = value[2];
 }
 
 void FieldImage::setRobotWidth(double width) {
@@ -24,6 +28,7 @@ void FieldImage::setRobotLength(double length) {
 
 void FieldImage::setImage(Globals::File image) {
     m_image = image;
+    m_imageChanged = true;
 
     update();
 }
@@ -37,20 +42,22 @@ void FieldImage::paintEvent(QPaintEvent *event) {
     // painter setup
     QPainter painter(this);
 
-    QPixmap pixmap = QPixmap(m_image.fileName);
-    QPixmap pixmap2 = pixmap.scaled(w, h, Qt::KeepAspectRatio);
+    if (m_imageChanged || m_lastRect != event->rect()) {
+        QPixmap pixmap = QPixmap(m_image.fileName);
+        QPixmap pixmap2 = pixmap.scaled(w, h, Qt::KeepAspectRatio);
 
-    QPointF topLeft = QPointF(w / 2. - pixmap2.width() / 2., h / 2. - pixmap2.height() / 2.);
+        m_pixmap = pixmap2;
 
-    if (pixmap.width() != pixmap2.width() || pixmap.height() != pixmap2.height()) {
-        pixmap = pixmap2;
-        painter.drawPixmap(topLeft, pixmap2, pixmap2.rect().toRectF());
+        m_imageChanged = false;
+        m_lastRect = event->rect();
     }
 
-    m_imageWidth = pixmap.width();
-    m_imageHeight = pixmap.height();
+    QPointF topLeft = QPointF(w / 2. - m_pixmap.width() / 2., h / 2. - m_pixmap.height() / 2.);
 
-    if (m_value.size() < 3) return;
+    painter.drawPixmap(topLeft, m_pixmap, m_pixmap.rect().toRectF());
+
+    m_imageWidth = m_pixmap.width();
+    m_imageHeight = m_pixmap.height();
 
     // meters->pixels
     double meterRatio = (double) m_imageHeight / FieldWidth;
@@ -59,7 +66,7 @@ void FieldImage::paintEvent(QPaintEvent *event) {
     double robotLength = m_length * meterRatio;
 
     // getting some important points & rects
-    QPointF robotTopLeft = topLeft + QPointF(m_value[0] * meterRatio, (FieldWidth - m_value[1]) * meterRatio);
+    QPointF robotTopLeft = topLeft + QPointF(m_x * meterRatio, (FieldWidth - m_y) * meterRatio);
 
     QRectF robotRect(robotTopLeft, QSizeF(robotWidth, robotLength));
     QPointF absoluteCenter = robotTopLeft + QPointF(robotWidth / 2., robotLength / 2.);
@@ -71,7 +78,7 @@ void FieldImage::paintEvent(QPaintEvent *event) {
     // I don't remember geometry class.
     // God Bless the Qt forums
     painter.translate(absoluteCenter);
-    painter.rotate(-m_value[2]); // make CCW positive, algebraic plane
+    painter.rotate(-m_theta); // make CCW positive, algebraic plane
     painter.translate(-absoluteCenter);
 
     painter.drawRect(robotRect);

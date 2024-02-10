@@ -93,8 +93,6 @@ QJsonDocument MainWindow::saveObject() {
 void MainWindow::loadObject(const QJsonDocument &doc) {
     QJsonObject object = doc.object();
 
-    // TODO: load server
-
     QJsonObject serverObj = object.value("server").toObject();
 
     ServerData server = ServerData{
@@ -117,6 +115,12 @@ void MainWindow::loadObject(const QJsonDocument &doc) {
         tab->loadObject(object);
         centralwidget->addTab(tab, tab->name());
         m_tabs.append(tab);
+
+        if (centralwidget->currentWidget() != tab) {
+            for (BaseWidget *widget : tab->widgets()) {
+                widget->setDisabled(true);
+            }
+        }
     } // tabs
 }
 
@@ -140,9 +144,17 @@ void MainWindow::makeNewWidget(WidgetTypes type) {
 // Internal Stuff
 void MainWindow::forceUpdateTab(int idx) {
     if (m_tabs.length() <= idx || idx == -1) return;
+
+    for (BaseWidget *widget : m_tabs.at(m_lastIdx)->widgets()) {
+        widget->setDisabled(true);
+    }
+
     for (BaseWidget *widget : m_tabs.at(idx)->widgets()) {
+        widget->setEnabled(true);
         widget->forceUpdate();
     }
+
+    m_lastIdx = idx;
 }
 
 void MainWindow::moveTab(int from, int to) {

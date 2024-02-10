@@ -21,6 +21,7 @@ private:
     QList<TabWidget *> m_tabs;
 
     QString m_filename{};
+    int m_lastIdx = 0;
 
     void makeNewWidget(WidgetTypes type);
 public:

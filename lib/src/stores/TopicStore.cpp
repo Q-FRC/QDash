@@ -1,5 +1,4 @@
 #include "stores/TopicStore.h"
-#include "qapplication.h"
 #include "widgets/BaseWidget.h"
 
 #include "Globals.h"
@@ -38,14 +37,14 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
         if (value.IsValid())
             QMetaObject::invokeMethod(subscriber, [subscriber, value] {
                 if (subscriber->ready()) {
-                    if (true) {
+                    if (subscriber->isEnabled()) {
                         subscriber->setValue(value);
                         subscriber->update();
                     }
                 } else {
                     connect(subscriber, &BaseWidget::isReady, subscriber, [subscriber, value] {
-                        subscriber->setValue(value);
-                        subscriber->update();
+                            subscriber->setValue(value);
+                            subscriber->update();
                         }, Qt::SingleShotConnection);
                 }
             }); // QMetaObject and its consequences have been a disaster for the human race
