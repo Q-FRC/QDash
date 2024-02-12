@@ -30,7 +30,9 @@ private:
     QMetaProperty m_currentProperty;
     BaseWidget *m_currentWidget;
 
-    QPushButton *selectTopicButton();
+    QPushButton *selectTopicButton(QList<TopicTypes> types);
+    QPushButton *numberTopicButton();
+    QPushButton *doubleArrayTopicButton();
     QPushButton *selectColorButton();
 
     std::tuple<QTableWidget *, QPushButton *, QPushButton *> setupTable(const QStringList &headers);
@@ -43,7 +45,7 @@ public:
 
     QVariantMap serializeTable(QTableWidget *widget);
     void serializeMap(QVariantMap map, QTableWidget *widget);
-    void serializeMap(QHash<Globals::Topic, QColor> map, QTableWidget *widget);
+    void serializeMap(QHash<Globals::NumberTopic, QColor> map, QTableWidget *widget);
 
     /** property functions **/
     QWidget *doubleProperty(QMetaProperty property);
@@ -68,7 +70,9 @@ public:
 
     QWidget *xAxisProperty(QMetaProperty property);
 
-    QWidget *topicColorMapProperty(QMetaProperty property);
+    QWidget *numberTopicColorMapProperty(QMetaProperty property);
+
+    QWidget *doubleArrayTopicProperty(QMetaProperty property);
 signals:
     void widgetReady(BaseWidget *widget, WidgetData data);
     void cancelled(BaseWidget *widget);

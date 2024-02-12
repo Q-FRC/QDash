@@ -17,6 +17,7 @@
 #include "widgets/CommandWidget.h"
 #include "widgets/GraphWidget.h"
 #include "widgets/FMSInfoWidget.h"
+#include "widgets/SwerveWidget.h"
 
 #include "dialogs/WidgetDialogGenerator.h"
 
@@ -196,9 +197,11 @@ QJsonObject BaseWidget::saveObject() {
         PROPERTY_FUNCTION(QMetaType::QString, writeStringProperty)
         PROPERTY_FUNCTION(QMetaType::QUrl, writeStringProperty)
         PROPERTY_FUNCTION(CustomMetaTypes::FrameShape, writeShapeProperty)
-        PROPERTY_FUNCTION(CustomMetaTypes::TopicList, writeTopicListProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::NumberTopicList, writeTopicListProperty)
         PROPERTY_FUNCTION(CustomMetaTypes::XAxis, writeXAxisProperty)
-        PROPERTY_FUNCTION(CustomMetaTypes::TopicColorMap, writeTopicColorMapProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::NumberTopicColorMap, writeNumberTopicColorMapProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::DoubleArrayTopic, writeDoubleArrayTopicProperty)
+
         { // else
             qCritical() << "Bad metatype for property" << property.name() << (QMetaType::Type) id;
             continue;
@@ -237,9 +240,10 @@ WidgetData BaseWidget::fromJson(QJsonObject obj) {
         PROPERTY_FUNCTION(QMetaType::QString, readStringProperty)
         PROPERTY_FUNCTION(QMetaType::QUrl, readStringProperty)
         PROPERTY_FUNCTION(CustomMetaTypes::FrameShape, readShapeProperty)
-        PROPERTY_FUNCTION(CustomMetaTypes::TopicList, readTopicListProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::NumberTopicList, readTopicListProperty)
         PROPERTY_FUNCTION(CustomMetaTypes::XAxis, readXAxisProperty)
-        PROPERTY_FUNCTION(CustomMetaTypes::TopicColorMap, readTopicColorMapProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::NumberTopicColorMap, readNumberTopicColorMapProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::DoubleArrayTopic, readDoubleArrayTopicProperty)
         { // else
             qCritical() << "Bad metatype for property" << property.name() << (QMetaType::Type) id;
             continue;
@@ -292,7 +296,8 @@ BaseWidget *BaseWidget::defaultWidgetFromTopic(QString ntTopic, WidgetTypes type
                                                             SendableFieldWidget,
                                                             CommandWidget,
                                                             GraphWidget,
-                                                            FMSInfoWidget>();
+                                                            FMSInfoWidget,
+                                                            SwerveWidget>();
 
     return widget;
 }
@@ -344,11 +349,11 @@ QVariant BaseWidget::readShapeProperty(const QMetaProperty &property, const QJso
 
 QVariant BaseWidget::readTopicListProperty(const QMetaProperty &property, const QJsonValue &value) {
     QJsonArray array = value.toArray({});
-    QList<Globals::Topic> list{};
+    QList<Globals::NumberTopic> list{};
 
     for (QJsonValueRef ref : array) {
         QJsonObject obj = ref.toObject();
-        Globals::Topic topic{
+        Globals::NumberTopic topic{
             obj.value("name").toString(),
             (TopicTypes) obj.value("type").toInt()
         };
@@ -356,7 +361,7 @@ QVariant BaseWidget::readTopicListProperty(const QMetaProperty &property, const 
         list.append(topic);
     }
 
-    return QVariant::fromValue<QList<Globals::Topic>>(list);
+    return QVariant::fromValue<QList<Globals::NumberTopic>>(list);
 }
 
 QVariant BaseWidget::readXAxisProperty(const QMetaProperty &property, const QJsonValue &value) {
@@ -370,15 +375,15 @@ QVariant BaseWidget::readXAxisProperty(const QMetaProperty &property, const QJso
         });
 }
 
-QVariant BaseWidget::readTopicColorMapProperty(const QMetaProperty &property, const QJsonValue &value) {
+QVariant BaseWidget::readNumberTopicColorMapProperty(const QMetaProperty &property, const QJsonValue &value) {
     QJsonArray array = value.toArray();
 
-    QHash<Globals::Topic, QColor> map{};
+    QHash<Globals::NumberTopic, QColor> map{};
 
     for (const QJsonValueRef &ref : array) {
         QJsonObject obj = ref.toObject();
         QJsonObject topicObj = obj.value("topic").toObject();
-        Globals::Topic topic {
+        Globals::NumberTopic topic {
             topicObj.value("name").toString(),
             (TopicTypes) topicObj.value("type").toInt()
         };
@@ -390,6 +395,13 @@ QVariant BaseWidget::readTopicColorMapProperty(const QMetaProperty &property, co
 
     return QVariant::fromValue(map);
 }
+
+QVariant BaseWidget::readDoubleArrayTopicProperty(const QMetaProperty &property, const QJsonValue &value) {
+    Globals::DoubleArrayTopic topic(value.toString());
+
+    return QVariant::fromValue(topic);
+}
+
 
 // Write
 QJsonValue BaseWidget::writeDoubleProperty(const QMetaProperty &property) {
@@ -438,13 +450,13 @@ QJsonValue BaseWidget::writeShapeProperty(const QMetaProperty &property) {
 
 QJsonValue BaseWidget::writeTopicListProperty(const QMetaProperty &property) {
     QJsonArray array{};
-    QList<Globals::Topic> list = property.read(this).value<QList<Globals::Topic>>();
+    QList<Globals::NumberTopic> list = property.read(this).value<QList<Globals::NumberTopic>>();
 
-    for (const Globals::Topic &topic : list) {
+    for (const Globals::NumberTopic &topic : list) {
         array.append(
             QJsonObject{
-                {"name", topic.name},
-                {"type", (int) topic.type}
+                {"name", topic.Name},
+                {"type", (int) topic.Type}
             });
     }
 
@@ -462,22 +474,22 @@ QJsonValue BaseWidget::writeXAxisProperty(const QMetaProperty &property) {
         );
 }
 
-QJsonValue BaseWidget::writeTopicColorMapProperty(const QMetaProperty &property) {
+QJsonValue BaseWidget::writeNumberTopicColorMapProperty(const QMetaProperty &property) {
     QJsonArray array{};
-    QHash<Globals::Topic, QColor> map = property.read(this).value<QHash<Globals::Topic, QColor>>();
+    QHash<Globals::NumberTopic, QColor> map = property.read(this).value<QHash<Globals::NumberTopic, QColor>>();
 
     QHashIterator iter(map);
 
     while (iter.hasNext()) {
         iter.next();
 
-        Globals::Topic topic = iter.key();
+        Globals::NumberTopic topic = iter.key();
         QColor color = iter.value();
 
         QJsonObject obj{};
         QJsonObject topicObj{
-            {"name", topic.name},
-            {"type", (int) topic.type}
+            {"name", topic.Name},
+            {"type", (int) topic.Type}
         };
 
         obj.insert("topic", topicObj);
@@ -486,6 +498,12 @@ QJsonValue BaseWidget::writeTopicColorMapProperty(const QMetaProperty &property)
     }
 
     return array;
+}
+
+QJsonValue BaseWidget::writeDoubleArrayTopicProperty(const QMetaProperty &property) {
+    QJsonValue value{property.read(this).value<Globals::DoubleArrayTopic>().Name};
+
+    return value;
 }
 
 // etc

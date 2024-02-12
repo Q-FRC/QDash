@@ -12,7 +12,7 @@ class DoubleDisplayWidget : public TextWidget
 protected:
     double m_value = 0.;
 
-    QHash<Globals::Topic, QColor> m_map{};
+    QHash<Globals::NumberTopic, QColor> m_map{};
 
     void keyPressEvent(QKeyEvent *event) override;
 public:

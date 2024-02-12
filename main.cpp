@@ -20,6 +20,7 @@
 #include "widgets/CommandWidget.h"
 #include "widgets/GraphWidget.h"
 #include "widgets/FMSInfoWidget.h"
+#include "widgets/SwerveWidget.h"
 
 #include "MainWindow.h"
 #include "Globals.h"
@@ -118,7 +119,8 @@ int main(int argc, char **argv) {
                                               SendableFieldWidget,
                                               CommandWidget,
                                               GraphWidget,
-                                              FMSInfoWidget>();
+                                              FMSInfoWidget,
+                                              SwerveWidget>();
 
     // settings dont exist or firstrun is true
     bool firstRun = Settings::FirstRun.value().toBool();

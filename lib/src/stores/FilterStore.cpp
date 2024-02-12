@@ -40,11 +40,11 @@ void FilterStore::filterTopics() {
     for (const Globals::Topic &topic : FilteredTopics) {
         if (!FilteredTopics.contains(topic)) return;
 
-        QStringList split = topic.name.split('/');
+        QStringList split = topic.Name.split('/');
         Globals::Topic supertable(topic);
-        supertable.name = split.sliced(0, split.length() - 1).join('/');
+        supertable.Name = split.sliced(0, split.length() - 1).join('/');
 
-        const QString name = topic.name;
+        const QString name = topic.Name;
 
         // account for sendables
         if (FilteredTopics.contains(supertable)) {
@@ -62,7 +62,7 @@ void FilterStore::filterTopics() {
 
 void FilterStore::sortTopic(QString topic) {
     std::string topicName = topic.toStdString();
-    TopicTypes topicType;
+    // TopicTypes topicType;
 
     nt::NetworkTableEntry entry = Globals::inst.GetEntry(topicName);
 
@@ -105,7 +105,7 @@ void FilterStore::sortTopic(QString topic) {
 
 Globals::Topic FilterStore::topicFromName(const QString &topicName, const QList<Globals::Topic> &topics) {
     for (const Globals::Topic & topic : topics) {
-        if (topic.name == topicName) {
+        if (topic.Name == topicName) {
             return topic;
         }
     }
@@ -117,7 +117,15 @@ Globals::Topic FilterStore::topicFromName(const QString &topicName, const QList<
 QStringList FilterStore::topicNames(QList<Globals::Topic> list) {
     QStringList strings{};
     for (const Globals::Topic &topic : list) {
-        strings.append(topic.name);
+        strings.append(topic.Name);
+    }
+    return strings;
+}
+
+QStringList FilterStore::topicNames(QList<Globals::NumberTopic> list) {
+    QStringList strings{};
+    for (const Globals::NumberTopic &topic : list) {
+        strings.append(topic.Name);
     }
     return strings;
 }

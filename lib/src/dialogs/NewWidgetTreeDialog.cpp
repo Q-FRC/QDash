@@ -35,7 +35,7 @@ void NewWidgetTreeDialog::constructList(QList<Globals::Topic> topics) {
 
         if (m_emitTopic) {
             connect(tree, &QTreeWidget::itemActivated, this, [this, topic](QTreeWidgetItem *item) {
-                if (getParentPath(item) == topic.name) {
+                if (getParentPath(item) == topic.Name) {
                     emit topicReady(topic);
                     close();
                 }
@@ -44,7 +44,7 @@ void NewWidgetTreeDialog::constructList(QList<Globals::Topic> topics) {
             QMenu *widgetMenu = Globals::typeStore.generateMenuForTopic(topic);
 
             connect(tree, &QTreeWidget::itemActivated, this, [this, topic, widgetMenu](QTreeWidgetItem *item) {
-                if (getParentPath(item) == topic.name) {
+                if (getParentPath(item) == topic.Name) {
                     widgetMenu->popup(QCursor::pos());
                 }
             });
@@ -53,7 +53,7 @@ void NewWidgetTreeDialog::constructList(QList<Globals::Topic> topics) {
 }
 
 void NewWidgetTreeDialog::createTreeIfNotExists(const Globals::Topic &topic) {
-    QStringList split = topic.name.split('/');
+    QStringList split = topic.Name.split('/');
     if (!split.at(0).isEmpty()) { // protect against entries not prefixed with /
         split.prepend("");
     }
@@ -95,7 +95,7 @@ void NewWidgetTreeDialog::createTreeIfNotExists(const Globals::Topic &topic) {
     QString superTable = tablePath.join('/');
 
     QStringList columns{};
-    columns << topicEnd << Globals::topicTypeDisplayNames.value(topic.type);
+    columns << topicEnd << Globals::topicTypeDisplayNames.value(topic.Type);
 
     QTreeWidgetItem *item = new QTreeWidgetItem(columns);
     item->setToolTip(1, columns.at(1));
@@ -133,7 +133,7 @@ QList<Globals::Topic> NewWidgetTreeDialog::filterTopicTypes(QList<Globals::Topic
     QList<Globals::Topic> newList{};
 
     for (const Globals::Topic &topic : list) {
-        if (acceptableTypes.contains(topic.type)) {
+        if (acceptableTypes.contains(topic.Type)) {
             newList.append(topic);
         }
     }

@@ -60,12 +60,15 @@ set(PROJECT_SOURCES
         src/widgets/SendableFieldWidget.cpp
         src/widgets/CommandWidget.cpp
         src/widgets/GraphWidget.cpp
+        src/widgets/FMSInfoWidget.cpp
+        src/widgets/SwerveWidget.cpp
 
         src/misc/ShapedFrame.cpp
         src/misc/BetterDial.cpp
         src/misc/FieldImage.cpp
         src/misc/ChartView.cpp
         src/misc/GridLineWidget.cpp
+        src/misc/SwerveTrain.cpp
 
         src/stores/TopicStore.cpp
         src/stores/TypeStore.cpp
@@ -85,7 +88,6 @@ set(PROJECT_SOURCES
         include/MainWindow.h
         include/Constants.h
 
-
         include/widgets/BaseWidget.h
         include/widgets/DoubleDisplayWidget.h
         include/widgets/TabWidget.h
@@ -103,12 +105,15 @@ set(PROJECT_SOURCES
         include/widgets/SendableFieldWidget.h
         include/widgets/CommandWidget.h
         include/widgets/GraphWidget.h
+        include/widgets/FMSInfoWidget.h
+        include/widgets/SwerveWidget.h
 
         include/misc/ShapedFrame.h
         include/misc/BetterDial.h
         include/misc/FieldImage.h
         include/misc/ChartView.h
         include/misc/GridLineWidget.h
+        include/misc/SwerveTrain.h
 
         include/stores/TopicStore.h
         include/stores/TypeStore.h
@@ -139,7 +144,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         theme/qrc/breeze.qrc
         icons.qrc
         ${PROJECT_SOURCES}
-        include/widgets/FMSInfoWidget.h src/widgets/FMSInfoWidget.cpp
+
     )
 endif()
 

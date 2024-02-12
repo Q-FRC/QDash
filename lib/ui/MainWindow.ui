@@ -63,6 +63,7 @@
     <addaction name="actionNew_NT_Widget"/>
     <addaction name="actionNew_Graph"/>
     <addaction name="actionNew_Camera_View"/>
+    <addaction name="actionNew_Swerve_Widget"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -188,6 +189,11 @@
   <action name="action_NT_Server">
    <property name="text">
     <string>&amp;NT Server</string>
+   </property>
+  </action>
+  <action name="actionNew_Swerve_Widget">
+   <property name="text">
+    <string>New &amp;Swerve Widget</string>
    </property>
   </action>
  </widget>
@@ -449,6 +455,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionNew_Swerve_Widget</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>newSwerve()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>ntSettingsPopup()</slot>
@@ -468,5 +490,6 @@
   <slot>preferences()</slot>
   <slot>refreshRecentFiles()</slot>
   <slot>forceUpdateTab(int)</slot>
+  <slot>newSwerve()</slot>
  </slots>
 </ui>

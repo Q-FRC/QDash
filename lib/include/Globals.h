@@ -26,7 +26,8 @@ enum class WidgetTypes {
     Field = 11,
     Command = 12,
     Graph = 13,
-    FMSInfo = 14
+    FMSInfo = 14,
+    Swerve = 15
 };
 
 enum class TopicTypes {
@@ -60,7 +61,6 @@ typedef struct {
 
 class TypeStore;
 
-
 // NAMESPACES //
 namespace Globals {
 
@@ -91,37 +91,64 @@ typedef struct {
     QString fileName;
 } File;
 
-typedef struct Topic {
-    QString name;
-    TopicTypes type;
-
-    bool operator==(const struct Topic &other) const;
-} Topic;
-
-extern uint qHash(const Globals::Topic &topic);
-
 typedef struct GraphXAxis {
     bool useTime;
     QString topic;
 
     bool operator==(const struct GraphXAxis &other) const;
 } GraphXAxis;
+
+class NumberTopic;
+class DoubleArrayTopic;
+
+class Topic
+{
+public:
+    QString Name;
+    TopicTypes Type;
+
+    Topic(QString name = "", TopicTypes type = TopicTypes::None) : Name(name), Type(type) {}
+
+    bool operator==(const Topic &other) const;
+
+    void operator=(const NumberTopic &other);
+    void operator=(const DoubleArrayTopic &other);
+};
+
+class NumberTopic : public Topic
+{
+public:
+    NumberTopic(QString name = "", TopicTypes type = TopicTypes::None) : Topic(name, type) {}
+
+    void operator=(const Topic &other);
+};
+
+class DoubleArrayTopic : public Topic
+{
+public:
+    DoubleArrayTopic(QString name = "") : Topic(name, TopicTypes::DoubleArray) {}
+
+    void operator=(const Topic &other);
+};
+
+extern uint qHash(const Topic &topic);
+
 }
 
 Q_DECLARE_METATYPE(Globals::File)
-Q_DECLARE_METATYPE(Globals::Topic)
+Q_DECLARE_METATYPE(Globals::NumberTopic)
 Q_DECLARE_METATYPE(Globals::GraphXAxis)
 
 namespace CustomMetaTypes {
 static const int FrameShape = qMetaTypeId<Globals::FrameShape>();
 static const int File = qMetaTypeId<Globals::File>();
-static const int Topic = qMetaTypeId<Globals::Topic>();
-static const int TopicList = qMetaTypeId<QList<Globals::Topic>>();
+static const int DATopic = qMetaTypeId<Globals::DoubleArrayTopic>();
+static const int NumberTopicList = qMetaTypeId<QList<Globals::NumberTopic>>();
 static const int XAxis = qMetaTypeId<Globals::GraphXAxis>();
-static const int TopicColorMap = qMetaTypeId<QHash<Globals::Topic, QColor>>();
+static const int NumberTopicColorMap = qMetaTypeId<QHash<Globals::NumberTopic, QColor>>();
+static const int DoubleArrayTopic = qMetaTypeId<Globals::DoubleArrayTopic>();
 }
 
 extern bool operator==(const WidgetData &a, const WidgetData &b);
-// extern bool operator==(const Globals::Topic &a, const Globals::Topic &b);
 
 extern void setAppStyleSheet(QString styleSheet);

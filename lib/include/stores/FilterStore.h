@@ -28,6 +28,7 @@ public:
     static Globals::Topic topicFromName(const QString &topicName, const QList<Globals::Topic> &topics);
 
     static QStringList topicNames(QList<Globals::Topic> list);
+    static QStringList topicNames(QList<Globals::NumberTopic> list);
 
 public slots:
     static void filterTopics();

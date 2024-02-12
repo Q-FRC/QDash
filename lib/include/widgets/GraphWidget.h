@@ -17,7 +17,7 @@ class ChartView;
 class GraphWidget : public BaseWidget
 {
     Q_OBJECT
-    Q_PROPERTY(QHash<Globals::Topic, QColor> Topics READ topics WRITE setTopics REQUIRED)
+    Q_PROPERTY(QHash<Globals::NumberTopic, QColor> Topics READ topics WRITE setTopics REQUIRED)
     Q_PROPERTY(double Update_Frequency_Seconds READ updateFrequency WRITE setUpdateFrequency REQUIRED)
     Q_PROPERTY(double Time_Scale_Seconds READ maxTimeScale WRITE setMaxTimeScale REQUIRED)
     Q_PROPERTY(double Max_Y_Value READ maxYValue WRITE setMaxYValue REQUIRED)
@@ -36,27 +36,26 @@ private:
     QValueAxis *m_xAxis;
     QValueAxis *m_yAxis;
 
-    double m_maxTimeScale = 0.;
-    double m_updateFrequency = 0.;
+    double m_maxTimeScale = 30.;
+    double m_updateFrequency = 1.;
 
-    double m_maxYValue;
-    double m_minYValue;
+    double m_maxYValue = 10.;
+    double m_minYValue = -10.;
 
-    double m_maxXValue;
-    double m_minXValue;
+    double m_maxXValue = -10.;
+    double m_minXValue = 10.;
 
     Globals::GraphXAxis m_xAxisData{true, ""};
 
     nt::NetworkTableEntry *m_xAxisEntry;
-
 
     void mouseReleaseEvent(QMouseEvent *event) override;
 
 public:
     GraphWidget(const QString &topic = "", const QString &title = "");
 
-    QHash<Globals::Topic, QColor> topics();
-    void setTopics(QHash<Globals::Topic, QColor> topics);
+    QHash<Globals::NumberTopic, QColor> topics();
+    void setTopics(QHash<Globals::NumberTopic, QColor> topics);
 
     double maxTimeScale();
     void setMaxTimeScale(double maxTimeScale);

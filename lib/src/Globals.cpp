@@ -21,11 +21,30 @@ bool operator==(const WidgetData &a, const WidgetData &b) {
 }
 
 uint Globals::qHash(const Globals::Topic &topic) {
-    return qHash(topic.name);
+    return qHash(topic.Name);
 }
 
 bool Globals::Topic::operator==(const Globals::Topic &other) const {
-    return (this->name == other.name);
+    return (this->Name == other.Name);
+}
+
+void Globals::Topic::operator=(const Globals::NumberTopic &other) {
+    this->Name = other.Name;
+    this->Type = other.Type;
+}
+void Globals::Topic::operator=(const Globals::DoubleArrayTopic &other) {
+    this->Name = other.Name;
+    this->Type = other.Type;
+}
+
+void Globals::NumberTopic::operator=(const Globals::Topic &other) {
+    this->Name = other.Name;
+    this->Type = other.Type;
+}
+
+void Globals::DoubleArrayTopic::operator=(const Globals::Topic &other) {
+    this->Name = other.Name;
+    this->Type = other.Type;
 }
 
 bool Globals::GraphXAxis::operator==(const Globals::GraphXAxis &other) const {

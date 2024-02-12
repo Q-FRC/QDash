@@ -10,11 +10,13 @@
 #include <QMessageBox>
 
 GraphWidget::GraphWidget(const QString &topic, const QString &title)
-    : BaseWidget(WidgetTypes::Graph, title, topic, true) {
+    : BaseWidget(WidgetType, title, topic, true) {
 
     QChart *chart = new QChart();
     m_timer = new QTimer(this);
+    m_timer->setTimerType(Qt::TimerType::PreciseTimer);
     m_chart = new ChartView(chart, this);
+    m_elapsed.start();
 
     connect(m_timer, &QTimer::timeout, this, &GraphWidget::updateGraph);
 
@@ -28,31 +30,47 @@ GraphWidget::GraphWidget(const QString &topic, const QString &title)
     m_chart->chart()->addAxis(m_yAxis, Qt::AlignLeft);
 
     setMaxTimeScale(30.);
-    setUpdateFrequency(1.0);
 
     setMaxYValue(10.0);
     setMinYValue(-10.0);
 
     connect(this, &BaseWidget::isReady, this, [this] {
-        m_elapsed.start();
+        setUpdateFrequency(1.0);
     });
 
     m_layout->addWidget(m_chart, 1, 0, 3, 1);
 }
 
-QHash<Globals::Topic, QColor> GraphWidget::topics() {
-    return m_topics;
+QHash<Globals::NumberTopic, QColor> GraphWidget::topics() {
+    QHash<Globals::NumberTopic, QColor> newHash{};
+
+    QHashIterator iter(m_topics);
+    while(iter.hasNext()) {
+        iter.next();
+        Globals::NumberTopic t;
+        t = iter.key();
+        newHash.insert(t, iter.value());
+    }
+    return newHash;
 }
 
-void GraphWidget::setTopics(QHash<Globals::Topic, QColor> topics) {
+void GraphWidget::setTopics(QHash<Globals::NumberTopic, QColor> topics) {
+    QHash<Globals::Topic, QColor> newHash{};
+
+    QHashIterator t_iter(topics);
+    while(t_iter.hasNext()) {
+        t_iter.next();
+        newHash.insert(t_iter.key(), t_iter.value());
+    }
+
     QHashIterator iter(m_topics);
 
     while (iter.hasNext()) {
         iter.next();
         Globals::Topic topic = iter.key();
 
-        if (!topics.contains(topic)) {
-            TopicStore::unsubscribe(topic.name.toStdString(), this);
+        if (!newHash.contains(topic)) {
+            TopicStore::unsubscribe(topic.Name.toStdString(), this);
             m_entryMap.remove(topic);
 
             QLineSeries *series = m_seriesMap.take(topic);
@@ -61,19 +79,19 @@ void GraphWidget::setTopics(QHash<Globals::Topic, QColor> topics) {
         }
     }
 
-    iter = QHashIterator(topics);
+    iter = QHashIterator(newHash);
 
     while (iter.hasNext()) {
         iter.next();
         Globals::Topic topic = iter.key();
 
         if (!m_topics.contains(topic)) {
-            nt::NetworkTableEntry *entry = TopicStore::subscribeWriteOnly(topic.name.toStdString(), this);
+            nt::NetworkTableEntry *entry = TopicStore::subscribeWriteOnly(topic.Name.toStdString(), this);
 
             m_entryMap.insert(topic, entry);
 
             QLineSeries *series = new QLineSeries;
-            series->setName(topic.name);
+            series->setName(topic.Name);
             series->append(m_elapsed.elapsed() / 1000., TopicStore::getDoubleFromEntry(entry));
             series->setColor(iter.value());
 
@@ -89,7 +107,7 @@ void GraphWidget::setTopics(QHash<Globals::Topic, QColor> topics) {
         }
     }
 
-    m_topics = topics;
+    m_topics = newHash;
 }
 
 
@@ -194,6 +212,8 @@ void GraphWidget::updateGraph() {
 
         series->append(xValue, value);
     }
+
+    update();
 }
 
 void GraphWidget::setValue(const nt::Value &value) {}

@@ -70,6 +70,7 @@ public slots:
     void beginNewWidgetDrag(BaseWidget *widget, WidgetData data);
     void newCameraView();
     void newGraph();
+    void newSwerve();
 
     // Camera
     void cameraServerPopup();

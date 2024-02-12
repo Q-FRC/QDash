@@ -16,7 +16,7 @@ void TypeStore::registerType(TopicTypes topicType, WidgetTypes widgetType, QStri
 QList<QAction *> TypeStore::generateActionsForTopic(Globals::Topic topic) {
     QList<QAction *> actions{};
 
-    QList<WidgetTypes> widgetTypes = m_typeWidgetMap.values(topic.type);
+    QList<WidgetTypes> widgetTypes = m_typeWidgetMap.values(topic.Type);
 
     for (WidgetTypes widgetType : widgetTypes) {
         QString displayName = widgetDisplayName(widgetType);
@@ -24,7 +24,7 @@ QList<QAction *> TypeStore::generateActionsForTopic(Globals::Topic topic) {
         QAction *action = new QAction(displayName);
 
         connect(action, &QAction::triggered, action, [this, widgetType, displayName, topic] {
-            auto widget = BaseWidget::defaultWidgetFromTopic(topic.name, widgetType);
+            auto widget = BaseWidget::defaultWidgetFromTopic(topic.Name, widgetType);
 
             emit widgetReady(widget, WidgetData{0, 0, 1, 1});
         });

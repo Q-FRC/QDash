@@ -9,6 +9,7 @@
 #include "dialogs/CameraSelectionDialog.h"
 
 #include "stores/FilterStore.h"
+#include "stores/TypeStore.h"
 #include "widgets/CameraViewWidget.h"
 
 #include <networktables/NetworkTableInstance.h>
@@ -116,10 +117,11 @@ void MainWindow::loadObject(const QJsonDocument &doc) {
         centralwidget->addTab(tab, tab->name());
         m_tabs.append(tab);
 
-        if (centralwidget->currentWidget() != tab) {
-            for (BaseWidget *widget : tab->widgets()) {
+        for (BaseWidget *widget : tab->widgets()) {
+            if (centralwidget->currentWidget() != tab) {
                 widget->setDisabled(true);
             }
+            widget->setReady(true);
         }
     } // tabs
 }
@@ -133,6 +135,7 @@ void MainWindow::makeNewWidget(WidgetTypes type) {
         }
     } else {
         BaseWidget *widget = BaseWidget::defaultWidgetFromTopic("", type);
+        widget->setTitle(Globals::typeStore.widgetDisplayName(type));
         WidgetData data{0, 0, 1, 1};
 
         beginNewWidgetDrag(widget, data);
@@ -429,6 +432,10 @@ void MainWindow::newCameraView() {
 
 void MainWindow::newGraph() {
     makeNewWidget(WidgetTypes::Graph);
+}
+
+void MainWindow::newSwerve() {
+    makeNewWidget(WidgetTypes::Swerve);
 }
 
 void MainWindow::cameraServerPopup() {

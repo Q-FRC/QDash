@@ -33,6 +33,6 @@ void NTSettingsDialog::putTopic() {
     dialog->show();
 
     connect(dialog, &NewWidgetTreeDialog::topicReady, this, [this](const Globals::Topic &topic) {
-            this->topic->setText(topic.name);
+            this->topic->setText(topic.Name);
         }, Qt::SingleShotConnection);
 }
