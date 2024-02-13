@@ -25,11 +25,11 @@ QFRCDashboard excels with its lightweight performance thanks to many factors:
 Thanks to these factors, QFRCDashboard is the best choice for a high-performance dashboard with no compromises.
 
 ## Download
-Windows and Linux builds are available via GitHub Actions. Currently, all use WPILib 2024. Release builds are available either through Actions or in the releases tab:
+Windows, Linux, and macOS builds are available via GitHub Actions. Currently, all use WPILib 2024.2.1. Release builds are available either through Actions or in the releases tab:
 
 [![Release](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_release.yml/badge.svg)](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_release.yml)
 
-NOTE: Windows Release builds require the Visual C++ runtime to be installed. For convenience, an executable has been included to install the runtime.
+NOTE: Windows Release builds require the Visual C++ runtime to be installed. For convenience, an executable has been included to install the runtime in the portable build.
 
 Development/debug builds are also available on a per-commit basis. These builds are generally unstable, have far larger executable sizes, and will perform slower, but are useful for users who wish to have the latest features or for developers who want to contribute and test.
 
