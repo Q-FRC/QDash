@@ -122,6 +122,7 @@ jobs:
         cmake --build ${{ env.BUILD_DIR }} --parallel $(nproc) --config ${{ inputs.build_type }}
 
     - name: Test
+      if: inputs.build_type == 'Debug'
       working-directory: ${{ env.BUILD_DIR }}/tests
       shell: bash
       run: |
