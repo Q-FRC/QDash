@@ -6,8 +6,7 @@
 
 CommandWidget::CommandWidget(const QString &topic, const QString &title) : BaseWidget(WidgetTypes::Command, title, topic, true)
 {
-    m_name = TopicStore::subscribe(topic.toStdString() + "/.name", this);
-    m_running = TopicStore::subscribeWriteOnly(topic.toStdString() + "/running", this);
+    setTopic(topic);
 
     m_button = new QPushButton(QString::fromStdString(m_name->GetString("Command")), this);
 
@@ -27,20 +26,32 @@ CommandWidget::~CommandWidget() {
 }
 
 void CommandWidget::setTopic(const QString &topic) {
-    if (m_topic == topic)
-        return;
+
 
     m_topic = topic;
 
-    if (m_name != nullptr) TopicStore::unsubscribe(m_name, this);
-    if (m_running != nullptr) TopicStore::unsubscribe(m_running, this);
+    if (m_name != nullptr) TopicStore::unsubscribe(topic.toStdString() + "/.name", this);
+    if (m_running != nullptr) TopicStore::unsubscribe(topic.toStdString() + "/.running", this);
 
-    m_name = TopicStore::subscribe(topic.toStdString() + "/.name", this);
-    m_running = TopicStore::subscribeWriteOnly(topic.toStdString() + "/running", this);
+    m_name = TopicStore::subscribe(topic.toStdString() + "/.name", this, NT_STRING, "Name");
+    m_running = TopicStore::subscribe(topic.toStdString() + "/running", this, NT_BOOLEAN, "Running", true);
 }
 
-void CommandWidget::setValue(const nt::Value &value) {
-    if (value.IsString() && value.IsValid()) {
+void CommandWidget::setValue(const nt::Value &value, QString label, bool force) {
+    if (force) {
+        QMap<std::string, QString> map{};
+        map.insert("/.name", "Name");
+
+        QMapIterator iter(map);
+        while (iter.hasNext()) {
+            iter.next();
+            TopicStore::updateTopic(m_topic.toStdString() + iter.key(), this, iter.value());
+        }
+
+        return;
+    }
+
+    if (label == "Name") {
         m_button->setText(QString::fromStdString(std::string{value.GetString()}));
     }
 }

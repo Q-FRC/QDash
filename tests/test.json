@@ -8,63 +8,65 @@
     "tabs": [
         {
             "maxSize": [
-                3,
-                3
+                5,
+                5
             ],
-            "tabName": "a",
+            "tabName": "Debug",
             "widgets": [
                 {
-                    "False_Color": "#ff0000",
-                    "Shape": "Hexagon",
-                    "Topic": "/test",
-                    "True_Color": "#00ff00",
+                    "Max_Y_Value": 10,
+                    "Min_Y_Value": -10,
+                    "Time_Scale_Seconds": 30,
+                    "Topics": [
+                    ],
+                    "Update_Frequency_Seconds": 1,
+                    "X_Axis_Topic": {
+                        "topic": "",
+                        "useTime": true
+                    },
                     "geometry": [
+                        0,
+                        0,
                         2,
+                        1
+                    ],
+                    "title": "Graph",
+                    "widgetType": 13
+                },
+                {
+                    "URL": "",
+                    "geometry": [
                         0,
                         1,
-                        1
-                    ],
-                    "title": "Game Piece?",
-                    "value": true,
-                    "widgetType": 1
-                },
-                {
-                    "Topic": "/epic/bruh/numero",
-                    "geometry": [
-                        2,
-                        1,
-                        1,
-                        2
-                    ],
-                    "title": "Arm Position",
-                    "value": 10.3444433,
-                    "widgetType": 3
-                },
-                {
-                    "Maximum": 100,
-                    "Minimum": 0,
-                    "Starting_Angle": 0,
-                    "Topic": "/pitbull named gothmog destroyer of worlds",
-                    "geometry": [
-                        1,
-                        2,
                         1,
                         1
                     ],
-                    "title": "Shooter Index",
-                    "value": 100,
-                    "widgetType": 9
+                    "title": "Camera",
+                    "value": "",
+                    "widgetType": 6
                 },
                 {
-                    "Image": ":/2023Field.png",
+                    "Location_Topic": "",
+                    "States_Topic": "/death machine",
+                    "geometry": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "title": "Swerve",
+                    "widgetType": 15
+                },
+                {
+                    "Image": ":/2024Field.png",
                     "Robot_Length": 0.5,
                     "Robot_Width": 0.5,
                     "Topic": "/SmartDashboard/Field/Robot",
                     "geometry": [
                         0,
-                        0,
-                        2,
-                        2
+                        3,
+                        1,
+                        1
                     ],
                     "title": "Field",
                     "value": [
@@ -77,14 +79,160 @@
                 {
                     "Topic": "/SmartDashboard/epic chooser",
                     "geometry": [
+                        1,
+                        3,
+                        1,
+                        1
+                    ],
+                    "title": "epic chooser",
+                    "value": "",
+                    "widgetType": 5
+                },
+                {
+                    "Topic": "/FMSInfo",
+                    "geometry": [
                         0,
+                        2,
+                        3,
+                        1
+                    ],
+                    "title": "FMSInfo",
+                    "widgetType": 14
+                },
+                {
+                    "False_Color": "#ff0000",
+                    "Shape": "Circle",
+                    "Topic": "/epic/booleanMan",
+                    "True_Color": "#00ffff",
+                    "geometry": [
+                        0,
+                        4,
+                        1,
+                        1
+                    ],
+                    "title": "booleanMan",
+                    "value": false,
+                    "widgetType": 1
+                },
+                {
+                    "Checkbox_Size": 30,
+                    "Topic": "/epic/booleanMan",
+                    "geometry": [
+                        1,
+                        4,
+                        1,
+                        1
+                    ],
+                    "title": "booleanMan",
+                    "value": false,
+                    "widgetType": 0
+                },
+                {
+                    "Topic": "/epic/bruh/string",
+                    "geometry": [
+                        2,
+                        0,
+                        1,
+                        1
+                    ],
+                    "title": "string",
+                    "value": "cool",
+                    "widgetType": 2
+                },
+                {
+                    "Colors": {
+                        "cool": "#ff00ff",
+                        "this is so epic": "#88FF22"
+                    },
+                    "Shape": "Circle",
+                    "Topic": "/epic/bruh/string",
+                    "geometry": [
+                        2,
+                        1,
+                        1,
+                        1
+                    ],
+                    "title": "string",
+                    "value": "cool",
+                    "widgetType": 7
+                },
+                {
+                    "Topic": "/Arm Motor Current",
+                    "geometry": [
+                        2,
+                        3,
+                        1,
+                        1
+                    ],
+                    "title": "Arm Motor Current",
+                    "value": 58.177382755055774,
+                    "widgetType": 3
+                },
+                {
+                    "Maximum": 100,
+                    "Minimum": 0,
+                    "Starting_Angle": 90,
+                    "Topic": "/Arm Motor Current",
+                    "geometry": [
+                        2,
+                        4,
+                        1,
+                        1
+                    ],
+                    "title": "Arm Motor Current",
+                    "value": 58.177382755055774,
+                    "widgetType": 4
+                },
+                {
+                    "Topic": "/Arm Position",
+                    "geometry": [
+                        3,
+                        0,
+                        1,
+                        1
+                    ],
+                    "title": "Arm Position",
+                    "value": 547,
+                    "widgetType": 8
+                },
+                {
+                    "Maximum": 1000,
+                    "Minimum": 0,
+                    "Starting_Angle": 120,
+                    "Topic": "/Arm Position",
+                    "geometry": [
+                        3,
+                        1,
+                        1,
+                        1
+                    ],
+                    "title": "Arm Position",
+                    "value": 547,
+                    "widgetType": 9
+                },
+                {
+                    "Image": ":/2024Field.png",
+                    "Robot_Length": 0.5,
+                    "Robot_Width": 0.5,
+                    "Topic": "/death machine",
+                    "geometry": [
+                        3,
                         2,
                         1,
                         1
                     ],
-                    "title": "Autons",
-                    "value": "hi",
-                    "widgetType": 5
+                    "title": "death machine",
+                    "value": [
+                        1,
+                        -90,
+                        -1,
+                        0,
+                        1,
+                        0,
+                        -1,
+                        -90
+                    ],
+                    "widgetType": 11
                 }
             ]
         }

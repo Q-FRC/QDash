@@ -80,6 +80,7 @@ int main(int argc, char **argv) {
     FilterStore::registerNTType(nt::NetworkTableType::kString, TopicTypes::String, "String");
     FilterStore::registerNTType(nt::NetworkTableType::kDouble, TopicTypes::Double, "Double");
     FilterStore::registerNTType(nt::NetworkTableType::kDoubleArray, TopicTypes::DoubleArray, "Double Array");
+    FilterStore::registerNTType(nt::NetworkTableType::kStringArray, TopicTypes::StringArray, "String Array");
     FilterStore::registerNTType(nt::NetworkTableType::kInteger, TopicTypes::Int, "Integer");
 
     // NT REGISTRATION

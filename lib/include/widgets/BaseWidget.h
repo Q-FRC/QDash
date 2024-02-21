@@ -25,7 +25,6 @@ class BaseWidget : public QFrame
     Q_OBJECT
 
     Q_PROPERTY(QString title READ title WRITE setTitle)
-    Q_PROPERTY(QString Topic READ topic WRITE setTopic REQUIRED)
 protected:
     WidgetTypes m_type;
     QGridLayout *m_layout;
@@ -61,8 +60,8 @@ public:
 
     virtual QMenu *constructContextMenu(WidgetData data);
 
-    virtual void setValue(const nt::Value &value);
-    virtual void forceUpdate();
+    virtual void setValue(const nt::Value &value, QString label = "", bool force = false);
+    void forceUpdate();
 
     void paintEvent(QPaintEvent *event);
 

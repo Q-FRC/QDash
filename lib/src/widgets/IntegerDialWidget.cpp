@@ -4,6 +4,7 @@
 #include <QApplication>
 
 IntegerDialWidget::IntegerDialWidget(const QString &topic, const int &defaultValue, const QString &title) : IntegerDisplayWidget(topic, defaultValue, title, false) {
+    setTopic(topic);
     m_dial = new BetterDial(this);
     m_type = WidgetTypes::IntegerDial;
 
@@ -16,7 +17,7 @@ IntegerDialWidget::IntegerDialWidget(const QString &topic, const int &defaultVal
     m_layout->addWidget(m_text, 3, 0);
 
     connect(m_dial, &BetterDial::sliderMoved, this, [this](int position) {
-        m_entry->SetInteger(position);
+        if (m_entry) m_entry->SetInteger(position);
         m_value = position;
         m_text->setText(QString::number(position));
     });
@@ -54,7 +55,15 @@ void IntegerDialWidget::setStartingAngle(double angle) {
     m_dial->setStartingAngle(angle * M_PI / 180.);
 }
 
-void IntegerDialWidget::setValue(const nt::Value &value) {
+void IntegerDialWidget::setTopic(const QString &topic) {
+    
+
+    m_topic = topic;
+    if (m_entry) TopicStore::unsubscribe(m_topic, this);
+    m_entry = TopicStore::subscribe(topic.toStdString(), this, NT_INTEGER);
+}
+
+void IntegerDialWidget::setValue(const nt::Value &value, QString label, bool force) {
     if (!m_text->hasFocus()) {
         m_value = value.GetInteger();
         setText(QString::number(m_value));
@@ -65,7 +74,7 @@ void IntegerDialWidget::setValue(const nt::Value &value) {
 
 void IntegerDialWidget::keyPressEvent(QKeyEvent *event) {
     if (m_text->hasFocus()) {
-        m_entry->SetInteger(m_text->text().toInt());
+        if (m_entry) m_entry->SetInteger(m_text->text().toInt());
         m_value = m_text->text().toInt();
 
         m_dial->setValue(m_value);

@@ -8,6 +8,7 @@ class BooleanDisplayWidget : public BaseWidget
     Q_OBJECT
 
     Q_PROPERTY(bool value MEMBER m_value)
+    Q_PROPERTY(QString Topic READ topic WRITE setTopic REQUIRED)
     Q_PROPERTY(QColor True_Color READ trueColor WRITE setTrueColor REQUIRED)
     Q_PROPERTY(QColor False_Color READ falseColor WRITE setFalseColor REQUIRED)
     Q_PROPERTY(Globals::FrameShape Shape READ shape WRITE setShape REQUIRED)
@@ -32,7 +33,8 @@ public:
     Globals::FrameShape shape();
     void setShape(Globals::FrameShape shape);
 
-    void setValue(const nt::Value &value) override;
+    void setTopic(const QString &topic) override;
+    void setValue(const nt::Value &value, QString label = "", bool force = false) override;
 
     inline static WidgetTypes WidgetType = WidgetTypes::BooleanDisplay;
     inline static TopicTypes TopicType = TopicTypes::Boolean;

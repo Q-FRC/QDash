@@ -39,7 +39,7 @@ void WidgetUpdate::initTestCase() {
     m_inst = nt::NetworkTableInstance::GetDefault();
     m_inst.StartServer("", "0.0.0.0");
 
-    m_testEntry = m_inst.GetEntry("/test");
+    m_testEntry = m_inst.GetEntry("/epic/booleanMan");
     m_testEntry.SetBoolean(false);
 
     m_window->setNtSettings(ServerData{false, "0.0.0.0", NT_DEFAULT_PORT4});
@@ -54,10 +54,10 @@ void WidgetUpdate::cleanupTestCase() {
 
 void WidgetUpdate::testUpdate() {
     TabWidget *tab = m_window->currentTab();
-    BaseWidget *widget = tab->widgets().at(0);
+    BaseWidget *widget = tab->widgets().at(7);
     m_testEntry.SetBoolean(true);
 
-    QTest::qWait(1000);
+    QTest::qWait(2000);
 
     QCOMPARE(true, widget->property("value").toBool());
 }

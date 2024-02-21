@@ -66,7 +66,7 @@ void FieldImage::paintEvent(QPaintEvent *event) {
     double robotLength = m_length * meterRatio;
 
     // getting some important points & rects
-    QPointF robotTopLeft = topLeft + QPointF(m_x * meterRatio, (FieldWidth - m_y) * meterRatio);
+    QPointF robotTopLeft = topLeft + QPointF(m_x * meterRatio, (FieldWidth - m_y) * meterRatio - robotLength);
 
     QRectF robotRect(robotTopLeft, QSizeF(robotWidth, robotLength));
     QPointF absoluteCenter = robotTopLeft + QPointF(robotWidth / 2., robotLength / 2.);

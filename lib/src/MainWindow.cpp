@@ -417,12 +417,15 @@ void MainWindow::beginNewWidgetDrag(BaseWidget *widget, WidgetData data) {
         }, Qt::SingleShotConnection);
 
     *cancelConn = connect(tab, &TabWidget::dragCancelled, this, [doneConn, cancelConn, widget](BaseWidget *draggedWidget) {
-            disconnect(*doneConn);
-            delete doneConn;
-            disconnect(*cancelConn);
-            delete cancelConn;
+            if (draggedWidget == widget) {
+                delete widget;
 
-            delete widget;
+                disconnect(*doneConn);
+                delete doneConn;
+                disconnect(*cancelConn);
+                delete cancelConn;
+            }
+
         }, Qt::SingleShotConnection);
 }
 

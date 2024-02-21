@@ -24,8 +24,6 @@ public:
     QUrl url();
     void setUrl(const QUrl &url);
 
-    void forceUpdate() override;
-
     inline static WidgetTypes WidgetType = WidgetTypes::CameraView;
     inline static TopicTypes TopicType = TopicTypes::None;
     inline static QString SendableName = "";

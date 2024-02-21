@@ -3,7 +3,7 @@
 
 BooleanDisplayWidget::BooleanDisplayWidget(const QString &topic, const bool &defaultValue, const QString &title) : BaseWidget(WidgetTypes::BooleanDisplay, title, topic)
 {
-    m_entry = TopicStore::subscribe(topic.toStdString(), this);
+    setTopic(topic);
 
     m_value = defaultValue;
     m_colorWidget = new ShapedFrame(Globals::FrameShape::Rectangle, this);
@@ -41,7 +41,15 @@ void BooleanDisplayWidget::setShape(Globals::FrameShape shape) {
     m_colorWidget->setShape(shape);
 }
 
-void BooleanDisplayWidget::setValue(const nt::Value &value) {
+void BooleanDisplayWidget::setTopic(const QString &topic) {
+
+
+    m_topic = topic;
+    if (m_entry) TopicStore::unsubscribe(m_topic, this);
+    m_entry = TopicStore::subscribe(topic.toStdString(), this, NT_BOOLEAN);
+}
+
+void BooleanDisplayWidget::setValue(const nt::Value &value, QString label, bool force) {
     m_value = value.GetBoolean();
 
     m_colorWidget->setColor(m_value ? m_trueColor : m_falseColor);

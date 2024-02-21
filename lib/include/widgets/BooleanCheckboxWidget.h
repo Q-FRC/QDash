@@ -9,6 +9,7 @@ class BooleanCheckboxWidget : public BaseWidget
     Q_OBJECT
 
     Q_PROPERTY(bool value MEMBER m_value)
+    Q_PROPERTY(QString Topic READ topic WRITE setTopic REQUIRED)
     Q_PROPERTY(int Checkbox_Size READ checkboxSize WRITE setCheckboxSize REQUIRED)
 protected:
     bool m_value = false;
@@ -23,7 +24,8 @@ public:
     int checkboxSize();
     void setCheckboxSize(int size);
 
-    void setValue(const nt::Value &value) override;
+    void setTopic(const QString &topic) override;
+    void setValue(const nt::Value &value, QString label = "", bool force = false) override;
 
     inline static WidgetTypes WidgetType = WidgetTypes::BooleanCheckbox;
     inline static TopicTypes TopicType = TopicTypes::Boolean;

@@ -18,6 +18,7 @@ class DoubleDialWidget : public DoubleDisplayWidget
     Q_OBJECT
 
     Q_PROPERTY(double value MEMBER m_value)
+    Q_PROPERTY(QString Topic READ topic WRITE setTopic REQUIRED)
     Q_PROPERTY(double Maximum READ max WRITE setMax REQUIRED)
     Q_PROPERTY(double Minimum READ min WRITE setMin REQUIRED)
     Q_PROPERTY(double Starting_Angle READ startingAngle WRITE setStartingAngle REQUIRED)
@@ -46,7 +47,8 @@ public:
     // input degrees
     void setStartingAngle(double angle);
 
-    void setValue(const nt::Value &value) override;
+    void setTopic(const QString &topic) override;
+    void setValue(const nt::Value &value, QString label = "", bool force = false) override;
 
     inline static WidgetTypes WidgetType = WidgetTypes::DoubleDial;
     inline static TopicTypes TopicType = TopicTypes::Double;

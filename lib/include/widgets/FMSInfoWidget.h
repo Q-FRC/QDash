@@ -40,6 +40,7 @@ extern QMap<AllianceStation, QString> StationNames;
 class FMSInfoWidget : public BaseWidget
 {
     Q_OBJECT
+    Q_PROPERTY(QString Topic READ topic WRITE setTopic REQUIRED)
 private:
     int m_number = 0;
     MatchType m_type = MatchType::None;
@@ -71,9 +72,8 @@ public:
     FMSInfoWidget(const QString &table = "", const QString &title = "");
     virtual ~FMSInfoWidget();
 
-    void forceUpdate() override;
-
-    void setValue(const nt::Value &value) override;
+    void setTopic(const QString &topic) override;
+    void setValue(const nt::Value &value, QString label = "", bool force = false) override;
 
     inline static WidgetTypes WidgetType = WidgetTypes::FMSInfo;
     inline static TopicTypes TopicType = TopicTypes::FMSInfo;

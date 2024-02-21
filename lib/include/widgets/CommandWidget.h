@@ -10,6 +10,8 @@ class CommandWidget : public BaseWidget
 protected:
     QPushButton *m_button;
 
+    Q_PROPERTY(QString Topic READ topic WRITE setTopic REQUIRED)
+
     nt::NetworkTableEntry *m_name;
     nt::NetworkTableEntry *m_running;
 public:
@@ -18,7 +20,7 @@ public:
 
     void setTopic(const QString &topic) override;
 
-    void setValue(const nt::Value &value) override;
+    void setValue(const nt::Value &value, QString label = "", bool force = false) override;
 
     inline static WidgetTypes WidgetType = WidgetTypes::Command;
     inline static TopicTypes TopicType = TopicTypes::Command;

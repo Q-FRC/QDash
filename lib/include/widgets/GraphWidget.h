@@ -74,8 +74,6 @@ public:
 
     double getCurrentXAxis();
 
-    void setValue(const nt::Value &value) override;
-
     QMenu *constructContextMenu(WidgetData data) override;
 
     inline static WidgetTypes WidgetType = WidgetTypes::Graph;

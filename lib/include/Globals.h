@@ -37,6 +37,7 @@ enum class TopicTypes {
     String = 2,
     Boolean = 3,
     Int = 4,
+    StringArray = 9,
 
     SendableChooser = 5,
     Field2d = 6,

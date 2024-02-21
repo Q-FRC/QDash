@@ -96,15 +96,7 @@ QString BaseWidget::topic()
     return m_topic;
 }
 
-void BaseWidget::setTopic(const QString &topic)
-{
-    if (m_topic == topic)
-        return;
-
-    m_topic = topic;
-    if (m_entry != nullptr) TopicStore::unsubscribe(m_topic.toStdString(), this);
-    m_entry = TopicStore::subscribe(topic.toStdString(), this);
-}
+void BaseWidget::setTopic(const QString &topic) {}
 
 ResizeDirection BaseWidget::resizing() {
     return m_resize;
@@ -148,17 +140,11 @@ QMenu *BaseWidget::constructContextMenu(WidgetData data) {
     return menu;
 }
 
-void BaseWidget::setValue(const nt::Value &value) {}
+void BaseWidget::setValue(const nt::Value &value, QString label, bool force) {}
 
 void BaseWidget::forceUpdate() {
-    if (m_sendable) return;
-    auto value = m_entry->GetValue();
-    if (m_entry &&
-        m_entry->Exists()
-        && value.IsValid() ) {
-        setValue(value);
-        update();
-    }
+    if (m_sendable) return setValue(nt::Value{}, "", true);
+    TopicStore::updateTopic(m_topic.toStdString(), this, "");
 }
 
 void BaseWidget::paintEvent(QPaintEvent *event) {

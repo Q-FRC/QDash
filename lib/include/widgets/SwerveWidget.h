@@ -14,12 +14,15 @@ private:
     nt::NetworkTableEntry *m_locEntry;
     nt::NetworkTableEntry *m_stateEntry;
 
+    QString m_locTopic = "";
+    QString m_stateTopic = "";
+
     SwerveTrain *m_train;
 public:
     SwerveWidget(const QString &topic = "", const QString &title = "");
+    virtual ~SwerveWidget();
 
-    void setValue(const nt::Value &value) override;
-    void forceUpdate() override;
+    void setValue(const nt::Value &value, QString label = "", bool force = false) override;
 
     void setLocationTopic(const Globals::DoubleArrayTopic &topic);
     Globals::DoubleArrayTopic locationTopic();

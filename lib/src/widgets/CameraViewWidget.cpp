@@ -26,5 +26,3 @@ void CameraViewWidget::setUrl(const QUrl &url) {
     m_player->setSource(url);
     m_player->play();
 }
-
-void CameraViewWidget::forceUpdate() {}
