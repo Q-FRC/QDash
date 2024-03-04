@@ -18,7 +18,6 @@ class DoubleDialWidget : public DoubleDisplayWidget
     Q_OBJECT
 
     Q_PROPERTY(double value MEMBER m_value)
-    Q_PROPERTY(QString Topic READ topic WRITE setTopic REQUIRED)
     Q_PROPERTY(double Maximum READ max WRITE setMax REQUIRED)
     Q_PROPERTY(double Minimum READ min WRITE setMin REQUIRED)
     Q_PROPERTY(double Starting_Angle READ startingAngle WRITE setStartingAngle REQUIRED)

@@ -11,7 +11,6 @@ class IntegerDialWidget : public IntegerDisplayWidget
     Q_OBJECT
 
     Q_PROPERTY(int value MEMBER m_value)
-    Q_PROPERTY(QString Topic READ topic WRITE setTopic REQUIRED)
     Q_PROPERTY(int Maximum READ max WRITE setMax REQUIRED)
     Q_PROPERTY(int Minimum READ min WRITE setMin REQUIRED)
     Q_PROPERTY(double Starting_Angle READ startingAngle WRITE setStartingAngle REQUIRED)

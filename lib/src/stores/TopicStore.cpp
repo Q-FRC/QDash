@@ -61,7 +61,6 @@ bool Listener::operator==(const Listener &other) const {
 }
 
 nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *subscriber, NT_Type desiredType, QString label, bool writeOnly) {
-    qDebug() << (int) desiredType << ntTopic;
     Listener listener;
     nt::NetworkTableEntry *entry = nullptr;
     if (!hasEntry(ntTopic)) {
@@ -86,7 +85,6 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
     if (!writeOnly) {
         nt::ListenerCallback updateWidget = [entry, subscriber, desiredType, label, ntTopic](const nt::Event &event = nt::Event()) {
             if (!subscriber || !entry) {
-                qDebug() << "Waaaaaah" << entry;
                 return;
             }
             nt::Value value;

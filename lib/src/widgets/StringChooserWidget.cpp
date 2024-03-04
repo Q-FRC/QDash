@@ -11,6 +11,10 @@ StringChooserWidget::StringChooserWidget(const QString &topic, const QString &de
     m_chooser = new QComboBox(this);
     m_layout->addWidget(m_chooser, 1, 0);
 
+    connect(m_chooser, &QComboBox::currentTextChanged, this, [this](const QString &text) {
+        if (m_selected) m_selected->SetString(text.toStdString());
+    });
+
     m_layout->setColumnStretch(0, -1);
     setReady(true);
 }
@@ -37,7 +41,6 @@ void StringChooserWidget::setTopic(const QString &topic) {
 }
 
 void StringChooserWidget::setValue(const nt::Value &value, QString label, bool force) {
-    qDebug() << label;
     if (force) {
         QMap<std::string, QString> map{};
         map.insert("/active", "Active");
@@ -74,7 +77,6 @@ void StringChooserWidget::setValue(const nt::Value &value, QString label, bool f
 
     // this is an interesting way to do things
     if (label == "Choices") {
-        qDebug() << "hereewgo";
         std::vector<std::string> choices = m_choices->GetStringArray({});
 
         std::vector<std::string> currentChoices{};

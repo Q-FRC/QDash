@@ -34,10 +34,6 @@ GraphWidget::GraphWidget(const QString &topic, const QString &title)
     setMaxYValue(10.0);
     setMinYValue(-10.0);
 
-    connect(this, &BaseWidget::isReady, this, [this] {
-        setUpdateFrequency(1.0);
-    });
-
     m_layout->addWidget(m_chart, 1, 0, 3, 1);
 }
 
