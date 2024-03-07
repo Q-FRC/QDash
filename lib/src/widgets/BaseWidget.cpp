@@ -147,6 +147,8 @@ void BaseWidget::forceUpdate() {
     TopicStore::updateTopic(m_topic.toStdString(), this, "");
 }
 
+void BaseWidget::reconnect() {}
+
 void BaseWidget::paintEvent(QPaintEvent *event) {
     QStyleOption opt;
     opt.initFrom(this);

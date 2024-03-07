@@ -53,6 +53,18 @@ void TabWidget::deleteWidget(BaseWidget *widget) {
     }
 }
 
+void TabWidget::forceUpdateWidgets() {
+    for (BaseWidget *widget : m_widgets) {
+        widget->forceUpdate();
+    }
+}
+
+void TabWidget::reconnect() {
+    for (BaseWidget *widget : m_widgets) {
+        widget->reconnect();
+    }
+}
+
 WidgetData TabWidget::widgetData(BaseWidget *widget) {
     int idx = m_layout->indexOf(widget);
     if (idx == -1) {

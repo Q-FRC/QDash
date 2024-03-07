@@ -1,5 +1,6 @@
 #include "widgets/StringChooserWidget.h"
 #include "Globals.h"
+#include "qtimer.h"
 #include "stores/TopicStore.h"
 
 #include <QApplication>
@@ -11,9 +12,7 @@ StringChooserWidget::StringChooserWidget(const QString &topic, const QString &de
     m_chooser = new QComboBox(this);
     m_layout->addWidget(m_chooser, 1, 0);
 
-    connect(m_chooser, &QComboBox::currentTextChanged, this, [this](const QString &text) {
-        if (m_selected) m_selected->SetString(text.toStdString());
-    });
+    connect(m_chooser, &QComboBox::currentTextChanged, this, &StringChooserWidget::updateSelected);
 
     m_layout->setColumnStretch(0, -1);
     setReady(true);
@@ -43,7 +42,7 @@ void StringChooserWidget::setTopic(const QString &topic) {
 void StringChooserWidget::setValue(const nt::Value &value, QString label, bool force) {
     if (force) {
         QMap<std::string, QString> map{};
-        map.insert("/active", "Active");
+        // map.insert("/active", "Active");
         map.insert("/options", "Choices");
 
         QMapIterator iter(map);
@@ -55,40 +54,22 @@ void StringChooserWidget::setValue(const nt::Value &value, QString label, bool f
         return;
     }
 
-    if (label == "Active") {
-        QString activeValue = m_chooser->currentText();
-        std::string activeValueStd = activeValue.toStdString();
+    // only update active if we're not reconnecting
+    // to send the current choice to NT.
+    if (m_reconnect) m_reconnect = false;
 
-        if (m_active->GetString(activeValueStd) != activeValueStd) {
-            if (m_flashCounter == 5) {
-                setStyleSheet("background-color: red;");
-            }
+    else {
+        if (label == "Active") {
+            QString activeValue = m_chooser->currentText();
+            std::string activeValueStd = activeValue.toStdString();
 
-            if (m_flashCounter == 10) {
-                setStyleSheet("BaseWidget { background-color: " + qApp->palette().color(QPalette::ColorRole::Base).darker(150).name() + "; border: 1px solid white; color: white; }");
-                m_flashCounter = -1;
-            }
-
-            ++m_flashCounter;
-        } else {
-            setStyleSheet("BaseWidget { background-color: " + qApp->palette().color(QPalette::ColorRole::Base).darker(150).name() + "; border: 1px solid white; color: white; }");
-        }
-    }
-
-    // this is an interesting way to do things
-    if (label == "Choices") {
-        std::vector<std::string> choices = m_choices->GetStringArray({});
-
-        std::vector<std::string> currentChoices{};
-
-        for (int i = 0; i < m_chooser->count(); ++i) {
-            currentChoices.push_back(m_chooser->itemText(i).toStdString());
+            m_chooser->setCurrentText(QString::fromStdString(std::string{value.GetString()}));
         }
 
-        std::sort(choices.begin(), choices.end());
-        std::sort(currentChoices.begin(), currentChoices.end());
+        // this is an interesting way to do things
+        else if (label == "Choices") {
+            std::span<const std::string> choices = value.GetStringArray();
 
-        if (choices != currentChoices) {
             m_chooser->clear();
 
             QStringList qchoices{};
@@ -100,4 +81,46 @@ void StringChooserWidget::setValue(const nt::Value &value, QString label, bool f
             m_chooser->setCurrentText(m_value);
         }
     }
+}
+
+void StringChooserWidget::updateSelected(const QString text) {
+    if (m_selected) m_selected->SetString(text.toStdString());
+
+    m_lastSelected = text;
+
+    QTimer *timer = new QTimer;
+    timer->callOnTimeout([this, timer] {
+        if (m_active->GetString(m_lastSelected.toStdString()) != m_lastSelected.toStdString()) {
+            if (m_flashCounter == 0) {
+                setStyleSheet("BaseWidget { background-color: red; }");
+            }
+
+            if (m_flashCounter == 5) {
+                setStyleSheet("BaseWidget { background-color: " + qApp->palette().color(QPalette::ColorRole::Base).darker(150).name() + "; border: 1px solid white; color: white; }");
+            }
+
+            if (m_flashCounter == 10) {
+                m_flashCounter = -1;
+            }
+
+            ++m_flashCounter;
+        } else {
+            setStyleSheet("BaseWidget { background-color: " + qApp->palette().color(QPalette::ColorRole::Base).darker(150).name() + "; border: 1px solid white; color: white; }");
+
+            timer->stop();
+            timer->deleteLater();
+            m_flashCounter = 0;
+        }
+    });
+
+    timer->start(100);
+}
+
+void StringChooserWidget::reconnect() {
+    if (m_chooser->currentText().isEmpty()) {
+        return forceUpdate();
+    }
+
+    m_reconnect = true;
+    updateSelected(m_lastSelected);
 }

@@ -84,6 +84,10 @@ public slots:
     void addWidget(BaseWidget *widget, WidgetData data);
     void deleteWidget(BaseWidget *widget);
 
+    // forced updates
+    void forceUpdateWidgets();
+    void reconnect();
+
 signals:
     void dragDone(BaseWidget *widget, WidgetData data);
     void dragCancelled(BaseWidget *widget);

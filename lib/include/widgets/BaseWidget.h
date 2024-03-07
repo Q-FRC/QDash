@@ -62,6 +62,7 @@ public:
 
     virtual void setValue(const nt::Value &value, QString label = "", bool force = false);
     void forceUpdate();
+    virtual void reconnect();
 
     void paintEvent(QPaintEvent *event);
 
