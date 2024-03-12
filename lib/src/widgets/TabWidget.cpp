@@ -59,12 +59,6 @@ void TabWidget::forceUpdateWidgets() {
     }
 }
 
-void TabWidget::reconnect() {
-    for (BaseWidget *widget : m_widgets) {
-        widget->reconnect();
-    }
-}
-
 WidgetData TabWidget::widgetData(BaseWidget *widget) {
     int idx = m_layout->indexOf(widget);
     if (idx == -1) {

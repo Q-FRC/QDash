@@ -31,6 +31,7 @@
                         1
                     ],
                     "title": "Graph",
+                    "titleFont": "Noto Sans,12,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "widgetType": 13
                 },
                 {
@@ -42,6 +43,7 @@
                         1
                     ],
                     "title": "Camera",
+                    "titleFont": "Noto Sans,12,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "value": "",
                     "widgetType": 6
                 },
@@ -55,6 +57,7 @@
                         1
                     ],
                     "title": "Swerve",
+                    "titleFont": "Noto Sans,12,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "widgetType": 15
                 },
                 {
@@ -69,6 +72,7 @@
                         1
                     ],
                     "title": "Field",
+                    "titleFont": "Noto Sans,12,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "value": [
                         1,
                         7,
@@ -85,6 +89,7 @@
                         1
                     ],
                     "title": "epic chooser",
+                    "titleFont": "Noto Sans,12,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "value": "",
                     "widgetType": 5
                 },
@@ -97,6 +102,7 @@
                         1
                     ],
                     "title": "FMSInfo",
+                    "titleFont": "Noto Sans,12,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "widgetType": 14
                 },
                 {
@@ -111,6 +117,7 @@
                         1
                     ],
                     "title": "booleanMan",
+                    "titleFont": "Noto Sans,12,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "value": false,
                     "widgetType": 1
                 },
@@ -124,11 +131,13 @@
                         1
                     ],
                     "title": "booleanMan",
+                    "titleFont": "Noto Sans,12,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "value": false,
                     "widgetType": 0
                 },
                 {
                     "Topic": "/epic/bruh/string",
+                    "font": "Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1",
                     "geometry": [
                         2,
                         0,
@@ -136,6 +145,7 @@
                         1
                     ],
                     "title": "string",
+                    "titleFont": "Noto Sans Kannada,6,-1,5,400,0,0,0,0,0,0,0,0,0,0,1",
                     "value": "cool",
                     "widgetType": 2
                 },
@@ -153,11 +163,13 @@
                         1
                     ],
                     "title": "string",
+                    "titleFont": "Noto Sans,12,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "value": "cool",
                     "widgetType": 7
                 },
                 {
                     "Topic": "/Arm Motor Current",
+                    "font": "Noto Sans,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1",
                     "geometry": [
                         2,
                         3,
@@ -165,6 +177,7 @@
                         1
                     ],
                     "title": "Arm Motor Current",
+                    "titleFont": "Noto Sans,12,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "value": 58.177382755055774,
                     "widgetType": 3
                 },
@@ -173,6 +186,7 @@
                     "Minimum": 0,
                     "Starting_Angle": 90,
                     "Topic": "/Arm Motor Current",
+                    "font": "Noto Sans,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1",
                     "geometry": [
                         2,
                         4,
@@ -180,11 +194,13 @@
                         1
                     ],
                     "title": "Arm Motor Current",
+                    "titleFont": "Noto Sans,12,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "value": 58.177382755055774,
                     "widgetType": 4
                 },
                 {
                     "Topic": "/Arm Position",
+                    "font": "Noto Sans,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1",
                     "geometry": [
                         3,
                         0,
@@ -192,6 +208,7 @@
                         1
                     ],
                     "title": "Arm Position",
+                    "titleFont": "Noto Sans,26,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "value": 547,
                     "widgetType": 8
                 },
@@ -200,6 +217,7 @@
                     "Minimum": 0,
                     "Starting_Angle": 120,
                     "Topic": "/Arm Position",
+                    "font": "Noto Sans,72,-1,5,400,0,0,0,0,0,0,0,0,0,0,1",
                     "geometry": [
                         3,
                         1,
@@ -207,6 +225,7 @@
                         1
                     ],
                     "title": "Arm Position",
+                    "titleFont": "Noto Sans,12,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "value": 547,
                     "widgetType": 9
                 },
@@ -222,6 +241,7 @@
                         1
                     ],
                     "title": "death machine",
+                    "titleFont": "Noto Sans,12,-1,5,700,0,0,0,0,0,0,0,0,0,0,1",
                     "value": [
                         1,
                         -90,

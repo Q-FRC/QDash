@@ -147,7 +147,9 @@ void BaseWidget::forceUpdate() {
     TopicStore::updateTopic(m_topic.toStdString(), this, "");
 }
 
-void BaseWidget::reconnect() {}
+void BaseWidget::setConnected(bool connected) {
+    m_connected = connected;
+}
 
 void BaseWidget::paintEvent(QPaintEvent *event) {
     QStyleOption opt;
@@ -322,7 +324,10 @@ QVariant BaseWidget::readFileProperty(const QMetaProperty &property, const QJson
 }
 
 QVariant BaseWidget::readFontProperty(const QMetaProperty &property, const QJsonValue &value) {
-    return QVariant::fromValue<QFont>(QFont(value.toString(property.read(this).value<QFont>().toString())));
+    QFont font;
+    font.fromString(value.toString(property.read(this).value<QString>()));
+
+    return QVariant::fromValue<QFont>(font);
 }
 
 QVariant BaseWidget::readStringProperty(const QMetaProperty &property, const QJsonValue &value) {

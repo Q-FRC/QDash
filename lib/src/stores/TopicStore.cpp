@@ -88,10 +88,19 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
                 return;
             }
 
+            if (event.Is(nt::EventFlags::kUnpublish)) {
+                QMetaObject::invokeMethod(subscriber, [subscriber] {
+                    subscriber->setConnected(false);
+                });
+
+                return;
+            }
+
             if (event.Is(nt::EventFlags::kPublish)) {
                 QMetaObject::invokeMethod(subscriber, [subscriber] {
-                    subscriber->reconnect();
+                    subscriber->setConnected(true);
                 });
+
                 return;
             }
 
@@ -133,7 +142,7 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
             }
         };
 
-        NT_Listener handle = Globals::inst.AddListener(Globals::inst.GetEntry(ntTopic), nt::EventFlags::kValueAll | nt::EventFlags::kPublish, updateWidget);
+        NT_Listener handle = Globals::inst.AddListener(Globals::inst.GetEntry(ntTopic), nt::EventFlags::kValueAll | nt::EventFlags::kPublish | nt::EventFlags::kUnpublish, updateWidget);
 
         listener.listenerHandle = handle;
         listener.callback = updateWidget;

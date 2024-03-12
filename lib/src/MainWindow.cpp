@@ -160,12 +160,6 @@ void MainWindow::forceUpdateTab(int idx) {
     m_lastIdx = idx;
 }
 
-void MainWindow::reconnect() {
-    for (TabWidget *tab : m_tabs) {
-        tab->reconnect();
-    }
-}
-
 void MainWindow::moveTab(int from, int to) {
     m_tabs.move(from, to);
 }

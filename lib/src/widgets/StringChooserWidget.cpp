@@ -42,7 +42,7 @@ void StringChooserWidget::setTopic(const QString &topic) {
 void StringChooserWidget::setValue(const nt::Value &value, QString label, bool force) {
     if (force) {
         QMap<std::string, QString> map{};
-        // map.insert("/active", "Active");
+        map.insert("/active", "Active");
         map.insert("/options", "Choices");
 
         QMapIterator iter(map);
@@ -54,20 +54,34 @@ void StringChooserWidget::setValue(const nt::Value &value, QString label, bool f
         return;
     }
 
-    // only update active if we're not reconnecting
+    // only update active if we're NOT reconnecting,
     // to send the current choice to NT.
-    if (m_reconnect) m_reconnect = false;
 
     else {
         if (label == "Active") {
+            if (!m_connected) {
+                return;
+            }
+
+            if (!m_readyToUpdate) {
+                QTimer::singleShot(200, this, [this] {
+                    updateSelected(m_lastSelected);
+                });
+                m_readyToUpdate = true;
+                return;
+            }
+
             QString activeValue = m_chooser->currentText();
             std::string activeValueStd = activeValue.toStdString();
 
             m_chooser->setCurrentText(QString::fromStdString(std::string{value.GetString()}));
+
+            m_lastSelected = m_chooser->currentText();
         }
 
         // this is an interesting way to do things
         else if (label == "Choices") {
+            QString selected = m_lastSelected;
             std::span<const std::string> choices = value.GetStringArray();
 
             m_chooser->clear();
@@ -78,15 +92,20 @@ void StringChooserWidget::setValue(const nt::Value &value, QString label, bool f
                 qchoices << QString::fromStdString(choice);
             }
             m_chooser->addItems(qchoices);
-            m_chooser->setCurrentText(m_value);
+            // m_chooser->setCurrentText(m_value);
+
+            updateSelected(selected);
         }
     }
 }
 
 void StringChooserWidget::updateSelected(const QString text) {
+    if (text.isEmpty() || text.isNull()) return;
     if (m_selected) m_selected->SetString(text.toStdString());
 
     m_lastSelected = text;
+
+    m_chooser->setCurrentText(text);
 
     QTimer *timer = new QTimer;
     timer->callOnTimeout([this, timer] {
@@ -116,11 +135,12 @@ void StringChooserWidget::updateSelected(const QString text) {
     timer->start(100);
 }
 
-void StringChooserWidget::reconnect() {
-    if (m_chooser->currentText().isEmpty()) {
-        return forceUpdate();
-    }
+void StringChooserWidget::setConnected(bool connected) {
+    BaseWidget::setConnected(connected);
 
-    m_reconnect = true;
-    updateSelected(m_lastSelected);
+    m_readyToUpdate = false;
+
+    if (connected) {
+        updateSelected(m_lastSelected);
+    }
 }

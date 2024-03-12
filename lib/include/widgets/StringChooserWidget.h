@@ -25,7 +25,8 @@ protected:
 
     qsizetype m_flashCounter = 0;
 
-    bool m_reconnect = false;
+    bool m_readyToUpdate = true;
+
     QString m_lastSelected = "";
 public:
     StringChooserWidget(const QString &topic = "", const QString &defaultValue = "", const QString &title = "");
@@ -33,7 +34,8 @@ public:
 
     void setTopic(const QString &topic) override;
     void setValue(const nt::Value &value, QString label = "", bool force = false) override;
-    void reconnect() override;
+
+    void setConnected(bool connected = true) override;
 
     inline static WidgetTypes WidgetType = WidgetTypes::SendableChooser;
     inline static TopicTypes TopicType = TopicTypes::SendableChooser;

@@ -9,6 +9,8 @@ class BaseWidget;
 class TextWidget : public BaseWidget
 {
     Q_OBJECT
+
+    Q_PROPERTY(QFont font READ font WRITE setFont)
 protected:
     QLineEdit *m_text;
 public:

@@ -86,7 +86,6 @@ public slots:
 
     // forced updates
     void forceUpdateWidgets();
-    void reconnect();
 
 signals:
     void dragDone(BaseWidget *widget, WidgetData data);
