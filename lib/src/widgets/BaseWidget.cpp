@@ -32,6 +32,8 @@
 BaseWidget::BaseWidget(const WidgetTypes &type, const QString &title, const QString &topic, const bool sendable)
     : QFrame()
 {
+    setFocusPolicy(Qt::ClickFocus);
+
     m_type = type;
     m_topic = topic;
     m_sendable = sendable;

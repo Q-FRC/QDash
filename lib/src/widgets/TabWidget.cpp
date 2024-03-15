@@ -7,6 +7,8 @@
 
 TabWidget::TabWidget(const QPoint &maxSize, QWidget *parent) : QWidget(parent)
 {
+    setFocusPolicy(Qt::ClickFocus);
+
     m_layout = new QGridLayout(this);
     m_gridLine = new GridLineWidget(this);
     m_gridLine->lower();
@@ -190,6 +192,8 @@ void TabWidget::loadObject(const QJsonObject &object) {
 /* DRAG AND DROP */
 
 void TabWidget::mousePressEvent(QMouseEvent *event) {
+    QWidget::mousePressEvent(event);
+
     BaseWidget *widgetPressed = nullptr;
 
     for (BaseWidget *widget : widgets())
@@ -202,6 +206,7 @@ void TabWidget::mousePressEvent(QMouseEvent *event) {
     }
 
     if (!widgetPressed) {
+
         return;
     }
     if (event->button() == Qt::RightButton) {

@@ -2,6 +2,7 @@
 #include "stores/TopicStore.h"
 
 #include <QApplication>
+#include <QKeyEvent>
 
 DoubleDialWidget::DoubleDialWidget(const QString &topic, const double &defaultValue, const QString &title) : DoubleDisplayWidget(topic, defaultValue, title, false) {
     setTopic(topic);
@@ -84,5 +85,7 @@ void DoubleDialWidget::keyPressEvent(QKeyEvent *event) {
         m_fakeValue = m_value * 100.;
 
         m_dial->setValue(m_fakeValue);
+    } else {
+        event->ignore();
     }
 }

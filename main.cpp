@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
             auto sendable = WidgetType::SendableName;
             auto name = WidgetType::DisplayName;
 
-            if (widget != WidgetTypes::None && topic != TopicTypes::None) {
+            if (widget != WidgetTypes::None) {
                 Globals::typeStore.registerType(topic, widget, name);
             }
 

@@ -1,4 +1,5 @@
 #include "widgets/StringDisplayWidget.h"
+#include "qevent.h"
 #include "stores/TopicStore.h"
 
 #include <QApplication>
@@ -34,5 +35,7 @@ void StringDisplayWidget::keyPressEvent(QKeyEvent *event) {
     if (m_text->hasFocus()) {
         if (m_entry) m_entry->SetString(m_text->text().toStdString());
         m_value = m_text->text();
+    } else {
+        event->ignore();
     }
 }

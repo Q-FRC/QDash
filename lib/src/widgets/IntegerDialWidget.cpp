@@ -2,6 +2,7 @@
 #include "stores/TopicStore.h"
 
 #include <QApplication>
+#include <QKeyEvent>
 
 IntegerDialWidget::IntegerDialWidget(const QString &topic, const int &defaultValue, const QString &title) : IntegerDisplayWidget(topic, defaultValue, title, false) {
     setTopic(topic);
@@ -78,5 +79,7 @@ void IntegerDialWidget::keyPressEvent(QKeyEvent *event) {
         m_value = m_text->text().toInt();
 
         m_dial->setValue(m_value);
+    } else {
+        event->ignore();
     }
 }

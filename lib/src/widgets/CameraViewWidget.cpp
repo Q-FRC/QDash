@@ -28,9 +28,10 @@ void CameraViewWidget::setUrl(const QUrl &url) {
 }
 
 void CameraViewWidget::forceUpdate() {
+    // setUrl(m_url);
     m_player->play();
 }
 
 void CameraViewWidget::setConnected(bool connected) {
-    if (connected) m_player->play();
+    if (connected) setUrl(m_url);
 }

@@ -135,6 +135,7 @@ void MainWindow::makeNewWidget(WidgetTypes type) {
         }
     } else {
         BaseWidget *widget = BaseWidget::defaultWidgetFromTopic("", type);
+
         widget->setTitle(Globals::typeStore.widgetDisplayName(type));
         WidgetData data{0, 0, 1, 1};
 

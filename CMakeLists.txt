@@ -103,6 +103,10 @@ endfunction()
 
 ccache_handle_debug_msvc()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+  set_property(TARGET QFRCDashboard PROPERTY WIN32_EXECUTABLE true)
+endif()
+
 include(GNUInstallDirs)
 install(TARGETS QFRCDashboard
     BUNDLE DESTINATION .

@@ -35,6 +35,8 @@ void DoubleDisplayWidget::keyPressEvent(QKeyEvent *event) {
     if (m_text->hasFocus()) {
         if (m_entry) m_entry->SetDouble(m_text->text().toDouble());
         m_value = m_text->text().toDouble();
+    } else {
+        event->ignore();
     }
 }
 

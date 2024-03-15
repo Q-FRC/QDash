@@ -33,6 +33,8 @@ void IntegerDisplayWidget::keyPressEvent(QKeyEvent *event) {
     if (m_text->hasFocus()) {
         if (m_entry) m_entry->SetInteger(m_text->text().toInt());
         m_value = m_text->text().toInt();
+    } else {
+        event->ignore();
     }
 }
 
