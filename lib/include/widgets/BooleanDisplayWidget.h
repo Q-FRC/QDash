@@ -19,7 +19,7 @@ protected:
 
     QColor m_trueColor = Qt::green;
     QColor m_falseColor = Qt::red;
-    Globals::FrameShape m_shape;
+    Globals::FrameShape m_shape = Globals::FrameShape::Rectangle;
 public:
     BooleanDisplayWidget(const QString &topic = "", const bool &defaultValue = false, const QString &title = "");
     ~BooleanDisplayWidget();

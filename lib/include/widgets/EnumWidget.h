@@ -17,7 +17,7 @@ protected:
     ShapedFrame *m_colorWidget;
 
     QVariantMap m_colors{};
-    Globals::FrameShape m_shape;
+    Globals::FrameShape m_shape = Globals::FrameShape::Rectangle;
 public:
     EnumWidget(const QString &topic = "", const QString &defaultValue = "", const QString &title = "");
     ~EnumWidget();
