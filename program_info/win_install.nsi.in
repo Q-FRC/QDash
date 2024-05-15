@@ -44,6 +44,14 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Carson Rueter"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "@Dashboard_GIT_TAG@"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "@Dashboard_GIT_TAG@"
 
+
+Section "Visual Studio Runtime"
+  SetOutPath "$INSTDIR"
+  File "..\vc_redist.x64.exe"
+  ExecWait "$INSTDIR\vc_redist.x64.exe"
+  Delete "$INSTDIR\vc_redist.x64.exe"
+SectionEnd
+
 ;--------------------------------
 
 ; The stuff to install

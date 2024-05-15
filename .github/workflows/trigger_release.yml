@@ -37,6 +37,7 @@ jobs:
           echo "VERSION=$tag_name" >> $GITHUB_ENV
 
       - name: Package artifacts properly
+        shell: bash
         run: |
           mv ${{ github.workspace }}/QFRCDashboard-source QFRCDashboard-${{ env.VERSION }}
           ls *
@@ -45,19 +46,14 @@ jobs:
           mv QFRCDashboard-Windows-Setup*/QFRCDashboard* QFRCDashboard-Windows-Setup-${{ env.VERSION }}.exe
 
           tar xf QFRCDashboard-macOS*/QFRCDashboard.tar.gz
-          mv QFRCDashboard.app QFRCDashboard-macOS-${{ env.VERSION }}.app
 
+          mv QFRCDashboard*.app QFRCDashboard-macOS-${{ env.VERSION }}.app
+
+          zip -r QFRCDashboard-macOS-${{ env.VERSION }}.zip QFRCDashboard-macOS-${{ env.VERSION }}.app
+          
           zip -r QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip QFRCDashboard-Windows-Portable*/* QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip
 
           tar -czf QFRCDashboard-${{ env.VERSION }}.tar.gz QFRCDashboard-${{ env.VERSION }}
-
-          # for d in QFRCDashboard-Windows-*; do
-          #   cd "${d}" || continue
-          #   PORT="$(echo -n ${d} | grep -o Portable || true)"
-          #   NAME="QFRCDashboard-Windows"
-          #   test -z "${PORT}" || NAME="${NAME}-Portable"
-          #   cd ..
-          # done
 
       - name: Create release
         id: create_release
@@ -73,4 +69,4 @@ jobs:
             QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip
             QFRCDashboard-${{ env.VERSION }}.tar.gz
             QFRCDashboard-Windows-Setup-${{ env.VERSION }}.exe
-            QFRCDashboard-macOS-${{ env.VERSION }}.app
+            QFRCDashboard-macOS-${{ env.VERSION }}.zip
