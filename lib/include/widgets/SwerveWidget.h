@@ -11,8 +11,8 @@ class SwerveWidget : public BaseWidget
     Q_PROPERTY(Globals::DoubleArrayTopic Location_Topic READ locationTopic WRITE setLocationTopic REQUIRED)
     Q_PROPERTY(Globals::DoubleArrayTopic States_Topic READ statesTopic WRITE setStatesTopic REQUIRED)
 private:
-    nt::NetworkTableEntry *m_locEntry;
-    nt::NetworkTableEntry *m_stateEntry;
+    nt::NetworkTableEntry m_locEntry;
+    nt::NetworkTableEntry m_stateEntry;
 
     QString m_locTopic = "";
     QString m_stateTopic = "";

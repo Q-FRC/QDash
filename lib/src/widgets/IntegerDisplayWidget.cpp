@@ -18,7 +18,7 @@ IntegerDisplayWidget::~IntegerDisplayWidget() {
 
 void IntegerDisplayWidget::setTopic(const QString &topic) {
     m_topic = topic;
-    if (m_entry) TopicStore::unsubscribe(m_topic, this);
+    TopicStore::unsubscribe(m_topic, this);
     m_entry = TopicStore::subscribe(topic.toStdString(), this, NT_INTEGER);
 }
 
@@ -31,7 +31,7 @@ void IntegerDisplayWidget::setValue(const nt::Value &value, QString label, bool 
 
 void IntegerDisplayWidget::keyPressEvent(QKeyEvent *event) {
     if (m_text->hasFocus()) {
-        if (m_entry) m_entry->SetInteger(m_text->text().toInt());
+        m_entry.SetInteger(m_text->text().toInt());
         m_value = m_text->text().toInt();
     } else {
         event->ignore();

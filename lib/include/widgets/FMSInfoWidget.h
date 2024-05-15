@@ -61,13 +61,13 @@ private:
 
     QLabel *m_controlLabel;
 
-    nt::NetworkTableEntry *m_event;
-    nt::NetworkTableEntry *m_controlWord;
-    nt::NetworkTableEntry *m_gameSpecificMessage;
-    nt::NetworkTableEntry *m_redAlliance;
-    nt::NetworkTableEntry *m_matchNumber;
-    nt::NetworkTableEntry *m_matchType;
-    nt::NetworkTableEntry *m_allianceStation;
+    nt::NetworkTableEntry m_event;
+    nt::NetworkTableEntry m_controlWord;
+    nt::NetworkTableEntry m_gameSpecificMessage;
+    nt::NetworkTableEntry m_redAlliance;
+    nt::NetworkTableEntry m_matchNumber;
+    nt::NetworkTableEntry m_matchType;
+    nt::NetworkTableEntry m_allianceStation;
 public:
     FMSInfoWidget(const QString &table = "", const QString &title = "");
     virtual ~FMSInfoWidget();

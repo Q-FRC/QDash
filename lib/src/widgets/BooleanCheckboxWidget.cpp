@@ -14,7 +14,7 @@ BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &topic, const bool &d
     m_layout->addWidget(m_checkbox, 1, 0, 3, 1, Qt::AlignHCenter);
 
     connect(m_checkbox, &QCheckBox::stateChanged, this, [this](int state) {
-        if (m_entry) m_entry->SetBoolean(state == Qt::Checked);
+        m_entry.SetBoolean(state == Qt::Checked);
         m_value = state == Qt::Checked;
     });
 
@@ -39,7 +39,7 @@ void BooleanCheckboxWidget::setTopic(const QString &topic) {
 
 
     m_topic = topic;
-    if (m_entry) TopicStore::unsubscribe(m_topic, this);
+    TopicStore::unsubscribe(m_topic, this);
     m_entry = TopicStore::subscribe(topic.toStdString(), this, NT_BOOLEAN);
 }
 

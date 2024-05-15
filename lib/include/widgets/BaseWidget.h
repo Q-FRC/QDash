@@ -40,7 +40,7 @@ protected:
     bool m_sendable = false;
     bool m_connected = true;
 
-    nt::NetworkTableEntry *m_entry;
+    nt::NetworkTableEntry m_entry;
 public:
     explicit BaseWidget(const WidgetTypes &type = WidgetTypes::StringDisplay, const QString &title = "", const QString &topic = "", const bool sendable = false);
     ~BaseWidget();

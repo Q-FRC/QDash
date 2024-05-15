@@ -28,10 +28,10 @@ StringChooserWidget::~StringChooserWidget() {
 void StringChooserWidget::setTopic(const QString &topic) {
     m_topic = topic;
 
-    if (m_active != nullptr) TopicStore::unsubscribe(topic.toStdString() + "/active", this);
-    if (m_default != nullptr) TopicStore::unsubscribe(topic.toStdString() + "/default", this);
-    if (m_choices != nullptr) TopicStore::unsubscribe(topic.toStdString() + "/options", this);
-    if (m_selected != nullptr) TopicStore::unsubscribe(topic.toStdString() + "/selected", this);
+    TopicStore::unsubscribe(topic.toStdString() + "/active", this);
+    TopicStore::unsubscribe(topic.toStdString() + "/default", this);
+    TopicStore::unsubscribe(topic.toStdString() + "/options", this);
+    TopicStore::unsubscribe(topic.toStdString() + "/selected", this);
 
     m_active = TopicStore::subscribe(topic.toStdString() + "/active", this, NT_STRING, "Active");
     m_default = TopicStore::subscribe(topic.toStdString() + "/default", this, NT_STRING, "Default", true);
@@ -101,7 +101,7 @@ void StringChooserWidget::setValue(const nt::Value &value, QString label, bool f
 
 void StringChooserWidget::updateSelected(const QString text) {
     if (text.isEmpty() || text.isNull()) return;
-    if (m_selected) m_selected->SetString(text.toStdString());
+    m_selected.SetString(text.toStdString());
 
     m_lastSelected = text;
 
@@ -109,7 +109,7 @@ void StringChooserWidget::updateSelected(const QString text) {
 
     QTimer *timer = new QTimer;
     timer->callOnTimeout([this, timer] {
-        if (m_active->GetString(m_lastSelected.toStdString()) != m_lastSelected.toStdString()) {
+        if (m_active.GetString(m_lastSelected.toStdString()) != m_lastSelected.toStdString()) {
             if (m_flashCounter == 0) {
                 setStyleSheet("BaseWidget { background-color: red; }");
             }

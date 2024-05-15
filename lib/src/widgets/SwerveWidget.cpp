@@ -25,7 +25,8 @@ SwerveWidget::~SwerveWidget() {
 }
 
 void SwerveWidget::setLocationTopic(const Globals::DoubleArrayTopic &topic) {
-    if (m_locEntry) TopicStore::unsubscribe(m_locTopic.toStdString(), this);
+    TopicStore::unsubscribe(m_locTopic.toStdString(), this);
+
     m_locEntry = TopicStore::subscribe(topic.Name.toStdString(), this, NT_DOUBLE_ARRAY, "Locations");
     m_locTopic = topic.Name;
 
@@ -37,7 +38,8 @@ Globals::DoubleArrayTopic SwerveWidget::locationTopic() {
 }
 
 void SwerveWidget::setStatesTopic(const Globals::DoubleArrayTopic &topic) {
-    if (m_stateEntry) TopicStore::unsubscribe(m_stateTopic.toStdString(), this);
+    TopicStore::unsubscribe(m_stateTopic.toStdString(), this);
+
     m_stateEntry = TopicStore::subscribe(topic.Name.toStdString(), this, NT_DOUBLE_ARRAY, "States");
     m_stateTopic = topic.Name;
 
@@ -57,7 +59,7 @@ void SwerveWidget::setValue(const nt::Value &value, QString label, bool force) {
         QMapIterator iter(map);
         while (iter.hasNext()) {
             iter.next();
-            TopicStore::updateTopic(m_topic.toStdString() + iter.key(), this, iter.value());
+            TopicStore::updateTopic(iter.key(), this, iter.value());
         }
 
         return;

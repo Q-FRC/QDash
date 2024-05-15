@@ -26,7 +26,7 @@ class GraphWidget : public BaseWidget
 private:
     QHash<Globals::Topic, QColor> m_topics{};
 
-    QHash<Globals::Topic, nt::NetworkTableEntry *> m_entryMap;
+    QHash<Globals::Topic, nt::NetworkTableEntry> m_entryMap;
     QHash<Globals::Topic, QLineSeries *> m_seriesMap;
 
     QTimer *m_timer;
@@ -47,7 +47,7 @@ private:
 
     Globals::GraphXAxis m_xAxisData{true, ""};
 
-    nt::NetworkTableEntry *m_xAxisEntry;
+    nt::NetworkTableEntry m_xAxisEntry;
 
     void mouseReleaseEvent(QMouseEvent *event) override;
 

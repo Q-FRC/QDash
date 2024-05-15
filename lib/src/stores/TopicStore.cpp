@@ -6,7 +6,7 @@
 #include "Globals.h"
 
 QList<Listener> TopicStore::Listeners{};
-QHash<std::string, nt::NetworkTableEntry *> TopicStore::topicEntryMap{};
+QHash<std::string, nt::NetworkTableEntry> TopicStore::topicEntryMap{};
 
 TopicStore::TopicStore()
 {
@@ -60,16 +60,16 @@ bool Listener::operator==(const Listener &other) const {
            (other.isNull == this->isNull);
 }
 
-nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *subscriber, NT_Type desiredType, QString label, bool writeOnly) {
+nt::NetworkTableEntry TopicStore::subscribe(std::string ntTopic, BaseWidget *subscriber, NT_Type desiredType, QString label, bool writeOnly) {
     Listener listener;
-    nt::NetworkTableEntry *entry = nullptr;
+    nt::NetworkTableEntry entry;
     if (!hasEntry(ntTopic)) {
-        entry = new nt::NetworkTableEntry(nt::GetEntry(Globals::inst.GetHandle(), ntTopic));
+        entry = Globals::inst.GetEntry(ntTopic);
 
         topicEntryMap.insert(ntTopic, entry);
+    } else {
+        entry = topicEntryMap.value(ntTopic);
     }
-
-    if (entry == nullptr) entry = topicEntryMap.value(ntTopic);
 
     listener = {
         ntTopic,
@@ -84,7 +84,7 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
 
     if (!writeOnly) {
         nt::ListenerCallback updateWidget = [entry, subscriber, desiredType, label, ntTopic](const nt::Event &event = nt::Event()) {
-            if (!subscriber || !entry) {
+            if (!subscriber) {
                 return;
             }
 
@@ -106,7 +106,7 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
 
             nt::Value value;
             if (!event.Is(nt::EventFlags::kValueAll)) {
-                value = entry->GetValue();
+                value = entry.GetValue();
             } else {
                 value = event.GetValueEventData()->value;
             }
@@ -164,7 +164,7 @@ void TopicStore::unsubscribe(std::string ntTopic, BaseWidget *subscriber) {
     Listeners.removeOne(listener);
 
     if (!hasEntry(ntTopic)) {
-        if (listener.entry) listener.entry->Unpublish();
+        listener.entry.Unpublish();
         topicEntryMap.remove(ntTopic);
     }
 
@@ -175,19 +175,19 @@ void TopicStore::unsubscribe(QString ntTopic, BaseWidget *subscriber) {
     unsubscribe(ntTopic.toStdString(), subscriber);
 }
 
-void TopicStore::unsubscribe(nt::NetworkTableEntry *entry, BaseWidget *subscriber) {
-    unsubscribe(entry->GetName(), subscriber);
+void TopicStore::unsubscribe(nt::NetworkTableEntry entry, BaseWidget *subscriber) {
+    unsubscribe(entry.GetName(), subscriber);
 }
 
-double TopicStore::getDoubleFromEntry(nt::NetworkTableEntry *entry) {
-    nt::Value value = entry->GetValue();
+double TopicStore::getDoubleFromEntry(nt::NetworkTableEntry entry) {
+    nt::Value value = entry.GetValue();
 
     if (value.IsBoolean()) {
-        return (double) entry->GetBoolean(0);
+        return (double) entry.GetBoolean(0);
     } else if (value.IsDouble()) {
-        return entry->GetDouble(0.);
+        return entry.GetDouble(0.);
     } else if (value.IsInteger()) {
-        return (double) entry->GetInteger(0);
+        return (double) entry.GetInteger(0);
     }
 
     return 0.;

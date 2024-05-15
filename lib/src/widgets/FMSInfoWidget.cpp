@@ -84,13 +84,13 @@ FMSInfoWidget::~FMSInfoWidget() {
 void FMSInfoWidget::setTopic(const QString &topic) {
     m_topic = topic;
 
-    if (m_event) TopicStore::unsubscribe(topic.toStdString() + "/EventName", this);
-    if (m_controlWord) TopicStore::unsubscribe(topic.toStdString() + "/FMSControlData", this);
-    if (m_gameSpecificMessage) TopicStore::unsubscribe(topic.toStdString() + "/GameSpecificMessage", this);
-    if (m_redAlliance) TopicStore::unsubscribe(topic.toStdString() + "/IsRedAlliance", this);
-    if (m_matchNumber) TopicStore::unsubscribe(topic.toStdString() + "/MatchNumber", this);
-    if (m_matchType) TopicStore::unsubscribe(topic.toStdString() + "/MatchType", this);
-    if (m_allianceStation) TopicStore::unsubscribe(topic.toStdString() + "/StationNumber", this);
+    TopicStore::unsubscribe(topic.toStdString() + "/EventName", this);
+    TopicStore::unsubscribe(topic.toStdString() + "/FMSControlData", this);
+    TopicStore::unsubscribe(topic.toStdString() + "/GameSpecificMessage", this);
+    TopicStore::unsubscribe(topic.toStdString() + "/IsRedAlliance", this);
+    TopicStore::unsubscribe(topic.toStdString() + "/MatchNumber", this);
+    TopicStore::unsubscribe(topic.toStdString() + "/MatchType", this);
+    TopicStore::unsubscribe(topic.toStdString() + "/StationNumber", this);
 
     m_event = TopicStore::subscribe(topic.toStdString() + "/EventName", this, NT_STRING, "Event");
     m_controlWord = TopicStore::subscribe(topic.toStdString() + "/FMSControlData", this, NT_INTEGER, "Control");
@@ -123,18 +123,18 @@ void FMSInfoWidget::setValue(const nt::Value &value, QString label, bool force) 
     }
 
     if (label == "Event") {
-        m_eventString = QString::fromStdString(m_event->GetString("Unknown"));
+        m_eventString = QString::fromStdString(m_event.GetString("Unknown"));
         m_eventLabel->setText("Event: " + m_eventString);
     }
 
     if (label == "GSM") {
-        m_gsm = QString::fromStdString(m_gameSpecificMessage->GetString("Unknown"));
+        m_gsm = QString::fromStdString(m_gameSpecificMessage.GetString("Unknown"));
         m_gsmLabel->setText("Game Specific Message: " + m_gsm);
     }
 
     if (label == "Station Number" || label == "Red Alliance") {
-        int station = m_allianceStation->GetInteger(1);
-        if (!m_redAlliance->GetBoolean(false)) {
+        int station = m_allianceStation.GetInteger(1);
+        if (!m_redAlliance.GetBoolean(false)) {
             station += 3;
         }
 
@@ -143,8 +143,8 @@ void FMSInfoWidget::setValue(const nt::Value &value, QString label, bool force) 
     }
 
     if (label == "Match Number" || label == "Match Type") {
-        m_number = m_matchNumber->GetInteger(0);
-        m_type = (MatchType) m_matchType->GetInteger(0);
+        m_number = m_matchNumber.GetInteger(0);
+        m_type = (MatchType) m_matchType.GetInteger(0);
 
         m_matchLabel->setText("Match: " +
                               MatchTypeNames.value(m_type) +
@@ -153,7 +153,7 @@ void FMSInfoWidget::setValue(const nt::Value &value, QString label, bool force) 
     }
 
     if (label == "Control") {
-        m_word = (ControlWord) m_controlWord->GetInteger(0);
+        m_word = (ControlWord) m_controlWord.GetInteger(0);
         ControlFlags flags(m_word);
 
         QString state = "Robot State: ";

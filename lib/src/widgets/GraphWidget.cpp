@@ -82,7 +82,7 @@ void GraphWidget::setTopics(QHash<Globals::NumberTopic, QColor> topics) {
         Globals::Topic topic = iter.key();
 
         if (!m_topics.contains(topic)) {
-            nt::NetworkTableEntry *entry = TopicStore::subscribe(topic.Name.toStdString(), this, NT_UNASSIGNED, topic.Name, true);
+            nt::NetworkTableEntry entry = TopicStore::subscribe(topic.Name.toStdString(), this, NT_UNASSIGNED, topic.Name, true);
 
             m_entryMap.insert(topic, entry);
 
@@ -157,7 +157,7 @@ void GraphWidget::setXAxisData(const Globals::GraphXAxis &axis) {
             m_elapsed.restart();
         }
 
-        if (m_xAxisEntry != nullptr) TopicStore::unsubscribe(m_xAxisData.topic.toStdString(), this);
+        TopicStore::unsubscribe(m_xAxisData.topic.toStdString(), this);
         m_xAxisEntry = TopicStore::subscribe(axis.topic.toStdString(), this, NT_UNASSIGNED, axis.topic, true);
 
         for (QLineSeries *series : m_seriesMap.values()) series->clear();
@@ -201,7 +201,7 @@ void GraphWidget::updateGraph() {
         iter.next();
         Globals::Topic topic = iter.key();
 
-        nt::NetworkTableEntry *entry = m_entryMap.value(topic);
+        nt::NetworkTableEntry entry = m_entryMap.value(topic);
         QLineSeries *series = m_seriesMap.value(topic);
 
         double value = TopicStore::getDoubleFromEntry(entry);

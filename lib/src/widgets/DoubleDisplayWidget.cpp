@@ -17,10 +17,8 @@ DoubleDisplayWidget::~DoubleDisplayWidget() {
 }
 
 void DoubleDisplayWidget::setTopic(const QString &topic) {
-
-
     m_topic = topic;
-    if (m_entry) TopicStore::unsubscribe(m_topic, this);
+    TopicStore::unsubscribe(m_topic, this);
     m_entry = TopicStore::subscribe(topic.toStdString(), this, NT_DOUBLE);
 }
 
@@ -33,7 +31,7 @@ void DoubleDisplayWidget::setValue(const nt::Value &value, QString label, bool f
 
 void DoubleDisplayWidget::keyPressEvent(QKeyEvent *event) {
     if (m_text->hasFocus()) {
-        if (m_entry) m_entry->SetDouble(m_text->text().toDouble());
+        m_entry.SetDouble(m_text->text().toDouble());
         m_value = m_text->text().toDouble();
     } else {
         event->ignore();

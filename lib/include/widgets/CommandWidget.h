@@ -12,8 +12,8 @@ protected:
 
     Q_PROPERTY(QString Topic READ topic WRITE setTopic REQUIRED)
 
-    nt::NetworkTableEntry *m_name;
-    nt::NetworkTableEntry *m_running;
+    nt::NetworkTableEntry m_name;
+    nt::NetworkTableEntry m_running;
 public:
     CommandWidget(const QString &topic = "", const QString &title = "");
     ~CommandWidget();

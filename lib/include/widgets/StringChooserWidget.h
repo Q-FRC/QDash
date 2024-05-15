@@ -16,10 +16,10 @@ class StringChooserWidget : public BaseWidget
 protected:
     QString m_value = "";
 
-    nt::NetworkTableEntry *m_active;
-    nt::NetworkTableEntry *m_default;
-    nt::NetworkTableEntry *m_choices;
-    nt::NetworkTableEntry *m_selected;
+    nt::NetworkTableEntry m_active;
+    nt::NetworkTableEntry m_default;
+    nt::NetworkTableEntry m_choices;
+    nt::NetworkTableEntry m_selected;
 
     QComboBox *m_chooser;
 

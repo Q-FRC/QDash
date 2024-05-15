@@ -21,7 +21,7 @@ DoubleDialWidget::DoubleDialWidget(const QString &topic, const double &defaultVa
     m_layout->addWidget(m_text, 3, 0);
 
     connect(m_dial, &BetterDial::sliderMoved, this, [this](int position) {
-        if (m_entry) m_entry->SetDouble(position / 100.);
+        m_entry.SetDouble(position / 100.);
         m_text->setText(QString::number(position / 100.));
     });
     setReady(true);
@@ -59,10 +59,8 @@ void DoubleDialWidget::setStartingAngle(double angle) {
 }
 
 void DoubleDialWidget::setTopic(const QString &topic) {
-    
-
     m_topic = topic;
-    if (m_entry) TopicStore::unsubscribe(m_topic, this);
+    TopicStore::unsubscribe(m_topic, this);
     m_entry = TopicStore::subscribe(topic.toStdString(), this, NT_DOUBLE);
 }
 
@@ -80,7 +78,7 @@ void DoubleDialWidget::setValue(const nt::Value &value, QString label, bool forc
 
 void DoubleDialWidget::keyPressEvent(QKeyEvent *event) {
     if (m_text->hasFocus()) {
-        if (m_entry) m_entry->SetDouble(m_text->text().toDouble());
+        m_entry.SetDouble(m_text->text().toDouble());
         m_value = m_text->text().toDouble();
         m_fakeValue = m_value * 100.;
 

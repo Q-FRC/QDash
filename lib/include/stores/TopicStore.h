@@ -13,7 +13,7 @@ class BaseWidget;
 struct Listener {
     std::string topic;
     QString label;
-    nt::NetworkTableEntry *entry;
+    nt::NetworkTableEntry entry;
     BaseWidget *subscriber;
     NT_Listener listenerHandle;
     nt::ListenerCallback callback;
@@ -37,17 +37,17 @@ private:
     static Listener getEntry(QString topic, BaseWidget *subscriber);
 public:
     static QList<Listener> Listeners;
-    static QHash<std::string, nt::NetworkTableEntry *> topicEntryMap;
+    static QHash<std::string, nt::NetworkTableEntry> topicEntryMap;
 
     TopicStore();
 
-    static nt::NetworkTableEntry *subscribe(std::string ntTopic, BaseWidget *subscriber, NT_Type desiredType = NT_UNASSIGNED, QString label = "", bool writeOnly = false);
+    static nt::NetworkTableEntry subscribe(std::string ntTopic, BaseWidget *subscriber, NT_Type desiredType = NT_UNASSIGNED, QString label = "", bool writeOnly = false);
 
     static void unsubscribe(std::string ntTopic, BaseWidget *subscriber);
     static void unsubscribe(QString ntTopic, BaseWidget *subscriber);
-    static void unsubscribe(nt::NetworkTableEntry *entry, BaseWidget *subscriber);
+    static void unsubscribe(nt::NetworkTableEntry entry, BaseWidget *subscriber);
 
-    static double getDoubleFromEntry(nt::NetworkTableEntry *entry);
+    static double getDoubleFromEntry(nt::NetworkTableEntry entry);
 
     static void updateTopic(std::string topic, BaseWidget *subscriber, QString label);
 };

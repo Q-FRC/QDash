@@ -8,11 +8,11 @@ CommandWidget::CommandWidget(const QString &topic, const QString &title) : BaseW
 {
     setTopic(topic);
 
-    m_button = new QPushButton(QString::fromStdString(m_name->GetString("Command")), this);
+    m_button = new QPushButton(QString::fromStdString(m_name.GetString("Command")), this);
 
     connect(m_button, &QPushButton::clicked, this, [this](bool) {
-        bool value = m_running->GetBoolean(false);
-        m_running->SetBoolean(!value);
+        bool value = m_running.GetBoolean(false);
+        m_running.SetBoolean(!value);
     });
 
     m_layout->addWidget(m_button, 1, 0, 3, 1);
@@ -26,12 +26,10 @@ CommandWidget::~CommandWidget() {
 }
 
 void CommandWidget::setTopic(const QString &topic) {
-
-
     m_topic = topic;
 
-    if (m_name != nullptr) TopicStore::unsubscribe(topic.toStdString() + "/.name", this);
-    if (m_running != nullptr) TopicStore::unsubscribe(topic.toStdString() + "/.running", this);
+    TopicStore::unsubscribe(topic.toStdString() + "/.name", this);
+    TopicStore::unsubscribe(topic.toStdString() + "/.running", this);
 
     m_name = TopicStore::subscribe(topic.toStdString() + "/.name", this, NT_STRING, "Name");
     m_running = TopicStore::subscribe(topic.toStdString() + "/running", this, NT_BOOLEAN, "Running", true);

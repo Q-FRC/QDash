@@ -42,10 +42,9 @@ void BooleanDisplayWidget::setShape(Globals::FrameShape shape) {
 }
 
 void BooleanDisplayWidget::setTopic(const QString &topic) {
-
-
     m_topic = topic;
-    if (m_entry) TopicStore::unsubscribe(m_topic, this);
+    TopicStore::unsubscribe(m_topic, this);
+
     m_entry = TopicStore::subscribe(topic.toStdString(), this, NT_BOOLEAN);
 }
 
