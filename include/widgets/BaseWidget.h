@@ -5,13 +5,14 @@
 #include <QWidget>
 #include <QLabel>
 #include <QGridLayout>
+#include <QLineEdit>
 
 class BaseWidget : public QWidget
 {
 protected:
     QGridLayout *m_layout;
 
-    QLabel *m_title;
+    QLineEdit *m_title;
 
     nt::NetworkTableEntry m_entry;
 public:

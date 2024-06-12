@@ -1,12 +1,7 @@
 #pragma once
 
 #include "widgets/BaseWidget.h"
-#include "widgets/NumberDisplayWidget.h"
-#include "widgets/StringDisplayWidget.h"
-#include "widgets/BooleanDisplayWidget.h"
 #include "widgets/TabWidget.h"
-
-#include "ntcore.h"
 
 #include <QMainWindow>
 #include <QLabel>
@@ -20,6 +15,7 @@
 
 class MainWindow : public QMainWindow
 {
+    Q_OBJECT
 private:
     QTabWidget *m_centralWidget;
     QStackedLayout *m_layout;
@@ -40,6 +36,8 @@ private:
     QMap<BaseWidget *, QList<int>> m_widgets;
 
     bool m_needsRelay = true;
+
+    void mousePressEvent(QMouseEvent *event);
 public:
     MainWindow();
     virtual ~MainWindow();
@@ -48,5 +46,6 @@ public:
     void setNeedsRelay(bool needsRelay);
     QList<int> getWidgetData(BaseWidget *widget);
 
-    void mousePressEvent(QMouseEvent *event);
+public slots:
+    void newWidget(std::string topic, nt::NetworkTableType type, QString name, QColor trueColor, QColor falseColor, QList<int> widgetData);
 };

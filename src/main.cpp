@@ -20,9 +20,12 @@ int main(int argc, char **argv) {
 
     window->show();
 
-    Globals::inst.AddListener({{"/"}}, nt::EventFlags::kTopic, [] (const nt::Event &event) {
+    Globals::inst.AddListener({{""}}, nt::EventFlags::kTopic, [] (const nt::Event &event) {
         if (event.Is(nt::EventFlags::kPublish)) {
-            qDebug() << "Published" << QString::fromStdString(event.GetTopicInfo()->name);
+            Globals::availableTopics.append(QString::fromStdString(event.GetTopicInfo()->name));
+        }
+        if (event.Is(nt::EventFlags::kUnpublish)) {
+            Globals::availableTopics.removeOne(QString::fromStdString(event.GetTopicInfo()->name));
         }
     });
 

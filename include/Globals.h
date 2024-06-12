@@ -7,4 +7,5 @@
 namespace Globals {
     extern nt::NetworkTableInstance inst;
     extern QString server;
+    extern QStringList availableTopics;
 }

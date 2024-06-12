@@ -31,14 +31,17 @@ ResizeDialog::ResizeDialog(QList<int> widgetData) {
 
     m_layout->addRow(m_columnSpanLabel, m_columnSpanInput);
 
-    m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok, this);
+    m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
     m_layout->addWidget(m_buttonBox);
 
     connect(m_buttonBox, &QDialogButtonBox::accepted, [this]() {
         QList<int> data({m_rowInput->value(), m_columnInput->value(), m_rowSpanInput->value(), m_columnSpanInput->value()});
         emit finished(data);
+        close();
     });
+
+    connect(m_buttonBox, &QDialogButtonBox::rejected, m_buttonBox, &QDialogButtonBox::close);
 }
 
 ResizeDialog::~ResizeDialog() {}

@@ -8,7 +8,6 @@ NewWidgetDialog::NewWidgetDialog(std::string ntTopic)
 {
     m_entry = Globals::inst.GetEntry(ntTopic);
     nt::NetworkTableType type = m_entry.GetType();
-    qDebug() << m_entry.Exists();
 
     m_isBooleanDisplay = (type == nt::NetworkTableType::kBoolean);
 
@@ -80,18 +79,18 @@ NewWidgetDialog::NewWidgetDialog(std::string ntTopic)
     m_rowSpanLabel = new QLabel("Row Span:", this);
     m_rowSpanInput = new QSpinBox(this);
     m_rowSpanInput->setRange(0, 1000);
-    m_rowSpanInput->setValue(0);
+    m_rowSpanInput->setValue(1);
 
     m_layout->addRow(m_rowSpanLabel, m_rowSpanInput);
 
     m_columnSpanLabel = new QLabel("Column Span:", this);
     m_columnSpanInput = new QSpinBox(this);
     m_columnSpanInput->setRange(0, 1000);
-    m_columnSpanInput->setValue(0);
+    m_columnSpanInput->setValue(1);
 
     m_layout->addRow(m_columnSpanLabel, m_columnSpanInput);
 
-    m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok, this);
+    m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
     m_layout->addWidget(m_buttonBox);
 
@@ -101,9 +100,11 @@ NewWidgetDialog::NewWidgetDialog(std::string ntTopic)
         QColor falseColor = m_isBooleanDisplay ? m_falseColorEdit->text() : QColor(Qt::red).name();
         QList<int> data({m_rowInput->value(), m_columnInput->value(), m_rowSpanInput->value(), m_columnSpanInput->value()});
 
-        qDebug() << "helo";
         emit dataReady(ntTopic, type, name, trueColor, falseColor, data);
+        close();
     });
+
+    connect(m_buttonBox, &QDialogButtonBox::rejected, m_buttonBox, &QDialogButtonBox::close);
 }
 
 NewWidgetDialog::~NewWidgetDialog() {

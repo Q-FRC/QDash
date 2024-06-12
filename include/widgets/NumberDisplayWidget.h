@@ -6,9 +6,11 @@ class NumberDisplayWidget : public TextWidget
 {
 protected:
     double m_value;
+
+    void keyPressEvent(QKeyEvent *event) override;
 public:
     NumberDisplayWidget(const QString &title, const double &defaultValue, const QString &topic);
     virtual ~NumberDisplayWidget();
 
-    void update();
+    void update() override;
 };

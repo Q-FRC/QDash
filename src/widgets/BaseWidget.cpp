@@ -6,7 +6,7 @@
 BaseWidget::BaseWidget(const QString &title, const QString &topic)
 {
     m_layout = new QGridLayout(this);
-    m_title = new QLabel(title, this);
+    m_title = new QLineEdit(title, this);
     m_entry = Globals::inst.GetEntry(topic.toStdString());
 
     setStyleSheet("background-color: white; border: 2px solid yellow; color: black;");

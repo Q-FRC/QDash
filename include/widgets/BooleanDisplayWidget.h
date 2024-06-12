@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TextWidget.h"
+#include "BaseWidget.h"
 
 #include <QFrame>
 
