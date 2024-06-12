@@ -13,7 +13,6 @@
 - Should be infinitely configurable; at least 50 value-color combos.
 
 # Bool Widgets
-- Make checkbox clearer (theming?)
 - Edit checkbox size
 - Edit true/false colors
 

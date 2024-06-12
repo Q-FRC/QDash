@@ -5,8 +5,11 @@ BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &title, const bool &d
     m_value = defaultValue;
 
     m_checkbox = new QCheckBox(this);
+    m_checkbox->setObjectName("checkboxWidget");
 
     m_checkbox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    m_checkbox->setStyleSheet("QCheckBox::indicator:unchecked { width: 30px; height: 30px; } QCheckBox::indicator:checked { width: 30px; height: 30px; }");
 
     m_layout->addWidget(m_checkbox, 1, 0, Qt::AlignHCenter);
 

@@ -85,9 +85,5 @@ int main(int argc, char **argv) {
     });
     timer->start(100);
 
-    QObject::connect(&app, &QApplication::aboutToQuit, window, [window] {
-        qDebug() << window->saveObject().toJson().toStdString();
-    });
-
     return app.exec();
 }

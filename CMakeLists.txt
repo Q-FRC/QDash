@@ -70,7 +70,6 @@ set(PROJECT_SOURCES
         include/misc/NewWidgetListDialog.h
         include/misc/ResizeDialog.h
 
-
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
