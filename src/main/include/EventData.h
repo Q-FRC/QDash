@@ -11,12 +11,22 @@
 #include <QJsonDocument>
 #include <QLabel>
 
+inline void swap(QJsonValueRef v1, QJsonValueRef v2)
+{
+    QJsonValue temp(v1);
+    v1 = QJsonValue(v2);
+    v2 = temp;
+}
 
 class EventData : public QWidget
 {
 private:
     QLabel *redLabel(int row, int column);
     QLabel *blueLabel(int row, int column);
+
+    const QJsonArray sortedMatches(QJsonArray matches);
+    void setTeamNumbers(const QJsonValue match, QList<QLabel *> redTeamLabels, QList<QLabel *> blueTeamLabels);
+    void setMatchScore(const QJsonValue match, QLabel *redScoreLabel, QLabel *blueScoreLabel);
 
     QNetworkAccessManager *m_manager;
 
@@ -32,17 +42,17 @@ private:
     QGridLayout *m_lastMatchLayout;
     QLabel *m_lastMatchCode;
 
-    QList<QLabel *> m_redTeams;
-    QLabel *m_red1Team;
-    QLabel *m_red2Team;
-    QLabel *m_red3Team;
-    QLabel *m_redScore;
+    QList<QLabel *> m_lastRedTeams;
+    QLabel *m_lastRed1Team;
+    QLabel *m_lastRed2Team;
+    QLabel *m_lastRed3Team;
+    QLabel *m_lastRedScore;
 
-    QList<QLabel *> m_blueTeams;
-    QLabel *m_blue1Team;
-    QLabel *m_blue2Team;
-    QLabel *m_blue3Team;
-    QLabel *m_blueScore;
+    QList<QLabel *> m_lastBlueTeams;
+    QLabel *m_lastBlue1Team;
+    QLabel *m_lastBlue2Team;
+    QLabel *m_lastBlue3Team;
+    QLabel *m_lastBlueScore;
 public:
     EventData();
 

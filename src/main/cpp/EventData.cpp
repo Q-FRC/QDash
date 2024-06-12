@@ -8,6 +8,8 @@
 #include <QNetworkReply>
 #include <QJsonArray>
 
+#include <algorithm>
+
 // Set the label's font size.
 void setFontSize(QLabel *label, int pixelSize)
 {
@@ -30,6 +32,12 @@ void setFontUnderline(QLabel *label)
     QFont font = label->font();
     font.setUnderline(true);
     label->setFont(font);
+}
+
+// Set the label's font color. (use hex color, i.e. #EEEEFF)
+void setFontColor(QLabel *label, QString color)
+{
+    label->setStyleSheet("color: " + color + ";");
 }
 
 // Gets a QLabel for a red team/score and adds it to the match layout at the specified position.
@@ -58,10 +66,101 @@ QLabel *EventData::blueLabel(int row, int column)
     return label;
 }
 
-// Set the label's font color. (use hex color, i.e. #EEEEFF)
-void setFontColor(QLabel *label, QString color)
+// Sort matches by time, earliest first.
+const QJsonArray EventData::sortedMatches(QJsonArray matches)
 {
-    label->setStyleSheet("color: " + color + ";");
+
+    std::sort(matches.begin(), matches.end(), [](const QJsonValue &value1, const QJsonValue &value2)
+              {
+                  return value1["time"].toInteger() < value2["time"].toInteger();
+              });
+
+    return matches;
+}
+
+// Set the specified list of labels to use the team numbers for a match.
+void EventData::setTeamNumbers(const QJsonValue match, QList<QLabel *> redTeamLabels, QList<QLabel *> blueTeamLabels)
+{
+    // Alliances
+    const QJsonValue alliances = match["alliances"];
+    const QJsonValue red = alliances["red"];
+    const QJsonValue blue = alliances["blue"];
+
+    const QString winningAlliance = match["winning_alliance"].toString();
+
+    // Teams
+    // Red
+    const QJsonArray redTeams = red["team_keys"].toArray();
+
+    for (qsizetype i = 0; i < redTeams.size(); ++i)
+    {
+        QString key = redTeams[i].toString();
+        QLabel *label = redTeamLabels[i];
+
+        if (label == nullptr)
+        {
+            continue;
+        }
+
+        label->setText(key.mid(3, 5));
+
+        if (key == Constants::TEAM_NUMBER)
+        {
+            setFontUnderline(label);
+        }
+
+        if (winningAlliance == "red")
+        {
+            setFontBold(label);
+        }
+    }
+
+    // blue
+    const QJsonArray blueTeams = blue["team_keys"].toArray();
+
+    for (qsizetype i = 0; i < blueTeams.size(); ++i)
+    {
+        QString key = blueTeams[i].toString();
+        QLabel *label = blueTeamLabels[i];
+
+        label->setText(key.mid(3, 5));
+
+        if (key == Constants::TEAM_NUMBER)
+        {
+            setFontUnderline(label);
+        }
+
+        if (winningAlliance == "blue")
+        {
+            setFontBold(label);
+        }
+    }
+}
+
+// Set the specified labels to the match score.
+void EventData::setMatchScore(const QJsonValue match, QLabel *redScoreLabel, QLabel *blueScoreLabel)
+{
+    // Alliances
+    const QJsonValue alliances = match["alliances"];
+    const QJsonValue red = alliances["red"];
+    const QJsonValue blue = alliances["blue"];
+
+    // Scores & Winner
+    const QString redScore = QString::number(red["score"].toInteger());
+    const QString blueScore = QString::number(blue["score"].toInteger());
+    const QString winningAlliance = match["winning_alliance"].toString();
+
+    if (winningAlliance == "red")
+    {
+        setFontBold(redScoreLabel);
+    }
+    else if (winningAlliance == "blue")
+    {
+        setFontBold(blueScoreLabel);
+    }
+
+    redScoreLabel->setText(redScore);
+    blueScoreLabel->setText(blueScore);
 }
 
 EventData::EventData()
@@ -103,20 +202,20 @@ EventData::EventData()
     m_lastMatchLayout->addWidget(m_lastMatchCode, 0, 0, 1, 4, Qt::AlignCenter);
 
     // Red Teams
-    m_red1Team = redLabel(1, 0);
-    m_red2Team = redLabel(1, 1);
-    m_red3Team = redLabel(1, 2);
-    m_redScore = redLabel(1, 3);
+    m_lastRed1Team = redLabel(1, 0);
+    m_lastRed2Team = redLabel(1, 1);
+    m_lastRed3Team = redLabel(1, 2);
+    m_lastRedScore = redLabel(1, 3);
 
-    m_redTeams = QList{m_red1Team, m_red2Team, m_red3Team};
+    m_lastRedTeams = QList{m_lastRed1Team, m_lastRed2Team, m_lastRed3Team};
 
     // Blue Teams
-    m_blue1Team = blueLabel(2, 0);
-    m_blue2Team = blueLabel(2, 1);
-    m_blue3Team = blueLabel(2, 2);
-    m_blueScore = blueLabel(2, 3);
+    m_lastBlue1Team = blueLabel(2, 0);
+    m_lastBlue2Team = blueLabel(2, 1);
+    m_lastBlue3Team = blueLabel(2, 2);
+    m_lastBlueScore = blueLabel(2, 3);
 
-    m_blueTeams = QList{m_blue1Team, m_blue2Team, m_blue3Team};
+    m_lastBlueTeams = QList{m_lastBlue1Team, m_lastBlue2Team, m_lastBlue3Team};
 
     m_layout->addLayout(m_lastMatchLayout, 1, 1, Qt::AlignCenter | Qt::AlignTop);
 }
@@ -161,92 +260,22 @@ void EventData::updateEventData()
 
     connect(reply, &QNetworkReply::readyRead, this, [this, reply]
             {
-        const QByteArray data = reply->read(reply->bytesAvailable());
+                const QByteArray data = reply->read(reply->bytesAvailable());
 
-        const QJsonDocument json = QJsonDocument::fromJson(data);
-        const QJsonArray jsonArray = json.array();
+                const QJsonDocument json = QJsonDocument::fromJson(data);
+                const QJsonArray jsonArray = json.array();
 
-        // Get the last played match.
-        // Search backwards until a match has an actual score, not -1 or null,
-        // indicating that it's been played.
-        QJsonValue match;
-        int greatestMatchTime = 0;
-        for (qsizetype i = jsonArray.size() - 1; i > 0; --i) {
-            QJsonValue score = jsonArray[i]["alliances"]["red"]["score"];
-            double matchTime = jsonArray[i]["actual_time"].toDouble();
+                // const QJsonValue match = latestMatch(jsonArray);
+                const QJsonValue match = sortedMatches(jsonArray)[jsonArray.size() - 1];
 
-            if (!score.isNull() && score.toInteger() != -1 && !score.isUndefined() && matchTime > greatestMatchTime) {
-                match = jsonArray[i];
-                greatestMatchTime = matchTime;
-            }
-        }
+                // Match Code
+                const QString matchKey = match["key"].toString();
 
-        // Match Code
-        const QString matchKey = match["key"].toString();
+                m_lastMatchCode->setText("Last Match: " + matchKey);
 
-        m_lastMatchCode->setText("Last Match: " + matchKey);
-
-        // Alliances
-        const QJsonValue alliances = match["alliances"];
-        const QJsonValue red = alliances["red"];
-        const QJsonValue blue = alliances["blue"];
-
-        // Scores & Winner
-        const QString redScore = QString::number(red["score"].toInteger());
-        const QString blueScore = QString::number(blue["score"].toInteger());
-        const QString winningAlliance = match["winning_alliance"].toString();
-
-        qDebug() << winningAlliance;
-
-        if (winningAlliance == "red") {
-            setFontBold(m_redScore);
-        } else if (winningAlliance == "blue") {
-            setFontBold(m_blueScore);
-        }
-
-        m_redScore->setText(redScore);
-        m_blueScore->setText(blueScore);
-        
-        // Teams
-        // Red
-        const QJsonArray redTeams = red["team_keys"].toArray();
-
-        for (qsizetype i = 0; i < redTeams.size(); ++i) {
-            QString key = redTeams[i].toString();
-            QLabel *label = m_redTeams[i];
-
-            if (label == nullptr) {
-                continue;
-            }
-
-            label->setText(key.mid(3, 5));
-
-            if (key == Constants::TEAM_NUMBER) {
-                setFontUnderline(label);
-            }
-
-            if (winningAlliance == "red") {
-                setFontBold(label);
-            }
-        }
-
-        // blue
-        const QJsonArray blueTeams = blue["team_keys"].toArray();
-
-        for (qsizetype i = 0; i < blueTeams.size(); ++i) {
-            QString key = blueTeams[i].toString();
-            QLabel *label = m_blueTeams[i];
-
-            label->setText(key.mid(3, 5));
-
-            if (key == Constants::TEAM_NUMBER) {
-                setFontUnderline(label);
-            }
-
-            if (winningAlliance == "blue") {
-                setFontBold(label);
-            }
-        } });
+                // Set team numbers
+                setTeamNumbers(match, m_lastRedTeams, m_lastBlueTeams);
+                setMatchScore(match, m_lastRedScore, m_lastBlueScore); });
 
     connect(reply, &QNetworkReply::errorOccurred, this, [=]
             { qDebug() << reply->error(); });
