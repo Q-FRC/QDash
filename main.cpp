@@ -67,6 +67,8 @@ int main(int argc, char **argv) {
                          QString::fromStdString(Globals::server.server),
                          QString(connected ? "" : "Not ") + "Connected")
                 );
+
+            window->setConnected(connected);
         });
     });
 

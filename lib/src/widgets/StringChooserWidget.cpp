@@ -41,6 +41,7 @@ void StringChooserWidget::setTopic(const QString &topic) {
 
 void StringChooserWidget::setValue(const nt::Value &value, QString label, bool force) {
     if (force) {
+        qDebug() << "Bro";
         QMap<std::string, QString> map{};
         map.insert("/active", "Active");
         map.insert("/options", "Choices");
@@ -54,19 +55,9 @@ void StringChooserWidget::setValue(const nt::Value &value, QString label, bool f
         return;
     }
 
-    // only update active if we're NOT reconnecting,
-    // to send the current choice to NT.
-
     else {
         if (label == "Active") {
-            if (!m_connected) {
-                return;
-            }
-
             if (!m_readyToUpdate) {
-                QTimer::singleShot(200, this, [this] {
-                    updateSelected(m_lastSelected);
-                });
                 m_readyToUpdate = true;
                 return;
             }
@@ -91,8 +82,9 @@ void StringChooserWidget::setValue(const nt::Value &value, QString label, bool f
             for (const std::string &choice : choices) {
                 qchoices << QString::fromStdString(choice);
             }
+
+            qchoices.sort();
             m_chooser->addItems(qchoices);
-            // m_chooser->setCurrentText(m_value);
 
             updateSelected(selected);
         }
@@ -137,10 +129,11 @@ void StringChooserWidget::updateSelected(const QString text) {
 
 void StringChooserWidget::setConnected(bool connected) {
     BaseWidget::setConnected(connected);
-
-    m_readyToUpdate = false;
+    m_connected = connected;
 
     if (connected) {
+        m_readyToUpdate = false;
+
         updateSelected(m_lastSelected);
     }
 }

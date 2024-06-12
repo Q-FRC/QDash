@@ -42,6 +42,7 @@ public slots:
     // Internal Stuff
     void forceUpdateTab(int idx);
     void moveTab(int from, int to);
+    void setConnected(bool connected);
 
     // Preferences
     void preferences();

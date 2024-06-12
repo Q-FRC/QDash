@@ -165,6 +165,14 @@ void MainWindow::moveTab(int from, int to) {
     m_tabs.move(from, to);
 }
 
+void MainWindow::setConnected(bool connected) {
+    for (TabWidget *tab : m_tabs) {
+        for (BaseWidget *widget : tab->widgets()) {
+            widget->setConnected(connected);
+        }
+    }
+}
+
 // Preferences
 void MainWindow::preferences() {
     PreferencesDialog *dialog = new PreferencesDialog(this);
