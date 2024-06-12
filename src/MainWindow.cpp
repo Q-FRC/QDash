@@ -66,8 +66,29 @@ MainWindow::MainWindow()
 
         QMessageBox::StandardButton close = QMessageBox::question(this, "Close Tab?", "Are you sure you want to close this tab?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (close == QMessageBox::Yes) {
+            QWidget *tab = m_centralWidget->widget(index);
             m_centralWidget->removeTab(index);
             m_tabWidgets.remove(index);
+            QMapIterator<BaseWidget *, QList<int>> iterator(m_widgets);
+
+            while (iterator.hasNext())
+            {
+                iterator.next();
+                BaseWidget *widget = iterator.key();
+                QList<int> data = iterator.value();
+                if (data.at(4) == index) {
+                    m_widgets.remove(widget);
+                } else if (data.at(4) > index) {
+                    QList<int> newData;
+                    newData.append(data.mid(0, 4));
+                    newData.append(data.at(4) - 1);
+
+                    m_widgets.remove(widget);
+                    m_widgets.insert(widget, newData);
+                }
+            }
+
+            delete tab;
         }
     });
 
@@ -158,7 +179,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         QAction *resizeAction = new QAction("Resize", menu);
 
         menu->addAction(resizeAction);
-        menu->popup(event->globalPosition().toPoint());
 
         connect(resizeAction, &QAction::triggered, this, [this, widgetPressed](bool) {
             ResizeDialog *dialog = new ResizeDialog(m_widgets.value(widgetPressed));
@@ -172,6 +192,16 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
                 setNeedsRelay(true);
             });
         });
+
+        QAction *deleteAction = new QAction("Delete Widget", menu);
+        menu->addAction(deleteAction);
+
+        connect(deleteAction, &QAction::triggered, this, [this, widgetPressed](bool) {
+            m_widgets.remove(widgetPressed);
+            delete widgetPressed;
+        });
+
+        menu->popup(event->globalPosition().toPoint());
     }
 }
 

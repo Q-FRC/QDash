@@ -4,10 +4,11 @@ TextWidget::TextWidget(const QString &title, const QString &defaultText, const Q
 {
     m_text = new QLineEdit(defaultText, this);
 
-    m_layout->addWidget(m_title, 0, 0, Qt::AlignHCenter | Qt::AlignCenter);
-    m_layout->addWidget(m_text, 1, 0, Qt::AlignHCenter | Qt::AlignCenter);
+    m_layout->addWidget(m_title, 0, 0);//, Qt::AlignHCenter | Qt::AlignCenter);
+    m_layout->addWidget(m_text, 1, 0);//, Qt::AlignHCenter | Qt::AlignCenter);
 
     m_text->setStyleSheet("border: none; border-bottom: 1px solid white;");
+    m_text->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 }
 
 TextWidget::~TextWidget() {}
