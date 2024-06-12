@@ -12,7 +12,6 @@ FieldImage::FieldImage(QWidget *parent) : QLabel(parent) {}
 void FieldImage::setValue(std::span<const double> value) {
     m_value = value;
     setImage(m_image); // ensure proper scaling and whatnot
-    update();
 }
 
 void FieldImage::setRobotWidth(double width) {
@@ -24,10 +23,9 @@ void FieldImage::setRobotLength(double length) {
 }
 
 void FieldImage::setImage(Globals::File image) {
-    QImage qimage(image.fileName);
-
-    setPixmap(QPixmap::fromImage(qimage));
     m_image = image;
+
+    update();
 }
 
 void FieldImage::paintEvent(QPaintEvent *event) {
@@ -36,12 +34,15 @@ void FieldImage::paintEvent(QPaintEvent *event) {
     int w = event->rect().width();
     int h = event->rect().height() * 4. / 5.;
 
-    QPixmap pixmap = this->pixmap();
+    // painter setup
+    QPainter painter(this);
+
+    QPixmap pixmap = QPixmap(m_image.fileName);
     QPixmap pixmap2 = pixmap.scaled(w, h, Qt::KeepAspectRatio);
 
     if (pixmap.width() != pixmap2.width() || pixmap.height() != pixmap2.height()) {
-        pixmap = pixmap.scaled(w, h, Qt::KeepAspectRatio);
-        setPixmap(pixmap);
+        pixmap = pixmap2;
+        painter.drawPixmap(QPointF(0, h / 2. - pixmap2.height() / 2.), pixmap2, pixmap2.rect().toRectF());
     }
 
     m_imageWidth = pixmap.width();
@@ -65,8 +66,6 @@ void FieldImage::paintEvent(QPaintEvent *event) {
     QPointF absoluteCenter = robotTopLeft + QPointF(robotWidth / 2., robotLength / 2.);
 
     // painter setup
-    QPainter painter(this);
-
     QPen pen(Qt::red, 3);
     painter.setPen(pen);
 

@@ -11,11 +11,9 @@ FieldWidget::FieldWidget(const QString &topic, QVariantList defaultValue, const 
     m_value = defaultValue;
 
     m_imageLabel = new FieldImage(this);
-    m_imageLabel->setSizePolicy(QSizePolicy::Policy::Maximum, QSizePolicy::Maximum);
-    m_imageLabel->setMaximumSize(QSize(size().width(), size().height() * 4. / 5.));
-    m_imageLabel->setMinimumSize(1, 1);
+    m_imageLabel->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Expanding);
 
-    m_layout->addWidget(m_imageLabel, 1, 0, 3, 1, Qt::AlignHCenter);
+    m_layout->addWidget(m_imageLabel, 1, 0, 3, 1);
 
     m_ready = true;
 }
