@@ -36,7 +36,5 @@ void BooleanDisplayWidget::update() {
 
     m_value = value;
 
-    qDebug() << (value ? m_trueColor : m_falseColor).name();
-
     m_colorWidget->setStyleSheet("background-color: " + (value ? m_trueColor : m_falseColor).name() + ";");
 }

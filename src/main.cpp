@@ -1,5 +1,4 @@
 #include "ntcore.h"
-#include "cscore.h"
 
 #include "ntcore_cpp.h"
 #include "ntcore_cpp_types.h"

@@ -39,9 +39,14 @@ private:
      * - rowspan
      * - colspan
     */
-    QMap<BaseWidget *, int *> m_widgets;
+    QMap<BaseWidget *, QList<int>> m_widgets;
+
+    bool m_needsRelay = true;
 public:
     MainWindow();
     virtual ~MainWindow();
     void update();
+
+    void setNeedsRelay(bool needsRelay);
+    QList<int> getWidgetData(BaseWidget *widget);
 };

@@ -4,6 +4,7 @@
 
 #include "MainWindow.h"
 #include "Globals.h"
+#include "dialogs/ResizeDialog.h"
 
 #include <QToolBar>
 #include <QMenuBar>
@@ -32,23 +33,14 @@ MainWindow::MainWindow()
     m_layout->addWidget(m_tabWidget);
 
     // FIXME: wacky
-    int booleanData[] = {0, 0, 0, 1, 1};
+    QList<int> booleanData({0, 0, 0, 1, 1});
     m_widgets.insert(boolean, booleanData);
 
-    int numberData[] = {0, 0, 1, 2, 1};
+    QList<int> numberData({0, 0, 1, 2, 1});
     m_widgets.insert(number, numberData);
 
-    int stringData[] = {0, 1, 0, 1, 1};
+    QList<int> stringData({0, 1, 0, 1, 1});
     m_widgets.insert(string, stringData);
-
-    QMapIterator<BaseWidget *, int *> iterator(m_widgets);
-
-    while (iterator.hasNext())
-    {
-        iterator.next();
-        int *data = iterator.value();
-        m_tabWidget->layout()->addWidget(iterator.key(), data[1], data[2], data[3], data[4]);
-    }
 
     m_toolbar = new QToolBar(this);
 
@@ -78,19 +70,54 @@ MainWindow::MainWindow()
     });
 
     m_menubar->addAction(ntServerAction);
+
+    QAction *testAction = new QAction("Resize Test");
+
+    connect(testAction, &QAction::triggered, this, [this, number](bool) {
+        ResizeDialog *dialog = new ResizeDialog(m_widgets.value(number));
+        dialog->show();
+
+        connect(dialog, &ResizeDialog::finished, [this, number, dialog](QList<int> data) {
+            QList<int> finalData({0, data[0], data[1], data[2], data[3]});
+            m_widgets.remove(number);
+            m_widgets.insert(number, finalData);
+
+            dialog->close();
+            setNeedsRelay(true);
+        });
+    });
+
+    m_menubar->addAction(testAction);
+
+    update();
 }
 
 MainWindow::~MainWindow() {}
 
 void MainWindow::update()
 {
-    QMapIterator<BaseWidget *, int *> iterator(m_widgets);
+    QMapIterator<BaseWidget *, QList<int>> iterator(m_widgets);
 
     while (iterator.hasNext())
     {
         iterator.next();
         iterator.key()->update();
-    }
+        if (m_needsRelay) {
+            QList<int> data = iterator.value();
+            m_tabWidget->layout()->removeWidget(iterator.key());
+            m_tabWidget->layout()->addWidget(iterator.key(), data[1], data[2], data[3], data[4]);
+        }
+    } 
+    
+    m_needsRelay = false;
 
     setWindowTitle("QFRCDashboard (" + Globals::server + ") - " + (nt::IsConnected(Globals::inst) ? "" : "Not ") + "Connected");
+}
+
+void MainWindow::setNeedsRelay(bool needsRelay) {
+    m_needsRelay = needsRelay;
+}
+
+QList<int> MainWindow::getWidgetData(BaseWidget *widget) {
+    return m_widgets.value(widget);
 }
