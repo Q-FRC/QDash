@@ -1,0 +1,26 @@
+name: Build Application
+
+on:
+  push:
+    branches-ignore:
+      - 'stable'
+    paths-ignore:
+      - '**.md'
+      - '**/LICENSE'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.markdownlint**'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - '**/LICENSE'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.markdownlint**'
+  workflow_dispatch:
+
+jobs:
+
+  build_debug:
+    name: Build Debug
+    uses: ./.github/workflows/build.yml
+    with:
+      build_type: Debug

@@ -1,0 +1,222 @@
+# This starter workflow is for a CMake project running on multiple platforms. There is a different starter workflow if you just want a single platform.
+# See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
+name: CMake on multiple platforms
+ 
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  workflow_call:
+    inputs:
+      build_type:
+        description: Type of build (Debug, Release, RelWithDebInfo, MinSizeRel)
+        type: string
+        default: Debug
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+
+          - os: ubuntu-20.04
+            qt_host: linux
+            qt_version: '6.6.0'
+            qt_modules: 'qt6-multimedia-dev'
+           
+    runs-on: ${{ matrix.os }}
+
+    env:
+      INSTALL_DIR: "install"
+      INSTALL_APPIMAGE_DIR: "install-appdir"
+      BUILD_DIR: "build"
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set reusable strings
+      # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
+      id: strings
+      shell: bash
+      run: |
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+    - name: 'Install Qt 6.6.0'
+      if: runner.os == 'Linux'
+      uses: jurplel/install-qt-action@v3.3.0
+      with:
+        version: 6.6.0
+        modules: qtmultimedia
+
+    - name: 'Checkout wpilib'
+      uses: actions/checkout@v4
+      with:
+        repository: 'wpilibsuite/allwpilib'
+        # ref: 'v2024.1.1-beta-3' # MAY want 2023
+        path: 'allwpilib'
+
+    - name: 'Prepare ntcore'
+      run: |
+        cd allwpilib
+        git apply ../.github/patches/No-Werror.patch
+        sed -i 's/protobuf/Protobuf/g' wpiutil/wpiutil-config.cmake.in
+        cd ..
+
+    - name: 'Install Python Dependencies (Linux)'
+      if: runner.os == 'Linux'
+      run: |
+        pip install jinja2
+        
+    - name: 'Build ntcore (Linux)'
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get install libprotobuf-dev libprotobuf17 libstdc++-10-dev gcc-10 ninja-build
+        cmake -B wpilib_build -S "allwpilib" \
+          -DCMAKE_INSTALL_PREFIX='/usr' \
+          -DUSE_SYSTEM_EIGEN=OFF \
+          -DUSE_SYSTEM_FMTLIB=OFF \
+          -DWITH_JAVA=OFF \
+          -DWITH_CSCORE=OFF \
+          -DWITH_NTCORE=ON \
+          -DWITH_WPIMATH=OFF \
+          -DWITH_WPILIB=OFF \
+          -DWITH_TESTS=OFF \
+          -DWITH_GUI=OFF \
+          -DWITH_SIMULATION_MODULES=OFF \
+          -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
+          -Wno-dev
+        cmake --build wpilib_build --parallel $(nproc)
+        sudo cmake --install wpilib_build
+
+    - name: Prepare AppImage (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        wget "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
+        wget "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage"
+        wget "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
+
+    - name: Configure CMake (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/bin/g++-10
+
+    - name: Build
+      run: |
+        cmake --build ${{ env.BUILD_DIR }} --parallel $(nproc)
+
+    # - name: Test
+    #   working-directory: ${{ steps.strings.outputs.build-output-dir }}
+    #   # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
+    #   # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+    #   run: ctest --build-config ${{ matrix.build_type }}
+
+    - name: Package (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        cmake --install ${{ env.BUILD_DIR }} --prefix ${{ env.INSTALL_DIR }}
+
+        cd ${{ env.INSTALL_DIR }}
+        tar --owner root --group root -czf ../QFRCDashboard.tar.gz *
+        
+    - name: Package AppImage (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        sudo apt-get install libxcb-cursor-dev libxcb-cursor0
+        mkdir -p ${{ env.INSTALL_APPIMAGE_DIR}}/usr/{lib,bin}
+        cmake --install ${{ env.BUILD_DIR }} --prefix ${{ env.INSTALL_APPIMAGE_DIR }}/usr
+
+        export OUTPUT="QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}-x86_64.AppImage"
+
+        chmod +x linuxdeploy-*.AppImage
+
+        mkdir -p ${{ env.INSTALL_APPIMAGE_DIR }}/usr/plugins/iconengines
+
+        cp -r /home/runner/work/QFRCDashboard/Qt/${{ matrix.qt_version }}/gcc_64/plugins/iconengines/* ${{ env.INSTALL_APPIMAGE_DIR }}/usr/plugins/iconengines
+        
+        cp /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1 ${{ env.INSTALL_APPIMAGE_DIR }}/usr/lib/
+        cp /usr/lib/x86_64-linux-gnu/libssl.so.1.1 ${{ env.INSTALL_APPIMAGE_DIR }}//usr/lib/
+
+        ./linuxdeploy-x86_64.AppImage --appdir ${{ env.INSTALL_APPIMAGE_DIR }} --output appimage --plugin qt
+
+  build-windows:
+    name: "Build - Windows"
+    runs-on: windows-2022
+    steps:
+      - uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Cache vcpkg
+        uses: actions/cache@v3.3.2
+        with:
+          path: allwpilib/vcpkg
+
+      - name: Install CMake
+        uses: lukka/get-cmake@v3.27.6
+
+      - name: Run sccache-cache
+        uses: mozilla-actions/sccache-action@v0.0.3
+
+      - name: Install jinja
+        run: |
+         python -m ensurepip
+         python -m pip install jinja2
+
+      - uses: actions/checkout@v3
+
+      - name: 'Checkout wpilib'
+        uses: actions/checkout@v4
+        with:
+          repository: 'wpilibsuite/allwpilib'
+          # ref: 'v2024.1.1-beta-3' # MAY want 2023
+          path: 'allwpilib'
+
+      - name: Run vcpkg
+        uses: lukka/run-vcpkg@v11.1
+        with:
+          vcpkgDirectory: ${{ runner.workspace }}/allwpilib/vcpkg
+          vcpkgGitCommitId: 78b61582c9e093fda56a01ebb654be15a0033897 # HEAD on 2023-08-6
+
+
+      - name: 'Prepare ntcore'
+        run: |
+          cd allwpilib
+          git apply ../.github/patches/No-Werror.patch
+          cd ..
+
+      - name: 'Configure ntcore CMake (Windows)'
+        run: |
+         cmake -S allwpilib -B win-nt-build -G "Ninja" -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=Release -DWITH_JAVA=OFF -DWITH_EXAMPLES=OFF -DUSE_SYSTEM_FMTLIB=ON -DUSE_SYSTEM_LIBUV=ON -DUSE_SYSTEM_EIGEN=ON -DWITH_CSCORE=OFF -DWITH_NTCORE=ON -DWITH_WPIMATH=OFF -DWITH_WPILIB=OFF -DWITH_TESTS=OFF -DWITH_GUI=OFF -DWITH_SIMULATION_MODULES=OFF -DCMAKE_TOOLCHAIN_FILE=${{ runner.workspace }}/allwpilib/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_INSTALL_OPTIONS=--clean-after-build -DVCPKG_TARGET_TRIPLET=x64-windows-release -DVCPKG_HOST_TRIPLET=x64-windows-release -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_DIR }}
+        env:
+          SCCACHE_GHA_ENABLED: "true"
+
+      - name: 'Build ntcore (Windows)'
+        working-directory: win-nt-build
+        run: |
+          cmake --build . --parallel $(nproc)
+        env:
+          SCCACHE_GHA_ENABLED: "true"
+
+      - name: 'Install ntcore (Windows)'
+        run: |
+          cmake --install win-nt-build
+        env:
+          SCCACHE_GHA_ENABLED: "true"
+
+      - name: 'Install Qt (Windows)'
+        uses: jurplel/install-qt-action@v3.3.0
+        with:
+          version: 6.6.0
+          modules: qtmultimedia
+
+      - name: 'Build (Windows)'
+        run: |
+          cmake -S . --build winbuild --parallel $(nproc)
+        env:
+          SCCACHE_GHA_ENABLED: "true"
+
+      - name: Package (Windows)
+        run: |
+          cmake --install winbuild --prefix install --component portable

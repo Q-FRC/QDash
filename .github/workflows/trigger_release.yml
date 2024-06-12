@@ -1,0 +1,63 @@
+name: Build Application and Make Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+
+  build_release:
+    name: Build Release
+    uses: ./.github/workflows/build.yml
+    with:
+      build_type: Release
+
+  create_release:
+    needs: build_release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+          path: 'QFRCDashboard-source'
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+      - name: Grab and store version
+        run: |
+          tag_name=$(echo ${{ github.ref }} | grep -oE "[^/]+$")
+          echo "VERSION=$tag_name" >> $GITHUB_ENV
+      - name: Package artifacts properly
+        run: |
+          mv ${{ github.workspace }}/QFRCDashboard-source QFRCDashboard-${{ env.VERSION }}
+          mv QFRCDashboard-Linux*/QFRCDashboard.tar.gz QFRCDashboard-Linux-${{ env.VERSION }}.tar.gz
+          mv QFRCDashboard-*.AppImage/QFRCDashboard-*.AppImage QFRCDashboard-Linux-${{ env.VERSION }}-x86_64.AppImage
+
+          tar -czf QFRCDashboard-${{ env.VERSION }}.tar.gz QFRCDashboard-${{ env.VERSION }}
+
+          for d in QFRCDashboard-Windows-*; do
+            cd "${d}" || continue
+            PORT="$(echo -n ${d} | grep -o Portable || true)"
+            NAME="QFRCDashboard-Windows"
+            test -z "${PORT}" || NAME="${NAME}-Portable"
+            cd ..
+          done
+
+      - name: Create release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          name: QFRCDashboard ${{ env.VERSION }}
+          draft: true
+          prerelease: false
+          files: |
+            # QFRCDashboard-Linux-${{ env.VERSION }}.tar.gz
+            QFRCDashboard-Linux-${{ env.VERSION }}-x86_64.AppImage
+            QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip
+            QFRCDashboard-${{ env.VERSION }}.tar.gz
