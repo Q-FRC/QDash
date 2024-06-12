@@ -1,3 +1,7 @@
+#include "ntcore.h"
+
+#include "ntcore_cpp.h"
+#include "ntcore_cpp_types.h"
 
 #include <QApplication>
 #include <QTimer>

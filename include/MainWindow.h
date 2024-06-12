@@ -15,6 +15,7 @@
 #include <QPixmap>
 #include <QStackedLayout>
 #include <QMap>
+#include <QMouseEvent>
 
 class MainWindow : public QMainWindow
 {
@@ -45,4 +46,6 @@ public:
 
     void setNeedsRelay(bool needsRelay);
     QList<int> getWidgetData(BaseWidget *widget);
+
+    void mousePressEvent(QMouseEvent *event);
 };

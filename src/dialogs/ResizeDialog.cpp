@@ -31,7 +31,7 @@ ResizeDialog::ResizeDialog(QList<int> widgetData) {
 
     m_layout->addRow(m_columnSpanLabel, m_columnSpanInput);
 
-    m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
+    m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok, this);
 
     m_layout->addWidget(m_buttonBox);
 

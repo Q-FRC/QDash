@@ -1,6 +1,8 @@
 #include "widgets/BaseWidget.h"
 #include "Globals.h"
 
+#include <QMenu>
+
 BaseWidget::BaseWidget(const QString &title, const QString &topic, const NT_Type &type)
 {
     m_layout = new QGridLayout(this);

@@ -5,6 +5,7 @@
 #include <QToolBar>
 #include <QMenuBar>
 #include <QInputDialog>
+#include <QMenu>
 
 MainWindow::MainWindow()
 {
@@ -28,7 +29,6 @@ MainWindow::MainWindow()
 
     m_layout->addWidget(m_tabWidget);
 
-    // FIXME: wacky
     QList<int> booleanData({0, 0, 0, 1, 1});
     m_widgets.insert(boolean, booleanData);
 
@@ -39,15 +39,6 @@ MainWindow::MainWindow()
     m_widgets.insert(string, stringData);
 
     m_toolbar = new QToolBar(this);
-
-    //     // DIAGNOSTICS WIDGET
-    //     m_diagnosticsWidget = diagnostics;
-    //     m_layout->addWidget(m_diagnosticsWidget);
-
-    //     m_diagnosticsAction = new QAction("Robot Diagnostics", m_toolbar);
-    //     connect(m_diagnosticsAction, &QAction::triggered, [this]
-    //             { m_layout->setCurrentWidget(m_diagnosticsWidget); });
-    //     m_toolbar->addAction(m_diagnosticsAction);
 
     addToolBar(Qt::ToolBarArea::BottomToolBarArea, m_toolbar);
 
@@ -66,24 +57,6 @@ MainWindow::MainWindow()
     });
 
     m_menubar->addAction(ntServerAction);
-
-    QAction *testAction = new QAction("Resize Test");
-
-    connect(testAction, &QAction::triggered, this, [this, number](bool) {
-        ResizeDialog *dialog = new ResizeDialog(m_widgets.value(number));
-        dialog->show();
-
-        connect(dialog, &ResizeDialog::finished, [this, number, dialog](QList<int> data) {
-            QList<int> finalData({0, data[0], data[1], data[2], data[3]});
-            m_widgets.remove(number);
-            m_widgets.insert(number, finalData);
-
-            dialog->close();
-            setNeedsRelay(true);
-        });
-    });
-
-    m_menubar->addAction(testAction);
 
     update();
 }
@@ -116,4 +89,42 @@ void MainWindow::setNeedsRelay(bool needsRelay) {
 
 QList<int> MainWindow::getWidgetData(BaseWidget *widget) {
     return m_widgets.value(widget);
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event) {
+    BaseWidget *widgetPressed = nullptr;
+
+    QMapIterator<BaseWidget *, QList<int>> iterator(m_widgets);
+
+    while (iterator.hasNext())
+    {
+        iterator.next();
+        if (iterator.key()->geometry().contains(event->pos())) {
+            widgetPressed = iterator.key();
+            break;
+        }
+    }
+
+    if (event->button() == Qt::RightButton && widgetPressed) {
+        QMenu *menu = new QMenu(this);
+
+        QAction *resizeAction = new QAction("Resize", menu);
+
+        menu->addAction(resizeAction);
+        menu->popup(event->globalPosition().toPoint());
+
+        connect(resizeAction, &QAction::triggered, [this, widgetPressed](bool) {
+            ResizeDialog *dialog = new ResizeDialog(m_widgets.value(widgetPressed));
+            dialog->show();
+
+            connect(dialog, &ResizeDialog::finished, [this, widgetPressed, dialog](QList<int> data) {
+                QList<int> finalData({0, data[0], data[1], data[2], data[3]});
+                m_widgets.remove(widgetPressed);
+                m_widgets.insert(widgetPressed, finalData);
+
+                dialog->close();
+                setNeedsRelay(true);
+            });
+        });
+    }
 }
