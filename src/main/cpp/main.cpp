@@ -8,6 +8,8 @@
 #include <QTimer>
 
 #include "MainWindow.h"
+#include "RobotDiagnostics.h"
+#include "PitChecklist.h"
 
 NT_Subscriber coolSub;
 
@@ -18,13 +20,16 @@ int main(int argc, char **argv) {
     nt::StartClient4(inst, "Pit Display");
     nt::SetServer(inst, "*", NT_DEFAULT_PORT4);
 
-    MainWindow *window = new MainWindow(inst);
+    RobotDiagnostics *diagnostics = new RobotDiagnostics(inst);
+    PitChecklist *checklist = new PitChecklist();
+
+    MainWindow *window = new MainWindow(diagnostics, checklist);
 
     window->show();
 
     QTimer *timer = new QTimer(window);
-    QWidget::connect(timer, &QTimer::timeout, window, [window]() {
-        window->updateLabels();
+    QWidget::connect(timer, &QTimer::timeout, diagnostics, [diagnostics]() {
+        diagnostics->updateData();
     });
     timer->start(50);
 

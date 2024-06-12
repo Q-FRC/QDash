@@ -11,36 +11,26 @@
 #include <QGridLayout>
 #include <QIcon>
 #include <QPixmap>
+#include <QStackedLayout>
+
+class RobotDiagnostics;
+class PitChecklist;
 
 class MainWindow : public QMainWindow
 {
 private:
     QWidget *m_centralWidget;
-    QWidget *m_menuWidget;
+    QStackedLayout *m_layout;
 
-    QGridLayout *m_layout;
+    QToolBar *m_toolbar;
 
-    QLabel *m_upperArmTitle;
-    QLabel *m_upperArmData;
-    NT_Subscriber m_upperArmSub;
+    QAction *m_diagnosticsAction;
+    QAction *m_checklistAction;
 
-    QLabel *m_lowerArmTitle;
-    QLabel *m_lowerArmData;
-    NT_Subscriber m_lowerArmSub;
-
-    QLabel *m_wristTitle;
-    QLabel *m_wristData;
-    NT_Subscriber m_wristSub;
-
-    QLabel *m_modeTitle;
-    QWidget *m_modeData;
-    QString m_modeTrue;
-    QString m_modeFalse;
-    NT_Subscriber m_modeSub;
+    RobotDiagnostics *m_diagnosticsWidget;
+    PitChecklist *m_checklistWidget;
     
 public:
-    MainWindow(NT_Inst inst);
+    MainWindow(RobotDiagnostics *diagnostics, PitChecklist *checklist);
     virtual ~MainWindow();
-
-    void updateLabels();
 };
