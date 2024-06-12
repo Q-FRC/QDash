@@ -6,11 +6,11 @@
 // TODO: make it work first time around
 NewWidgetDialog::NewWidgetDialog(std::string ntTopic)
 {
-    m_entry = nt::GetEntry(Globals::inst, ntTopic);
-    NT_Type type = nt::GetTopicType(nt::GetTopic(Globals::inst, ntTopic));
-    qDebug() << nt::GetTopicExists(m_entry);
+    m_entry = Globals::inst.GetEntry(ntTopic);
+    nt::NetworkTableType type = m_entry.GetType();
+    qDebug() << m_entry.Exists();
 
-    m_isBooleanDisplay = (type == NT_BOOLEAN);
+    m_isBooleanDisplay = (type == nt::NetworkTableType::kBoolean);
 
     m_layout = new QFormLayout(this);
 
@@ -107,5 +107,5 @@ NewWidgetDialog::NewWidgetDialog(std::string ntTopic)
 }
 
 NewWidgetDialog::~NewWidgetDialog() {
-    nt::ReleaseEntry(m_entry);
+    m_entry.Unpublish();
 }

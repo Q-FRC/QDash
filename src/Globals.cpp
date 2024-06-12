@@ -1,4 +1,4 @@
 #include "Globals.h"
 
-NT_Inst Globals::inst = nt::GetDefaultInstance();
+nt::NetworkTableInstance Globals::inst = nt::NetworkTableInstance::GetDefault();
 QString Globals::server = "0.0.0.0";

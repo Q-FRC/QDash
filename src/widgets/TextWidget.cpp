@@ -1,6 +1,6 @@
 #include "widgets/TextWidget.h"
 
-TextWidget::TextWidget(const QString &title, const QString &defaultText, const QString &topic, const NT_Type &type) : BaseWidget::BaseWidget(title, topic, type)
+TextWidget::TextWidget(const QString &title, const QString &defaultText, const QString &topic) : BaseWidget::BaseWidget(title, topic)
 {
     m_text = new QLineEdit(defaultText, this);
 

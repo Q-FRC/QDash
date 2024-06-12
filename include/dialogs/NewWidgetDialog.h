@@ -1,6 +1,6 @@
 #ifndef NEWWIDGETDIALOG_H
 #define NEWWIDGETDIALOG_H
-#include <ntcore.h>
+#include "networktables/NetworkTableEntry.h"
 
 #include <QDialog>
 #include <QWidget>
@@ -16,7 +16,7 @@ class NewWidgetDialog : public QDialog
         Q_OBJECT
 private:
     QFormLayout *m_layout;
-    NT_Entry m_entry;
+    nt::NetworkTableEntry m_entry;
 
     bool m_isBooleanDisplay;
 
@@ -53,7 +53,7 @@ public:
     virtual ~NewWidgetDialog();
 
 signals:
-    void dataReady(std::string topic, NT_Type type, QString name, QColor trueColor, QColor falseColor, QList<int> widgetData);
+    void dataReady(std::string topic, nt::NetworkTableType type, QString name, QColor trueColor, QColor falseColor, QList<int> widgetData);
 };
 
 #endif // NEWWIDGETDIALOG_H

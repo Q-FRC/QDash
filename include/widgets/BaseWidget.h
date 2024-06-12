@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ntcore.h"
+#include "networktables/NetworkTableEntry.h"
 
 #include <QWidget>
 #include <QLabel>
@@ -13,10 +13,9 @@ protected:
 
     QLabel *m_title;
 
-    NT_Entry m_entry;
-    NT_Type m_type;
+    nt::NetworkTableEntry m_entry;
 public:
-    BaseWidget(const QString &title, const QString &topic, const NT_Type &type);
+    BaseWidget(const QString &title, const QString &topic);
     virtual ~BaseWidget();
 
     QFont titleFont();
@@ -27,9 +26,6 @@ public:
 
     std::string topic();
     void setTopic(const std::string &topic);
-
-    NT_Type type();
-    void setType(const NT_Type &type);
 
     virtual void update() {}
 };

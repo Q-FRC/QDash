@@ -1,6 +1,6 @@
 #include "widgets/NumberDisplayWidget.h"
 
-NumberDisplayWidget::NumberDisplayWidget(const QString &title, const double &defaultValue, const QString &topic) : TextWidget(title, QString::number(defaultValue), topic, NT_DOUBLE)
+NumberDisplayWidget::NumberDisplayWidget(const QString &title, const double &defaultValue, const QString &topic) : TextWidget(title, QString::number(defaultValue), topic)
 {
     m_value = defaultValue;
 }
@@ -8,7 +8,7 @@ NumberDisplayWidget::NumberDisplayWidget(const QString &title, const double &def
 NumberDisplayWidget::~NumberDisplayWidget() {}
 
 void NumberDisplayWidget::update() {
-    double value = nt::GetDouble(m_entry, m_value);
+    double value = m_entry.GetDouble(m_value);
 
     m_value = value;
     setText(QString::number(value));

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ntcore.h"
+#include "networktables/NetworkTableInstance.h"
 
 #include <QString>
 
 namespace Globals {
-    extern NT_Inst inst;
+    extern nt::NetworkTableInstance inst;
     extern QString server;
 }

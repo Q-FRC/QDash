@@ -9,7 +9,7 @@ class TextWidget : public BaseWidget
 protected:
     QLineEdit *m_text;
 public:
-    TextWidget(const QString &title, const QString &defaultText, const QString &topic, const NT_Type &type);
+    TextWidget(const QString &title, const QString &defaultText, const QString &topic);
     virtual ~TextWidget();
     
     QString text();

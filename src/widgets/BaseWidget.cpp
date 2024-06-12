@@ -3,12 +3,11 @@
 
 #include <QMenu>
 
-BaseWidget::BaseWidget(const QString &title, const QString &topic, const NT_Type &type)
+BaseWidget::BaseWidget(const QString &title, const QString &topic)
 {
     m_layout = new QGridLayout(this);
     m_title = new QLabel(title, this);
-    m_entry = nt::GetEntry(Globals::inst, topic.toStdString());
-    m_type = type;
+    m_entry = Globals::inst.GetEntry(topic.toStdString());
 
     setStyleSheet("background-color: white; border: 2px solid yellow; color: black;");
 }
@@ -37,20 +36,11 @@ void BaseWidget::setTitle(const QString &title)
 
 std::string BaseWidget::topic()
 {
-    return nt::GetTopicName(nt::GetTopicFromHandle(m_entry));
+    return m_entry.GetName();
 }
 
 void BaseWidget::setTopic(const std::string &topic)
 {
-    m_entry = nt::GetEntry(Globals::inst, topic);
-}
-
-NT_Type BaseWidget::type()
-{
-    return m_type;
-}
-
-void BaseWidget::setType(const NT_Type &type)
-{
-    m_type = type;
+    m_entry.Unpublish();
+    m_entry = Globals::inst.GetEntry(topic);
 }

@@ -3,6 +3,8 @@
 #include "dialogs/ResizeDialog.h"
 #include "dialogs/NewWidgetDialog.h"
 
+#include "ntcore/networktables/NetworkTableInstance.h"
+
 #include <QToolBar>
 #include <QMenuBar>
 #include <QInputDialog>
@@ -17,7 +19,7 @@ MainWindow::MainWindow()
     // the previously set widget is destroyed.
     m_tabWidget = new TabWidget(QPoint(3, 3));
 
-    BooleanDisplayWidget *boolean = new BooleanDisplayWidget("Test", "yoooo", "deez");
+    BooleanDisplayWidget *boolean = new BooleanDisplayWidget("Test", "yoooo", "deez/cryaboutit");
     boolean->setTrueColor(Qt::blue);
     boolean->setFalseColor(Qt::yellow);
 
@@ -52,20 +54,25 @@ MainWindow::MainWindow()
 
                 if (!server.isEmpty() && ok) {
                     Globals::server = server;
-                    nt::SetServer(Globals::inst, Globals::server.toStdString().c_str(), NT_DEFAULT_PORT4);
+                    Globals::inst.SetServer(server.toStdString().c_str(), NT_DEFAULT_PORT4);
                 }
             });
 
     m_menubar->addAction(ntServerAction);
 
     QAction *newWidget = new QAction("New Widget");
-    connect(newWidget, &QAction::triggered, this, [this](bool) {
-        NewWidgetDialog *dialog = new NewWidgetDialog("cryaboutit");
+    connect(newWidget, &QAction::triggered, this, [this](bool) {  
+//        std::shared_ptr<nt::NetworkTable> table = inst.GetTable("deez");
+//        for (nt::Topic topic : table->GetTopics()) {
+//            qDebug() << topic.GetName();
+//        }
+
+        NewWidgetDialog *dialog = new NewWidgetDialog("numero");
         dialog->show();
 
-        connect(dialog, &NewWidgetDialog::dataReady, this, [this, dialog](std::string topic, NT_Type type, QString name, QColor trueColor, QColor falseColor, QList<int> widgetData) {
+        connect(dialog, &NewWidgetDialog::dataReady, this, [this, dialog](std::string topic, nt::NetworkTableType type, QString name, QColor trueColor, QColor falseColor, QList<int> widgetData) {
             switch(type) {
-                case NT_BOOLEAN: {
+                case nt::NetworkTableType::kBoolean: {
                     BooleanDisplayWidget *widget = new BooleanDisplayWidget(name, false, QString::fromStdString(topic));
                     widget->setTrueColor(trueColor);
                     widget->setFalseColor(falseColor);
@@ -73,13 +80,13 @@ MainWindow::MainWindow()
                     m_widgets.insert(widget, finalData);
                     break;
                 }
-                case NT_DOUBLE: {
+                case nt::NetworkTableType::kDouble: {
                     NumberDisplayWidget *widget = new NumberDisplayWidget(name, 0., QString::fromStdString(topic));
                     QList<int> finalData({m_centralWidget->currentIndex(), widgetData[0], widgetData[1], widgetData[2], widgetData[3]});
                     m_widgets.insert(widget, finalData);
                 }
                 default:
-                case NT_STRING: {
+                case nt::NetworkTableType::kString: {
                     StringDisplayWidget *widget = new StringDisplayWidget(name, "", QString::fromStdString(topic));
                     QList<int> finalData({m_centralWidget->currentIndex(), widgetData[0], widgetData[1], widgetData[2], widgetData[3]});
                     m_widgets.insert(widget, finalData);
@@ -114,7 +121,7 @@ void MainWindow::update()
     
     m_needsRelay = false;
 
-    setWindowTitle("QFRCDashboard (" + Globals::server + ") - " + (nt::IsConnected(Globals::inst) ? "" : "Not ") + "Connected");
+    setWindowTitle("QFRCDashboard (" + Globals::server + ") - " + (Globals::inst.IsConnected() ? "" : "Not ") + "Connected");
 }
 
 void MainWindow::setNeedsRelay(bool needsRelay) {
