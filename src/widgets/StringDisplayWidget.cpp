@@ -10,7 +10,7 @@ StringDisplayWidget::StringDisplayWidget(const QString &topic, const QString &de
 }
 
 StringDisplayWidget::~StringDisplayWidget() {
-    TopicStore::unsubscribe(m_entry, this);
+    TopicStore::unsubscribe(m_topic.toStdString(), this);
 }
 
 void StringDisplayWidget::setValue(const nt::Value &value) {

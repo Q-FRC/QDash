@@ -17,7 +17,7 @@ public:
     FilterStore();
 
     static void registerSendable(std::string typeString, TopicTypes topicType);
-    static void registerNTType(nt::NetworkTableType ntType, TopicTypes topicType);
+    static void registerNTType(nt::NetworkTableType ntType, TopicTypes topicType, const QString &displayName);
 
     static std::optional<TopicTypes> sendableTypeForTypeString(std::string typeString);
     static std::optional<TopicTypes> topicTypeForNTType(nt::NetworkTableType ntType);

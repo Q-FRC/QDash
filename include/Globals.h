@@ -21,7 +21,8 @@ enum class WidgetTypes {
     IntegerDisplay = 8,
     IntegerDial = 9,
     SendableField = 10, // UNUSED BY SAVE/LOAD
-    Field = 11
+    Field = 11,
+    Command = 12
 };
 
 Q_DECLARE_FLAGS(WidgetType, WidgetTypes);
@@ -30,6 +31,8 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(WidgetType);
 enum class TopicTypes {
     SendableChooser,
     Field2d,
+    Command,
+
     Double,
     DoubleArray,
     String,

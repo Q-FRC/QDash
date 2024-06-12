@@ -11,7 +11,7 @@ IntegerDisplayWidget::IntegerDisplayWidget(const QString &topic, const int &defa
 }
 
 IntegerDisplayWidget::~IntegerDisplayWidget() {
-    TopicStore::unsubscribe(m_entry, this);
+    TopicStore::unsubscribe(m_topic.toStdString(), this);
 }
 
 void IntegerDisplayWidget::setValue(const nt::Value &value) {

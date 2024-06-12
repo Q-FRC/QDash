@@ -13,7 +13,7 @@ EnumWidget::EnumWidget(const QString &topic, const QString &defaultValue, const 
 }
 
 EnumWidget::~EnumWidget() {
-    TopicStore::unsubscribe(m_entry, this);
+    TopicStore::unsubscribe(m_topic.toStdString(), this);
 }
 
 QVariantMap EnumWidget::colors() {

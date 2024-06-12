@@ -34,7 +34,7 @@ StringChooserWidget::StringChooserWidget(const QString &topic, const QString &de
 }
 
 StringChooserWidget::~StringChooserWidget() {
-    TopicStore::unsubscribe(m_entry, this);
+    TopicStore::unsubscribe(m_topic.toStdString(), this);
     TopicStore::unsubscribe(m_active, this);
     TopicStore::unsubscribe(m_default, this);
     TopicStore::unsubscribe(m_choices, this);

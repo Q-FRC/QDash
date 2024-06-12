@@ -5,15 +5,7 @@
 nt::NetworkTableInstance Globals::inst = nt::NetworkTableInstance::GetDefault();
 ServerData Globals::server{false, "0.0.0.0", NT_DEFAULT_PORT4};
 
-QMap<TopicTypes, QString> Globals::topicTypeDisplayNames = {
-    {TopicTypes::SendableChooser, "Sendable Chooser"},
-    {TopicTypes::Field2d, "Field2d"},
-    {TopicTypes::Double, "Double"},
-    {TopicTypes::DoubleArray, "Double Array"},
-    {TopicTypes::String, "String"},
-    {TopicTypes::Boolean, "Boolean"},
-    {TopicTypes::Int, "Integer"}
-};
+QMap<TopicTypes, QString> Globals::topicTypeDisplayNames{};
 
 QStringList Globals::ntTopics{};
 

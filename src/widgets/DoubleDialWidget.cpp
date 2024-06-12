@@ -27,7 +27,7 @@ DoubleDialWidget::DoubleDialWidget(const QString &topic, const double &defaultVa
 }
 
 DoubleDialWidget::~DoubleDialWidget() {
-    TopicStore::unsubscribe(m_entry, this);
+    TopicStore::unsubscribe(m_topic.toStdString(), this);
 }
 
 double DoubleDialWidget::min() {

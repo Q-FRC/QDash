@@ -38,6 +38,7 @@ set(PROJECT_SOURCES
         src/widgets/IntegerDialWidget.cpp
         src/widgets/FieldWidget.cpp
         src/widgets/SendableFieldWidget.cpp
+        src/widgets/CommandWidget.cpp
 
         src/misc/NewWidgetTreeDialog.cpp
         src/misc/NTSettingsDialog.cpp
@@ -71,6 +72,7 @@ set(PROJECT_SOURCES
         include/widgets/IntegerDialWidget.h
         include/widgets/FieldWidget.h
         include/widgets/SendableFieldWidget.h
+        include/widgets/CommandWidget.h
 
         include/misc/NewWidgetTreeDialog.h
         include/misc/NTSettingsDialog.h

@@ -3,5 +3,5 @@
 #include "stores/TopicStore.h"
 
 SendableFieldWidget::~SendableFieldWidget() {
-    TopicStore::unsubscribe(m_entry, this);
+    TopicStore::unsubscribe(m_topic.toStdString(), this);
 }

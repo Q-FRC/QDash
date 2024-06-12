@@ -12,7 +12,7 @@ DoubleDisplayWidget::DoubleDisplayWidget(const QString &topic, const double &def
 }
 
 DoubleDisplayWidget::~DoubleDisplayWidget() {
-    TopicStore::unsubscribe(m_entry, this);
+    TopicStore::unsubscribe(m_topic.toStdString(), this);
 }
 
 void DoubleDisplayWidget::setValue(const nt::Value &value) {

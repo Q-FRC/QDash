@@ -32,21 +32,23 @@ int main(int argc, char **argv) {
     Globals::inst.SetServer(Globals::server.server.c_str(), NT_DEFAULT_PORT4);
 
     // NT REGISTRATION
-#define REGISTER_NT(ntType, topicType) FilterStore::registerNTType(ntType, topicType);
+#define REGISTER_NT(ntType, topicType, displayName) FilterStore::registerNTType(ntType, topicType, displayName);
 
-    REGISTER_NT(nt::NetworkTableType::kBoolean, TopicTypes::Boolean)
-    REGISTER_NT(nt::NetworkTableType::kString, TopicTypes::String)
-    REGISTER_NT(nt::NetworkTableType::kDouble, TopicTypes::Double)
-    REGISTER_NT(nt::NetworkTableType::kDoubleArray, TopicTypes::DoubleArray)
-    REGISTER_NT(nt::NetworkTableType::kInteger, TopicTypes::Int)
+    REGISTER_NT(nt::NetworkTableType::kBoolean, TopicTypes::Boolean, "Boolean")
+    REGISTER_NT(nt::NetworkTableType::kString, TopicTypes::String, "String")
+    REGISTER_NT(nt::NetworkTableType::kDouble, TopicTypes::Double, "Double")
+    REGISTER_NT(nt::NetworkTableType::kDoubleArray, TopicTypes::DoubleArray, "Double Array")
+    REGISTER_NT(nt::NetworkTableType::kInteger, TopicTypes::Int, "Integer")
 
 #undef REGISTER_NT
 
     // SENDABLE REGISTRATION
 #define REGISTER_SENDABLE(typeString, topicType) FilterStore::registerSendable(typeString, topicType);
 
-    REGISTER_SENDABLE("String Chooser", TopicTypes::SendableChooser)
+    REGISTER_SENDABLE("Sendable Chooser", TopicTypes::SendableChooser)
     REGISTER_SENDABLE("Field2d", TopicTypes::Field2d)
+    REGISTER_SENDABLE("Command", TopicTypes::Command)
+
 
 #undef REGISTER_SENDABLE
 
@@ -70,6 +72,8 @@ int main(int argc, char **argv) {
     REGISTER_TYPE(TopicTypes::SendableChooser, WidgetTypes::SendableChooser, "Sendable Chooser");
 
     REGISTER_TYPE(TopicTypes::Field2d, WidgetTypes::SendableField, "Field2d");
+
+    REGISTER_TYPE(TopicTypes::Command, WidgetTypes::Command, "Command");
 
 #undef REGISTER_TYPE
 

@@ -362,6 +362,9 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
     } else if (m_resizing) {
         resizeRelease(event->pos());
     }
+
+    m_dragging = false;
+    m_resizing = false;
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {

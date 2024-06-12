@@ -12,13 +12,12 @@ class BaseWidget;
 class TopicStore : public QObject
 {
     Q_OBJECT
-private:
+public:
     static QHash<std::string, nt::NetworkTableEntry *> topicEntryMap;
     static QMultiHash<std::string, BaseWidget *> topicSubscriberMap;
 
     // little messy but its alright
     static QHash<std::pair<std::string, BaseWidget *>, NT_Listener> topicListenerMap;
-public:
     TopicStore();
 
     static nt::NetworkTableEntry *subscribe(std::string ntTopic, BaseWidget *subscriber);

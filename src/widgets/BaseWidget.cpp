@@ -14,6 +14,7 @@
 #include "widgets/IntegerDialWidget.h"
 #include "widgets/FieldWidget.h"
 #include "widgets/SendableFieldWidget.h"
+#include "widgets/CommandWidget.h"
 
 #include "misc/WidgetDialogGenerator.h"
 
@@ -53,7 +54,7 @@ BaseWidget::BaseWidget(const WidgetTypes &type, const QString &title, const QStr
 }
 
 BaseWidget::~BaseWidget() {
-    TopicStore::unsubscribe(m_entry, this);
+    TopicStore::unsubscribe(m_topic.toStdString(), this);
 }
 
 bool BaseWidget::ready() {
@@ -95,7 +96,7 @@ void BaseWidget::setTopic(const QString &topic)
         return;
 
     m_topic = topic;
-    if (m_entry != nullptr) TopicStore::unsubscribe(m_entry, this);
+    if (m_entry != nullptr) TopicStore::unsubscribe(m_topic.toStdString(), this);
     m_entry = TopicStore::subscribe(topic.toStdString(), this);
 }
 
@@ -261,6 +262,8 @@ BaseWidget *BaseWidget::defaultWidgetFromTopic(QString ntTopic, WidgetTypes type
 
     REGISTER_WIDGET_TYPE(WidgetTypes::Field, FieldWidget)
     REGISTER_WIDGET_TYPE(WidgetTypes::SendableField, SendableFieldWidget)
+
+    REGISTER_WIDGET_TYPE(WidgetTypes::Command, CommandWidget)
 
     // implicit-condition: StringDisplay
     { // else

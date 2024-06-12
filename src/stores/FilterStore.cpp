@@ -12,10 +12,12 @@ FilterStore::FilterStore()
 
 void FilterStore::registerSendable(std::string typeString, TopicTypes topicType) {
     m_sendableTypeMap.insert(typeString, topicType);
+    Globals::topicTypeDisplayNames.insert(topicType, QString::fromStdString(typeString));
 }
 
-void FilterStore::registerNTType(nt::NetworkTableType ntType, TopicTypes topicType) {
+void FilterStore::registerNTType(nt::NetworkTableType ntType, TopicTypes topicType, const QString &displayName) {
     m_ntTypeMap.insert(ntType, topicType);
+    Globals::topicTypeDisplayNames.insert(topicType, displayName);
 }
 
 std::optional<TopicTypes> FilterStore::sendableTypeForTypeString(std::string typeString) {
