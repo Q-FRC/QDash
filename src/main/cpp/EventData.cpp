@@ -335,8 +335,10 @@ void EventData::updateLastMatchData()
                 // Match Code
                 const QString matchKey = match["key"].toString();
 
-                m_lastMatchCode->setText("Last Match:\n" + matchKey);
-
+                if (!matchKey.isEmpty()) {
+                    m_lastMatchCode->setText("Last Match:\n" + matchKey);
+                }
+                
                 // Set team numbers
                 setTeamNumbers(match, m_lastRedTeams, m_lastBlueTeams);
                 setMatchScore(match, m_lastRedScore, m_lastBlueScore); });
@@ -360,12 +362,17 @@ void EventData::updateCurrentMatchData()
                 const QJsonDocument json = QJsonDocument::fromJson(data);
                 const QJsonArray matches = sortMatches(json.array());
 
-                const QJsonValue match = matches[lastPlayedMatchIndex(matches)];
+                int index = lastPlayedMatchIndex(matches);
+                index = matches.size() > index ? index : index + 1;
+
+                const QJsonValue match = matches[index];
 
                 // Match Code
                 const QString matchKey = match["key"].toString();
 
-                m_currentMatchCode->setText("Match On Field:\n" + matchKey);
+                if (!matchKey.isEmpty()) {
+                    m_currentMatchCode->setText("Match On Field:\n" + matchKey);
+                }
 
                 // Set team numbers
                 setTeamNumbers(match, m_currentRedTeams, m_currentBlueTeams); });
@@ -397,7 +404,9 @@ void EventData::updateNextMatchData()
                 // Match Code
                 const QString matchKey = match["key"].toString();
 
-                m_nextMatchCode->setText("Next Match:\n" + matchKey);
+                if (!matchKey.isEmpty()) {
+                    m_nextMatchCode->setText("Next Match:\n" + matchKey);
+                }
 
                 // Set team numbers
                 setTeamNumbers(match, m_nextRedTeams, m_nextBlueTeams); });
