@@ -3,6 +3,7 @@
 #include "dialogs/NewBooleanDisplayDialog.h"
 #include "dialogs/NewStringDisplayDialog.h"
 #include "dialogs/NewDoubleDisplayDialog.h"
+#include "dialogs/NewDoubleDialDialog.h"
 
 #include "Globals.h"
 
@@ -68,6 +69,10 @@ NewWidgetDialog *NewWidgetDialog::fromWidgetType(NewWidgetDialog::WidgetTypes ty
     }
     case WidgetTypes::DoubleDisplay: {
         return new NewDoubleDisplayDialog(ntTopic);
+        break;
+    }
+    case WidgetTypes::DoubleDial: {
+        return new NewDoubleDialDialog(ntTopic);
         break;
     }
     case WidgetTypes::StringDisplay:

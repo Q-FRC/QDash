@@ -44,7 +44,8 @@ public:
         BooleanCheckbox,
         BooleanDisplay,
         StringDisplay,
-        DoubleDisplay
+        DoubleDisplay,
+        DoubleDial
     };
 
     static NewWidgetDialog *fromWidgetType(WidgetTypes type, std::string ntTopic);

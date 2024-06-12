@@ -25,7 +25,7 @@ set(PROJECT_SOURCES
         src/widgets/StringDisplayWidget.cpp
         src/widgets/TextWidget.cpp
         src/widgets/BooleanCheckboxWidget.cpp
-
+        src/widgets/DoubleDialWidget.cpp
 
         src/dialogs/ResizeDialog.cpp
         src/dialogs/NewWidgetDialog.cpp
@@ -33,6 +33,7 @@ set(PROJECT_SOURCES
         src/dialogs/NewStringDisplayDialog.cpp
         src/dialogs/NewDoubleDisplayDialog.cpp
         src/dialogs/NewBooleanDisplayDialog.cpp
+        src/dialogs/NewDoubleDialDialog.cpp
 
         # =======================================
 
@@ -46,7 +47,7 @@ set(PROJECT_SOURCES
         include/widgets/StringDisplayWidget.h
         include/widgets/TextWidget.h
         include/widgets/BooleanCheckboxWidget.h
-
+        include/widgets/DoubleDialWidget.h
 
         include/dialogs/ResizeDialog.h
         include/dialogs/NewWidgetDialog.h
@@ -54,6 +55,7 @@ set(PROJECT_SOURCES
         include/dialogs/NewStringDisplayDialog.h
         include/dialogs/NewDoubleDisplayDialog.h
         include/dialogs/NewBooleanDisplayDialog.h
+        include/dialogs/NewDoubleDialDialog.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

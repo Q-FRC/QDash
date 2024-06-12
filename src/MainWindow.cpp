@@ -206,12 +206,23 @@ void MainWindow::constructNewWidgetMenu(QMenu *menu) {
             break;
         }
         case nt::NetworkTableType::kDouble: {
-            QAction *doubleAction = new QAction(topicName, this);
-            menu->addAction(doubleAction);
+            QMenu *doubleMenu = new QMenu(topicName, menu);
 
-            connect(doubleAction, &QAction::triggered, this, [this, topicName](bool) {
+            QAction *displayAction = new QAction("Number Display", this);
+            doubleMenu->addAction(displayAction);
+
+            connect(displayAction, &QAction::triggered, this, [this, topicName](bool) {
                 showNewWidgetDialog(NewWidgetDialog::WidgetTypes::DoubleDisplay, topicName.toStdString());
             });
+
+            QAction *dialAction = new QAction("Dial", this);
+            doubleMenu->addAction(dialAction);
+
+            connect(dialAction, &QAction::triggered, this, [this, topicName](bool) {
+                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::DoubleDial, topicName.toStdString());
+            });
+
+            menu->addMenu(doubleMenu);
             break;
         }
         case nt::NetworkTableType::kString:
