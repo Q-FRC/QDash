@@ -41,10 +41,11 @@ model {
             sources.cpp {
                 source {
                     srcDir 'src/main/cpp'
-                    include '**/*.cpp', '**/*.cc'
+                    include '**/*.cpp', '**/*.cc', "*.cpp"
                 }
                 exportedHeaders {
                     srcDir 'src/main/include'
+                    include '**/*.h', "*.h"
                 }
                 lib library: 'QtHeaders', linkage: 'api'
                 lib library: 'QtCore', linkage: 'shared'
