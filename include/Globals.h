@@ -5,20 +5,6 @@
 #include <QString>
 #include <QMap>
 
-namespace Globals {
-extern nt::NetworkTableInstance inst;
-extern QString server;
-
-enum class TopicTypes {
-    SendableChooser,
-    Double,
-    String,
-    Boolean
-};
-
-extern QStringList ntTopics;
-extern QMap<QString, TopicTypes> availableTopics;
-}
 
 typedef struct WidgetData {
     int tabIdx;
@@ -37,3 +23,22 @@ enum class WidgetTypes {
     SendableChooser = 5,
     CameraView = 6
 };
+
+extern WidgetData makeWidgetData(int row, int col, int rowSpan, int colSpan, int tabIdx);
+extern bool operator==(const WidgetData &a, const WidgetData &b);
+
+namespace Globals {
+extern nt::NetworkTableInstance inst;
+extern QString server;
+
+enum class TopicTypes {
+    SendableChooser,
+    Double,
+    String,
+    Boolean
+};
+
+extern QStringList ntTopics;
+extern QMap<QString, TopicTypes> availableTopics;
+extern WidgetData *defaultWidgetData;
+}

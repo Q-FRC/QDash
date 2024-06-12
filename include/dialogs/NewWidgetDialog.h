@@ -38,10 +38,10 @@ protected:
 
     QDialogButtonBox *m_buttonBox;
 public:
-    NewWidgetDialog(std::string ntTopic);
+    NewWidgetDialog(std::string ntTopic, QWidget *parent, const WidgetData &data);
     virtual ~NewWidgetDialog();
 
-    static NewWidgetDialog *fromWidgetType(WidgetTypes type, std::string ntTopic);
+    static NewWidgetDialog *fromWidgetType(WidgetTypes type, std::string ntTopic, QWidget *parent = nullptr, const WidgetData &data = makeWidgetData(0, 0, 0, 0, 0));
 
 signals:
     void widgetReady(BaseWidget *widget, WidgetData data);

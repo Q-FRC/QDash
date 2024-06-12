@@ -6,7 +6,7 @@
 
 #include "Globals.h"
 
-NewWidgetListDialog::NewWidgetListDialog() : QDialog()
+NewWidgetListDialog::NewWidgetListDialog(QWidget *parent = nullptr) : QDialog(parent)
 {
     m_layout = new QVBoxLayout(this);
 
@@ -91,10 +91,6 @@ void NewWidgetListDialog::constructList() {
 
 void NewWidgetListDialog::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
-//        QList<QListWidgetItem *> items = m_list->selectedItems();
-//        if (!items.empty()) {
-//            emit m_list->itemActivated(items.at(0));
-//        }
         return;
     }
     QDialog::keyPressEvent(event);
@@ -111,7 +107,8 @@ QAction *NewWidgetListDialog::createWidgetAction(const QString &text, const QStr
 }
 
 void NewWidgetListDialog::showNewWidgetDialog(WidgetTypes widgetType, std::string ntTopic) {
-    NewWidgetDialog *dialog = NewWidgetDialog::fromWidgetType(widgetType, ntTopic);
+    NewWidgetDialog *dialog = NewWidgetDialog::fromWidgetType(widgetType, ntTopic, this->parentWidget());
+    dialog->setWindowTitle("New Widget");
     dialog->show();
 
     connect(dialog, &NewWidgetDialog::widgetReady, this, &NewWidgetListDialog::emitWidget);

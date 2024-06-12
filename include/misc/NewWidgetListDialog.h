@@ -7,7 +7,8 @@
 #include <QListWidget>
 #include <QDialogButtonBox>
 
-#include "dialogs/NewWidgetDialog.h"
+#include "Globals.h"
+#include "widgets/BaseWidget.h"
 
 class NewWidgetListDialog : public QDialog
 {
@@ -21,7 +22,7 @@ private:
     void constructList();
     QAction *createWidgetAction(const QString &text, const QString &ntTopic, const WidgetTypes &widgetType);
 public:
-    NewWidgetListDialog();
+    NewWidgetListDialog(QWidget *parent);
     virtual ~NewWidgetListDialog();
 
     void showNewWidgetDialog(WidgetTypes widgetType, std::string ntTopic);

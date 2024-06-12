@@ -6,7 +6,7 @@
 class NewBooleanCheckboxDialog : public NewWidgetDialog
 {
 public:
-    NewBooleanCheckboxDialog(std::string ntTopic);
+    NewBooleanCheckboxDialog(std::string ntTopic, QWidget *parent, WidgetData data);
     virtual ~NewBooleanCheckboxDialog();
 };
 

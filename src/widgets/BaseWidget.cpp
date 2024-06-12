@@ -1,7 +1,7 @@
 #include "widgets/BaseWidget.h"
 #include "Globals.h"
 
-#include "misc/ResizeDialog.h"
+#include "dialogs/NewWidgetDialog.h"
 
 #include "widgets/BooleanCheckboxWidget.h"
 #include "widgets/BooleanDisplayWidget.h"
@@ -17,8 +17,10 @@
 #include <QPainter>
 #include <QJsonArray>
 
-BaseWidget::BaseWidget(const QString &title, const QString &topic)
+BaseWidget::BaseWidget(const WidgetTypes &type, const QString &title, const QString &topic)
 {
+    m_type = type;
+
     m_layout = new QGridLayout(this);
     m_title = new QLineEdit(title, this);
     m_entry = Globals::inst.GetEntry(topic.toStdString());
@@ -78,11 +80,12 @@ QMenu *BaseWidget::constructContextMenu(WidgetData data) {
     menu->addAction(resizeAction);
 
     connect(resizeAction, &QAction::triggered, this, [this, data](bool) {
-        ResizeDialog *dialog = new ResizeDialog(data);
+        NewWidgetDialog *dialog = NewWidgetDialog::fromWidgetType(m_type, m_entry.GetName(), this->parentWidget(), data);
+        dialog->setWindowTitle("Resize Widget");
         dialog->show();
 
-        connect(dialog, &ResizeDialog::resizeReady, this, [this](WidgetData data) {
-            emit resizeRequested(data);
+        connect(dialog, &NewWidgetDialog::widgetReady, this, [this](BaseWidget *widget, WidgetData data) {
+            emit reconfigRequested(widget, data);
         });
     });
 
@@ -149,6 +152,7 @@ std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int ta
     }
     case WidgetTypes::DoubleDisplay: {
         NumberDisplayWidget *displayWidget = new NumberDisplayWidget(
+            WidgetTypes::DoubleDisplay,
             obj.value("title").toString(),
             obj.value("value").toDouble(),
             obj.value("topic").toString());

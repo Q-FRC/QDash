@@ -1,7 +1,7 @@
 #include "dialogs/NewCameraViewDialog.h"
 #include "widgets/CameraViewWidget.h"
 
-NewCameraViewDialog::NewCameraViewDialog() : NewWidgetDialog("")
+NewCameraViewDialog::NewCameraViewDialog(QWidget *parent, WidgetData data) : NewWidgetDialog("", parent, data)
 {
     m_urlEdit = new QLineEdit(this);
 

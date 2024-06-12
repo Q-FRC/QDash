@@ -1,6 +1,6 @@
 #include "widgets/StringDisplayWidget.h"
 
-StringDisplayWidget::StringDisplayWidget(const QString &title, const QString &defaultValue, const QString &topic) : TextWidget(title, defaultValue, topic)
+StringDisplayWidget::StringDisplayWidget(const QString &title, const QString &defaultValue, const QString &topic) : TextWidget(WidgetTypes::StringDisplay, title, defaultValue, topic)
 {
     m_value = defaultValue;
 }

@@ -8,7 +8,8 @@ class NewCameraViewDialog : public NewWidgetDialog
 protected:
     QLineEdit *m_urlEdit;
 public:
-    NewCameraViewDialog();
+    // default constructor errors are really funny
+    NewCameraViewDialog(QWidget *parent, WidgetData data = makeWidgetData(0, 0, 0, 0, 0));
     virtual ~NewCameraViewDialog();
 };
 

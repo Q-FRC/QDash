@@ -16,6 +16,7 @@
 #include <QMessageBox>
 #include <QJsonArray>
 #include <QFileDialog>
+#include <QApplication>
 
 MainWindow::MainWindow()
 {
@@ -218,13 +219,16 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::RightButton && widgetPressed) {
         QMenu *menu = widgetPressed->constructContextMenu(m_widgets.value(widgetPressed));
 
-        connect(widgetPressed, &BaseWidget::resizeRequested, this, [this, widgetPressed](WidgetData data) {
+        connect(widgetPressed, &BaseWidget::reconfigRequested, this, [this, widgetPressed](BaseWidget *widget, WidgetData data) {
             data.tabIdx = m_centralWidget->currentIndex();
 
             m_widgets.remove(widgetPressed);
-            m_widgets.insert(widgetPressed, data);
+            m_widgets.insert(widget, data);
+
+            widget->setTitle(widgetPressed->title());
 
             setNeedsRelay(true);
+            delete widgetPressed;
         });
 
         connect(widgetPressed, &BaseWidget::deleteRequested, this, [this, widgetPressed] {
@@ -388,10 +392,16 @@ void MainWindow::newWidgetPopup() {
             newTab();
         }
     } else {
-        NewWidgetListDialog *listDialog = new NewWidgetListDialog;
+        NewWidgetListDialog *listDialog = new NewWidgetListDialog(this);
+        listDialog->setWindowTitle("Select Widget...");
+
+        // Width: 1/4 of available space
+        // Height: 1/2 of available space
+        QRect screenSize = qApp->primaryScreen()->geometry();
+        listDialog->resize(screenSize.width() / 4., screenSize.height() / 2.);
 
         connect(listDialog, &NewWidgetListDialog::widgetReady, this, &MainWindow::newWidget);
-        listDialog->open();
+        listDialog->show();
     }
 }
 
@@ -403,7 +413,7 @@ void MainWindow::newCameraView() {
             newTab();
         }
     } else {
-        NewCameraViewDialog *dialog = new NewCameraViewDialog;
+        NewCameraViewDialog *dialog = new NewCameraViewDialog(this);
         dialog->open();
 
         connect(dialog, &NewWidgetDialog::widgetReady, this, &MainWindow::newWidget);

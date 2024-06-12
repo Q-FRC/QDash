@@ -39,7 +39,6 @@ set(PROJECT_SOURCES
         src/dialogs/NewCameraViewDialog.cpp
 
         src/misc/NewWidgetListDialog.cpp
-        src/misc/ResizeDialog.cpp
 
 
         # =======================================
@@ -68,7 +67,7 @@ set(PROJECT_SOURCES
         include/dialogs/NewCameraViewDialog.h
 
         include/misc/NewWidgetListDialog.h
-        include/misc/ResizeDialog.h
+
 
 )
 

@@ -9,7 +9,7 @@ protected:
 
     void keyPressEvent(QKeyEvent *event) override;
 public:
-    NumberDisplayWidget(const QString &title, const double &defaultValue, const QString &topic);
+    NumberDisplayWidget(const WidgetTypes &type, const QString &title, const double &defaultValue, const QString &topic);
     virtual ~NumberDisplayWidget();
 
     QJsonObject saveObject() override;

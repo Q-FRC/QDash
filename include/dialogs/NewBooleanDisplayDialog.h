@@ -18,7 +18,7 @@ private:
     QLineEdit *m_falseColorEdit;
     QPushButton *m_falseColorSelect;
 public:
-    NewBooleanDisplayDialog(std::string ntTopic);
+    NewBooleanDisplayDialog(std::string ntTopic, QWidget *parent, WidgetData data);
     virtual ~NewBooleanDisplayDialog();
 };
 

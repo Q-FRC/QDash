@@ -2,7 +2,7 @@
 
 #include <QKeyEvent>
 
-NumberDisplayWidget::NumberDisplayWidget(const QString &title, const double &defaultValue, const QString &topic) : TextWidget(title, QString::number(defaultValue), topic)
+NumberDisplayWidget::NumberDisplayWidget(const WidgetTypes &type, const QString &title, const double &defaultValue, const QString &topic) : TextWidget(type, title, QString::number(defaultValue), topic)
 {
     m_value = defaultValue;
 }

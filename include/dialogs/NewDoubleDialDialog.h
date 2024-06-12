@@ -11,7 +11,7 @@ protected:
     QDoubleSpinBox *m_minInput;
     QDoubleSpinBox *m_maxInput;
 public:
-    NewDoubleDialDialog(std::string ntTopic);
+    NewDoubleDialDialog(std::string ntTopic, QWidget *parent, WidgetData data);
     virtual ~NewDoubleDialDialog();
 };
 

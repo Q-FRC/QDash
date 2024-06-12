@@ -6,7 +6,7 @@
 class NewStringChooserDialog : public NewWidgetDialog
 {
 public:
-    NewStringChooserDialog(std::string ntTopic);
+    NewStringChooserDialog(std::string ntTopic, QWidget *parent, WidgetData data);
     virtual ~NewStringChooserDialog();
 };
 #endif // NEWSTRINGCHOOSERDIALOG_H

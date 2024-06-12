@@ -1,6 +1,6 @@
 #include "widgets/BooleanDisplayWidget.h"
 
-BooleanDisplayWidget::BooleanDisplayWidget(const QString &title, const bool &defaultValue, const QString &topic) : BaseWidget(title, topic)
+BooleanDisplayWidget::BooleanDisplayWidget(const QString &title, const bool &defaultValue, const QString &topic) : BaseWidget(WidgetTypes::BooleanDisplay, title, topic)
 {
     m_value = defaultValue;
     m_colorWidget = new QFrame(this);

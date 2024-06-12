@@ -2,7 +2,7 @@
 
 #include "widgets/NumberDisplayWidget.h"
 
-NewDoubleDisplayDialog::NewDoubleDisplayDialog(std::string ntTopic) : NewWidgetDialog(ntTopic)
+NewDoubleDisplayDialog::NewDoubleDisplayDialog(std::string ntTopic, QWidget *parent = nullptr, WidgetData data = makeWidgetData(0, 0, 0, 0, 0)) : NewWidgetDialog(ntTopic, parent, data)
 {
     m_layout->addWidget(m_buttonBox);
 
@@ -14,7 +14,7 @@ NewDoubleDisplayDialog::NewDoubleDisplayDialog(std::string ntTopic) : NewWidgetD
         data.rowSpan = m_rowSpanInput->value();
         data.colSpan = m_columnSpanInput->value();
 
-        NumberDisplayWidget *widget = new NumberDisplayWidget(name, 0., QString::fromStdString(ntTopic));
+        NumberDisplayWidget *widget = new NumberDisplayWidget(WidgetTypes::DoubleDisplay, name, 0., QString::fromStdString(ntTopic));
 
         emit widgetReady(widget, data);
         close();

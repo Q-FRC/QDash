@@ -4,7 +4,7 @@
 #include <QMenu>
 #include <QFontDialog>
 
-TextWidget::TextWidget(const QString &title, const QString &defaultText, const QString &topic) : BaseWidget::BaseWidget(title, topic)
+TextWidget::TextWidget(const WidgetTypes &type, const QString &title, const QString &defaultText, const QString &topic) : BaseWidget::BaseWidget(type, title, topic)
 {
     m_text = new QLineEdit(defaultText, this);
 

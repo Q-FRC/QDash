@@ -13,13 +13,14 @@ class BaseWidget : public QWidget
 {
     Q_OBJECT
 protected:
+    WidgetTypes m_type;
     QGridLayout *m_layout;
 
     QLineEdit *m_title;
 
     nt::NetworkTableEntry m_entry;
 public:
-    BaseWidget(const QString &title, const QString &topic);
+    BaseWidget(const WidgetTypes &type, const QString &title, const QString &topic);
     virtual ~BaseWidget();
 
     QFont titleFont();
@@ -42,6 +43,6 @@ public:
     static std::pair<BaseWidget *, WidgetData> fromJson(QJsonObject obj, int tabIdx);
 
 signals:
-    void resizeRequested(WidgetData data);
+    void reconfigRequested(BaseWidget *widget, WidgetData data);
     void deleteRequested();
 };

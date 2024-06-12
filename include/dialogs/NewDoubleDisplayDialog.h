@@ -6,7 +6,7 @@
 class NewDoubleDisplayDialog : public NewWidgetDialog
 {
 public:
-    NewDoubleDisplayDialog(std::string ntTopic);
+    NewDoubleDisplayDialog(std::string ntTopic, QWidget *parent, WidgetData data);
     virtual ~NewDoubleDisplayDialog();
 };
 

@@ -1,6 +1,6 @@
 #include "widgets/DoubleDialWidget.h"
 
-DoubleDialWidget::DoubleDialWidget(const QString &title, const double &defaultValue, const QString &topic) : NumberDisplayWidget(title, defaultValue, topic) {
+DoubleDialWidget::DoubleDialWidget(const QString &title, const double &defaultValue, const QString &topic) : NumberDisplayWidget(WidgetTypes::DoubleDial, title, defaultValue, topic) {
     m_dial = new QDial(this);
 
     m_fakeValue = defaultValue * 100;

@@ -1,7 +1,7 @@
 #include "widgets/StringChooserWidget.h"
 #include "Globals.h"
 
-StringChooserWidget::StringChooserWidget(const QString &title, const QString &topic) : BaseWidget(title, topic)
+StringChooserWidget::StringChooserWidget(const QString &title, const QString &topic) : BaseWidget(WidgetTypes::SendableChooser, title, topic)
 {
     m_table = Globals::inst.GetTable(topic.toStdString());
     m_active = m_table->GetEntry("active");

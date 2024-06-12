@@ -1,6 +1,6 @@
 #include "widgets/BooleanCheckboxWidget.h"
 
-BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &title, const bool &defaultValue, const QString &topic) : BaseWidget(title, topic)
+BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &title, const bool &defaultValue, const QString &topic) : BaseWidget(WidgetTypes::BooleanCheckbox, title, topic)
 {
     m_value = defaultValue;
 
