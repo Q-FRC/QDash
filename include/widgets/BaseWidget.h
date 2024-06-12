@@ -64,7 +64,7 @@ public:
     void paintEvent(QPaintEvent *event);
 
     QJsonObject saveObject();
-    WidgetData fromJson(QJsonObject obj, int tabIdx);
+    WidgetData fromJson(QJsonObject obj);
 
     static BaseWidget *defaultWidgetFromTopic(QString ntTopic, WidgetTypes type);
 

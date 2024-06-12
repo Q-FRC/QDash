@@ -196,7 +196,7 @@ QJsonObject BaseWidget::saveObject() {
     return object;
 }
 
-WidgetData BaseWidget::fromJson(QJsonObject obj, int tabIdx) {
+WidgetData BaseWidget::fromJson(QJsonObject obj) {
     int offset = staticMetaObject.propertyOffset();
     int propertyCount = metaObject()->propertyCount();
 
@@ -235,8 +235,8 @@ WidgetData BaseWidget::fromJson(QJsonObject obj, int tabIdx) {
     }
 
     QJsonArray geometry = obj.value("geometry").toArray({});
+
     WidgetData data;
-    data.tabIdx = tabIdx;
     data.row = geometry.at(0).toInt(0);
     data.col = geometry.at(1).toInt(0);
     data.rowSpan = geometry.at(2).toInt(1);

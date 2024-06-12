@@ -14,8 +14,6 @@ BetterDial::BetterDial(QWidget *parent)
     setMin(0);
     setMax(10);
     setStartingAngle(0.);
-
-    removeEventFilter(parent);
 }
 
 int BetterDial::min() {

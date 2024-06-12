@@ -16,8 +16,7 @@ bool operator==(const WidgetData &a, const WidgetData &b) {
     return (a.row == b.row) &&
            (a.col == b.col) &&
            (a.rowSpan == b.rowSpan) &&
-           (a.colSpan == b.rowSpan) &&
-           (a.tabIdx == b.tabIdx);
+           (a.colSpan == b.rowSpan);
 }
 
 uint Globals::qHash(const Globals::Topic &topic) {

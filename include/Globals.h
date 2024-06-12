@@ -47,7 +47,6 @@ typedef struct {
 } ServerData;
 
 typedef struct {
-    int tabIdx;
     int row;
     int col;
     int rowSpan;

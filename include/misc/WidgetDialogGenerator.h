@@ -45,7 +45,7 @@ private:
     std::tuple<QTableWidget *, QPushButton *, QPushButton *> setupTable(const QStringList &headers);
 
 public:
-    WidgetDialogGenerator(BaseWidget *widget, QWidget *parent = nullptr, bool isResize = false, WidgetData data = WidgetData{0, 0, 0, 1, 1});
+    WidgetDialogGenerator(BaseWidget *widget, QWidget *parent = nullptr, bool isResize = false, WidgetData data = WidgetData{0, 0, 1, 1});
     ~WidgetDialogGenerator();
 
     void bindMetaProperty(const QMetaProperty property, Getter getter);

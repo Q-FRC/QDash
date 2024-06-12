@@ -26,7 +26,7 @@ QList<QAction *> TypeStore::generateActionsForTopic(Globals::Topic topic) {
         connect(action, &QAction::triggered, action, [this, widgetType, displayName, topic] {
             auto widget = BaseWidget::defaultWidgetFromTopic(topic.name, widgetType);
 
-            emit widgetReady(widget, WidgetData{0, 0, 0, 1, 1});
+            emit widgetReady(widget, WidgetData{0, 0, 1, 1});
         });
 
         actions.append(action);

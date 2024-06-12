@@ -117,7 +117,7 @@ WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, QWidget *parent
         QString name = m_nameInput->text();
 
         WidgetData widgetData;
-        widgetData.tabIdx = 0;
+
         widgetData.row = m_rowInput->value();
         widgetData.col = m_columnInput->value();
         widgetData.rowSpan = m_rowSpanInput->value();
