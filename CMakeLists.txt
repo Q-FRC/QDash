@@ -26,6 +26,7 @@ set(PROJECT_SOURCES
         src/widgets/TextWidget.cpp
 
         src/dialogs/ResizeDialog.cpp
+        src/dialogs/NewWidgetDialog.cpp
 
         include/Globals.h
         include/MainWindow.h
@@ -38,6 +39,7 @@ set(PROJECT_SOURCES
         include/widgets/TextWidget.h
 
         include/dialogs/ResizeDialog.h
+        include/dialogs/NewWidgetDialog.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -16,11 +16,12 @@
 #include <QStackedLayout>
 #include <QMap>
 #include <QMouseEvent>
+#include <QTabWidget>
 
 class MainWindow : public QMainWindow
 {
 private:
-    QWidget *m_centralWidget;
+    QTabWidget *m_centralWidget;
     QStackedLayout *m_layout;
 
     QToolBar *m_toolbar;

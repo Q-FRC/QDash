@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include "Globals.h"
 #include "dialogs/ResizeDialog.h"
+#include "dialogs/NewWidgetDialog.h"
 
 #include <QToolBar>
 #include <QMenuBar>
@@ -9,16 +10,14 @@
 
 MainWindow::MainWindow()
 {
-    setCentralWidget(m_centralWidget = new QWidget);
+    setCentralWidget(m_centralWidget = new QTabWidget);
 
     // Use a stacked layout to have multiple widgets available to switch between
     // Using setCentralWidget is not possible, because upon switching the central widget
     // the previously set widget is destroyed.
-    m_layout = new QStackedLayout(m_centralWidget);
-
     m_tabWidget = new TabWidget(QPoint(3, 3));
 
-    BooleanDisplayWidget *boolean = new BooleanDisplayWidget("Test", "yoooo", "deez");
+    BooleanDisplayWidget *boolean = new BooleanDisplayWidget("Test", "yoooo", "cryaboutit");
     boolean->setTrueColor(Qt::blue);
     boolean->setFalseColor(Qt::yellow);
 
@@ -27,7 +26,8 @@ MainWindow::MainWindow()
     NumberDisplayWidget *number = new NumberDisplayWidget("Numero", 25.3, "numero");
     StringDisplayWidget *string = new StringDisplayWidget("String", "hola", "stringio");
 
-    m_layout->addWidget(m_tabWidget);
+    m_centralWidget->setCurrentWidget(m_tabWidget);
+    m_centralWidget->addTab(m_tabWidget, "Dashboard");
 
     QList<int> booleanData({0, 0, 0, 1, 1});
     m_widgets.insert(boolean, booleanData);
@@ -47,16 +47,50 @@ MainWindow::MainWindow()
     QAction *ntServerAction = new QAction("NT Server");
     connect(ntServerAction, &QAction::triggered, this, [this](bool)
             {
-        bool ok;
-        QString server = QInputDialog::getText(this, "NT Server Settings", "Input NT4 Server Address", QLineEdit::Normal, "", &ok);
-        
-        if (!server.isEmpty() && ok) {
-            Globals::server = server;
-            nt::SetServer(Globals::inst, Globals::server.toStdString().c_str(), NT_DEFAULT_PORT4);
-        }
-    });
+                bool ok;
+                QString server = QInputDialog::getText(this, "NT Server Settings", "Input NT4 Server Address", QLineEdit::Normal, "", &ok);
+
+                if (!server.isEmpty() && ok) {
+                    Globals::server = server;
+                    nt::SetServer(Globals::inst, Globals::server.toStdString().c_str(), NT_DEFAULT_PORT4);
+                }
+            });
 
     m_menubar->addAction(ntServerAction);
+
+    QAction *newWidget = new QAction("New Widget");
+    connect(newWidget, &QAction::triggered, this, [this](bool) {
+        NewWidgetDialog *dialog = new NewWidgetDialog("cryaboutit");
+        dialog->show();
+
+        connect(dialog, &NewWidgetDialog::dataReady, this, [this, dialog](std::string topic, NT_Type type, QString name, QColor trueColor, QColor falseColor, QList<int> widgetData) {
+            switch(type) {
+                case NT_BOOLEAN: {
+                    BooleanDisplayWidget *widget = new BooleanDisplayWidget(name, false, QString::fromStdString(topic));
+                    widget->setTrueColor(trueColor);
+                    widget->setFalseColor(falseColor);
+                    QList<int> finalData({m_centralWidget->currentIndex(), widgetData[0], widgetData[1], widgetData[2], widgetData[3]});
+                    m_widgets.insert(widget, finalData);
+                    break;
+                }
+                case NT_DOUBLE: {
+                    NumberDisplayWidget *widget = new NumberDisplayWidget(name, 0., QString::fromStdString(topic));
+                    QList<int> finalData({m_centralWidget->currentIndex(), widgetData[0], widgetData[1], widgetData[2], widgetData[3]});
+                    m_widgets.insert(widget, finalData);
+                }
+                default:
+                case NT_STRING: {
+                    StringDisplayWidget *widget = new StringDisplayWidget(name, "", QString::fromStdString(topic));
+                    QList<int> finalData({m_centralWidget->currentIndex(), widgetData[0], widgetData[1], widgetData[2], widgetData[3]});
+                    m_widgets.insert(widget, finalData);
+                    break;
+                }
+            }
+            m_needsRelay = true;
+            dialog->close();
+        });
+    });
+    m_menubar->addAction(newWidget);
 
     update();
 }
@@ -113,11 +147,11 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         menu->addAction(resizeAction);
         menu->popup(event->globalPosition().toPoint());
 
-        connect(resizeAction, &QAction::triggered, [this, widgetPressed](bool) {
+        connect(resizeAction, &QAction::triggered, this, [this, widgetPressed](bool) {
             ResizeDialog *dialog = new ResizeDialog(m_widgets.value(widgetPressed));
             dialog->show();
 
-            connect(dialog, &ResizeDialog::finished, [this, widgetPressed, dialog](QList<int> data) {
+            connect(dialog, &ResizeDialog::finished, this, [this, widgetPressed, dialog](QList<int> data) {
                 QList<int> finalData({0, data[0], data[1], data[2], data[3]});
                 m_widgets.remove(widgetPressed);
                 m_widgets.insert(widgetPressed, finalData);
