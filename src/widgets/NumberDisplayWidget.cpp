@@ -20,6 +20,15 @@ void NumberDisplayWidget::update() {
     }
 }
 
+QJsonObject NumberDisplayWidget::saveObject() {
+    QJsonObject object = TextWidget::saveObject();
+
+    object.insert("value", m_value);
+    object.insert("widgetType", (int) WidgetTypes::DoubleDisplay);
+
+    return object;
+}
+
 void NumberDisplayWidget::keyPressEvent(QKeyEvent *event) {
     if (m_text->hasFocus()) {
         m_entry.SetDouble(m_text->text().toDouble());

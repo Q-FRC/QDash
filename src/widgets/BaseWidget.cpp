@@ -3,10 +3,19 @@
 
 #include "misc/ResizeDialog.h"
 
+#include "widgets/BooleanCheckboxWidget.h"
+#include "widgets/BooleanDisplayWidget.h"
+#include "widgets/CameraViewWidget.h"
+#include "widgets/DoubleDialWidget.h"
+#include "widgets/NumberDisplayWidget.h"
+#include "widgets/StringChooserWidget.h"
+#include "widgets/StringDisplayWidget.h"
+
 #include <QMenu>
 #include <QFontDialog>
 #include <QStyleOption>
 #include <QPainter>
+#include <QJsonArray>
 
 BaseWidget::BaseWidget(const QString &title, const QString &topic)
 {
@@ -72,7 +81,7 @@ QMenu *BaseWidget::constructContextMenu(WidgetData data) {
         ResizeDialog *dialog = new ResizeDialog(data);
         dialog->show();
 
-        connect(dialog, &ResizeDialog::finished, this, [this](WidgetData data) {
+        connect(dialog, &ResizeDialog::resizeReady, this, [this](WidgetData data) {
             emit resizeRequested(data);
         });
     });
@@ -101,4 +110,112 @@ void BaseWidget::paintEvent(QPaintEvent *event) {
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 
     QWidget::paintEvent(event);
+}
+
+QJsonObject BaseWidget::saveObject() {
+    QJsonObject object{};
+
+    object.insert("title", title());
+    object.insert("topic", QString::fromStdString(m_entry.GetName()));
+    object.insert("titleFont", titleFont().toString());
+
+    return object;
+}
+
+std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int tabIdx) {
+    WidgetTypes widgetType = (WidgetTypes) obj.value("widgetType").toInt();
+
+    BaseWidget *widget;
+
+    switch (widgetType) {
+    case WidgetTypes::BooleanCheckbox: {
+        widget = new BooleanCheckboxWidget(
+            obj.value("title").toString(),
+            obj.value("value").toBool(),
+            obj.value("topic").toString());
+        break;
+    }
+    case WidgetTypes::BooleanDisplay: {
+        BooleanDisplayWidget *displayWidget = new BooleanDisplayWidget(
+            obj.value("title").toString(),
+            obj.value("value").toBool(),
+            obj.value("topic").toString());
+
+        displayWidget->setTrueColor(QColor::fromString(obj.value("trueColor").toString()));
+        displayWidget->setFalseColor(QColor::fromString(obj.value("falseColor").toString()));
+
+        widget = displayWidget;
+        break;
+    }
+    case WidgetTypes::DoubleDisplay: {
+        NumberDisplayWidget *displayWidget = new NumberDisplayWidget(
+            obj.value("title").toString(),
+            obj.value("value").toDouble(),
+            obj.value("topic").toString());
+
+        QFont font;
+        font.fromString(obj.value("textFont").toString());
+        displayWidget->setFont(font);
+
+        widget = displayWidget;
+        break;
+    }
+    case WidgetTypes::DoubleDial: {
+        DoubleDialWidget *dialWidget = new DoubleDialWidget(
+            obj.value("title").toString(),
+            obj.value("value").toDouble(),
+            obj.value("topic").toString());
+
+        QFont font;
+        font.fromString(obj.value("textFont").toString());
+        dialWidget->setFont(font);
+
+        dialWidget->setRange(QPoint(obj.value("min").toDouble(), obj.value("max").toDouble()));
+
+        widget = dialWidget;
+        break;
+    }
+    case WidgetTypes::SendableChooser: {
+        widget = new StringChooserWidget(
+            obj.value("title").toString(),
+            obj.value("topic").toString());
+
+        break;
+    }
+    case WidgetTypes::CameraView: {
+        widget = new CameraViewWidget(
+            obj.value("title").toString(),
+            QUrl(obj.value("url").toString()));
+
+        break;
+    }
+    case WidgetTypes::StringDisplay:
+    default: {
+        StringDisplayWidget *displayWidget = new StringDisplayWidget(
+            obj.value("title").toString(),
+            obj.value("value").toString(),
+            obj.value("topic").toString());
+
+        QFont font;
+        font.fromString(obj.value("textFont").toString());
+        displayWidget->setFont(font);
+
+        widget = displayWidget;
+        break;
+    }
+    } // switch
+
+    QFont titleFont;
+    titleFont.fromString(obj.value("titleFont").toString());
+    widget->setTitleFont(titleFont);
+
+    QJsonArray geometry = obj.value("geometry").toArray();
+    WidgetData data;
+    data.tabIdx = tabIdx;
+    data.row = geometry.at(0).toInt();
+    data.col = geometry.at(1).toInt();
+    data.rowSpan = geometry.at(2).toInt();
+    data.colSpan = geometry.at(3).toInt();
+
+    return std::make_pair(widget, data);
 }

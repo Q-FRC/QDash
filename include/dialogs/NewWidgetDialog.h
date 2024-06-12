@@ -41,15 +41,6 @@ public:
     NewWidgetDialog(std::string ntTopic);
     virtual ~NewWidgetDialog();
 
-    enum class WidgetTypes {
-        BooleanCheckbox,
-        BooleanDisplay,
-        StringDisplay,
-        DoubleDisplay,
-        DoubleDial,
-        SendableChooser
-    };
-
     static NewWidgetDialog *fromWidgetType(WidgetTypes type, std::string ntTopic);
 
 signals:

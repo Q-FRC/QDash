@@ -34,7 +34,16 @@ StringChooserWidget::~StringChooserWidget() {
     m_entry.Unpublish();
 }
 
+QJsonObject StringChooserWidget::saveObject() {
+    QJsonObject object = BaseWidget::saveObject();
+
+    object.insert("widgetType", (int) WidgetTypes::SendableChooser);
+
+    return object;
+}
+
 // TODO: implement a check/x-mark to verify if values  match
+// TODO: allow updating stuff
 //void StringChooserWidget::update() {
 //    if (false) {
 //        m_chooser->clear();

@@ -46,6 +46,15 @@ QMenu *TextWidget::constructContextMenu(WidgetData data) {
     return menu;
 }
 
+QJsonObject TextWidget::saveObject() {
+    QJsonObject object = BaseWidget::saveObject();
+
+    object.insert("textFont", font().toString());
+    object.insert("text", text());
+
+    return object;
+}
+
 void TextWidget::update() {
 
 }

@@ -1,6 +1,5 @@
 #include "MainWindow.h"
 #include "Globals.h"
-#include "misc/ResizeDialog.h"
 #include "dialogs/NewWidgetDialog.h"
 #include "dialogs/NewCameraViewDialog.h"
 
@@ -15,6 +14,8 @@
 #include <QListWidget>
 #include <QMenu>
 #include <QMessageBox>
+#include <QJsonArray>
+#include <QFileDialog>
 
 MainWindow::MainWindow()
 {
@@ -25,114 +26,73 @@ MainWindow::MainWindow()
     addToolBar(Qt::ToolBarArea::BottomToolBarArea, m_toolbar);
 
     m_menubar = menuBar();
+    // NT Settings
+    {
+        QAction *ntServerAction = new QAction("NT Server");
+        connect(ntServerAction, &QAction::triggered, this, &MainWindow::ntSettings);
 
-    QAction *ntServerAction = new QAction("NT Server");
-    connect(ntServerAction, &QAction::triggered, this, [this](bool)
-            {
-                bool ok;
-                QString server = QInputDialog::getText(this, "NT Server Settings", "Input NT4 Server Address", QLineEdit::Normal, "", &ok);
+        m_menubar->addAction(ntServerAction);
+    } // End NT Settings
 
-                if (!server.isEmpty() && ok) {
-                    Globals::server = server;
-                    Globals::inst.SetServer(server.toStdString().c_str(), NT_DEFAULT_PORT4);
-                }
-            });
+    { // File
+        QMenu *fileMenu = new QMenu("File");
 
-    m_menubar->addAction(ntServerAction);
+        QAction *saveAction = new QAction("Save");
+        saveAction->setShortcut(tr("Ctrl+S"));
+        fileMenu->addAction(saveAction);
 
-    QMenu *tabMenu = new QMenu("Tab");
+        connect(saveAction, &QAction::triggered, this, &MainWindow::save);
 
-    QAction *newTab = new QAction("New Tab");
+        QAction *saveAsAction = new QAction("Save As...");
+        saveAsAction->setShortcut(tr("Ctrl+Shift+S"));
+        fileMenu->addAction(saveAsAction);
 
-    newTab->setShortcut(QKeySequence::AddTab);
-    connect(newTab, &QAction::triggered, this, [this](bool) {
-        bool ok;
-        QString tabName = QInputDialog::getText(this, "New Tab Name", "Input new tab name", QLineEdit::Normal, "", &ok);
+        connect(saveAsAction, &QAction::triggered, this, &MainWindow::saveAs);
 
-        // TODO: max size
-        if (!tabName.isEmpty() && ok) {
-            TabWidget *tab = new TabWidget(QPoint(3, 3));
+        QAction *loadAction = new QAction("Open File...");
+        loadAction->setShortcut(tr("Ctrl+O"));
+        fileMenu->addAction(loadAction);
 
-            m_tabWidgets.append(tab);
-            m_centralWidget->addTab(tab, tabName);
-            m_centralWidget->setCurrentWidget(tab);
-        }
-    });
+        connect(loadAction, &QAction::triggered, this, &MainWindow::open);
 
-    tabMenu->addAction(newTab);
+        m_menubar->addMenu(fileMenu);
+    } // End File
 
-    QAction *closeTab = new QAction("Close Tab");
+    { // Tab
+        QMenu *tabMenu = new QMenu("Tab");
 
-    closeTab->setShortcut(QKeySequence::Close);
-    connect(closeTab, &QAction::triggered, this, [this](bool) {
-        int index = m_centralWidget->currentIndex();
+        QAction *newTab = new QAction("New Tab");
 
-        QMessageBox::StandardButton close = QMessageBox::question(this, "Close Tab?", "Are you sure you want to close this tab?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-        if (close == QMessageBox::Yes) {
-            QWidget *tab = m_centralWidget->widget(index);
-            m_centralWidget->removeTab(index);
-            m_tabWidgets.remove(index);
-            QMapIterator<BaseWidget *, WidgetData> iterator(m_widgets);
+        newTab->setShortcut(QKeySequence::AddTab);
+        connect(newTab, &QAction::triggered, this, &MainWindow::newTab);
 
-            while (iterator.hasNext())
-            {
-                iterator.next();
-                BaseWidget *widget = iterator.key();
-                WidgetData data = iterator.value();
-                if (data.tabIdx == index) {
-                    m_widgets.remove(widget);
-                } else if (data.tabIdx > index) {
-                    data.tabIdx -= 1;
+        tabMenu->addAction(newTab);
 
-                    m_widgets.remove(widget);
-                    m_widgets.insert(widget, data);
-                }
-            }
+        QAction *closeTab = new QAction("Close Tab");
 
-//            delete tab;
-        }
-    });
+        closeTab->setShortcut(QKeySequence::Close);
+        connect(closeTab, &QAction::triggered, this, &MainWindow::closeTab);
 
-    tabMenu->addAction(closeTab);
+        tabMenu->addAction(closeTab);
 
-    m_menubar->addMenu(tabMenu);
+        m_menubar->addMenu(tabMenu);
+    } // End Tab
 
-    QAction *newWidgetAction = new QAction("&New Widget");
+    { // New Widget
+        QAction *newWidgetAction = new QAction("&New Widget");
 
-    connect(newWidgetAction, &QAction::triggered, this, [this, newTab](bool) {
+        connect(newWidgetAction, &QAction::triggered, this, &MainWindow::newWidgetPopup);
 
-        if (m_tabWidgets.length() == 0) {
-            QMessageBox::StandardButton warning = QMessageBox::warning(this, "Cannot Add Widget", "You must select a tab before adding a widget.\nWould you like to add a tab now?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-            if (warning == QMessageBox::StandardButton::Yes) {
-                newTab->trigger();
-            }
-        } else {
-            NewWidgetListDialog *listDialog = new NewWidgetListDialog;
+        m_menubar->addAction(newWidgetAction);
+    } // End New Widget
 
-            connect(listDialog, &NewWidgetListDialog::widgetReady, this, &MainWindow::newWidget);
-            listDialog->open();
-        }
-    });
+    { // Camera View
+        QAction *cameraAction = new QAction("New &Camera View");
 
-    m_menubar->addAction(newWidgetAction);
+        connect(cameraAction, &QAction::triggered, this, &MainWindow::newCameraView);
 
-    QAction *cameraAction = new QAction("New &Camera View");
-
-    connect(cameraAction, &QAction::triggered, this, [this, newTab](bool) {
-        if (m_tabWidgets.length() == 0) {
-            QMessageBox::StandardButton warning = QMessageBox::warning(this, "Cannot Add Widget", "You must select a tab before adding a widget.\nWould you like to add a tab now?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-            if (warning == QMessageBox::StandardButton::Yes) {
-                newTab->trigger();
-            }
-        } else {
-            NewCameraViewDialog *dialog = new NewCameraViewDialog;
-            dialog->open();
-
-            connect(dialog, &NewWidgetDialog::widgetReady, this, &MainWindow::newWidget);
-        }
-    });
-
-    m_menubar->addAction(cameraAction);
+        m_menubar->addAction(cameraAction);
+    } // End Camera View
 
     update();
 }
@@ -155,12 +115,12 @@ void MainWindow::update()
                 tabWidget->layout()->removeWidget(iterator.key());
                 tabWidget->layout()->addWidget(iterator.key(), data.row, data.col, data.rowSpan, data.colSpan);
 
-                for (int i = 0; i < data.rowSpan; ++i) {
-                    tabWidget->layout()->setRowStretch(data.row + i, 1);
+                for (int i = 0; i < data.row + data.rowSpan; ++i) {
+                    tabWidget->layout()->setRowStretch(i, 1);
                 }
 
-                for (int i = 0; i < data.colSpan; ++i) {
-                    tabWidget->layout()->setColumnStretch(data.col + i, 1);
+                for (int i = 0; i < data.col + data.colSpan; ++i) {
+                    tabWidget->layout()->setColumnStretch(i, 1);
                 }
             }
         }
@@ -173,14 +133,72 @@ void MainWindow::update()
     setWindowTitle("QFRCDashboard (" + Globals::server + ") - " + (Globals::inst.IsConnected() ? "" : "Not ") + "Connected");
 }
 
-void MainWindow::setNeedsRelay(bool needsRelay) {
-    m_needsRelay = needsRelay;
+/* File I/O */
+
+QJsonDocument MainWindow::saveObject() {
+    QJsonDocument doc{};
+    QJsonArray topArray{};
+
+    for (TabWidget *tab : m_tabWidgets) {
+        QJsonObject object{};
+        int tabIdx = m_centralWidget->indexOf(tab);
+
+        object.insert("tabIdx", tabIdx);
+        object.insert("tabName", m_centralWidget->tabText(tabIdx));
+
+        QJsonArray widgets{};
+
+        QMapIterator<BaseWidget *, WidgetData> iterator(widgetsForTab(tabIdx));
+
+        while (iterator.hasNext()) {
+            iterator.next();
+
+            QJsonObject widgetObj = iterator.key()->saveObject();
+            WidgetData data = iterator.value();
+
+            widgetObj.insert("geometry", QJsonArray({data.row, data.col, data.rowSpan, data.colSpan}));
+
+            widgets.insert(widgets.size(), widgetObj);
+        }
+
+        object.insert("widgets", widgets);
+        topArray.insert(topArray.size(), object);
+    }
+
+    doc.setArray(topArray);
+    return doc;
 }
 
-WidgetData MainWindow::getWidgetData(BaseWidget *widget) {
-    return m_widgets.value(widget);
+void MainWindow::loadObject(const QJsonDocument &doc) {
+    QJsonArray array = doc.array();
+
+    for (QJsonValueRef ref : array) {
+        QJsonObject object = ref.toObject();
+
+        TabWidget *tab = new TabWidget(QPoint(3,3));
+
+        int tabIdx = object.value("tabIdx").toInt();
+
+        m_centralWidget->insertTab(tabIdx, tab, object.value("tabName").toString());
+        m_tabWidgets.insert(tabIdx, tab);
+
+        QJsonArray widgets = object.value("widgets").toArray();
+
+        for (QJsonValueRef wref : widgets) {
+            QJsonObject widgetObject = wref.toObject();
+
+            auto widgetData = BaseWidget::fromJson(widgetObject, tabIdx);
+
+            BaseWidget *widget = widgetData.first;
+            WidgetData data = widgetData.second;
+
+            m_widgets.insert(widget, data);
+        } // widgets
+    } // tabs
+    setNeedsRelay(true);
 }
 
+/* Private Member Functions */
 void MainWindow::mousePressEvent(QMouseEvent *event) {
     BaseWidget *widgetPressed = nullptr;
 
@@ -220,9 +238,174 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     }
 }
 
+QMap<BaseWidget *, WidgetData> MainWindow::widgetsForTab(int tabIdx) {
+    QMap<BaseWidget *, WidgetData> map{};
+
+    QMapIterator<BaseWidget *, WidgetData> iterator(m_widgets);
+
+    while(iterator.hasNext()) {
+        iterator.next();
+
+        if (iterator.value().tabIdx == tabIdx) {
+            map.insert(iterator.key(), iterator.value());
+        }
+    }
+
+    return map;
+}
+
+void MainWindow::setNeedsRelay(bool needsRelay) {
+    m_needsRelay = needsRelay;
+}
+
+/* Slots */
 void MainWindow::newWidget(BaseWidget *widget, WidgetData data) {
     data.tabIdx = m_centralWidget->currentIndex();
     m_widgets.insert(widget, data);
 
     m_needsRelay = true;
+}
+
+// NT Settings
+void MainWindow::ntSettings() {
+    bool ok;
+    QString server = QInputDialog::getText(this, "NT Server Settings", "Input NT4 Server Address", QLineEdit::Normal, "", &ok);
+
+    if (!server.isEmpty() && ok) {
+        Globals::server = server;
+        Globals::inst.SetServer(server.toStdString().c_str(), NT_DEFAULT_PORT4);
+    }
+}
+
+// File Actions
+void MainWindow::save() {
+    if (m_filename.isEmpty()) {
+        m_filename = QFileDialog::getSaveFileName(
+            this, "Save File", QDir::homePath(), "JSON Files (*.json);;All Files (*)");
+    }
+
+    QFile file(m_filename);
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, "Save Failed!", "Failed to open file for writing."
+                                                    "Directory may not exist or may be read-only.",
+                              QMessageBox::StandardButton::Ok);
+        return;
+    }
+
+    QTextStream stream(&file);
+    stream << saveObject().toJson();
+    file.close();
+}
+
+void MainWindow::saveAs() {
+    QFile file(QFileDialog::getSaveFileName(
+        this, "Save File", QDir::homePath(), "JSON Files (*.json);;All Files (*)"));
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, "Save Failed!", "Failed to open file for writing."
+                                                    "Directory may not exist or may be read-only.",
+                              QMessageBox::StandardButton::Ok);
+        return;
+    }
+
+    m_filename = file.fileName();
+
+    QTextStream stream(&file);
+    stream << saveObject().toJson();
+    file.close();
+}
+
+void MainWindow::open() {
+    QFile file(QFileDialog::getOpenFileName(
+        this, "Open File", QDir::homePath(), "JSON Files (*.json);;All Files (*)"));
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, "Load Failed!", "Failed to open file for reading."
+                                                    "Directory may not exist or may be inaccessible.",
+                              QMessageBox::StandardButton::Ok);
+        return;
+    }
+
+    m_filename = file.fileName();
+
+    QTextStream stream(&file);
+    QByteArray data = stream.readAll().toUtf8();
+
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    loadObject(doc);
+    file.close();
+}
+
+// Tab Actions
+void MainWindow::newTab() {
+    bool ok;
+    QString tabName = QInputDialog::getText(this, "New Tab Name", "Input new tab name", QLineEdit::Normal, "", &ok);
+
+    // TODO: max size
+    if (!tabName.isEmpty() && ok) {
+        TabWidget *tab = new TabWidget(QPoint(3, 3));
+
+        m_tabWidgets.append(tab);
+        m_centralWidget->addTab(tab, tabName);
+        m_centralWidget->setCurrentWidget(tab);
+    }
+}
+
+void MainWindow::closeTab() {
+    int index = m_centralWidget->currentIndex();
+
+    QMessageBox::StandardButton close = QMessageBox::question(this, "Close Tab?", "Are you sure you want to close this tab?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (close == QMessageBox::Yes) {
+        QWidget *tab = m_centralWidget->widget(index);
+        m_centralWidget->removeTab(index);
+        m_tabWidgets.remove(index);
+        QMapIterator<BaseWidget *, WidgetData> iterator(m_widgets);
+
+        while (iterator.hasNext())
+        {
+            iterator.next();
+            BaseWidget *widget = iterator.key();
+            WidgetData data = iterator.value();
+            if (data.tabIdx == index) {
+                m_widgets.remove(widget);
+            } else if (data.tabIdx > index) {
+                data.tabIdx -= 1;
+
+                m_widgets.remove(widget);
+                m_widgets.insert(widget, data);
+            }
+        }
+    }
+}
+
+// New Widget
+void MainWindow::newWidgetPopup() {
+
+    if (m_tabWidgets.length() == 0) {
+        QMessageBox::StandardButton warning = QMessageBox::warning(this, "Cannot Add Widget", "You must select a tab before adding a widget.\nWould you like to add a tab now?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (warning == QMessageBox::StandardButton::Yes) {
+            newTab();
+        }
+    } else {
+        NewWidgetListDialog *listDialog = new NewWidgetListDialog;
+
+        connect(listDialog, &NewWidgetListDialog::widgetReady, this, &MainWindow::newWidget);
+        listDialog->open();
+    }
+}
+
+// Camera View
+void MainWindow::newCameraView() {
+    if (m_tabWidgets.length() == 0) {
+        QMessageBox::StandardButton warning = QMessageBox::warning(this, "Cannot Add Widget", "You must select a tab before adding a widget.\nWould you like to add a tab now?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (warning == QMessageBox::StandardButton::Yes) {
+            newTab();
+        }
+    } else {
+        NewCameraViewDialog *dialog = new NewCameraViewDialog;
+        dialog->open();
+
+        connect(dialog, &NewWidgetDialog::widgetReady, this, &MainWindow::newWidget);
+    }
 }

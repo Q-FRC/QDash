@@ -19,12 +19,12 @@ private:
     QDialogButtonBox *m_buttonBox;
 
     void constructList();
-    QAction *createWidgetAction(const QString &text, const QString &ntTopic, const NewWidgetDialog::WidgetTypes &widgetType);
+    QAction *createWidgetAction(const QString &text, const QString &ntTopic, const WidgetTypes &widgetType);
 public:
     NewWidgetListDialog();
     virtual ~NewWidgetListDialog();
 
-    void showNewWidgetDialog(NewWidgetDialog::WidgetTypes widgetType, std::string ntTopic);
+    void showNewWidgetDialog(WidgetTypes widgetType, std::string ntTopic);
 
     void keyPressEvent(QKeyEvent *event);
 

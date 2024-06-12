@@ -80,10 +80,14 @@ int main(int argc, char **argv) {
     filterTimer->start(50);
 
     QTimer *timer = new QTimer(window);
-    QObject::connect(timer, &QTimer::timeout, [window]() {
+    QObject::connect(timer, &QTimer::timeout, window, [window]() {
         window->update();
     });
     timer->start(100);
+
+    QObject::connect(&app, &QApplication::aboutToQuit, window, [window] {
+        qDebug() << window->saveObject().toJson().toStdString();
+    });
 
     return app.exec();
 }

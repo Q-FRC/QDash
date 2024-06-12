@@ -23,5 +23,7 @@ public:
     QColor falseColor();
     void setFalseColor(const QColor &color);
 
+    QJsonObject saveObject() override;
+
     void update();
 };

@@ -35,14 +35,14 @@ ResizeDialog::ResizeDialog(WidgetData widgetData) {
 
     m_layout->addWidget(m_buttonBox);
 
-    connect(m_buttonBox, &QDialogButtonBox::accepted, [this]() {
+    connect(m_buttonBox, &QDialogButtonBox::accepted, this, [this] {
         WidgetData data;
         data.row = m_rowInput->value();
         data.col = m_columnInput->value();
         data.rowSpan = m_rowSpanInput->value();
         data.colSpan = m_columnSpanInput->value();
-
-        emit finished(data);
+        
+        emit resizeReady(data);
         close();
     });
 

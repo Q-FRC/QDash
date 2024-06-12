@@ -18,6 +18,8 @@ public:
 
     QUrl url();
     void setUrl(const QUrl &url);
+
+    QJsonObject saveObject() override;
 };
 
 #endif // CAMERAVIEWWIDGET_H

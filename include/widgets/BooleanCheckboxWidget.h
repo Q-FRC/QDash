@@ -15,6 +15,8 @@ public:
     BooleanCheckboxWidget(const QString &title, const bool &defaultValue, const QString &topic);
     virtual ~BooleanCheckboxWidget();
 
+    QJsonObject saveObject() override;
+
     void update() override;
 };
 

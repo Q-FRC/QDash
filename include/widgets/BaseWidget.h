@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QGridLayout>
 #include <QLineEdit>
+#include <QJsonObject>
 
 class BaseWidget : public QWidget
 {
@@ -34,7 +35,11 @@ public:
 
     void paintEvent(QPaintEvent *event);
 
+    virtual QJsonObject saveObject();
+
     virtual void update() {}
+
+    static std::pair<BaseWidget *, WidgetData> fromJson(QJsonObject obj, int tabIdx);
 
 signals:
     void resizeRequested(WidgetData data);

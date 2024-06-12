@@ -28,6 +28,17 @@ void BooleanDisplayWidget::setFalseColor(const QColor &color) {
     m_falseColor = color;
 }
 
+QJsonObject BooleanDisplayWidget::saveObject() {
+    QJsonObject object = BaseWidget::saveObject();
+
+    object.insert("value", m_value);
+    object.insert("widgetType", (int) WidgetTypes::BooleanDisplay);
+    object.insert("trueColor", m_trueColor.name());
+    object.insert("falseColor", m_falseColor.name());
+
+    return object;
+}
+
 void BooleanDisplayWidget::update() {
     bool value = m_entry.GetBoolean(m_value);
 

@@ -6,7 +6,9 @@ BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &title, const bool &d
 
     m_checkbox = new QCheckBox(this);
 
-    m_layout->addWidget(m_checkbox, 1, 0);
+    m_checkbox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    m_layout->addWidget(m_checkbox, 1, 0, Qt::AlignHCenter);
 
     connect(m_checkbox, &QCheckBox::stateChanged, this, [this](int state) {
         m_entry.SetBoolean(state == Qt::Checked);
@@ -15,6 +17,15 @@ BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &title, const bool &d
 
 BooleanCheckboxWidget::~BooleanCheckboxWidget() {
     m_entry.Unpublish();
+}
+
+QJsonObject BooleanCheckboxWidget::saveObject() {
+    QJsonObject object = BaseWidget::saveObject();
+
+    object.insert("value", m_value);
+    object.insert("widgetType", (int) WidgetTypes::BooleanCheckbox);
+
+    return object;
 }
 
 void BooleanCheckboxWidget::update() {

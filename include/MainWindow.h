@@ -13,8 +13,8 @@
 #include <QMouseEvent>
 #include <QTabWidget>
 #include <QListWidget>
+#include <QJsonDocument>
 
-#include "dialogs/NewWidgetDialog.h"
 #include "Globals.h"
 
 class MainWindow : public QMainWindow
@@ -41,15 +41,41 @@ private:
 
     bool m_needsRelay = true;
 
+    QString m_filename{};
+
     void mousePressEvent(QMouseEvent *event);
+
+    QMap<BaseWidget *, WidgetData> widgetsForTab(int tabIdx);    
+
+    void setNeedsRelay(bool needsRelay);
+    WidgetData getWidgetData(BaseWidget *widget);
 public:
     MainWindow();
     virtual ~MainWindow();
     void update();
 
-    void setNeedsRelay(bool needsRelay);
-    WidgetData getWidgetData(BaseWidget *widget);
+    // File I/O
+    QJsonDocument saveObject();
+    void loadObject(const QJsonDocument &doc);
 
 public slots:
     void newWidget(BaseWidget *widget, WidgetData data);
+
+    // NT Settings
+    void ntSettings();
+
+    // File Actions
+    void save();
+    void saveAs();
+    void open();
+
+    // Tab Actions
+    void newTab();
+    void closeTab();
+
+    // New Widget
+    void newWidgetPopup();
+
+    // Camera View
+    void newCameraView();
 };

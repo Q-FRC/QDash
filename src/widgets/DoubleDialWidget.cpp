@@ -35,6 +35,16 @@ void DoubleDialWidget::setRange(double min, double max) {
     m_dial->setRange(min * 100, max * 100);
 }
 
+QJsonObject DoubleDialWidget::saveObject() {
+    QJsonObject object = NumberDisplayWidget::saveObject();
+
+    object.insert("min", range().x());
+    object.insert("max", range().y());
+    object.insert("widgetType", (int) WidgetTypes::DoubleDial);
+
+    return object;
+}
+
 void DoubleDialWidget::update() {
     if (!m_text->hasFocus()) {
         double value = m_entry.GetDouble(m_value);

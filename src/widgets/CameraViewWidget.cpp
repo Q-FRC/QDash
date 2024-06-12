@@ -23,3 +23,12 @@ void CameraViewWidget::setUrl(const QUrl &url) {
     m_player->setSource(url);
     m_player->play();
 }
+
+QJsonObject CameraViewWidget::saveObject() {
+    QJsonObject object = BaseWidget::saveObject();
+
+    object.insert("url", url().toString());
+    object.insert("widgetType", (int) WidgetTypes::CameraView);
+
+    return object;
+}

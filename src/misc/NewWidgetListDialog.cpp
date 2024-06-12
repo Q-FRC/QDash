@@ -39,10 +39,10 @@ void NewWidgetListDialog::constructList() {
         case Globals::TopicTypes::Boolean: {
             QMenu *boolMenu = new QMenu(topicName);
 
-            QAction *checkboxAction = createWidgetAction("Checkbox", topicName, NewWidgetDialog::WidgetTypes::BooleanCheckbox);
+            QAction *checkboxAction = createWidgetAction("Checkbox", topicName, WidgetTypes::BooleanCheckbox);
             boolMenu->addAction(checkboxAction);
 
-            QAction *colorAction = createWidgetAction("Color Display", topicName, NewWidgetDialog::WidgetTypes::BooleanDisplay);
+            QAction *colorAction = createWidgetAction("Color Display", topicName, WidgetTypes::BooleanDisplay);
             boolMenu->addAction(colorAction);
 
             connect(m_list, &QListWidget::itemActivated, this, [this, topicName, boolMenu](QListWidgetItem *item) {
@@ -55,10 +55,10 @@ void NewWidgetListDialog::constructList() {
         case Globals::TopicTypes::Double: {
             QMenu *doubleMenu = new QMenu(topicName);
 
-            QAction *displayAction = createWidgetAction("Number Display", topicName, NewWidgetDialog::WidgetTypes::DoubleDisplay);
+            QAction *displayAction = createWidgetAction("Number Display", topicName, WidgetTypes::DoubleDisplay);
             doubleMenu->addAction(displayAction);
 
-            QAction *dialAction = createWidgetAction("Dial", topicName, NewWidgetDialog::WidgetTypes::DoubleDial);
+            QAction *dialAction = createWidgetAction("Dial", topicName, WidgetTypes::DoubleDial);
             doubleMenu->addAction(dialAction);
 
             connect(m_list, &QListWidget::itemActivated, this, [this, topicName, doubleMenu](QListWidgetItem *item) {
@@ -71,7 +71,7 @@ void NewWidgetListDialog::constructList() {
         case Globals::TopicTypes::SendableChooser: {
             connect(m_list, &QListWidget::itemActivated, this, [this, topicName](QListWidgetItem *item) {
                 if (item->text() == topicName) {
-                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::SendableChooser, topicName.toStdString());
+                    showNewWidgetDialog(WidgetTypes::SendableChooser, topicName.toStdString());
                 }
             });
             break;
@@ -80,7 +80,7 @@ void NewWidgetListDialog::constructList() {
         default: {
             connect(m_list, &QListWidget::itemActivated, this, [this, topicName](QListWidgetItem *item) {
                 if (item->text() == topicName) {
-                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::StringDisplay, topicName.toStdString());
+                    showNewWidgetDialog(WidgetTypes::StringDisplay, topicName.toStdString());
                 }
             });
             break;
@@ -100,7 +100,7 @@ void NewWidgetListDialog::keyPressEvent(QKeyEvent *event) {
     QDialog::keyPressEvent(event);
 }
 
-QAction *NewWidgetListDialog::createWidgetAction(const QString &text, const QString &ntTopic, const NewWidgetDialog::WidgetTypes &widgetType) {
+QAction *NewWidgetListDialog::createWidgetAction(const QString &text, const QString &ntTopic, const WidgetTypes &widgetType) {
     QAction *action = new QAction(text, this);
 
     connect(action, &QAction::triggered, this, [this, text, ntTopic, widgetType](bool) {
@@ -110,7 +110,7 @@ QAction *NewWidgetListDialog::createWidgetAction(const QString &text, const QStr
     return action;
 }
 
-void NewWidgetListDialog::showNewWidgetDialog(NewWidgetDialog::WidgetTypes widgetType, std::string ntTopic) {
+void NewWidgetListDialog::showNewWidgetDialog(WidgetTypes widgetType, std::string ntTopic) {
     NewWidgetDialog *dialog = NewWidgetDialog::fromWidgetType(widgetType, ntTopic);
     dialog->show();
 

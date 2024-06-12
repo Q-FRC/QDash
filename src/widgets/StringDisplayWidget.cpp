@@ -9,6 +9,15 @@ StringDisplayWidget::~StringDisplayWidget() {
     m_entry.Unpublish();
 }
 
+QJsonObject StringDisplayWidget::saveObject() {
+    QJsonObject object = TextWidget::saveObject();
+
+    object.insert("value", m_value);
+    object.insert("widgetType", (int) WidgetTypes::StringDisplay);
+
+    return object;
+}
+
 void StringDisplayWidget::update() {
     if (!m_text->hasFocus()) {
         QString value = QString::fromStdString(m_entry.GetString(m_value.toStdString()));

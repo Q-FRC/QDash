@@ -50,7 +50,7 @@ NewBooleanDisplayDialog::NewBooleanDisplayDialog(std::string ntTopic) : NewWidge
 
     m_layout->addWidget(m_buttonBox);
 
-    connect(m_buttonBox, &QDialogButtonBox::accepted, [this, ntTopic]() {
+    connect(m_buttonBox, &QDialogButtonBox::accepted, this, [this, ntTopic]() {
         QString name = m_nameInput->text();
         QColor trueColor = m_trueColorEdit->text();
         QColor falseColor = m_falseColorEdit->text();

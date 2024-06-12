@@ -27,3 +27,13 @@ typedef struct WidgetData {
     int rowSpan;
     int colSpan;
 } WidgetData;
+
+enum class WidgetTypes {
+    BooleanCheckbox = 0,
+    BooleanDisplay = 1,
+    StringDisplay = 2,
+    DoubleDisplay = 3,
+    DoubleDial = 4,
+    SendableChooser = 5,
+    CameraView = 6
+};

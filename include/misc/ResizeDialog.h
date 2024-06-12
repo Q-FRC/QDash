@@ -32,5 +32,5 @@ public:
     virtual ~ResizeDialog();
 
 signals:
-    void finished(WidgetData data);
+    void resizeReady(WidgetData data);
 };

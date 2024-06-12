@@ -27,6 +27,8 @@ public:
     void setRange(QPointF range);
     void setRange(double min, double max);
 
+    QJsonObject saveObject() override;
+
     void update() override;
 };
 

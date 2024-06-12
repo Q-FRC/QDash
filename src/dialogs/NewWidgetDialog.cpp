@@ -58,7 +58,7 @@ NewWidgetDialog::~NewWidgetDialog() {
     m_entry.Unpublish();
 }
 
-NewWidgetDialog *NewWidgetDialog::fromWidgetType(NewWidgetDialog::WidgetTypes type, std::string ntTopic) {
+NewWidgetDialog *NewWidgetDialog::fromWidgetType(WidgetTypes type, std::string ntTopic) {
     switch(type) {
     case WidgetTypes::BooleanCheckbox: {
         return new NewBooleanCheckboxDialog(ntTopic);

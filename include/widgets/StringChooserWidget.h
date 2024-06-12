@@ -22,6 +22,8 @@ public:
     StringChooserWidget(const QString &title, const QString &topic);
     virtual ~StringChooserWidget();
 
+    QJsonObject saveObject() override;
+
 //    void update() override;
 };
 
