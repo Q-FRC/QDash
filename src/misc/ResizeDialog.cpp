@@ -1,4 +1,4 @@
-#include "dialogs/ResizeDialog.h"
+#include "misc/ResizeDialog.h"
 
 ResizeDialog::ResizeDialog(WidgetData widgetData) {
     m_layout = new QFormLayout(this);
@@ -46,7 +46,7 @@ ResizeDialog::ResizeDialog(WidgetData widgetData) {
         close();
     });
 
-    connect(m_buttonBox, &QDialogButtonBox::rejected, m_buttonBox, &QDialogButtonBox::close);
+    connect(m_buttonBox, &QDialogButtonBox::rejected, this, &QDialog::close);
 }
 
 ResizeDialog::~ResizeDialog() {}

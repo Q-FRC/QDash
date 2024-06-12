@@ -50,10 +50,6 @@ public:
     void setNeedsRelay(bool needsRelay);
     WidgetData getWidgetData(BaseWidget *widget);
 
-    void showNewWidgetDialog(NewWidgetDialog::WidgetTypes widgetType, std::string topic);
-
 public slots:
     void newWidget(BaseWidget *widget, WidgetData data);
-
-    void constructNewWidgetList(QListWidget *list, QDialog *dialog);
 };

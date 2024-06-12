@@ -29,7 +29,6 @@ set(PROJECT_SOURCES
         src/widgets/StringChooserWidget.cpp
         src/widgets/CameraViewWidget.cpp
 
-        src/dialogs/ResizeDialog.cpp
         src/dialogs/NewWidgetDialog.cpp
         src/dialogs/NewBooleanCheckboxDialog.cpp
         src/dialogs/NewStringDisplayDialog.cpp
@@ -38,6 +37,9 @@ set(PROJECT_SOURCES
         src/dialogs/NewDoubleDialDialog.cpp
         src/dialogs/NewStringChooserDialog.cpp
         src/dialogs/NewCameraViewDialog.cpp
+
+        src/misc/NewWidgetListDialog.cpp
+        src/misc/ResizeDialog.cpp
 
         # =======================================
 
@@ -55,7 +57,6 @@ set(PROJECT_SOURCES
         include/widgets/StringChooserWidget.h
         include/widgets/CameraViewWidget.h
 
-        include/dialogs/ResizeDialog.h
         include/dialogs/NewWidgetDialog.h
         include/dialogs/NewBooleanCheckboxDialog.h
         include/dialogs/NewStringDisplayDialog.h
@@ -64,6 +65,10 @@ set(PROJECT_SOURCES
         include/dialogs/NewDoubleDialDialog.h
         include/dialogs/NewStringChooserDialog.h
         include/dialogs/NewCameraViewDialog.h
+
+        include/misc/NewWidgetListDialog.h
+        include/misc/ResizeDialog.h
+
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

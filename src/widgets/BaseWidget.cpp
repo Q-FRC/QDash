@@ -14,6 +14,12 @@ BaseWidget::BaseWidget(const QString &title, const QString &topic)
     setStyleSheet("background-color: black; border: 1px solid white; color: white;");
     m_title->setStyleSheet("border: none; border-bottom: 2px solid white;");
 
+    QFont titleFont = this->titleFont();
+    titleFont.setBold(true);
+    setTitleFont(titleFont);
+
+    m_title->setAlignment(Qt::AlignHCenter);
+
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 

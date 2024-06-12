@@ -1,8 +1,10 @@
 #include "MainWindow.h"
 #include "Globals.h"
-#include "dialogs/ResizeDialog.h"
+#include "misc/ResizeDialog.h"
 #include "dialogs/NewWidgetDialog.h"
 #include "dialogs/NewCameraViewDialog.h"
+
+#include "misc/NewWidgetListDialog.h"
 
 #include "ntcore/networktables/NetworkTableInstance.h"
 
@@ -105,19 +107,9 @@ MainWindow::MainWindow()
                 newTab->trigger();
             }
         } else {
-            QListWidget *list = new QListWidget(this);
-            QDialog *listDialog = new QDialog;
-            QVBoxLayout *listLayout = new QVBoxLayout(listDialog);
-            QDialogButtonBox *box = new QDialogButtonBox(QDialogButtonBox::StandardButton::Cancel);
+            NewWidgetListDialog *listDialog = new NewWidgetListDialog;
 
-            connect(box, &QDialogButtonBox::rejected, listDialog, &QDialog::close);
-
-            listLayout->addWidget(list);
-            listLayout->addWidget(box);
-
-            // TODO: Separate this logic into a separate class.
-            constructNewWidgetList(list, listDialog);
-
+            connect(listDialog, &NewWidgetListDialog::widgetReady, this, &MainWindow::newWidget);
             listDialog->open();
         }
     });
@@ -244,100 +236,4 @@ void MainWindow::newWidget(BaseWidget *widget, WidgetData data) {
     m_widgets.insert(widget, data);
 
     m_needsRelay = true;
-}
-
-void MainWindow::showNewWidgetDialog(NewWidgetDialog::WidgetTypes widgetType, std::string topic) {
-    NewWidgetDialog *dialog = NewWidgetDialog::fromWidgetType(widgetType, topic);
-    dialog->show();
-
-    connect(dialog, &NewWidgetDialog::widgetReady, this, &MainWindow::newWidget);
-}
-
-// TODO: Separate this logic into a separate class.
-void MainWindow::constructNewWidgetList(QListWidget *list, QDialog *dialog) {
-    list->clear();
-    QMapIterator<QString, Globals::TopicTypes> iterator(Globals::availableTopics);
-
-    while (iterator.hasNext())
-    {
-        iterator.next();
-        QString topicName = iterator.key();
-        Globals::TopicTypes topicType = iterator.value();
-
-        list->addItem(topicName);
-
-        switch(topicType) {
-        case Globals::TopicTypes::Boolean: {
-            QMenu *boolMenu = new QMenu(topicName);
-
-            QAction *checkboxAction = new QAction("Checkbox", this);
-            boolMenu->addAction(checkboxAction);
-
-            connect(checkboxAction, &QAction::triggered, this, [this, topicName, dialog](bool) {
-                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanCheckbox, topicName.toStdString());
-                dialog->close();
-            });
-
-            QAction *colorAction = new QAction("Color Display", this);
-            boolMenu->addAction(colorAction);
-
-            connect(colorAction, &QAction::triggered, this, [this, topicName, dialog](bool) {
-                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanDisplay, topicName.toStdString());
-                dialog->close();
-            });
-
-            connect(list, &QListWidget::itemActivated, this, [this, topicName, boolMenu](QListWidgetItem *item) {
-                if (item->text() == topicName) {
-                    boolMenu->popup(QCursor::pos());
-                }
-            });
-            break;
-        }
-        case Globals::TopicTypes::Double: {
-            QMenu *doubleMenu = new QMenu(topicName);
-
-            QAction *displayAction = new QAction("Number Display", this);
-            doubleMenu->addAction(displayAction);
-
-            connect(displayAction, &QAction::triggered, this, [this, topicName, dialog](bool) {
-                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::DoubleDisplay, topicName.toStdString());
-                dialog->close();
-            });
-
-            QAction *dialAction = new QAction("Dial", this);
-            doubleMenu->addAction(dialAction);
-
-            connect(dialAction, &QAction::triggered, this, [this, topicName, dialog](bool) {
-                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::DoubleDial, topicName.toStdString());
-                dialog->close();
-            });
-
-            connect(list, &QListWidget::itemActivated, this, [this, topicName, doubleMenu](QListWidgetItem *item) {
-                if (item->text() == topicName) {
-                    doubleMenu->popup(QCursor::pos());
-                }
-            });
-            break;
-        }
-        case Globals::TopicTypes::SendableChooser: {
-            connect(list, &QListWidget::itemActivated, this, [this, topicName, dialog](QListWidgetItem *item) {
-                if (item->text() == topicName) {
-                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::SendableChooser, topicName.toStdString());
-                    dialog->close();
-                }
-            });
-            break;
-        }
-        case Globals::TopicTypes::String:
-        default: {
-            connect(list, &QListWidget::itemActivated, this, [this, topicName, dialog](QListWidgetItem *item) {
-                if (item->text() == topicName) {
-                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::StringDisplay, topicName.toStdString());
-                    dialog->close();
-                }
-            });
-            break;
-        }
-        }
-    }
 }

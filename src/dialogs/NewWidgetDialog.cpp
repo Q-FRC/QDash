@@ -51,7 +51,7 @@ NewWidgetDialog::NewWidgetDialog(std::string ntTopic)
 
     m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
-    connect(m_buttonBox, &QDialogButtonBox::rejected, m_buttonBox, &QDialogButtonBox::close);
+    connect(m_buttonBox, &QDialogButtonBox::rejected, this, &QDialog::close);
 }
 
 NewWidgetDialog::~NewWidgetDialog() {
