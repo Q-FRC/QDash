@@ -1,6 +1,8 @@
 #include "widgets/TabWidget.h"
 
-// TODO: Implement max size enforcement
+#include <QPaintEvent>
+#include <QPainter>
+
 TabWidget::TabWidget(const QPoint &maxSize)
 {
     m_layout = new QGridLayout(this);
@@ -40,5 +42,28 @@ void TabWidget::setMaxSize(const QPoint &maxSize) {
         for (int y = 0; y < m_maxSize.y(); ++y) {
             m_layout->setRowStretch(y, 1);
         }
+    }
+}
+
+void TabWidget::paintEvent(QPaintEvent *event) {
+    QWidget::paintEvent(event);
+
+    QPainter painter(this);
+    QPen pen;
+    pen.setColor(Qt::red);
+    pen.setWidth(2);
+
+    for (int x = 0; x < m_maxSize.x(); ++x) {
+        double xPos = width() / m_maxSize.x() * x;
+        painter.drawLine(QLine(
+            QPoint(xPos, 0),
+            QPoint(xPos, height())));
+    }
+
+    for (int y = 0; y < m_maxSize.x(); ++y) {
+        double yPos = height() / m_maxSize.y() * y;
+        painter.drawLine(QLine(
+            QPoint(0, yPos),
+            QPoint(width(), yPos)));
     }
 }

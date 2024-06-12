@@ -23,4 +23,6 @@ public:
 
     QPoint maxSize();
     void setMaxSize(const QPoint &maxSize);
+
+    void paintEvent(QPaintEvent *event) override;
 };
