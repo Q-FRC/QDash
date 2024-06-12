@@ -8,7 +8,7 @@ DoubleDisplayWidget::DoubleDisplayWidget(const QString &topic, const double &def
 {
     m_entry = TopicStore::subscribe(topic.toStdString(), this);
     m_value = defaultValue;
-    m_ready = true;
+    setReady(true);
 }
 
 DoubleDisplayWidget::~DoubleDisplayWidget() {

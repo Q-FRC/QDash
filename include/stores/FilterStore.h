@@ -22,7 +22,8 @@ public:
     static std::optional<TopicTypes> sendableTypeForTypeString(std::string typeString);
     static std::optional<TopicTypes> topicTypeForNTType(nt::NetworkTableType ntType);
 
-    static QMap<QString, TopicTypes> FilteredTopics;
+    static QList<Globals::Topic> FilteredTopics;
+    static QList<Globals::Topic> UnfilteredTopics;
 
 public slots:
     static void filterTopics();

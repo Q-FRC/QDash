@@ -1,4 +1,5 @@
 #include "Globals.h"
+#include "stores/TypeStore.h"
 
 #include <QStringList>
 
@@ -9,6 +10,8 @@ QMap<TopicTypes, QString> Globals::topicTypeDisplayNames{};
 
 QStringList Globals::ntTopics{};
 
+TypeStore Globals::typeStore;
+
 bool operator==(const WidgetData &a, const WidgetData &b) {
     return (a.row == b.row) &&
            (a.col == b.col) &&
@@ -17,9 +20,14 @@ bool operator==(const WidgetData &a, const WidgetData &b) {
            (a.tabIdx == b.tabIdx);
 }
 
-QMap<QString, Globals::FrameShape> Globals::shapeNameMap = {
+bool Globals::Topic::operator==(const Globals::Topic &other) const {
+    return (this->name == other.name);// && (this->type == other.type);
+}
+
+QMap<QString, Globals:: FrameShape> Globals::shapeNameMap = {
     {"Circle", Globals::FrameShape::Circle},
     {"Triangle", Globals::FrameShape::Triangle},
     {"Rectangle", Globals::FrameShape::Rectangle},
     {"Hexagon", Globals::FrameShape::Hexagon}
 };
+

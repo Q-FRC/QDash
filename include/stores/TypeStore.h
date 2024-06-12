@@ -15,11 +15,11 @@ private:
     QMultiMap<TopicTypes, WidgetTypes> m_typeWidgetMap{};
     QMap<WidgetTypes, QString> m_widgetNameMap{};
 public:
-    explicit TypeStore(QWidget *parent = nullptr);
+    explicit TypeStore();
 
     void registerType(TopicTypes topicType, WidgetTypes widgetType, QString displayName);
-    QList<QAction *> generateActionsForType(TopicTypes type, std::string ntTopic);
-    QMenu *generateMenuForType(TopicTypes type, std::string ntTopic);
+    QList<QAction *> generateActionsForTopic(Globals::Topic topic, bool emitTopic = false);
+    QMenu *generateMenuForTopic(Globals::Topic topic, bool emitTopic = false);
 
     QString widgetDisplayName(WidgetTypes type);
 
@@ -27,6 +27,7 @@ public slots:
     void emitWidget(BaseWidget *widget, WidgetData data);
 signals:
     void widgetReady(BaseWidget *widget, WidgetData data);
+    void topicSelected(const Globals::Topic &topic);
 };
 
 #endif // TYPESTORE_H

@@ -58,8 +58,6 @@ typedef struct {
     int colSpan;
 } WidgetData;
 
-extern bool operator==(const WidgetData &a, const WidgetData &b);
-
 class TypeStore;
 
 
@@ -80,7 +78,7 @@ Q_ENUM_NS(FrameShape)
 extern nt::NetworkTableInstance inst;
 extern ServerData server;
 
-extern TypeStore *typeStore;
+extern TypeStore typeStore;
 
 extern QMap<TopicTypes, QString> topicTypeDisplayNames;
 
@@ -92,13 +90,24 @@ extern QMap<QString, FrameShape> shapeNameMap;
 typedef struct {
     QString fileName;
 } File;
+
+typedef struct Topic {
+    QString name;
+    TopicTypes type;
+
+    bool operator==(const struct Topic &other) const;
+} Topic;
 }
 
 Q_DECLARE_METATYPE(Globals::File)
+Q_DECLARE_METATYPE(Globals::Topic)
 
 namespace CustomMetaTypes {
-//static const int FrameShape = QMetaEnum::fromType<Globals::FrameShape>().metaType().id();
 static const int FrameShape = qMetaTypeId<Globals::FrameShape>();
 static const int File = qMetaTypeId<Globals::File>();
+static const int Topic = qMetaTypeId<Globals::Topic>();
 }
 
+
+extern bool operator==(const WidgetData &a, const WidgetData &b);
+// extern bool operator==(const Globals::Topic &a, const Globals::Topic &b);

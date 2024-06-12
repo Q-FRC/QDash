@@ -23,7 +23,7 @@ DoubleDialWidget::DoubleDialWidget(const QString &topic, const double &defaultVa
         m_entry->SetDouble(position / 100.);
         m_text->setText(QString::number(position / 100.));
     });
-    m_ready = true;
+    setReady(true);
 }
 
 DoubleDialWidget::~DoubleDialWidget() {

@@ -6,6 +6,8 @@
 #include "misc/WidgetDialogGenerator.h"
 #include "misc/TabMaxSizeDialog.h"
 
+#include "stores/FilterStore.h"
+
 #include <ntcore/networktables/NetworkTableInstance.h>
 
 #include <QToolBar>
@@ -768,15 +770,18 @@ void MainWindow::newWidgetPopup() {
             newTab();
         }
     } else {
-        NewWidgetTreeDialog *listDialog = new NewWidgetTreeDialog(this);
+        NewWidgetTreeDialog *listDialog = new NewWidgetTreeDialog(false, this);
         listDialog->setWindowTitle("Select Widget...");
+        listDialog->constructList(FilterStore::FilteredTopics);
 
         // Width: 1/2 of available space
         // Height: 1/2 of available space
         QRect screenSize = qApp->primaryScreen()->geometry();
         listDialog->resize(screenSize.width() / 2., screenSize.height() / 2.);
 
-        connect(listDialog, &NewWidgetTreeDialog::widgetReady, this, [this](BaseWidget *widget, WidgetData data) {
+        QObject *receiver = new QObject(this);
+        connect(listDialog, &NewWidgetTreeDialog::widgetReady, receiver, [this, receiver](BaseWidget *widget, WidgetData data) {
+            receiver->deleteLater();
             m_draggedWidget = widget;
             data.tabIdx = m_centralWidget->currentIndex();
             m_draggedWidgetData = data;
@@ -784,16 +789,15 @@ void MainWindow::newWidgetPopup() {
             dragStart(QCursor::pos(), QPoint(0, 0));
 
             // ensure connection only occurs once
-            QMetaObject::Connection *const connection = new QMetaObject::Connection;
-            *connection = connect(this, &MainWindow::dragDone, this, [this, connection, widget](BaseWidget *, WidgetData data) {
+            QObject *receiver2 = new QObject(this);
+            connect(this, &MainWindow::dragDone, receiver2, [this, receiver2, widget](BaseWidget *, WidgetData data) {
+                receiver2->deleteLater();
+
                 WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget, this, false, data);
                 dialog->setWindowTitle("New Widget");
                 dialog->show();
 
                 connect(dialog, &WidgetDialogGenerator::widgetReady, this, &MainWindow::newWidget);
-
-                disconnect(*connection);
-                delete connection;
             });
         });
         listDialog->show();

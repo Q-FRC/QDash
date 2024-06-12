@@ -3,27 +3,34 @@
 
 #include <QMenu>
 
-TypeStore::TypeStore(QWidget *parent) : QObject(parent)
-{}
+TypeStore::TypeStore()
+{
+    // throw std::runtime_error("TypeStore is a static class.");
+}
 
 void TypeStore::registerType(TopicTypes topicType, WidgetTypes widgetType, QString displayName) {
     m_typeWidgetMap.insert(topicType, widgetType);
     m_widgetNameMap.insert(widgetType, displayName);
 }
 
-QList<QAction *> TypeStore::generateActionsForType(TopicTypes type, std::string ntTopic) {
+QList<QAction *> TypeStore::generateActionsForTopic(Globals::Topic topic, bool emitTopic) {
     QList<QAction *> actions{};
 
-    QList<WidgetTypes> widgetTypes = m_typeWidgetMap.values(type);
+    QList<WidgetTypes> widgetTypes = m_typeWidgetMap.values(topic.type);
+
     for (WidgetTypes widgetType : widgetTypes) {
         QString displayName = widgetDisplayName(widgetType);
 
         QAction *action = new QAction(displayName);
 
-        connect(action, &QAction::triggered, action, [this, type, widgetType, displayName, ntTopic] {
-            auto widget = BaseWidget::defaultWidgetFromTopic(QString::fromStdString(ntTopic), widgetType);
+        connect(action, &QAction::triggered, action, [this, widgetType, displayName, topic, emitTopic] {
+            if (emitTopic) {
+                emit topicSelected(topic);
+            } else {
+                auto widget = BaseWidget::defaultWidgetFromTopic(topic.name, widgetType);
 
-            emit widgetReady(widget, WidgetData{0, 0, 0, 1, 1});
+                emit widgetReady(widget, WidgetData{0, 0, 0, 1, 1});
+            }
         });
 
         actions.append(action);
@@ -32,10 +39,10 @@ QList<QAction *> TypeStore::generateActionsForType(TopicTypes type, std::string 
     return actions;
 }
 
-QMenu *TypeStore::generateMenuForType(TopicTypes type, std::string ntTopic) {
+QMenu *TypeStore::generateMenuForTopic(Globals::Topic topic, bool emitTopic) {
     QMenu *menu = new QMenu((QWidget *) parent());
 
-    menu->addActions(generateActionsForType(type, ntTopic));
+    menu->addActions(generateActionsForTopic(topic, emitTopic));
 
     return menu;
 }

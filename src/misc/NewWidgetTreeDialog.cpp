@@ -9,7 +9,7 @@
 
 #include "Globals.h"
 
-NewWidgetTreeDialog::NewWidgetTreeDialog(QWidget *parent) : QDialog(parent)
+NewWidgetTreeDialog::NewWidgetTreeDialog(bool emitTopic, QWidget *parent) : QDialog(parent)
 {
     FilterStore::filterTopics();
     m_layout = new QVBoxLayout(this);
@@ -30,37 +30,36 @@ NewWidgetTreeDialog::NewWidgetTreeDialog(QWidget *parent) : QDialog(parent)
     m_layout->addWidget(m_tree);
     m_layout->addWidget(m_buttonBox);
 
-    constructList();
-
-    connect(Globals::typeStore, &TypeStore::widgetReady, this, &NewWidgetTreeDialog::emitWidget);
+    if (emitTopic) {
+        connect(&Globals::typeStore, &TypeStore::topicSelected, this, &NewWidgetTreeDialog::topicReady);
+        connect(&Globals::typeStore, &TypeStore::topicSelected, this, &NewWidgetTreeDialog::close);
+    } else {
+        connect(&Globals::typeStore, &TypeStore::widgetReady, this, &NewWidgetTreeDialog::widgetReady);
+        connect(&Globals::typeStore, &TypeStore::widgetReady, this, &NewWidgetTreeDialog::close);
+    }
 }
 
 NewWidgetTreeDialog::~NewWidgetTreeDialog() {}
 
-void NewWidgetTreeDialog::constructList() {
+void NewWidgetTreeDialog::constructList(QList<Globals::Topic> topics) {
     m_tree->clear();
-    QMapIterator<QString, TopicTypes> iterator(FilterStore::FilteredTopics);
 
-    while (iterator.hasNext())
+    for (const Globals::Topic & topic : topics)
     {
-        iterator.next();
-        QString topicName = iterator.key();
-        TopicTypes topicType = iterator.value();
+        createTreeIfNotExists(topic);
 
-        createTreeIfNotExists(topicName, topicType);
+        QMenu *widgetMenu = Globals::typeStore.generateMenuForTopic(topic);
 
-        QMenu *widgetMenu = Globals::typeStore->generateMenuForType(topicType, topicName.toStdString());
-
-        connect(m_tree, &QTreeWidget::itemActivated, this, [this, topicName, widgetMenu](QTreeWidgetItem *item) {
-            if (getParentPath(item) == topicName) {
+        connect(m_tree, &QTreeWidget::itemActivated, this, [this, topic, widgetMenu](QTreeWidgetItem *item) {
+            if (getParentPath(item) == topic.name) {
                 widgetMenu->popup(QCursor::pos());
             }
         });
     }
 }
 
-void NewWidgetTreeDialog::createTreeIfNotExists(QString topicName, TopicTypes type) {
-    QStringList split = topicName.split('/');
+void NewWidgetTreeDialog::createTreeIfNotExists(const Globals::Topic &topic) {
+    QStringList split = topic.name.split('/');
     if (!split.at(0).isEmpty()) { // protect against entries not prefixed with /
         split.prepend("");
     }
@@ -98,11 +97,11 @@ void NewWidgetTreeDialog::createTreeIfNotExists(QString topicName, TopicTypes ty
         m_itemTableMap.insert(table, item);
     }
 
-    QString topic = split.last();
+    QString topicEnd = split.last();
     QString superTable = tablePath.join('/');
 
     QStringList columns{};
-    columns << topic << Globals::topicTypeDisplayNames.value(type);
+    columns << topicEnd << Globals::topicTypeDisplayNames.value(topic.type);
 
     QTreeWidgetItem *item = new QTreeWidgetItem(columns);
     item->setFirstColumnSpanned(true);
@@ -115,7 +114,7 @@ void NewWidgetTreeDialog::createTreeIfNotExists(QString topicName, TopicTypes ty
     QTreeWidgetItem *parent = m_itemTableMap.value(superTable);
 
     if (parent == nullptr) {
-        qCritical() << "something very bad happened with topic" << topic << superTable;
+        qCritical() << "something very bad happened with topic" << topicEnd << superTable;
         return;
     }
 
@@ -135,14 +134,27 @@ QString NewWidgetTreeDialog::getParentPath(QTreeWidgetItem *item) {
     return "/" + list.join('/');
 }
 
+QList<Globals::Topic> NewWidgetTreeDialog::filterNumberTypes(QList<Globals::Topic> list) {
+    QList<Globals::Topic> newList{};
+
+    QList<TopicTypes> acceptableTypes = {
+        TopicTypes::Int,
+        TopicTypes::Double,
+        TopicTypes::Boolean
+    };
+
+    for (const Globals::Topic &topic : list) {
+        if (acceptableTypes.contains(topic.type)) {
+            newList.append(topic);
+        }
+    }
+
+    return newList;
+}
+
 void NewWidgetTreeDialog::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
         return;
     }
     QDialog::keyPressEvent(event);
-}
-
-void NewWidgetTreeDialog::emitWidget(BaseWidget *widget, WidgetData data) {
-    emit widgetReady(widget, data);
-    close();
 }

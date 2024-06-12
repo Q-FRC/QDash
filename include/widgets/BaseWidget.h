@@ -71,6 +71,7 @@ public:
 signals:
     void reconfigRequested(BaseWidget *widget, WidgetData data);
     void deleteRequested();
+    void isReady();
 private:
     QVariant readDoubleProperty(const QMetaProperty &property, const QJsonValue &value);
     QVariant readIntProperty(const QMetaProperty &property, const QJsonValue &value);

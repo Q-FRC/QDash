@@ -9,7 +9,7 @@ BooleanDisplayWidget::BooleanDisplayWidget(const QString &topic, const bool &def
     m_colorWidget = new ShapedFrame(Globals::FrameShape::Rectangle, this);
 
     m_layout->addWidget(m_colorWidget, 1, 0, 3, 1);
-    m_ready = true;
+    setReady(true);
 }
 
 BooleanDisplayWidget::~BooleanDisplayWidget() {

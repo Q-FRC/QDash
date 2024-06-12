@@ -6,7 +6,7 @@
 StringDisplayWidget::StringDisplayWidget(const QString &topic, const QString &defaultValue, const QString &title) : TextWidget(WidgetTypes::StringDisplay, topic, defaultValue, title)
 {
     m_value = defaultValue;
-    m_ready = true;
+    setReady(true);
 }
 
 StringDisplayWidget::~StringDisplayWidget() {

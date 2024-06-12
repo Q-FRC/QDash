@@ -18,7 +18,7 @@ BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &topic, const bool &d
         m_value = state == Qt::Checked;
     });
 
-    m_ready = true;
+    setReady(true);
 }
 
 BooleanCheckboxWidget::~BooleanCheckboxWidget() {

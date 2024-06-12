@@ -18,7 +18,7 @@ CommandWidget::CommandWidget(const QString &topic, const QString &title) : BaseW
 
     m_layout->addWidget(m_button, 1, 0, 3, 1);
 
-    m_ready = true;
+    setReady(true);
 }
 
 CommandWidget::~CommandWidget() {

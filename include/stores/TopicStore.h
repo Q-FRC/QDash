@@ -18,6 +18,7 @@ public:
 
     // little messy but its alright
     static QHash<std::pair<std::string, BaseWidget *>, NT_Listener> topicListenerMap;
+
     TopicStore();
 
     static nt::NetworkTableEntry *subscribe(std::string ntTopic, BaseWidget *subscriber);

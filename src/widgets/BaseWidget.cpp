@@ -63,6 +63,7 @@ bool BaseWidget::ready() {
 
 void BaseWidget::setReady(bool ready) {
     m_ready = ready;
+    emit isReady();
 }
 
 QFont BaseWidget::titleFont()

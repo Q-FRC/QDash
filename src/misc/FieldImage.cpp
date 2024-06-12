@@ -40,9 +40,11 @@ void FieldImage::paintEvent(QPaintEvent *event) {
     QPixmap pixmap = QPixmap(m_image.fileName);
     QPixmap pixmap2 = pixmap.scaled(w, h, Qt::KeepAspectRatio);
 
+    QPointF topLeft = QPointF(w / 2. - pixmap2.width() / 2., h / 2. - pixmap2.height() / 2.);
+
     if (pixmap.width() != pixmap2.width() || pixmap.height() != pixmap2.height()) {
         pixmap = pixmap2;
-        painter.drawPixmap(QPointF(0, h / 2. - pixmap2.height() / 2.), pixmap2, pixmap2.rect().toRectF());
+        painter.drawPixmap(topLeft, pixmap2, pixmap2.rect().toRectF());
     }
 
     m_imageWidth = pixmap.width();
@@ -57,9 +59,6 @@ void FieldImage::paintEvent(QPaintEvent *event) {
     double robotLength = m_length * meterRatio;
 
     // getting some important points & rects
-    QPointF topLeft(width() / 2. - m_imageWidth / 2.,
-                    height() / 2. - m_imageHeight / 2.);
-
     QPointF robotTopLeft = topLeft + QPointF(m_value[0] * meterRatio, (FieldWidth - m_value[1]) * meterRatio);
 
     QRectF robotRect(robotTopLeft, QSizeF(robotWidth, robotLength));

@@ -11,8 +11,6 @@
 
 #include <SingleApplication>
 
-TypeStore *Globals::typeStore = new TypeStore;
-
 int main(int argc, char **argv) {
     SingleApplication app(argc, argv);
 
@@ -47,7 +45,7 @@ int main(int argc, char **argv) {
 // SENDABLE REGISTRATION
 #define REGISTER_SENDABLE(typeString, topicType) FilterStore::registerSendable(typeString, topicType);
 
-    REGISTER_SENDABLE("Sendable Chooser", TopicTypes::SendableChooser)
+    REGISTER_SENDABLE("String Chooser", TopicTypes::SendableChooser)
     REGISTER_SENDABLE("Field2d", TopicTypes::Field2d)
     REGISTER_SENDABLE("Command", TopicTypes::Command)
 
@@ -55,7 +53,7 @@ int main(int argc, char **argv) {
 #undef REGISTER_SENDABLE
 
 // WIDGET REGISTRATION
-#define REGISTER_TYPE(topic, widget, name) Globals::typeStore->registerType(topic, widget, name);
+#define REGISTER_TYPE(topic, widget, name) Globals::typeStore.registerType(topic, widget, name);
 
     REGISTER_TYPE(TopicTypes::Boolean, WidgetTypes::BooleanCheckbox, "Checkbox")
     REGISTER_TYPE(TopicTypes::Boolean, WidgetTypes::BooleanDisplay, "Color Display")
@@ -109,6 +107,7 @@ int main(int argc, char **argv) {
         } else if (event.Is(nt::EventFlags::kUnpublish)) {
             Globals::ntTopics.removeOne(QString::fromStdString(topicName));
         }
+
         FilterStore::filterTopics();
     });
 

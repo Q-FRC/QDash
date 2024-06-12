@@ -24,7 +24,7 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
 
     nt::NetworkTableEntry *entry = topicEntryMap.value(ntTopic);
 
-    auto updateWidget = [entry, subscriber](const nt::Event &event = nt::Event()) {
+    nt::ListenerCallback updateWidget = [entry, subscriber](const nt::Event &event = nt::Event()) {
         nt::Value value = entry->GetValue();
 
         // ensure thread-safety
@@ -33,15 +33,23 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
                 if (subscriber->ready()) {
                     subscriber->setValue(value);
                     subscriber->update();
+                } else {
+                    QObject *receiver = new QObject;
+                    connect(subscriber, &BaseWidget::isReady, receiver, [receiver, subscriber, value] {
+                        receiver->deleteLater();
+                        subscriber->setValue(value);
+                        subscriber->update();
+                    });
                 }
             }); // QMetaObject and its consequences have been a disaster for the human race
     };
 
-    updateWidget();
+    updateWidget(nt::Event());
 
     NT_Listener listener = Globals::inst.AddListener(entry->GetTopic(), nt::EventFlags::kValueAll, updateWidget);
 
     topicListenerMap.insert({ntTopic, subscriber}, listener);
+
     return entry;
 }
 

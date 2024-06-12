@@ -1,9 +1,12 @@
 #include "stores/FilterStore.h"
 
+#include "Globals.h"
+
 QMap<std::string, TopicTypes> FilterStore::m_sendableTypeMap{};
 QMap<nt::NetworkTableType, TopicTypes> FilterStore::m_ntTypeMap{};
 
-QMap<QString, TopicTypes> FilterStore::FilteredTopics{};
+QList<Globals::Topic> FilterStore::FilteredTopics{};
+QList<Globals::Topic> FilterStore::UnfilteredTopics{};
 
 FilterStore::FilterStore()
 {
@@ -34,18 +37,21 @@ void FilterStore::filterTopics() {
     }
 
     // delete unused topics
-    const QStringList &topics = FilteredTopics.keys();
-
-    for (const QString &topic : topics) {
-        QStringList split = topic.split('/');
-        QString supertable = split.sliced(0, split.length() - 1).join('/');
+    for (const Globals::Topic &topic : FilteredTopics) {
+        QStringList split = topic.name.split('/');
+        Globals::Topic supertable(topic);
+        supertable.name = split.sliced(0, split.length() - 1).join('/');
 
         // account for sendables
+        if (FilteredTopics.contains(supertable)) {
+            FilteredTopics.removeAll(topic);
+        }
+
         if (
-            (!Globals::ntTopics.contains(topic) &&
-             !Globals::ntTopics.contains(topic + "/.type")) ||
-            topics.contains(supertable)) {
-            FilteredTopics.remove(topic);
+            (!Globals::ntTopics.contains(topic.name) &&
+             !Globals::ntTopics.contains(topic.name + "/.type"))) {
+            FilteredTopics.removeAll(topic);
+            UnfilteredTopics.removeAll(topic);
         }
     }
 }
@@ -55,6 +61,10 @@ void FilterStore::sortTopic(QString topic) {
     TopicTypes topicType;
 
     nt::NetworkTableEntry entry = Globals::inst.GetEntry(topicName);
+
+    if (!entry.GetValue().IsValid()) {
+        return;
+    }
 
     QStringList split = QString::fromStdString(topicName).split('/');
     QString supertable = split.sliced(0, split.length() - 1).join('/');
@@ -72,14 +82,18 @@ void FilterStore::sortTopic(QString topic) {
 
     std::optional<TopicTypes> sendableType = sendableTypeForTypeString(value);
     std::optional<TopicTypes> ntType = topicTypeForNTType(entry.GetType());
+    if (ntType == std::nullopt) ntType = {TopicTypes::String};
+
+    Globals::Topic ntTopic{topic, ntType.value()};
 
     if (sendableType != std::nullopt) {
-        FilteredTopics.insert(supertable, sendableType.value());
-    } else if (ntType != std::nullopt) {
-        FilteredTopics.insert(topic, ntType.value());
+        Globals::Topic sendableTopic{supertable, sendableType.value()};
+        if (!FilteredTopics.contains(sendableTopic)) FilteredTopics.append(sendableTopic);
     } else {
-        FilteredTopics.insert(topic, TopicTypes::String);
+        if (!FilteredTopics.contains(ntTopic)) FilteredTopics.append(ntTopic);
     }
+
+    if (!UnfilteredTopics.contains(ntTopic)) UnfilteredTopics.append(ntTopic);
 
     entry.Unpublish();
     typeEntry.Unpublish();
