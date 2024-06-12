@@ -7,7 +7,9 @@ NumberDisplayWidget::NumberDisplayWidget(const QString &title, const double &def
     m_value = defaultValue;
 }
 
-NumberDisplayWidget::~NumberDisplayWidget() {}
+NumberDisplayWidget::~NumberDisplayWidget() {
+    m_entry.Unpublish();
+}
 
 void NumberDisplayWidget::update() {
     if (!m_text->hasFocus()) {

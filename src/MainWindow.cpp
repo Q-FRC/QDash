@@ -3,11 +3,6 @@
 #include "dialogs/ResizeDialog.h"
 #include "dialogs/NewWidgetDialog.h"
 
-#include "widgets/BooleanCheckboxWidget.h"
-#include "widgets/NumberDisplayWidget.h"
-#include "widgets/StringDisplayWidget.h"
-#include "widgets/BooleanDisplayWidget.h"
-
 #include "ntcore/networktables/NetworkTableInstance.h"
 
 #include <QToolBar>
@@ -26,26 +21,8 @@ MainWindow::MainWindow()
     // the previously set widget is destroyed.
     m_tabWidget = new TabWidget(QPoint(3, 3));
 
-//    BooleanDisplayWidget *boolean = new BooleanDisplayWidget("Test", "yoooo", "deez/cryaboutit");
-//    boolean->setTrueColor(Qt::blue);
-//    boolean->setFalseColor(Qt::yellow);
-
-//    boolean->update();
-
-//    NumberDisplayWidget *number = new NumberDisplayWidget("Numero", 25.3, "numero");
-//    StringDisplayWidget *string = new StringDisplayWidget("String", "hola", "stringio");
-
     m_centralWidget->setCurrentWidget(m_tabWidget);
     m_centralWidget->addTab(m_tabWidget, "Dashboard");
-
-//    QList<int> booleanData({0, 0, 0, 1, 1});
-//    m_widgets.insert(boolean, booleanData);
-
-//    QList<int> numberData({0, 0, 1, 2, 1});
-//    m_widgets.insert(number, numberData);
-
-//    QList<int> stringData({0, 1, 0, 1, 1});
-//    m_widgets.insert(string, stringData);
 
     m_toolbar = new QToolBar(this);
 
@@ -72,15 +49,51 @@ MainWindow::MainWindow()
         newWidgetMenu->clear();
         for (int i = 0; i < Globals::availableTopics.length(); ++i) {
             QString topicName = Globals::availableTopics.at(i);
-            newWidgetMenu->addAction(topicName);
+            nt::NetworkTableType topicType = Globals::inst.GetTopic(topicName.toStdString()).GetType();
+
+
+            switch(topicType) {
+            case nt::NetworkTableType::kBoolean: {
+                QMenu *boolMenu = new QMenu(topicName, newWidgetMenu);
+
+                QAction *checkboxAction = new QAction("Checkbox", this);
+                boolMenu->addAction(checkboxAction);
+
+                connect(checkboxAction, &QAction::triggered, [this, topicName](bool) {
+                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanCheckbox, topicName.toStdString());
+                });
+
+                QAction *colorAction = new QAction("Color Display", this);
+                boolMenu->addAction(colorAction);
+
+                connect(colorAction, &QAction::triggered, [this, topicName](bool) {
+                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanDisplay, topicName.toStdString());
+                });
+
+                newWidgetMenu->addMenu(boolMenu);
+                break;
+            }
+            case nt::NetworkTableType::kDouble: {
+                QAction *doubleAction = new QAction(topicName, this);
+                newWidgetMenu->addAction(doubleAction);
+
+                connect(doubleAction, &QAction::triggered, this, [this, topicName](bool) {
+                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::DoubleDisplay, topicName.toStdString());
+                });
+                break;
+            }
+            case nt::NetworkTableType::kString:
+            default: {
+                QAction *stringAction = new QAction(topicName, this);
+                newWidgetMenu->addAction(stringAction);
+
+                connect(stringAction, &QAction::triggered, this, [this, topicName](bool) {
+                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::StringDisplay, topicName.toStdString());
+                });
+                break;
+            }
+            }
         }
-    });
-
-    connect(newWidgetMenu, &QMenu::triggered, this, [this, newWidgetMenu](QAction *action) {
-        NewWidgetDialog *dialog = new NewWidgetDialog(action->text().toStdString());
-        dialog->show();
-
-        connect(dialog, &NewWidgetDialog::dataReady, this, &MainWindow::newWidget);
     });
 
     m_menubar->addMenu(newWidgetMenu);
@@ -155,29 +168,16 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     }
 }
 
-// TODO: newBooleanWidget, etc.
-void MainWindow::newWidget(std::string topic, nt::NetworkTableType type, QString name, QColor trueColor, QColor falseColor, QList<int> widgetData) {
-    switch(type) {
-    case nt::NetworkTableType::kBoolean: {
-        BooleanCheckboxWidget *widget = new BooleanCheckboxWidget(name, false, QString::fromStdString(topic));
-//        widget->setTrueColor(trueColor);
-//        widget->setFalseColor(falseColor);
-        QList<int> finalData({m_centralWidget->currentIndex(), widgetData[0], widgetData[1], widgetData[2], widgetData[3]});
-        m_widgets.insert(widget, finalData);
-        break;
-    }
-    case nt::NetworkTableType::kDouble: {
-        NumberDisplayWidget *widget = new NumberDisplayWidget(name, 0., QString::fromStdString(topic));
-        QList<int> finalData({m_centralWidget->currentIndex(), widgetData[0], widgetData[1], widgetData[2], widgetData[3]});
-        m_widgets.insert(widget, finalData);
-    }
-    default:
-    case nt::NetworkTableType::kString: {
-        StringDisplayWidget *widget = new StringDisplayWidget(name, "", QString::fromStdString(topic));
-        QList<int> finalData({m_centralWidget->currentIndex(), widgetData[0], widgetData[1], widgetData[2], widgetData[3]});
-        m_widgets.insert(widget, finalData);
-        break;
-    }
-    }
+void MainWindow::newWidget(BaseWidget *widget, QList<int> data) {
+    QList<int> finalData({m_centralWidget->currentIndex(), data[0], data[1], data[2], data[3]});
+    m_widgets.insert(widget, finalData);
+
     m_needsRelay = true;
+}
+
+void MainWindow::showNewWidgetDialog(NewWidgetDialog::WidgetTypes widgetType, std::string topic) {
+    NewWidgetDialog *dialog = NewWidgetDialog::fromWidgetType(widgetType, topic);
+    dialog->show();
+
+    connect(dialog, &NewWidgetDialog::widgetReady, this, &MainWindow::newWidget);
 }

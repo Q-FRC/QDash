@@ -1,4 +1,3 @@
-
 # Created by https://www.gitignore.io/api/macos,windows,linux,java,gradle,intellij,eclipse
 # Edit at https://www.gitignore.io/?templates=macos,windows,linux,java,gradle,intellij,eclipse
 
@@ -283,3 +282,5 @@ gradle-app.setting
 
 # VS Code settings file
 .vscode/
+
+CMakeLists.txt.user

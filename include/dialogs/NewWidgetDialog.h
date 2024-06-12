@@ -2,6 +2,8 @@
 #define NEWWIDGETDIALOG_H
 #include "networktables/NetworkTableEntry.h"
 
+#include "widgets/BaseWidget.h"
+
 #include <QDialog>
 #include <QWidget>
 #include <QFormLayout>
@@ -14,26 +16,12 @@
 class NewWidgetDialog : public QDialog
 {
         Q_OBJECT
-private:
+protected:
     QFormLayout *m_layout;
     nt::NetworkTableEntry m_entry;
 
-    bool m_isBooleanDisplay;
-
     QLabel *m_nameLabel;
     QLineEdit *m_nameInput;
-
-    QLabel *m_trueColorLabel;
-    QWidget *m_trueColorInput;
-    QHBoxLayout *m_trueColorInputLayout;
-    QLineEdit *m_trueColorEdit;
-    QPushButton *m_trueColorSelect;
-
-    QLabel *m_falseColorLabel;
-    QWidget *m_falseColorInput;
-    QHBoxLayout *m_falseColorInputLayout;
-    QLineEdit *m_falseColorEdit;
-    QPushButton *m_falseColorSelect;
 
     QLabel *m_rowLabel;
     QSpinBox *m_rowInput;
@@ -52,8 +40,17 @@ public:
     NewWidgetDialog(std::string ntTopic);
     virtual ~NewWidgetDialog();
 
+    enum class WidgetTypes {
+        BooleanCheckbox,
+        BooleanDisplay,
+        StringDisplay,
+        DoubleDisplay
+    };
+
+    static NewWidgetDialog *fromWidgetType(WidgetTypes type, std::string ntTopic);
+
 signals:
-    void dataReady(std::string topic, nt::NetworkTableType type, QString name, QColor trueColor, QColor falseColor, QList<int> widgetData);
+    void widgetReady(BaseWidget *widget, QList<int> data);
 };
 
 #endif // NEWWIDGETDIALOG_H

@@ -5,7 +5,9 @@ StringDisplayWidget::StringDisplayWidget(const QString &title, const QString &de
     m_value = defaultValue;
 }
 
-StringDisplayWidget::~StringDisplayWidget() {}
+StringDisplayWidget::~StringDisplayWidget() {
+    m_entry.Unpublish();
+}
 
 void StringDisplayWidget::update() {
     if (!m_text->hasFocus()) {

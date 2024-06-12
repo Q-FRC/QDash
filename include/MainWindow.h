@@ -13,6 +13,8 @@
 #include <QMouseEvent>
 #include <QTabWidget>
 
+#include "dialogs/NewWidgetDialog.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -46,6 +48,8 @@ public:
     void setNeedsRelay(bool needsRelay);
     QList<int> getWidgetData(BaseWidget *widget);
 
+    void showNewWidgetDialog(NewWidgetDialog::WidgetTypes widgetType, std::string topic);
+
 public slots:
-    void newWidget(std::string topic, nt::NetworkTableType type, QString name, QColor trueColor, QColor falseColor, QList<int> widgetData);
+    void newWidget(BaseWidget *widget, QList<int> data);
 };

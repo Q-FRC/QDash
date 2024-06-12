@@ -28,6 +28,12 @@ set(PROJECT_SOURCES
 
         src/dialogs/ResizeDialog.cpp
         src/dialogs/NewWidgetDialog.cpp
+        src/dialogs/NewBooleanCheckboxDialog.cpp
+        src/dialogs/NewStringDisplayDialog.cpp
+        src/dialogs/NewDoubleDisplayDialog.cpp
+        src/dialogs/NewBooleanDisplayDialog.cpp
+
+        # =======================================
 
         include/Globals.h
         include/MainWindow.h
@@ -42,6 +48,10 @@ set(PROJECT_SOURCES
 
         include/dialogs/ResizeDialog.h
         include/dialogs/NewWidgetDialog.h
+        include/dialogs/NewBooleanCheckboxDialog.h
+        include/dialogs/NewStringDisplayDialog.h
+        include/dialogs/NewDoubleDisplayDialog.h
+        include/dialogs/NewBooleanDisplayDialog.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

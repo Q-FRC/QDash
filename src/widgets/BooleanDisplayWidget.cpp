@@ -9,7 +9,9 @@ BooleanDisplayWidget::BooleanDisplayWidget(const QString &title, const bool &def
     m_layout->addWidget(m_colorWidget, 1, 0, 3, 1);
 }
 
-BooleanDisplayWidget::~BooleanDisplayWidget() {}
+BooleanDisplayWidget::~BooleanDisplayWidget() {
+    m_entry.Unpublish();
+}
 
 QColor BooleanDisplayWidget::trueColor() {
     return m_trueColor;

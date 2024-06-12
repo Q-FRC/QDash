@@ -14,7 +14,9 @@ BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &title, const bool &d
     });
 }
 
-BooleanCheckboxWidget::~BooleanCheckboxWidget() {}
+BooleanCheckboxWidget::~BooleanCheckboxWidget() {
+    m_entry.Unpublish();
+}
 
 void BooleanCheckboxWidget::update() {
     bool value = m_entry.GetBoolean(m_value);
