@@ -119,6 +119,7 @@ endif()
 if(UNIX AND NOT(APPLE))
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/QFRCDashboard.desktop DESTINATION "share/applications")
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/QFRCDashboard.svg DESTINATION "share/icons/hicolor/scalable/apps")
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/QFRCDashboard-symbolic.svg DESTINATION "share/icons/hicolor/symbolic/apps" RENAME QFRCDashboard.svg)
 endif()
 
 configure_file(QFRCDashboard.rc.in QFRCDashboard.rc)
