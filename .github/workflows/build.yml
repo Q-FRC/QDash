@@ -32,6 +32,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
@@ -156,11 +158,14 @@ jobs:
          python -m pip install jinja2
 
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: 'Build (Windows)'
         run: |
           git submodule update --init --recursive
           cmake -S . -B ${{ env.BUILD_WIN_DIR }} -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF
+
           cmake --build ${{ env.BUILD_WIN_DIR }} --config ${{ inputs.build_type }} --parallel $(nproc)
         env:
           SCCACHE_GHA_ENABLED: "true"
@@ -170,10 +175,13 @@ jobs:
         run: |
           cmake --install ${{ env.BUILD_WIN_DIR }}\_deps\ntcore-build --prefix ${{ env.NTCORE_INSTALL_DIR }}
           cmake --install ${{ env.BUILD_WIN_DIR }}\_deps\protobuf-build --prefix ${{ env.PROTOBUF_INSTALL_DIR }}
+
           mkdir ${{ env.INSTALL_WIN_DIR }}
           set PATH=%PATH%;"${{ runner.workspace }}\Qt\6.6.0\msvc2019_64\bin"
+
           windeployqt ${{ env.BUILD_WIN_DIR }}\QFRCDashboard.exe --dir ${{ env.INSTALL_WIN_DIR }}
           cp ${{ env.BUILD_WIN_DIR }}\QFRCDashboard.exe ${{ env.INSTALL_WIN_DIR }}
+
           if "${{ inputs.build_type }}" == "Debug" (
             cp ${{ env.NTCORE_INSTALL_DIR }}\bin\ntcored.dll ${{ env.INSTALL_WIN_DIR }}
             cp ${{ env.NTCORE_INSTALL_DIR }}\bin\wpinetd.dll ${{ env.INSTALL_WIN_DIR }}
@@ -187,6 +195,7 @@ jobs:
             cp ${{ env.PROTOBUF_INSTALL_DIR }}\bin\libprotobuf.dll ${{ env.INSTALL_WIN_DIR }}
             cp C:\Windows\System32\ucrtbase.dll ${{ env.INSTALL_WIN_DIR }}
           )
+
           cp ${{ env.PROTOBUF_INSTALL_DIR }}\bin\abseil_dll.dll ${{ env.INSTALL_WIN_DIR }}
 
       ##

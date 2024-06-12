@@ -11,13 +11,14 @@
 #include "stores/TypeStore.h"
 
 #include <SingleApplication>
+#include <BuildConfig.h>
 
 int main(int argc, char **argv) {
     SingleApplication app(argc, argv);
 
-    app.setOrganizationName("binex-dsk");
-    app.setApplicationName("QFRCDashboard");
-    app.setApplicationVersion("1.0.0");
+    app.setOrganizationName(BuildConfig.ORG_NAME);
+    app.setApplicationName(BuildConfig.APP_NAME);
+    app.setApplicationVersion(BuildConfig.versionString());
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Simple, reliable, high-performance, low-footprint FRC dashboard");
@@ -34,11 +35,17 @@ int main(int argc, char **argv) {
         bool connected = event.Is(nt::EventFlags::kConnected);
 
         QMetaObject::invokeMethod(window, [window, connected] {
-            window->setWindowTitle("QFRCDashboard (" + QString::fromStdString(Globals::server.server) + ") - " + (connected ? "" : "Not ") + "Connected");
+            window->setWindowTitle(
+                QString("%1 %2 (%3) - %4")
+                    .arg(BuildConfig.APP_NAME,
+                         BuildConfig.versionString(),
+                         QString::fromStdString(Globals::server.server),
+                         QString(connected ? "" : "Not ") + "Connected")
+                );
         });
     });
 
-    Globals::inst.StartClient4("QFRCDashboard");
+    Globals::inst.StartClient4(BuildConfig.APP_NAME.toStdString());
     Globals::inst.SetServer(Globals::server.server.c_str(), NT_DEFAULT_PORT4);
 
 // NT REGISTRATION
@@ -95,18 +102,20 @@ int main(int argc, char **argv) {
     if (firstRun) {
         settings.setValue("firstRun", false);
 
-        QMessageBox::information(window, "Welcome to QFRCDashboard!",
-                                 "Welcome to QFRCDashboard. Ensure to check the GitHub page in the \"about\" "
-                                 "tab.\n\n"
-                                 "To get started, open the NT server settings tab with Alt+S and input your desired "
-                                 "NetworkTables settings. Once connected, add a tab with Ctrl+T, and search "
-                                 "for your widget in the New Widget tab with Alt+N.\n\n"
+        QMessageBox::information
+            (window, QString("Welcome to %1!").arg(BuildConfig.APP_NAME),
+             QString("Welcome to %1. Ensure to check the GitHub page in the \"about\" "
+                     "tab.\n\n"
+                     "To get started, open the NT server settings tab with Alt+S and input your desired "
+                     "NetworkTables settings. Once connected, add a tab with Ctrl+T, and search "
+                     "for your widget in the New Widget tab with Alt+N.\n\n"
 
-                                 "Note that row and column indices start AT 0! Spans, however, do not.\n\n"
+                     "Note that row and column indices start AT 0! Spans, however, do not.\n\n"
 
-                                 "Save and load at any time with Ctrl+S and Ctrl+O, or through the File Menu. "
-                                 "Close tabs with Ctrl+W or through the Tab menu. Modify or delete widgets--"
-                                 "or even change their fonts--by right clicking any widget.");
+                     "Save and load at any time with Ctrl+S and Ctrl+O, or through the File Menu. "
+                     "Close tabs with Ctrl+W or through the Tab menu. Modify or delete widgets--"
+                     "or even change their fonts--by right clicking any widget.")
+                 .arg(BuildConfig.APP_NAME));
     }
 
     Globals::inst.AddListener({{""}}, nt::EventFlags::kTopic, [window] (const nt::Event &event) {

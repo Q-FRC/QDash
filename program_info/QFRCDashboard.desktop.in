@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
-Name=QFRCDashboard
+Name=@Dashboard_APP_NAME@
 Comment=Reliable, high-performance dashboard for FRC.
-Exec=QFRCDashboard
-Icon=QFRCDashboard
+Exec=@Dashboard_APP_NAME@
+Icon=@Dashboard_APP_NAME@
 Categories=Education;Utility

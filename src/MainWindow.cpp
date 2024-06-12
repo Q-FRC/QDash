@@ -24,6 +24,8 @@
 #include <QShortcut>
 #include <QDrag>
 
+#include <BuildConfig.h>
+
 MainWindow::MainWindow()
 {
     setCentralWidget(m_centralWidget = new QTabWidget(this));
@@ -120,7 +122,7 @@ MainWindow::MainWindow()
     { // About
         QMenu *aboutMenu = new QMenu("&About");
 
-        QAction *aboutAction = new QAction("About QFRCDashboard", aboutMenu);
+        QAction *aboutAction = new QAction("About " + BuildConfig.APP_NAME, aboutMenu);
         connect(aboutAction, &QAction::triggered, this, &MainWindow::aboutDialog);
         aboutMenu->addAction(aboutAction);
 
@@ -419,11 +421,13 @@ void MainWindow::beginNewWidgetDrag(BaseWidget *widget, WidgetData data) {
 //  Menu
 void MainWindow::aboutDialog() {
     QStringList aboutString;
-    aboutString << "Current Version: 1.0.0"
-                << "GitHub: https://github.com/binex-dsk/QFRCDashboard"
+    aboutString << "Current Version: " + BuildConfig.versionString()
+                << "Build Platform: " + BuildConfig.BUILD_PLATFORM
+                << "Build Date: " + BuildConfig.BUILD_DATE
+                << "Git Repo: " + BuildConfig.GIT_REPO
                 << "Author: Carson Rueter <swurl@swurl.xyz>"
                 << "Contributors: Ashley Hawkins"
-                << "Copyleft 2023 Carson Rueter"
+                << "Copyleft 2023-2024 Carson Rueter"
                 << "Enjoy :)";
-    QMessageBox::about(this, "About QFRCDashboard", aboutString.join("\n"));
+    QMessageBox::about(this, "About " + BuildConfig.APP_NAME, aboutString.join("\n"));
 }

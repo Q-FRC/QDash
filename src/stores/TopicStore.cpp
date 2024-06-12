@@ -35,12 +35,10 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
                     subscriber->setValue(value);
                     subscriber->update();
                 } else {
-                    QObject *receiver = new QObject;
-                    connect(subscriber, &BaseWidget::isReady, receiver, [receiver, subscriber, value] {
-                        receiver->deleteLater();
+                    connect(subscriber, &BaseWidget::isReady, subscriber, [subscriber, value] {
                         subscriber->setValue(value);
                         subscriber->update();
-                    });
+                        }, Qt::SingleShotConnection);
                 }
             }); // QMetaObject and its consequences have been a disaster for the human race
     };

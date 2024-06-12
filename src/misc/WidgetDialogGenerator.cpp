@@ -203,11 +203,9 @@ QPushButton *WidgetDialogGenerator::selectTopicButton() {
 
         dialog->show();
 
-        QObject *receiver = new QObject(this);
-        connect(dialog, &NewWidgetTreeDialog::topicReady, receiver, [this, receiver, topicButton](const Globals::Topic &topic) {
+        connect(dialog, &NewWidgetTreeDialog::topicReady, this, [this, topicButton](const Globals::Topic &topic) {
             emit topicSelected(topic, topicButton);
-            receiver->deleteLater();
-        });
+            }, Qt::SingleShotConnection);
     });
 
     return topicButton;

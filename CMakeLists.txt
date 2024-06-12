@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(QFRCDashboard VERSION 0.1 LANGUAGES CXX)
-
-#set(CMAKE_PREFIX_PATH "C:\\Qt6\\6.6.1\\msvc2019_64") # Windows thing
+project(QFRCDashboard VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -106,7 +104,10 @@ set(PROJECT_SOURCES
 )
 
 if(WIN32)
-    set(RCS_FILE ${CMAKE_CURRENT_BINARY_DIR}/QFRCDashboard.rc)
+    set(RCS_FILE ${CMAKE_CURRENT_BINARY_DIR}/program_info/QFRCDashboard.rc)
+    set(Dashboard_BUILD_PLATFORM "win32")
+else()
+    set(Dashboard_BUILD_PLATFORM "lin64")
 endif()
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -120,14 +121,37 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     )
 endif()
 
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
+
+set(Dashboard_ORG_NAME "binex-dsk")
+set(Dashboard_APP_NAME "QFRCDashboard")
+set(Dashboard_GIT_REPO "https://github.com/binex-dsk/QFRCDashboard")
+
+# Git
+include(GetGitRevisionDescription)
+git_get_exact_tag(Dashboard_GIT_TAG)
+get_git_head_revision(Dashboard_GIT_REFSPEC Dashboard_GIT_COMMIT)
+
+message(STATUS "Git commit: ${Dashboard_GIT_COMMIT}")
+message(STATUS "Git tag: ${Dashboard_GIT_TAG}")
+message(STATUS "Git refspec: ${Dashboard_GIT_REFSPEC}")
+
+string(REPLACE "-beta" "." Dashboard_GIT_TAG_NUMERO ${Dashboard_GIT_TAG})
+
+# Build Date
+string(TIMESTAMP TODAY "%Y-%m-%d")
+set(Dashboard_BUILD_TIMESTAMP "${TODAY}")
+
 set(QAPPLICATION_CLASS QApplication)
 add_subdirectory("SingleApplication")
 
-target_link_libraries(QFRCDashboard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::MultimediaWidgets Qt${QT_VERSION_MAJOR}::Charts ntcore SingleApplication::SingleApplication)
+add_subdirectory("program_info")
+add_subdirectory("buildconfig")
+
+target_link_libraries(QFRCDashboard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::MultimediaWidgets Qt${QT_VERSION_MAJOR}::Charts ntcore SingleApplication::SingleApplication BuildConfig)
 
 target_include_directories(QFRCDashboard PRIVATE "$<TARGET_PROPERTY:ntcore,INTERFACE_INCLUDE_DIRECTORIES>")
 target_include_directories(QFRCDashboard PRIVATE include/)
-target_include_directories(QFRCDashboard PRIVATE SingleApplication/)
 
 include(GNUInstallDirs)
 install(TARGETS QFRCDashboard
@@ -136,19 +160,6 @@ install(TARGETS QFRCDashboard
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-set(Dashboard_VERSION "1.0.0")
-set(Dashboard_VERSION_NUMBER "1.0.0")
-
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(QFRCDashboard)
 endif()
-
-if(UNIX AND NOT(APPLE))
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/QFRCDashboard.desktop DESTINATION "share/applications")
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/QFRCDashboard.svg DESTINATION "share/icons/hicolor/scalable/apps")
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/QFRCDashboard-symbolic.svg DESTINATION "share/icons/hicolor/symbolic/apps" RENAME QFRCDashboard.svg)
-endif()
-
-configure_file(QFRCDashboard.rc.in QFRCDashboard.rc)
-configure_file(QFRCDashboard.manifest.in QFRCDashboard.manifest)
-configure_file(QFRCDashboard.ico QFRCDashboard.ico COPYONLY)
