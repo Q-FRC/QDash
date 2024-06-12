@@ -75,21 +75,47 @@ MainWindow::MainWindow()
 
     m_menubar->addMenu(tabMenu);
 
-    QMenu *newWidgetMenu = new QMenu("&New Widget");
-    newWidgetMenu->setStyleSheet("QMenu { menu-scrollable: 1; }");
-    connect(newWidgetMenu, &QMenu::aboutToShow, this, [this, newWidgetMenu, newTab] {
+    QAction *newWidgetAction = new QAction("&New Widget");
+
+    connect(newWidgetAction, &QAction::triggered, this, [this, newTab](bool) {
+
         if (m_tabWidgets.length() == 0) {
             QMessageBox::StandardButton warning = QMessageBox::warning(this, "Cannot Add Widget", "You must select a tab before adding a widget.\nWould you like to add a tab now?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
             if (warning == QMessageBox::StandardButton::Yes) {
                 newTab->trigger();
             }
         } else {
-            constructNewWidgetMenu(newWidgetMenu);
-            newWidgetMenu->show();
+            QListWidget *list = new QListWidget(this);
+            QDialog *listDialog = new QDialog;
+            QVBoxLayout *listLayout = new QVBoxLayout(listDialog);
+            QDialogButtonBox *box = new QDialogButtonBox(QDialogButtonBox::StandardButton::Ok | QDialogButtonBox::StandardButton::Cancel);
+
+            listLayout->addWidget(list);
+            listLayout->addWidget(box);
+
+            constructNewWidgetList(list, listDialog);
+
+            listDialog->open();
         }
     });
 
-    m_menubar->addMenu(newWidgetMenu);
+    m_menubar->addAction(newWidgetAction);
+
+//    QMenu *newWidgetMenu = new QMenu("&New Widget");
+//    newWidgetMenu->setStyleSheet("QMenu { menu-scrollable: 1; }");
+//    connect(newWidgetMenu, &QMenu::aboutToShow, this, [this, newWidgetMenu, newTab] {
+//        if (m_tabWidgets.length() == 0) {
+//            QMessageBox::StandardButton warning = QMessageBox::warning(this, "Cannot Add Widget", "You must select a tab before adding a widget.\nWould you like to add a tab now?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+//            if (warning == QMessageBox::StandardButton::Yes) {
+//                newTab->trigger();
+//            }
+//        } else {
+//            constructNewWidgetMenu(newWidgetMenu);
+//            newWidgetMenu->show();
+//        }
+//    });
+
+//    m_menubar->addMenu(newWidgetMenu);
 
     update();
 }
@@ -246,6 +272,92 @@ void MainWindow::constructNewWidgetMenu(QMenu *menu) {
 
             connect(stringAction, &QAction::triggered, this, [this, topicName](bool) {
                 showNewWidgetDialog(NewWidgetDialog::WidgetTypes::StringDisplay, topicName.toStdString());
+            });
+            break;
+        }
+        }
+    }
+}
+
+void MainWindow::constructNewWidgetList(QListWidget *list, QDialog *dialog) {
+    list->clear();
+    QMapIterator<QString, Globals::TopicTypes> iterator(Globals::availableTopics);
+
+    connect(list, &QListWidget::itemActivated, this, [dialog](QListWidgetItem *) {
+        dialog->close();
+    });
+
+    while (iterator.hasNext())
+    {
+        iterator.next();
+        QString topicName = iterator.key();
+        Globals::TopicTypes topicType = iterator.value();
+
+        list->addItem(topicName);
+
+        switch(topicType) {
+        case Globals::TopicTypes::Boolean: {
+            QMenu *boolMenu = new QMenu(topicName);
+
+            QAction *checkboxAction = new QAction("Checkbox", this);
+            boolMenu->addAction(checkboxAction);
+
+            connect(checkboxAction, &QAction::triggered, this, [this, topicName](bool) {
+                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanCheckbox, topicName.toStdString());
+            });
+
+            QAction *colorAction = new QAction("Color Display", this);
+            boolMenu->addAction(colorAction);
+
+            connect(colorAction, &QAction::triggered, this, [this, topicName](bool) {
+                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanDisplay, topicName.toStdString());
+            });
+
+            connect(list, &QListWidget::itemActivated, this, [this, topicName, boolMenu](QListWidgetItem *item) {
+                if (item->text() == topicName) {
+                    boolMenu->popup(QCursor::pos());
+                }
+            });
+            break;
+        }
+        case Globals::TopicTypes::Double: {
+            QMenu *doubleMenu = new QMenu(topicName);
+
+            QAction *displayAction = new QAction("Number Display", this);
+            doubleMenu->addAction(displayAction);
+
+            connect(displayAction, &QAction::triggered, this, [this, topicName](bool) {
+                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::DoubleDisplay, topicName.toStdString());
+            });
+
+            QAction *dialAction = new QAction("Dial", this);
+            doubleMenu->addAction(dialAction);
+
+            connect(dialAction, &QAction::triggered, this, [this, topicName](bool) {
+                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::DoubleDial, topicName.toStdString());
+            });
+
+            connect(list, &QListWidget::itemActivated, this, [this, topicName, doubleMenu](QListWidgetItem *item) {
+                if (item->text() == topicName) {
+                    doubleMenu->popup(QCursor::pos());
+                }
+            });
+            break;
+        }
+        case Globals::TopicTypes::SendableChooser: {
+            connect(list, &QListWidget::itemActivated, this, [this, topicName](QListWidgetItem *item) {
+                if (item->text() == topicName) {
+                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::SendableChooser, topicName.toStdString());
+                }
+            });
+            break;
+        }
+        case Globals::TopicTypes::String:
+        default: {
+            connect(list, &QListWidget::itemActivated, this, [this, topicName](QListWidgetItem *item) {
+                if (item->text() == topicName) {
+                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::StringDisplay, topicName.toStdString());
+                }
             });
             break;
         }

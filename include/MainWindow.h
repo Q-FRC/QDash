@@ -12,6 +12,7 @@
 #include <QMap>
 #include <QMouseEvent>
 #include <QTabWidget>
+#include <QListWidget>
 
 #include "dialogs/NewWidgetDialog.h"
 
@@ -54,4 +55,5 @@ public slots:
     void newWidget(BaseWidget *widget, QList<int> data);
 
     void constructNewWidgetMenu(QMenu *menu);
+    void constructNewWidgetList(QListWidget *list, QDialog *dialog);
 };
