@@ -5,10 +5,11 @@
 #include "MainWindow.h"
 #include "RobotDiagnostics.h"
 #include "PitChecklist.h"
+#include "EventData.h"
 
 #include <QToolBar>
 
-MainWindow::MainWindow(RobotDiagnostics *diagnostics, PitChecklist *checklist)
+MainWindow::MainWindow(RobotDiagnostics *diagnostics, PitChecklist *checklist, EventData *eventData)
 {
     setCentralWidget(m_centralWidget = new QWidget);
 
@@ -36,6 +37,15 @@ MainWindow::MainWindow(RobotDiagnostics *diagnostics, PitChecklist *checklist)
     connect(m_checklistAction, &QAction::triggered, [this]
             { m_layout->setCurrentWidget(m_checklistWidget); });
     m_toolbar->addAction(m_checklistAction);
+
+    // EVENT DATA
+    m_eventDataWidget = eventData;
+    m_layout->addWidget(m_eventDataWidget);
+
+    m_eventDataAction = new QAction("Event Data", m_toolbar);
+    connect(m_eventDataAction, &QAction::triggered, [this]
+            { m_layout->setCurrentWidget(m_eventDataWidget); });
+    m_toolbar->addAction(m_eventDataAction);
 
     addToolBar(Qt::ToolBarArea::BottomToolBarArea, m_toolbar);
 }

@@ -15,6 +15,7 @@
 
 class RobotDiagnostics;
 class PitChecklist;
+class EventData;
 
 class MainWindow : public QMainWindow
 {
@@ -26,11 +27,13 @@ private:
 
     QAction *m_diagnosticsAction;
     QAction *m_checklistAction;
+    QAction *m_eventDataAction;
 
     RobotDiagnostics *m_diagnosticsWidget;
     PitChecklist *m_checklistWidget;
+    EventData *m_eventDataWidget;
     
 public:
-    MainWindow(RobotDiagnostics *diagnostics, PitChecklist *checklist);
+    MainWindow(RobotDiagnostics *diagnostics, PitChecklist *checklist, EventData *eventData);
     virtual ~MainWindow();
 };

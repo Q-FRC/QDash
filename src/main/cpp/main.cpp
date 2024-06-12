@@ -26,17 +26,22 @@ int main(int argc, char **argv) {
     PitChecklist *checklist = new PitChecklist();
     EventData *eventData = new EventData();
 
-    MainWindow *window = new MainWindow(diagnostics, checklist);
+    MainWindow *window = new MainWindow(diagnostics, checklist, eventData);
 
     window->show();
 
     QTimer *timer = new QTimer(window);
-    QWidget::connect(timer, &QTimer::timeout, diagnostics, [diagnostics]() {
+    QWidget::connect(timer, &QTimer::timeout, diagnostics, [diagnostics] {
         diagnostics->updateData();
     });
     timer->start(20);
 
-    eventData->test();
+    QTimer *networkTimer = new QTimer(window);
+    QWidget::connect(networkTimer, &QTimer::timeout, eventData, [eventData] {
+        eventData->updateRankingData();
+        eventData->updateEventData();
+    });
+    networkTimer->start(4000);
 
     return app.exec();
 }
