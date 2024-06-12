@@ -25,7 +25,7 @@ private:
     QToolBar *m_toolbar;
     QMenuBar *m_menubar;
 
-    TabWidget *m_tabWidget;
+    QList<TabWidget *> m_tabWidgets;
 
     /**
      * Widget map. Int array format is as follows:
@@ -52,4 +52,6 @@ public:
 
 public slots:
     void newWidget(BaseWidget *widget, QList<int> data);
+
+    void constructNewWidgetMenu(QMenu *menu);
 };

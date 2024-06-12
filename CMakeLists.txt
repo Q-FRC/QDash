@@ -26,6 +26,7 @@ set(PROJECT_SOURCES
         src/widgets/TextWidget.cpp
         src/widgets/BooleanCheckboxWidget.cpp
 
+
         src/dialogs/ResizeDialog.cpp
         src/dialogs/NewWidgetDialog.cpp
         src/dialogs/NewBooleanCheckboxDialog.cpp
@@ -45,6 +46,7 @@ set(PROJECT_SOURCES
         include/widgets/StringDisplayWidget.h
         include/widgets/TextWidget.h
         include/widgets/BooleanCheckboxWidget.h
+
 
         include/dialogs/ResizeDialog.h
         include/dialogs/NewWidgetDialog.h

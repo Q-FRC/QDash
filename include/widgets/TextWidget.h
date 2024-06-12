@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BaseWidget.h"
+#include "widgets/BaseWidget.h"
 
 #include <QLineEdit>
 
@@ -17,4 +17,6 @@ public:
 
     QFont font();
     void setFont(const QFont &font);
+
+    void update() override;
 };

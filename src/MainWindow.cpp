@@ -11,18 +11,11 @@
 #include <QMenu>
 #include <QListWidget>
 #include <QMenu>
+#include <QMessageBox>
 
 MainWindow::MainWindow()
 {
     setCentralWidget(m_centralWidget = new QTabWidget);
-
-    // Use a stacked layout to have multiple widgets available to switch between
-    // Using setCentralWidget is not possible, because upon switching the central widget
-    // the previously set widget is destroyed.
-    m_tabWidget = new TabWidget(QPoint(3, 3));
-
-    m_centralWidget->setCurrentWidget(m_tabWidget);
-    m_centralWidget->addTab(m_tabWidget, "Dashboard");
 
     m_toolbar = new QToolBar(this);
 
@@ -44,55 +37,54 @@ MainWindow::MainWindow()
 
     m_menubar->addAction(ntServerAction);
 
-    QMenu *newWidgetMenu = new QMenu("New Widget");
-    connect(newWidgetMenu, &QMenu::aboutToShow, this, [this, newWidgetMenu] {
-        newWidgetMenu->clear();
-        for (int i = 0; i < Globals::availableTopics.length(); ++i) {
-            QString topicName = Globals::availableTopics.at(i);
-            nt::NetworkTableType topicType = Globals::inst.GetTopic(topicName.toStdString()).GetType();
+    QMenu *tabMenu = new QMenu("Tab");
 
+    QAction *newTab = new QAction("New Tab");
 
-            switch(topicType) {
-            case nt::NetworkTableType::kBoolean: {
-                QMenu *boolMenu = new QMenu(topicName, newWidgetMenu);
+    newTab->setShortcut(QKeySequence::AddTab);
+    connect(newTab, &QAction::triggered, this, [this](bool) {
+        bool ok;
+        QString tabName = QInputDialog::getText(this, "New Tab Name", "Input new tab name", QLineEdit::Normal, "", &ok);
 
-                QAction *checkboxAction = new QAction("Checkbox", this);
-                boolMenu->addAction(checkboxAction);
+        // TODO: max size
+        if (!tabName.isEmpty() && ok) {
+            TabWidget *tab = new TabWidget(QPoint(3, 3));
 
-                connect(checkboxAction, &QAction::triggered, [this, topicName](bool) {
-                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanCheckbox, topicName.toStdString());
-                });
+            m_tabWidgets.append(tab);
+            m_centralWidget->addTab(tab, tabName);
+            m_centralWidget->setCurrentWidget(tab);
+        }
+    });
 
-                QAction *colorAction = new QAction("Color Display", this);
-                boolMenu->addAction(colorAction);
+    tabMenu->addAction(newTab);
 
-                connect(colorAction, &QAction::triggered, [this, topicName](bool) {
-                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanDisplay, topicName.toStdString());
-                });
+    QAction *closeTab = new QAction("Close Tab");
 
-                newWidgetMenu->addMenu(boolMenu);
-                break;
+    closeTab->setShortcut(QKeySequence::Close);
+    connect(closeTab, &QAction::triggered, this, [this](bool) {
+        int index = m_centralWidget->currentIndex();
+
+        QMessageBox::StandardButton close = QMessageBox::question(this, "Close Tab?", "Are you sure you want to close this tab?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (close == QMessageBox::Yes) {
+            m_centralWidget->removeTab(index);
+            m_tabWidgets.remove(index);
+        }
+    });
+
+    tabMenu->addAction(closeTab);
+
+    m_menubar->addMenu(tabMenu);
+
+    QMenu *newWidgetMenu = new QMenu("&New Widget");
+    connect(newWidgetMenu, &QMenu::aboutToShow, this, [this, newWidgetMenu, newTab] {
+        if (m_tabWidgets.length() == 0) {
+            QMessageBox::StandardButton warning = QMessageBox::warning(this, "Cannot Add Widget", "You must select a tab before adding a widget.\nWould you like to add a tab now?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+            if (warning == QMessageBox::StandardButton::Yes) {
+                newTab->trigger();
             }
-            case nt::NetworkTableType::kDouble: {
-                QAction *doubleAction = new QAction(topicName, this);
-                newWidgetMenu->addAction(doubleAction);
-
-                connect(doubleAction, &QAction::triggered, this, [this, topicName](bool) {
-                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::DoubleDisplay, topicName.toStdString());
-                });
-                break;
-            }
-            case nt::NetworkTableType::kString:
-            default: {
-                QAction *stringAction = new QAction(topicName, this);
-                newWidgetMenu->addAction(stringAction);
-
-                connect(stringAction, &QAction::triggered, this, [this, topicName](bool) {
-                    showNewWidgetDialog(NewWidgetDialog::WidgetTypes::StringDisplay, topicName.toStdString());
-                });
-                break;
-            }
-            }
+        } else {
+            constructNewWidgetMenu(newWidgetMenu);
+            newWidgetMenu->show();
         }
     });
 
@@ -113,8 +105,12 @@ void MainWindow::update()
         iterator.key()->update();
         if (m_needsRelay) {
             QList<int> data = iterator.value();
-            m_tabWidget->layout()->removeWidget(iterator.key());
-            m_tabWidget->layout()->addWidget(iterator.key(), data[1], data[2], data[3], data[4]);
+            TabWidget *tabWidget = m_tabWidgets.at(data.at(0));
+
+            if (tabWidget != nullptr) {
+                tabWidget->layout()->removeWidget(iterator.key());
+                tabWidget->layout()->addWidget(iterator.key(), data[1], data[2], data[3], data[4]);
+            }
         }
     } 
     
@@ -139,7 +135,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     while (iterator.hasNext())
     {
         iterator.next();
-        if (iterator.key()->geometry().contains(event->pos())) {
+        if (iterator.key()->geometry().contains(event->pos()) && iterator.value().at(0) == m_centralWidget->currentIndex()) {
             widgetPressed = iterator.key();
             break;
         }
@@ -158,7 +154,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
             dialog->show();
 
             connect(dialog, &ResizeDialog::finished, this, [this, widgetPressed](QList<int> data) {
-                QList<int> finalData({0, data[0], data[1], data[2], data[3]});
+                QList<int> finalData({m_centralWidget->currentIndex(), data[0], data[1], data[2], data[3]});
                 m_widgets.remove(widgetPressed);
                 m_widgets.insert(widgetPressed, finalData);
 
@@ -180,4 +176,54 @@ void MainWindow::showNewWidgetDialog(NewWidgetDialog::WidgetTypes widgetType, st
     dialog->show();
 
     connect(dialog, &NewWidgetDialog::widgetReady, this, &MainWindow::newWidget);
+}
+
+void MainWindow::constructNewWidgetMenu(QMenu *menu) {
+    menu->clear();
+    for (int i = 0; i < Globals::availableTopics.length(); ++i) {
+        QString topicName = Globals::availableTopics.at(i);
+        nt::NetworkTableType topicType = Globals::inst.GetTopic(topicName.toStdString()).GetType();
+
+        switch(topicType) {
+        case nt::NetworkTableType::kBoolean: {
+            QMenu *boolMenu = new QMenu(topicName, menu);
+
+            QAction *checkboxAction = new QAction("Checkbox", this);
+            boolMenu->addAction(checkboxAction);
+
+            connect(checkboxAction, &QAction::triggered, this, [this, topicName](bool) {
+                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanCheckbox, topicName.toStdString());
+            });
+
+            QAction *colorAction = new QAction("Color Display", this);
+            boolMenu->addAction(colorAction);
+
+            connect(colorAction, &QAction::triggered, this, [this, topicName](bool) {
+                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanDisplay, topicName.toStdString());
+            });
+
+            menu->addMenu(boolMenu);
+            break;
+        }
+        case nt::NetworkTableType::kDouble: {
+            QAction *doubleAction = new QAction(topicName, this);
+            menu->addAction(doubleAction);
+
+            connect(doubleAction, &QAction::triggered, this, [this, topicName](bool) {
+                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::DoubleDisplay, topicName.toStdString());
+            });
+            break;
+        }
+        case nt::NetworkTableType::kString:
+        default: {
+            QAction *stringAction = new QAction(topicName, this);
+            menu->addAction(stringAction);
+
+            connect(stringAction, &QAction::triggered, this, [this, topicName](bool) {
+                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::StringDisplay, topicName.toStdString());
+            });
+            break;
+        }
+        }
+    }
 }

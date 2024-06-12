@@ -6,6 +6,8 @@ TextWidget::TextWidget(const QString &title, const QString &defaultText, const Q
 
     m_layout->addWidget(m_title, 0, 0, Qt::AlignHCenter | Qt::AlignCenter);
     m_layout->addWidget(m_text, 1, 0, Qt::AlignHCenter | Qt::AlignCenter);
+
+    m_text->setStyleSheet("border: none; border-bottom: 1px solid white;");
 }
 
 TextWidget::~TextWidget() {}
@@ -24,4 +26,9 @@ QFont TextWidget::font() {
 
 void TextWidget::setFont(const QFont &font) {
     m_text->setFont(font);
+    m_text->setMinimumWidth(m_text->fontMetrics().maxWidth());
+}
+
+void TextWidget::update() {
+
 }
