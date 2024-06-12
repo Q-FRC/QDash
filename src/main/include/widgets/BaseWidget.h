@@ -23,6 +23,9 @@ public:
     BaseWidget(const QString &title, const QString &topic, const NT_Type &type);
     virtual ~BaseWidget();
 
+    QFont titleFont();
+    void setTitleFont(const QFont &font);
+
     QString title();
     void setTitle(const QString &title);
 

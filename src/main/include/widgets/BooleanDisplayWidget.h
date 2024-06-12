@@ -6,12 +6,14 @@
 
 #include "TextWidget.h"
 
+#include <QFrame>
+
 class BooleanDisplayWidget : public BaseWidget
 {
 protected:
     bool m_value;
 
-    QWidget *m_colorWidget;
+    QFrame *m_colorWidget;
 
     QColor m_trueColor = Qt::green;
     QColor m_falseColor = Qt::red;

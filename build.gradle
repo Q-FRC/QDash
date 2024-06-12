@@ -9,7 +9,7 @@ wpi.maven.useLocal = false
 // Set to true to run simulation in debug mode
 wpi.cpp.debugSimulation = false
 
-def appName = "NT3-Test"
+def appName = "QFRCDashboard"
 
 // nativeUtils.withCrossLinuxArm64()
 //nativeUtils.withCrossLinuxArm32() // Uncomment to build for arm32. targetPlatform below also needs to be fixed

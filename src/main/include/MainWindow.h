@@ -4,10 +4,11 @@
 
 #pragma once
 
-#include "BaseWidget.h"
-#include "NumberDisplayWidget.h"
-#include "StringDisplayWidget.h"
-#include "BooleanDisplayWidget.h"
+#include "widgets/BaseWidget.h"
+#include "widgets/NumberDisplayWidget.h"
+#include "widgets/StringDisplayWidget.h"
+#include "widgets/BooleanDisplayWidget.h"
+#include "widgets/TabWidget.h"
 
 #include "ntcore.h"
 
@@ -17,6 +18,7 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QStackedLayout>
+#include <QMap>
 
 class MainWindow : public QMainWindow
 {
@@ -26,10 +28,17 @@ private:
 
     QToolBar *m_toolbar;
 
-    QWidget *m_coolWidget;
-    QGridLayout *m_coolLayout;
+    TabWidget *m_tabWidget;
 
-    QList<BaseWidget *> m_widgets;
+    /**
+     * Widget map. Int array format is as follows:
+     * - tab idx
+     * - row idx
+     * - column idx
+     * - rowspan
+     * - colspan
+    */
+    QMap<BaseWidget *, int *> m_widgets;
 public:
     MainWindow();
     virtual ~MainWindow();
