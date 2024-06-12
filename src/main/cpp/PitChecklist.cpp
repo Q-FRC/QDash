@@ -97,6 +97,7 @@ PitChecklist::PitChecklist() {
 
     m_layout->addWidget(m_controlsWidget, 1, 0, Qt::AlignmentFlag::AlignTop);
 
+
     // BUTTON :)
     m_clearBoxes = new QPushButton("Clear Checklist", this);
     m_layout->addWidget(m_clearBoxes, 1, 1, Qt::AlignmentFlag::AlignTop);

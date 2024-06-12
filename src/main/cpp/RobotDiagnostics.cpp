@@ -39,7 +39,7 @@ RobotDiagnostics::RobotDiagnostics(const NT_Inst &inst)
     // UPPER ARM
     m_upperArmTitle = titleLabel("Upper Arm");
     m_upperArmData = dataLabel("3.0");
-    m_upperArmSub = nt::Subscribe(nt::GetTopic(inst, "/SmartDashboard/Upper Arm"), NT_DOUBLE, "double");
+    m_upperArmSub = nt::Subscribe(nt::GetTopic(inst, "/SmartDashboard/Up Arm Pos"), NT_DOUBLE, "double");
 
     m_layout->addWidget(m_upperArmTitle, 0, 0);
     m_layout->addWidget(m_upperArmData, 1, 0);
@@ -47,7 +47,7 @@ RobotDiagnostics::RobotDiagnostics(const NT_Inst &inst)
     // LOWER ARM
     m_lowerArmTitle = titleLabel("Lower Arm");
     m_lowerArmData = dataLabel("3.0");
-    m_lowerArmSub = nt::Subscribe(nt::GetTopic(inst, "/SmartDashboard/Lower Arm"), NT_DOUBLE, "double");
+    m_lowerArmSub = nt::Subscribe(nt::GetTopic(inst, "/SmartDashboard/Low Arm Pos"), NT_DOUBLE, "double");
 
     m_layout->addWidget(m_lowerArmTitle, 0, 1);
     m_layout->addWidget(m_lowerArmData, 1, 1);
@@ -55,7 +55,7 @@ RobotDiagnostics::RobotDiagnostics(const NT_Inst &inst)
     // WRIST
     m_wristTitle = titleLabel("Wrist");
     m_wristData = dataLabel("275.0");
-    m_wristSub = nt::Subscribe(nt::GetTopic(inst, "/SmartDashboard/Wrist"), NT_DOUBLE, "double");
+    m_wristSub = nt::Subscribe(nt::GetTopic(inst, "/SmartDashboard/Wrist Pos"), NT_DOUBLE, "double");
 
     m_layout->addWidget(m_wristTitle, 0, 2);
     m_layout->addWidget(m_wristData, 1, 2);
@@ -71,9 +71,6 @@ RobotDiagnostics::RobotDiagnostics(const NT_Inst &inst)
 
     m_layout->addWidget(m_modeTitle, 2, 0);
     m_layout->addWidget(m_modeData, 3, 0);
-
-    // END WIDGETS
-    // setLayout(m_layout);
 }
 
 void RobotDiagnostics::updateData()

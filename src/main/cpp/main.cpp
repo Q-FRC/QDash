@@ -6,10 +6,12 @@
 
 #include <QApplication>
 #include <QTimer>
+#include <QRadioButton>
 
 #include "MainWindow.h"
 #include "RobotDiagnostics.h"
 #include "PitChecklist.h"
+#include "EventData.h"
 
 NT_Subscriber coolSub;
 
@@ -18,10 +20,11 @@ int main(int argc, char **argv) {
     NT_Inst inst = nt::GetDefaultInstance();
 
     nt::StartClient4(inst, "Pit Display");
-    nt::SetServer(inst, "*", NT_DEFAULT_PORT4);
+    nt::SetServer(inst, "10.40.28.2", NT_DEFAULT_PORT4);
 
     RobotDiagnostics *diagnostics = new RobotDiagnostics(inst);
     PitChecklist *checklist = new PitChecklist();
+    EventData *eventData = new EventData();
 
     MainWindow *window = new MainWindow(diagnostics, checklist);
 
@@ -31,7 +34,9 @@ int main(int argc, char **argv) {
     QWidget::connect(timer, &QTimer::timeout, diagnostics, [diagnostics]() {
         diagnostics->updateData();
     });
-    timer->start(50);
+    timer->start(20);
+
+    eventData->test();
 
     return app.exec();
 }

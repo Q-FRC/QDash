@@ -21,7 +21,7 @@ model {
             headers.srcDir "/usr/include/qt6/"
           }
 
-          ["Core", "Gui", "Widgets"].each { libName ->
+          ["Core", "Gui", "Widgets", "Network"].each { libName ->
                "Qt${libName}" {
                 headers.srcDir "/usr/include/qt6/Qt${libName}" // <-- put the path to the qt header in here
                 binaries.withType(SharedLibraryBinary) {
@@ -51,6 +51,7 @@ model {
                 lib library: 'QtCore', linkage: 'shared'
                 lib library: 'QtGui', linkage: 'shared'
                 lib library: 'QtWidgets', linkage: 'shared'
+                lib library: 'QtNetwork', linkage: 'shared'
             }
 
             // Enable run tasks for this component
