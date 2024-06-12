@@ -1,0 +1,66 @@
+plugins {
+    id "cpp"
+    id "edu.wpi.first.GradleRIO" version "2023.4.3"
+}
+
+// Disable local cache, as it won't have the cross artifact necessary
+wpi.maven.useLocal = false
+
+// Set to true to run simulation in debug mode
+wpi.cpp.debugSimulation = false
+
+def appName = "NT3-Test"
+
+// nativeUtils.withCrossLinuxArm64()
+//nativeUtils.withCrossLinuxArm32() // Uncomment to build for arm32. targetPlatform below also needs to be fixed
+
+model {
+    repositories {
+        libs(PrebuiltLibraries) {
+          QtHeaders {
+            headers.srcDir "/usr/include/qt6/"
+          }
+
+          ["Core", "Gui", "Widgets"].each { libName ->
+               "Qt${libName}" {
+                headers.srcDir "/usr/include/qt6/Qt${libName}" // <-- put the path to the qt header in here
+                binaries.withType(SharedLibraryBinary) {
+                    sharedLibraryFile = file("/usr/lib/libQt6${libName}.so") // <-- put the path to the qt libs in here
+                }
+              }
+          }
+        }
+    }
+
+    components {
+        "${appName}"(NativeExecutableSpec) {
+            targetPlatform wpi.platforms.desktop // Uncomment to build on whatever the native platform currently is
+            // targetPlatform wpi.platforms.linuxarm64
+            //targetPlatform wpi.platforms.linuxarm32 // Uncomment to build for arm32
+
+            sources.cpp {
+                source {
+                    srcDir 'src/main/cpp'
+                    include '**/*.cpp', '**/*.cc'
+                }
+                exportedHeaders {
+                    srcDir 'src/main/include'
+                }
+                lib library: 'QtHeaders', linkage: 'api'
+                lib library: 'QtCore', linkage: 'shared'
+                lib library: 'QtGui', linkage: 'shared'
+                lib library: 'QtWidgets', linkage: 'shared'
+            }
+
+            // Enable run tasks for this component
+            wpi.cpp.enableExternalTasks(it)
+
+            wpi.cpp.deps.wpilibStatic(it)
+            
+        }
+    }
+}
+
+// wrapper {
+//     gradleVersion = '7.5.1'
+// }
