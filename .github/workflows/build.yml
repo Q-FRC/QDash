@@ -25,7 +25,7 @@ jobs:
           - os: ubuntu-20.04
             qt_host: linux
             qt_version: '6.6.0'
-            qt_modules: 'qt6-multimedia-dev'
+            qt_modules: 'qt6-multimedia-dev qt6-wayland-dev'
 
     runs-on: ${{ matrix.os }}
 
@@ -178,11 +178,6 @@ jobs:
     steps:
       - uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Cache vcpkg
-        uses: actions/cache@v3.3.2
-        with:
-          path: allwpilib/vcpkg
-
       - name: Install CMake
         uses: lukka/get-cmake@v3.27.6
 
@@ -199,48 +194,8 @@ jobs:
         run: |
          python -m ensurepip
          python -m pip install jinja2
-         dir ..\Qt\6.6.0\msvc2019_64\bin
 
       - uses: actions/checkout@v3
-
-      - name: 'Checkout wpilib'
-        uses: actions/checkout@v4
-        with:
-          repository: 'wpilibsuite/allwpilib'
-          ref: '9b8011aa67e30f150862545758056ff4d0cc0eac' # MAY want 2023
-          path: 'allwpilib'
-
-      - name: Run vcpkg
-        uses: lukka/run-vcpkg@v11.1
-        with:
-          vcpkgDirectory: ${{ runner.workspace }}/allwpilib/vcpkg
-          vcpkgGitCommitId: 78b61582c9e093fda56a01ebb654be15a0033897 # HEAD on 2023-08-6
-
-
-      - name: 'Prepare ntcore'
-        run: |
-          cd allwpilib
-          git apply ../.github/patches/No-Werror.patch
-          cd ..
-
-      - name: 'Configure ntcore CMake (Windows)'
-        run: |
-         cmake -S allwpilib -B win-nt-build -G "Ninja" -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=Release -DWITH_JAVA=OFF -DWITH_EXAMPLES=OFF -DUSE_SYSTEM_FMTLIB=OFF -DUSE_SYSTEM_LIBUV=OFF -DUSE_SYSTEM_EIGEN=OFF -DWITH_CSCORE=OFF -DWITH_NTCORE=ON -DWITH_WPIMATH=OFF -DWITH_WPILIB=OFF -DWITH_TESTS=OFF -DWITH_GUI=OFF -DWITH_SIMULATION_MODULES=OFF -DCMAKE_TOOLCHAIN_FILE=${{ runner.workspace }}/allwpilib/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_INSTALL_OPTIONS=--clean-after-build -DVCPKG_TARGET_TRIPLET=x64-windows-release -DVCPKG_HOST_TRIPLET=x64-windows-release -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_DIR }}
-        env:
-          SCCACHE_GHA_ENABLED: "true"
-
-      - name: 'Build ntcore (Windows)'
-        working-directory: win-nt-build
-        run: |
-          cmake --build . --parallel $(nproc)
-        env:
-          SCCACHE_GHA_ENABLED: "true"
-
-      - name: 'Install ntcore (Windows)'
-        run: |
-          cmake --install win-nt-build --prefix ${{ env.NTCORE_INSTALL_DIR }}
-        env:
-          SCCACHE_GHA_ENABLED: "true"
 
       - name: 'Checkout protobuf'
         uses: actions/checkout@v4
@@ -256,7 +211,7 @@ jobs:
 
       - name: 'Configure protobuf CMake (Windows)'
         run: |
-         cmake -S protobuf -B win-pb-build -G "Ninja" -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PROTOBUF_DIR }} -Dprotobuf_ALLOW_CCACHE=ON -Dprotobuf_BUILD_TESTS=OFF
+         cmake -S protobuf -B win-pb-build -G "Ninja" -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PROTOBUF_DIR }} -Dprotobuf_ALLOW_CCACHE=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_MSVC_STATIC_RUNTIME=OFF -Dprotobuf_BUILD_SHARED_LIBS=ON
         env:
           SCCACHE_GHA_ENABLED: "true"
 
@@ -273,10 +228,42 @@ jobs:
         env:
           SCCACHE_GHA_ENABLED: "true"
 
+      - name: 'Checkout wpilib'
+        uses: actions/checkout@v4
+        with:
+          repository: 'wpilibsuite/allwpilib'
+          ref: '9b8011aa67e30f150862545758056ff4d0cc0eac' # MAY want 2023
+          path: 'allwpilib'
+
+      - name: 'Prepare ntcore'
+        run: |
+          cd allwpilib
+          git apply ../.github/patches/No-Werror.patch
+          cd ..
+
+      - name: 'Configure ntcore CMake (Windows)'
+        run: |
+         cmake -S allwpilib -B win-nt-build -DCMAKE_CXX_FLAGS="/FS /EHsc" -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -DWITH_JAVA=OFF -DWITH_EXAMPLES=OFF -DUSE_SYSTEM_FMTLIB=OFF -DUSE_SYSTEM_LIBUV=OFF -DUSE_SYSTEM_EIGEN=OFF -DWITH_CSCORE=OFF -DWITH_NTCORE=ON -DWITH_WPIMATH=OFF -DWITH_WPILIB=OFF -DWITH_TESTS=OFF -DWITH_GUI=OFF -DWITH_SIMULATION_MODULES=OFF -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_DIR }} -DProtobuf_ROOT=${{ env.PROTOBUF_INSTALL_DIR }} -DCMAKE_POLICY_DEFAULT_CMP0074=NEW
+        env:
+          SCCACHE_GHA_ENABLED: "true"
+
+      - name: 'Build ntcore (Windows)'
+        working-directory: win-nt-build
+        run: |
+          cmake --build . --parallel $(nproc) --config ${{ inputs.build_type }}
+        env:
+          SCCACHE_GHA_ENABLED: "true"
+
+      - name: 'Install ntcore (Windows)'
+        run: |
+          cmake --install win-nt-build --config ${{ inputs.build_type }} --prefix ${{ env.NTCORE_INSTALL_DIR }}
+        env:
+          SCCACHE_GHA_ENABLED: "true"
+
       - name: 'Build (Windows)'
         run: |
-          cmake -S . -B ${{ env.BUILD_WIN_DIR }} -Dntcore_ROOT=${{ env.NTCORE_INSTALL_DIR }} -DProtobuf_ROOT=${{ env.PROTOBUF_INSTALL_DIR }} -DCMAKE_CXX_FLAGS="/I${{ runner.workspace }}\QFRCDashboard\${{ env.NTCORE_INSTALL_DIR }}\include /MT" -G "Ninja" -DBUILD_SHARED_LIBS=OFF
-          cmake --build ${{ env.BUILD_WIN_DIR }} --parallel $(nproc)
+          cmake -S . -B ${{ env.BUILD_WIN_DIR }} -Dntcore_ROOT=${{ env.NTCORE_INSTALL_DIR }} -DProtobuf_ROOT=${{ env.PROTOBUF_INSTALL_DIR }} -DCMAKE_CXX_FLAGS="/I${{ runner.workspace }}\QFRCDashboard\${{ env.NTCORE_INSTALL_DIR }}\include /MT /FS" -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=${{ inputs.build_type }}
+          cmake --build ${{ env.BUILD_WIN_DIR }} --config ${{ inputs.build_type }} --parallel $(nproc)
         env:
           SCCACHE_GHA_ENABLED: "true"
 
@@ -286,8 +273,22 @@ jobs:
           mkdir ${{ env.INSTALL_WIN_DIR }}
           set PATH=%PATH%;"${{ runner.workspace }}\Qt\6.6.0\msvc2019_64\bin"
           windeployqt ${{ env.BUILD_WIN_DIR }}\QFRCDashboard.exe --dir ${{ env.INSTALL_WIN_DIR }}
-          cp ${{ env.BUILD_WIN_DIR }}\QFRCDashboard.exe ${{ env.INSTALL_WIN_DIR }}
-
+          if "${{ inputs.build_type }}" == "Debug" (
+            cp ${{ env.BUILD_WIN_DIR }}\QFRCDashboard.exe ${{ env.INSTALL_WIN_DIR }}
+            cp ${{ env.NTCORE_INSTALL_DIR }}\bin\ntcored.dll ${{ env.INSTALL_WIN_DIR }}
+            cp ${{ env.NTCORE_INSTALL_DIR }}\bin\wpinetd.dll ${{ env.INSTALL_WIN_DIR }}
+            cp ${{ env.NTCORE_INSTALL_DIR }}\bin\wpiutild.dll ${{ env.INSTALL_WIN_DIR }}
+            cp ${{ env.PROTOBUF_INSTALL_DIR }}\bin\libprotobufd.dll ${{ env.INSTALL_WIN_DIR }}
+            cp C:\Windows\System32\ucrtbased.dll ${{ env.INSTALL_WIN_DIR }}
+          ) else (
+            cp ${{ env.BUILD_WIN_DIR }}\QFRCDashboard.exe ${{ env.INSTALL_WIN_DIR }}
+            cp ${{ env.NTCORE_INSTALL_DIR }}\bin\ntcore.dll ${{ env.INSTALL_WIN_DIR }}
+            cp ${{ env.NTCORE_INSTALL_DIR }}\bin\wpinet.dll ${{ env.INSTALL_WIN_DIR }}
+            cp ${{ env.NTCORE_INSTALL_DIR }}\bin\wpiutil.dll ${{ env.INSTALL_WIN_DIR }}
+            cp ${{ env.PROTOBUF_INSTALL_DIR }}\bin\libprotobuf.dll ${{ env.INSTALL_WIN_DIR }}
+            cp C:\Windows\System32\ucrtbase.dll ${{ env.INSTALL_WIN_DIR }}
+          )
+          cp ${{ env.PROTOBUF_INSTALL_DIR }}\bin\abseil_dll.dll ${{ env.INSTALL_WIN_DIR }}
 
       ##
       # UPLOAD BUILDS

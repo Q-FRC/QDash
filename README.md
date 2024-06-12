@@ -25,7 +25,13 @@ QFRCDashboard excels with its lightweight performance thanks to many factors:
 Thanks to these factors, QFRCDashboard is the best choice for a high-performance dashboard with no compromises.
 
 ## Download
-Coming soon. Downloads will be made available via Github Actions and Jenkins for Linux and Windows, and hopefully BSD and MacOS.
+Windows and Linux builds are available via GitHub Actions. Currently, all use WPILib 2024 beta 3. Release builds are available either through Actions or in the releases tab:
+
+[![Release](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_release.yml/badge.svg)](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_release.yml)
+
+Development/debug builds are also available on a per-commit basis. These builds are generally unstable and also have far larger executable sizes, but are useful for users who wish to have the latest features or for developers who want to contribute and test.
+
+[![Debug](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_builds.yml/badge.svg)](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_builds.yml)
 
 ## Usage Guide
 Set your NT server URL with the menubar option, create a new tab in the Tab menu, and add a widget using the New Widget menu option. Save and load layouts with the File menu, and resize and edit widgets as desired by right-clicking and selecting Resize, Delete, etc.

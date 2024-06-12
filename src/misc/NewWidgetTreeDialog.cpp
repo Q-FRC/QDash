@@ -13,6 +13,7 @@
 
 NewWidgetTreeDialog::NewWidgetTreeDialog(QWidget *parent) : QDialog(parent)
 {
+    FilterStore::filterTopics();
     m_layout = new QVBoxLayout(this);
 
     m_tree = new QTreeWidget(this);

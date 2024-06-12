@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     MainWindow *window = new MainWindow();
     window->show();
 
-    Globals::inst.AddConnectionListener(true, [window] (const nt::Event &event) {
+    Globals::inst.AddConnectionListener(true, [window, timer] (const nt::Event &event) {
         bool connected = event.Is(nt::EventFlags::kConnected);
 
         QMetaObject::invokeMethod(window, [window, connected] {
@@ -104,12 +104,6 @@ int main(int argc, char **argv) {
             Globals::ntTopics.removeOne(QString::fromStdString(topicName));
         }
         FilterStore::filterTopics();
-    });
-
-    // if initially connected to localhost, refilter
-    // to ensure sendables are captured
-    QTimer::singleShot(1000, window, [] {
-        if (Globals::inst.IsConnected()) FilterStore::filterTopics();
     });
 
     return app.exec();

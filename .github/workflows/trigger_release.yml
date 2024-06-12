@@ -5,6 +5,9 @@ on:
     tags:
       - '*'
 
+permissions:
+  contents: write
+
 jobs:
 
   build_release:
@@ -33,25 +36,25 @@ jobs:
       - name: Package artifacts properly
         run: |
           mv ${{ github.workspace }}/QFRCDashboard-source QFRCDashboard-${{ env.VERSION }}
-          mv QFRCDashboard-Linux*/QFRCDashboard.tar.gz QFRCDashboard-Linux-${{ env.VERSION }}.tar.gz
+          ls *
+          mv QFRCDashboard-Linux-Binary*/QFRCDashboard.tar.gz QFRCDashboard-Linux-Binary-${{ env.VERSION }}.tar.gz
+          tar czf QFRCDashboard-Linux-System-${{ env.VERSION }}.tar.gz QFRCDashboard-Linux-System*/*
           mv QFRCDashboard-*.AppImage/QFRCDashboard-*.AppImage QFRCDashboard-Linux-${{ env.VERSION }}-x86_64.AppImage
-          mv QFRCDashboard-Windows*/QFRCDashboard* QFRCDashboard-Windows-${{ env.VERSION }}.zip
+          zip -r QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip QFRCDashboard-Windows-Portable*/* QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip
 
           tar -czf QFRCDashboard-${{ env.VERSION }}.tar.gz QFRCDashboard-${{ env.VERSION }}
 
-          for d in QFRCDashboard-Windows-*; do
-            cd "${d}" || continue
-            PORT="$(echo -n ${d} | grep -o Portable || true)"
-            NAME="QFRCDashboard-Windows"
-            test -z "${PORT}" || NAME="${NAME}-Portable"
-            cd ..
-          done
+          # for d in QFRCDashboard-Windows-*; do
+          #   cd "${d}" || continue
+          #   PORT="$(echo -n ${d} | grep -o Portable || true)"
+          #   NAME="QFRCDashboard-Windows"
+          #   test -z "${PORT}" || NAME="${NAME}-Portable"
+          #   cd ..
+          # done
 
       - name: Create release
         id: create_release
         uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
           name: QFRCDashboard ${{ env.VERSION }}
@@ -62,4 +65,4 @@ jobs:
             QFRCDashboard-Linux-System-${{ env.VERSION }}.tar.gz
             QFRCDashboard-Linux-${{ env.VERSION }}-x86_64.AppImage
             QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip
-            # QFRCDashboard-${{ env.VERSION }}.tar.gz
+            QFRCDashboard-${{ env.VERSION }}.tar.gz
