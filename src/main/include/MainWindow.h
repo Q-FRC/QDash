@@ -4,6 +4,11 @@
 
 #pragma once
 
+#include "BaseWidget.h"
+#include "NumberDisplayWidget.h"
+#include "StringDisplayWidget.h"
+#include "BooleanDisplayWidget.h"
+
 #include "ntcore.h"
 
 #include <QMainWindow>
@@ -13,10 +18,6 @@
 #include <QPixmap>
 #include <QStackedLayout>
 
-class RobotDiagnostics;
-class PitChecklist;
-class EventData;
-
 class MainWindow : public QMainWindow
 {
 private:
@@ -25,15 +26,12 @@ private:
 
     QToolBar *m_toolbar;
 
-    QAction *m_diagnosticsAction;
-    QAction *m_checklistAction;
-    QAction *m_eventDataAction;
+    QWidget *m_coolWidget;
+    QGridLayout *m_coolLayout;
 
-    RobotDiagnostics *m_diagnosticsWidget;
-    PitChecklist *m_checklistWidget;
-    EventData *m_eventDataWidget;
-    
+    QList<BaseWidget *> m_widgets;
 public:
-    MainWindow(RobotDiagnostics *diagnostics, PitChecklist *checklist, EventData *eventData);
+    MainWindow();
     virtual ~MainWindow();
+    void update();
 };

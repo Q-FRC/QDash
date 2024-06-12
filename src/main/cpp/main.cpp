@@ -9,41 +9,23 @@
 #include <QRadioButton>
 
 #include "MainWindow.h"
-#include "RobotDiagnostics.h"
-#include "PitChecklist.h"
-#include "EventData.h"
-
-NT_Subscriber coolSub;
 
 int main(int argc, char **argv) {
     QApplication app(argc, argv);
     NT_Inst inst = nt::GetDefaultInstance();
 
-    nt::StartClient4(inst, "Pit Display");
+    nt::StartClient4(inst, "QFRCDashboard");
     nt::SetServer(inst, "10.40.28.2", NT_DEFAULT_PORT4);
 
-    RobotDiagnostics *diagnostics = new RobotDiagnostics(inst);
-    PitChecklist *checklist = new PitChecklist();
-    EventData *eventData = new EventData();
-
-    MainWindow *window = new MainWindow(diagnostics, checklist, eventData);
+    MainWindow *window = new MainWindow();
 
     window->show();
 
-    QTimer *timer = new QTimer(window);
-    QWidget::connect(timer, &QTimer::timeout, diagnostics, [diagnostics] {
-        diagnostics->updateData();
-    });
-    timer->start(20);
-
-    QTimer *networkTimer = new QTimer(window);
-    QWidget::connect(networkTimer, &QTimer::timeout, eventData, [eventData] {
-        eventData->updateRankingData();
-        eventData->updateLastMatchData();
-        eventData->updateCurrentMatchData();
-        eventData->updateNextMatchData();
-    });
-    networkTimer->start(4000);
+    // QTimer *timer = new QTimer(window);
+    // QWidget::connect(timer, &QTimer::timeout, diagnostics, [diagnostics] {
+    //     diagnostics->updateData();
+    // });
+    // timer->start(20);
 
     return app.exec();
 }

@@ -3,13 +3,10 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "MainWindow.h"
-#include "RobotDiagnostics.h"
-#include "PitChecklist.h"
-#include "EventData.h"
 
 #include <QToolBar>
 
-MainWindow::MainWindow(RobotDiagnostics *diagnostics, PitChecklist *checklist, EventData *eventData)
+MainWindow::MainWindow()
 {
     setCentralWidget(m_centralWidget = new QWidget);
 
@@ -18,36 +15,35 @@ MainWindow::MainWindow(RobotDiagnostics *diagnostics, PitChecklist *checklist, E
     // the previously set widget is destroyed.
     m_layout = new QStackedLayout(m_centralWidget);
 
+    m_coolWidget = new QWidget(this);
+    m_coolLayout = new QGridLayout(m_coolWidget);
+
+    NumberDisplayWidget *number = new NumberDisplayWidget("Test", 25.5, "deez");
+
+    m_coolLayout->addWidget(number, 0, 0);
+
+    m_layout->addWidget(m_coolWidget);
+
+    m_widgets.push_back(number);
+
     m_toolbar = new QToolBar(this);
 
-    // DIAGNOSTICS WIDGET
-    m_diagnosticsWidget = diagnostics;
-    m_layout->addWidget(m_diagnosticsWidget);
+    //     // DIAGNOSTICS WIDGET
+    //     m_diagnosticsWidget = diagnostics;
+    //     m_layout->addWidget(m_diagnosticsWidget);
 
-    m_diagnosticsAction = new QAction("Robot Diagnostics", m_toolbar);
-    connect(m_diagnosticsAction, &QAction::triggered, [this]
-            { m_layout->setCurrentWidget(m_diagnosticsWidget); });
-    m_toolbar->addAction(m_diagnosticsAction);
-
-    // CHECKLIST
-    m_checklistWidget = checklist;
-    m_layout->addWidget(m_checklistWidget);
-
-    m_checklistAction = new QAction("Pit Checklist", m_toolbar);
-    connect(m_checklistAction, &QAction::triggered, [this]
-            { m_layout->setCurrentWidget(m_checklistWidget); });
-    m_toolbar->addAction(m_checklistAction);
-
-    // EVENT DATA
-    m_eventDataWidget = eventData;
-    m_layout->addWidget(m_eventDataWidget);
-
-    m_eventDataAction = new QAction("Event Data", m_toolbar);
-    connect(m_eventDataAction, &QAction::triggered, [this]
-            { m_layout->setCurrentWidget(m_eventDataWidget); });
-    m_toolbar->addAction(m_eventDataAction);
+    //     m_diagnosticsAction = new QAction("Robot Diagnostics", m_toolbar);
+    //     connect(m_diagnosticsAction, &QAction::triggered, [this]
+    //             { m_layout->setCurrentWidget(m_diagnosticsWidget); });
+    //     m_toolbar->addAction(m_diagnosticsAction);
 
     addToolBar(Qt::ToolBarArea::BottomToolBarArea, m_toolbar);
 }
 
 MainWindow::~MainWindow() {}
+
+void MainWindow::update() {
+    for (BaseWidget *w : m_widgets) {
+        w->update();
+    }
+}
