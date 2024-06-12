@@ -1,5 +1,9 @@
 #include "widgets/TextWidget.h"
 
+#include <QAction>
+#include <QMenu>
+#include <QFontDialog>
+
 TextWidget::TextWidget(const QString &title, const QString &defaultText, const QString &topic) : BaseWidget::BaseWidget(title, topic)
 {
     m_text = new QLineEdit(defaultText, this);
@@ -27,6 +31,19 @@ QFont TextWidget::font() {
 void TextWidget::setFont(const QFont &font) {
     m_text->setFont(font);
     m_text->setMinimumWidth(m_text->fontMetrics().maxWidth());
+}
+
+QMenu *TextWidget::constructContextMenu(WidgetData data) {
+    QMenu *menu = BaseWidget::constructContextMenu(data);
+
+    QAction *textFontAction = new QAction("Text Font", menu);
+    menu->addAction(textFontAction);
+
+    connect(textFontAction, &QAction::triggered, this, [this](bool) {
+        setFont(QFontDialog::getFont(0, font(), this, "Set Text Font"));
+    });
+
+    return menu;
 }
 
 void TextWidget::update() {

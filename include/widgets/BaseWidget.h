@@ -1,6 +1,7 @@
 #pragma once
 
 #include "networktables/NetworkTableEntry.h"
+#include "Globals.h"
 
 #include <QWidget>
 #include <QLabel>
@@ -9,6 +10,7 @@
 
 class BaseWidget : public QWidget
 {
+    Q_OBJECT
 protected:
     QGridLayout *m_layout;
 
@@ -28,5 +30,13 @@ public:
     std::string topic();
     void setTopic(const std::string &topic);
 
+    virtual QMenu *constructContextMenu(WidgetData data);
+
+    void paintEvent(QPaintEvent *event);
+
     virtual void update() {}
+
+signals:
+    void resizeRequested(WidgetData data);
+    void deleteRequested();
 };

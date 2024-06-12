@@ -6,6 +6,7 @@
 
 class TextWidget : public BaseWidget
 {
+    Q_OBJECT
 protected:
     QLineEdit *m_text;
 public:
@@ -17,6 +18,8 @@ public:
 
     QFont font();
     void setFont(const QFont &font);
+
+    QMenu *constructContextMenu(WidgetData data) override;
 
     void update() override;
 };

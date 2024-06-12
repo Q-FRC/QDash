@@ -198,32 +198,21 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     }
 
     if (event->button() == Qt::RightButton && widgetPressed) {
-        QMenu *menu = new QMenu(this);
+        QMenu *menu = widgetPressed->constructContextMenu(m_widgets.value(widgetPressed));
 
-        QAction *resizeAction = new QAction("Resize", menu);
+        connect(widgetPressed, &BaseWidget::resizeRequested, this, [this, widgetPressed](WidgetData data) {
+            data.tabIdx = m_centralWidget->currentIndex();
 
-        menu->addAction(resizeAction);
+            m_widgets.remove(widgetPressed);
+            m_widgets.insert(widgetPressed, data);
 
-        connect(resizeAction, &QAction::triggered, this, [this, widgetPressed](bool) {
-            ResizeDialog *dialog = new ResizeDialog(m_widgets.value(widgetPressed));
-            dialog->show();
-
-            connect(dialog, &ResizeDialog::finished, this, [this, widgetPressed](WidgetData data) {
-                data.tabIdx = m_centralWidget->currentIndex();
-
-                m_widgets.remove(widgetPressed);
-                m_widgets.insert(widgetPressed, data);
-
-                setNeedsRelay(true);
-            });
+            setNeedsRelay(true);
         });
 
-        QAction *deleteAction = new QAction("Delete Widget", menu);
-        menu->addAction(deleteAction);
-
-        connect(deleteAction, &QAction::triggered, this, [this, widgetPressed](bool) {
+        connect(widgetPressed, &BaseWidget::deleteRequested, this, [this, widgetPressed] {
             m_widgets.remove(widgetPressed);
-            m_needsRelay = true;
+            setNeedsRelay(true);
+
             delete widgetPressed;
         });
 

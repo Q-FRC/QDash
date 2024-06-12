@@ -41,6 +41,7 @@ set(PROJECT_SOURCES
         src/misc/NewWidgetListDialog.cpp
         src/misc/ResizeDialog.cpp
 
+
         # =======================================
 
         include/Globals.h
@@ -68,6 +69,7 @@ set(PROJECT_SOURCES
 
         include/misc/NewWidgetListDialog.h
         include/misc/ResizeDialog.h
+
 
 )
 
