@@ -1,5 +1,3 @@
-#include "ntcore_cpp.h"
-
 #include <QApplication>
 #include <QTimer>
 #include <QRadioButton>

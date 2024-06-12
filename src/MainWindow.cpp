@@ -5,7 +5,7 @@
 #include "misc/NTSettingsDialog.h"
 #include "misc/WidgetDialogGenerator.h"
 
-#include "ntcore/networktables/NetworkTableInstance.h"
+#include <ntcore/networktables/NetworkTableInstance.h>
 
 #include <QToolBar>
 #include <QMenuBar>

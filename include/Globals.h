@@ -1,6 +1,6 @@
 #pragma once
 
-#include "networktables/NetworkTableInstance.h"
+#include <ntcore/networktables/NetworkTableInstance.h>
 
 #include <QString>
 #include <QMap>
@@ -98,3 +98,4 @@ namespace CustomMetaTypes {
 static const int FrameShape = qMetaTypeId<Globals::FrameShape>();
 static const int File = qMetaTypeId<Globals::File>();
 }
+
