@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=QFRCDashboard
+Comment=Reliable, high-performance dashboard for FRC.
+Exec=QFRCDashboard
