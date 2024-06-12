@@ -3,8 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "MainWindow.h"
+#include "Globals.h"
 
 #include <QToolBar>
+#include <QMenuBar>
+#include <QInputDialog>
 
 MainWindow::MainWindow()
 {
@@ -59,6 +62,22 @@ MainWindow::MainWindow()
     //     m_toolbar->addAction(m_diagnosticsAction);
 
     addToolBar(Qt::ToolBarArea::BottomToolBarArea, m_toolbar);
+
+    m_menubar = menuBar();
+
+    QAction *ntServerAction = new QAction("NT Server");
+    connect(ntServerAction, &QAction::triggered, this, [this](bool)
+            {
+        bool ok;
+        QString server = QInputDialog::getText(this, "NT Server Settings", "Input NT4 Server Address", QLineEdit::Normal, "", &ok);
+        
+        if (!server.isEmpty() && ok) {
+            Globals::server = server;
+            nt::SetServer(Globals::inst, Globals::server.toStdString().c_str(), NT_DEFAULT_PORT4);
+        }
+    });
+
+    m_menubar->addAction(ntServerAction);
 }
 
 MainWindow::~MainWindow() {}
@@ -72,4 +91,6 @@ void MainWindow::update()
         iterator.next();
         iterator.key()->update();
     }
+
+    setWindowTitle("QFRCDashboard (" + Globals::server + ") - " + (nt::IsConnected(Globals::inst) ? "" : "Not ") + "Connected");
 }

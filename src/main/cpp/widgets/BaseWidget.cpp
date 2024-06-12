@@ -3,12 +3,13 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "widgets/BaseWidget.h"
+#include "Globals.h"
 
 BaseWidget::BaseWidget(const QString &title, const QString &topic, const NT_Type &type)
 {
     m_layout = new QGridLayout(this);
     m_title = new QLabel(title, this);
-    m_entry = nt::GetEntry(nt::GetDefaultInstance(), topic.toStdString());
+    m_entry = nt::GetEntry(Globals::inst, topic.toStdString());
     m_type = type;
 
     setStyleSheet("background-color: white; border: 2px solid yellow; color: black;");
@@ -43,7 +44,7 @@ std::string BaseWidget::topic()
 
 void BaseWidget::setTopic(const std::string &topic)
 {
-    m_entry = nt::GetEntry(nt::GetDefaultInstance(), topic);
+    m_entry = nt::GetEntry(Globals::inst, topic);
 }
 
 NT_Type BaseWidget::type()

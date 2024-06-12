@@ -27,6 +27,7 @@ private:
     QStackedLayout *m_layout;
 
     QToolBar *m_toolbar;
+    QMenuBar *m_menubar;
 
     TabWidget *m_tabWidget;
 

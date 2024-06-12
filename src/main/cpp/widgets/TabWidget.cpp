@@ -4,7 +4,6 @@
 
 #include "widgets/TabWidget.h"
 
-
 // TODO: Implement max size enforcement
 TabWidget::TabWidget(const QPoint &maxSize)
 {

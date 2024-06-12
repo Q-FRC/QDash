@@ -1,4 +1,4 @@
-#include <ntcore.h>
+#include "ntcore.h"
 #include "cscore.h"
 
 #include "ntcore_cpp.h"
@@ -9,17 +9,23 @@
 #include <QRadioButton>
 
 #include "MainWindow.h"
+#include "Globals.h"
 
 int main(int argc, char **argv) {
     QApplication app(argc, argv);
-    NT_Inst inst = nt::GetDefaultInstance();
 
-    nt::StartClient4(inst, "QFRCDashboard");
-    nt::SetServer(inst, "10.40.28.2", NT_DEFAULT_PORT4);
+    nt::StartClient4(Globals::inst, "QFRCDashboard");
+    nt::SetServer(Globals::inst, Globals::server.toStdString().c_str(), NT_DEFAULT_PORT4);
 
     MainWindow *window = new MainWindow();
 
     window->show();
+
+    QTimer *timer = new QTimer(window);
+    QObject::connect(timer, &QTimer::timeout, [window]() {
+        window->update();
+    });
+    timer->start(100);
 
     // QTimer *timer = new QTimer(window);
     // QWidget::connect(timer, &QTimer::timeout, diagnostics, [diagnostics] {
