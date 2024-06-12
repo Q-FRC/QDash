@@ -35,4 +35,6 @@ public:
     void setImage(Globals::File image);
 
     void setValue(const nt::Value &value) override;
+
+    void resizeEvent(QResizeEvent *event);
 };

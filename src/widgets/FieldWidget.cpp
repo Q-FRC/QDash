@@ -1,9 +1,7 @@
 #include "widgets/FieldWidget.h"
 
 #include <QJsonArray>
-#include <QPaintEvent>
-#include <QPainter>
-#include <QPainterPath>
+#include <QResizeEvent>
 
 FieldWidget::FieldWidget(const QString &topic, QVariantList defaultValue, const QString &title, bool fromSendable)
     : BaseWidget(WidgetTypes::Field, title, topic)
@@ -11,7 +9,9 @@ FieldWidget::FieldWidget(const QString &topic, QVariantList defaultValue, const 
     m_value = defaultValue;
 
     m_imageLabel = new FieldImage(this);
-    m_imageLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_imageLabel->setSizePolicy(QSizePolicy::Policy::Maximum, QSizePolicy::Maximum);
+    m_imageLabel->setMaximumSize(QSize(size().width(), size().height() * 4. / 5.));
+    m_imageLabel->setMinimumSize(1, 1);
 
     m_layout->addWidget(m_imageLabel, 1, 0, 3, 1, Qt::AlignHCenter);
 
@@ -54,4 +54,13 @@ void FieldWidget::setValue(const nt::Value &value) {
     m_value = decltype(m_value)(value.GetDoubleArray().begin(), value.GetDoubleArray().end());
 
     m_imageLabel->setValue(value.GetDoubleArray());
+}
+
+void FieldWidget::resizeEvent(QResizeEvent *event) {
+    BaseWidget::resizeEvent(event);
+
+    int w = event->size().width();
+    int h = event->size().height() * 4. / 5.;
+
+    m_imageLabel->setPixmap(m_imageLabel->pixmap().scaled(w, h, Qt::KeepAspectRatio));
 }

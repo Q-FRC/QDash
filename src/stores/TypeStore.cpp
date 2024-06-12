@@ -24,7 +24,7 @@ QList<QAction *> TypeStore::generateActionsForType(TopicTypes type, std::string 
         connect(action, &QAction::triggered, action, [this, type, widgetType, displayName, ntTopic] {
             auto widget = BaseWidget::defaultWidgetFromTopic(QString::fromStdString(ntTopic), widgetType);
 
-            WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget);
+            WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget, (QWidget *) this->parent());
             dialog->setWindowTitle("New " + displayName + " Widget");
 
             dialog->show();

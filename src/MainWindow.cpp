@@ -4,6 +4,7 @@
 #include "misc/NewWidgetTreeDialog.h"
 #include "misc/NTSettingsDialog.h"
 #include "misc/WidgetDialogGenerator.h"
+#include "misc/TabMaxSizeDialog.h"
 
 #include <ntcore/networktables/NetworkTableInstance.h>
 
@@ -65,18 +66,22 @@ MainWindow::MainWindow()
         QMenu *tabMenu = new QMenu("&Tab", this);
 
         QAction *newTab = new QAction("New Tab", tabMenu);
-
         newTab->setShortcut(QKeySequence::AddTab);
         connect(newTab, &QAction::triggered, this, &MainWindow::newTab);
-
         tabMenu->addAction(newTab);
 
         QAction *closeTab = new QAction("Close Tab", tabMenu);
-
         closeTab->setShortcut(QKeySequence::Close);
         connect(closeTab, &QAction::triggered, this, &MainWindow::closeTab);
-
         tabMenu->addAction(closeTab);
+
+        QAction *resizeTab = new QAction("Resize Tab", tabMenu);
+        connect(resizeTab, &QAction::triggered, this, &MainWindow::setMaxSize);
+        tabMenu->addAction(resizeTab);
+
+        QAction *renameTab = new QAction("Rename Tab", tabMenu);
+        connect(renameTab, &QAction::triggered, this, &MainWindow::renameTab);
+        tabMenu->addAction(renameTab);
 
         m_menubar->addMenu(tabMenu);
     } // End Tab
@@ -155,6 +160,9 @@ QJsonDocument MainWindow::saveObject() {
         object.insert("tabIdx", tabIdx);
         object.insert("tabName", m_centralWidget->tabText(tabIdx));
 
+        QPoint maxSize = m_tabWidgets.at(tabIdx)->maxSize();
+        object.insert("maxSize", QJsonArray{ maxSize.x(), maxSize.y() });
+
         QJsonArray widgets{};
 
         QMapIterator<BaseWidget *, WidgetData> iterator(widgetsForTab(tabIdx));
@@ -211,6 +219,9 @@ void MainWindow::loadObject(const QJsonDocument &doc) {
 
         m_centralWidget->insertTab(tabIdx, tab, object.value("tabName").toString());
         m_tabWidgets.insert(tabIdx, tab);
+
+        QJsonArray maxSize = object.value("maxSize").toArray();
+        tab->setMaxSize(QPoint(maxSize.at(0).toInt(3), maxSize.at(1).toInt(3)));
 
         QJsonArray widgets = object.value("widgets").toArray();
 
@@ -304,14 +315,6 @@ void MainWindow::relay() {
         if (tabWidget != nullptr) {
             tabWidget->layout()->removeWidget(iterator.key());
             tabWidget->layout()->addWidget(iterator.key(), data.row, data.col, data.rowSpan, data.colSpan);
-
-            for (int i = 0; i < data.row + data.rowSpan; ++i) {
-                tabWidget->layout()->setRowStretch(i, 1);
-            }
-
-            for (int i = 0; i < data.col + data.colSpan; ++i) {
-                tabWidget->layout()->setColumnStretch(i, 1);
-            }
         }
     }
 
@@ -402,7 +405,7 @@ void MainWindow::open() {
         this, "Open File", QDir::homePath(), "JSON Files (*.json);;All Files (*)"));
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QMessageBox::critical(this, "Load Failed!", "Failed to open file for reading."
+        QMessageBox::critical(this, "Load Failed!", "Failed to open file for reading. "
                                                     "Directory may not exist or may be inaccessible.",
                               QMessageBox::StandardButton::Ok);
         return;
@@ -424,7 +427,6 @@ void MainWindow::newTab() {
     bool ok;
     QString tabName = QInputDialog::getText(this, "New Tab Name", "Input new tab name", QLineEdit::Normal, "", &ok);
 
-    // TODO: max size
     if (!tabName.isEmpty() && ok) {
         TabWidget *tab = new TabWidget(QPoint(3, 3));
 
@@ -466,6 +468,25 @@ void MainWindow::closeTab() {
     relay();
 }
 
+void MainWindow::renameTab() {
+    bool ok;
+    QString tabName = QInputDialog::getText(this, "Tab Name", "Input new tab name", QLineEdit::Normal, m_centralWidget->tabText(m_centralWidget->currentIndex()), &ok);
+
+    if (!tabName.isEmpty() && ok) {
+        m_centralWidget->setTabText(m_centralWidget->currentIndex(), tabName);
+    }
+}
+
+void MainWindow::setMaxSize() {
+    TabWidget *tab = m_tabWidgets.at(m_centralWidget->currentIndex());
+    TabMaxSizeDialog *dialog = new TabMaxSizeDialog(this, tab->maxSize());
+    dialog->show();
+
+    connect(dialog, &TabMaxSizeDialog::dataReady, this, [this, tab](QPoint point) {
+        tab->setMaxSize(point);
+    });
+}
+
 // New Widget
 void MainWindow::newWidgetPopup() {
 
@@ -497,7 +518,7 @@ void MainWindow::newCameraView() {
         }
     } else {
         BaseWidget *widget = BaseWidget::defaultWidgetFromTopic("", WidgetTypes::CameraView);
-        WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget);
+        WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget, this);
         dialog->setWindowTitle("New Camera View");
         dialog->open();
 

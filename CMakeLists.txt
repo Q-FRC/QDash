@@ -45,6 +45,7 @@ set(PROJECT_SOURCES
         src/misc/ShapedFrame.cpp
         src/misc/BetterDial.cpp
         src/misc/FieldImage.cpp
+        src/misc/TabMaxSizeDialog.cpp
 
         src/stores/TopicStore.cpp
         src/stores/TypeStore.cpp
@@ -77,6 +78,7 @@ set(PROJECT_SOURCES
         include/misc/ShapedFrame.h
         include/misc/BetterDial.h
         include/misc/FieldImage.h
+        include/misc/TabMaxSizeDialog.h
 
         include/stores/TopicStore.h
         include/stores/TypeStore.h

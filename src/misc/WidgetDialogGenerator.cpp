@@ -20,7 +20,7 @@ bool operator<(QMetaProperty a, QMetaProperty b) {
     return a.name() < a.name();
 }
 
-WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, bool isResize, WidgetData data)
+WidgetDialogGenerator::WidgetDialogGenerator(BaseWidget *widget, QWidget *parent, bool isResize, WidgetData data) : QDialog(parent)
 {
     m_widget = widget;
     m_isResize = isResize;

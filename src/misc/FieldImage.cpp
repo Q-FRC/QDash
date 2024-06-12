@@ -12,6 +12,7 @@ FieldImage::FieldImage(QWidget *parent) : QLabel(parent) {}
 void FieldImage::setValue(std::span<const double> value) {
     m_value = value;
     setImage(m_image); // ensure proper scaling and whatnot
+    update();
 }
 
 void FieldImage::setRobotWidth(double width) {
@@ -25,21 +26,20 @@ void FieldImage::setRobotLength(double length) {
 void FieldImage::setImage(Globals::File image) {
     QImage qimage(image.fileName);
 
-    double ratio = qMin(
-        (double) parentWidget()->height() / qimage.height(),
-        (double) parentWidget()->width() / qimage.width());
-
-    QImage scaled = qimage.scaledToWidth(ratio * qimage.width());
-
-    m_imageWidth = scaled.width();
-    m_imageHeight = scaled.height();
-
-    setPixmap(QPixmap::fromImage(scaled));
+    setPixmap(QPixmap::fromImage(qimage));
     m_image = image;
 }
 
 void FieldImage::paintEvent(QPaintEvent *event) {
     QLabel::paintEvent(event);
+
+    int w = event->rect().width();
+    int h = event->rect().height() * 4. / 5.;
+
+    setPixmap(pixmap().scaled(w, h, Qt::KeepAspectRatio));
+
+    m_imageWidth = pixmap().width();
+    m_imageHeight = pixmap().height();
 
     if (m_value.size() < 3) return;
 

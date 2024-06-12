@@ -19,5 +19,26 @@ QPoint TabWidget::maxSize() {
 }
 
 void TabWidget::setMaxSize(const QPoint &maxSize) {
+    QPoint lastMax = m_maxSize;
     m_maxSize = maxSize;
+
+    if (lastMax.x() > maxSize.x()) {
+        for (int x = maxSize.x(); x < lastMax.x(); ++x) {
+            m_layout->setColumnStretch(x, 0);
+        }
+    } else {
+        for (int x = 0; x < m_maxSize.x(); ++x) {
+            m_layout->setColumnStretch(x, 1);
+        }
+    }
+
+    if (lastMax.y() > maxSize.y()) {
+        for (int y = maxSize.y(); y < lastMax.y(); ++y) {
+            m_layout->setRowStretch(y, 0);
+        }
+    } else {
+        for (int y = 0; y < m_maxSize.y(); ++y) {
+            m_layout->setRowStretch(y, 1);
+        }
+    }
 }

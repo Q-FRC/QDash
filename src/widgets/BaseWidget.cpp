@@ -97,7 +97,7 @@ QMenu *BaseWidget::constructContextMenu(WidgetData data) {
     menu->addAction(resizeAction);
 
     connect(resizeAction, &QAction::triggered, this, [this, data](bool) {
-        WidgetDialogGenerator *dialog = new WidgetDialogGenerator(this, true, data);
+        WidgetDialogGenerator *dialog = new WidgetDialogGenerator(this, this, true, data);
         dialog->setWindowTitle("Resize Widget");
         dialog->show();
 

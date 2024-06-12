@@ -158,7 +158,7 @@ QAction *NewWidgetTreeDialog::createWidgetAction(const QString &text, const QStr
 void NewWidgetTreeDialog::showNewWidgetDialog(WidgetTypes widgetType, std::string ntTopic) {
     auto widget = BaseWidget::defaultWidgetFromTopic(QString::fromStdString(ntTopic), widgetType);
 
-    WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget);
+    WidgetDialogGenerator *dialog = new WidgetDialogGenerator(widget, this->parentWidget());
     dialog->setWindowTitle("New Widget");
     dialog->show();
 

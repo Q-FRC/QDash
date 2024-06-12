@@ -75,6 +75,8 @@ public slots:
     // Tab Actions
     void newTab();
     void closeTab();
+    void setMaxSize();
+    void renameTab();
 
     // New Widget
     void newWidgetPopup();

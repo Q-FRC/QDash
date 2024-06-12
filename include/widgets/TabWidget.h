@@ -19,6 +19,8 @@ public:
 
     QGridLayout *layout();
 
+    bool addWidget(QWidget *widget, int fromRow, int fromColumn, int rowSpan, int columnSpan, Qt::Alignment alignment = Qt::Alignment());
+
     QPoint maxSize();
     void setMaxSize(const QPoint &maxSize);
 };
