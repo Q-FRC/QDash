@@ -101,22 +101,6 @@ MainWindow::MainWindow()
 
     m_menubar->addAction(newWidgetAction);
 
-//    QMenu *newWidgetMenu = new QMenu("&New Widget");
-//    newWidgetMenu->setStyleSheet("QMenu { menu-scrollable: 1; }");
-//    connect(newWidgetMenu, &QMenu::aboutToShow, this, [this, newWidgetMenu, newTab] {
-//        if (m_tabWidgets.length() == 0) {
-//            QMessageBox::StandardButton warning = QMessageBox::warning(this, "Cannot Add Widget", "You must select a tab before adding a widget.\nWould you like to add a tab now?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-//            if (warning == QMessageBox::StandardButton::Yes) {
-//                newTab->trigger();
-//            }
-//        } else {
-//            constructNewWidgetMenu(newWidgetMenu);
-//            newWidgetMenu->show();
-//        }
-//    });
-
-//    m_menubar->addMenu(newWidgetMenu);
-
     update();
 }
 
@@ -205,87 +189,9 @@ void MainWindow::showNewWidgetDialog(NewWidgetDialog::WidgetTypes widgetType, st
     connect(dialog, &NewWidgetDialog::widgetReady, this, &MainWindow::newWidget);
 }
 
-void MainWindow::constructNewWidgetMenu(QMenu *menu) {
-    menu->clear();
-    QMapIterator<QString, Globals::TopicTypes> iterator(Globals::availableTopics);
-
-    while (iterator.hasNext())
-    {
-        iterator.next();
-        QString topicName = iterator.key();
-        Globals::TopicTypes topicType = iterator.value();
-
-        switch(topicType) {
-        case Globals::TopicTypes::Boolean: {
-            QMenu *boolMenu = new QMenu(topicName, menu);
-
-            QAction *checkboxAction = new QAction("Checkbox", this);
-            boolMenu->addAction(checkboxAction);
-
-            connect(checkboxAction, &QAction::triggered, this, [this, topicName](bool) {
-                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanCheckbox, topicName.toStdString());
-            });
-
-            QAction *colorAction = new QAction("Color Display", this);
-            boolMenu->addAction(colorAction);
-
-            connect(colorAction, &QAction::triggered, this, [this, topicName](bool) {
-                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanDisplay, topicName.toStdString());
-            });
-
-            menu->addMenu(boolMenu);
-            break;
-        }
-        case Globals::TopicTypes::Double: {
-            QMenu *doubleMenu = new QMenu(topicName, menu);
-
-            QAction *displayAction = new QAction("Number Display", this);
-            doubleMenu->addAction(displayAction);
-
-            connect(displayAction, &QAction::triggered, this, [this, topicName](bool) {
-                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::DoubleDisplay, topicName.toStdString());
-            });
-
-            QAction *dialAction = new QAction("Dial", this);
-            doubleMenu->addAction(dialAction);
-
-            connect(dialAction, &QAction::triggered, this, [this, topicName](bool) {
-                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::DoubleDial, topicName.toStdString());
-            });
-
-            menu->addMenu(doubleMenu);
-            break;
-        }
-        case Globals::TopicTypes::SendableChooser: {
-            QAction *chooserAction = new QAction(topicName, this);
-            menu->addAction(chooserAction);
-
-            connect(chooserAction, &QAction::triggered, this, [this, topicName](bool) {
-                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::SendableChooser, topicName.toStdString());
-            });
-            break;
-        }
-        case Globals::TopicTypes::String:
-        default: {
-            QAction *stringAction = new QAction(topicName, this);
-            menu->addAction(stringAction);
-
-            connect(stringAction, &QAction::triggered, this, [this, topicName](bool) {
-                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::StringDisplay, topicName.toStdString());
-            });
-            break;
-        }
-        }
-    }
-}
-
 void MainWindow::constructNewWidgetList(QListWidget *list, QDialog *dialog) {
     list->clear();
     QMapIterator<QString, Globals::TopicTypes> iterator(Globals::availableTopics);
-
-    connect(list, &QListWidget::itemActivated, this, [dialog](QListWidgetItem *) {
-        dialog->close();
-    });
 
     while (iterator.hasNext())
     {
@@ -302,15 +208,17 @@ void MainWindow::constructNewWidgetList(QListWidget *list, QDialog *dialog) {
             QAction *checkboxAction = new QAction("Checkbox", this);
             boolMenu->addAction(checkboxAction);
 
-            connect(checkboxAction, &QAction::triggered, this, [this, topicName](bool) {
+            connect(checkboxAction, &QAction::triggered, this, [this, topicName, dialog](bool) {
                 showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanCheckbox, topicName.toStdString());
+                dialog->close();
             });
 
             QAction *colorAction = new QAction("Color Display", this);
             boolMenu->addAction(colorAction);
 
-            connect(colorAction, &QAction::triggered, this, [this, topicName](bool) {
+            connect(colorAction, &QAction::triggered, this, [this, topicName, dialog](bool) {
                 showNewWidgetDialog(NewWidgetDialog::WidgetTypes::BooleanDisplay, topicName.toStdString());
+                dialog->close();
             });
 
             connect(list, &QListWidget::itemActivated, this, [this, topicName, boolMenu](QListWidgetItem *item) {
@@ -326,15 +234,17 @@ void MainWindow::constructNewWidgetList(QListWidget *list, QDialog *dialog) {
             QAction *displayAction = new QAction("Number Display", this);
             doubleMenu->addAction(displayAction);
 
-            connect(displayAction, &QAction::triggered, this, [this, topicName](bool) {
+            connect(displayAction, &QAction::triggered, this, [this, topicName, dialog](bool) {
                 showNewWidgetDialog(NewWidgetDialog::WidgetTypes::DoubleDisplay, topicName.toStdString());
+                dialog->close();
             });
 
             QAction *dialAction = new QAction("Dial", this);
             doubleMenu->addAction(dialAction);
 
-            connect(dialAction, &QAction::triggered, this, [this, topicName](bool) {
+            connect(dialAction, &QAction::triggered, this, [this, topicName, dialog](bool) {
                 showNewWidgetDialog(NewWidgetDialog::WidgetTypes::DoubleDial, topicName.toStdString());
+                dialog->close();
             });
 
             connect(list, &QListWidget::itemActivated, this, [this, topicName, doubleMenu](QListWidgetItem *item) {
@@ -345,18 +255,20 @@ void MainWindow::constructNewWidgetList(QListWidget *list, QDialog *dialog) {
             break;
         }
         case Globals::TopicTypes::SendableChooser: {
-            connect(list, &QListWidget::itemActivated, this, [this, topicName](QListWidgetItem *item) {
+            connect(list, &QListWidget::itemActivated, this, [this, topicName, dialog](QListWidgetItem *item) {
                 if (item->text() == topicName) {
                     showNewWidgetDialog(NewWidgetDialog::WidgetTypes::SendableChooser, topicName.toStdString());
+                    dialog->close();
                 }
             });
             break;
         }
         case Globals::TopicTypes::String:
         default: {
-            connect(list, &QListWidget::itemActivated, this, [this, topicName](QListWidgetItem *item) {
+            connect(list, &QListWidget::itemActivated, this, [this, topicName, dialog](QListWidgetItem *item) {
                 if (item->text() == topicName) {
                     showNewWidgetDialog(NewWidgetDialog::WidgetTypes::StringDisplay, topicName.toStdString());
+                    dialog->close();
                 }
             });
             break;

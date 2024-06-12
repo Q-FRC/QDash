@@ -54,6 +54,5 @@ public:
 public slots:
     void newWidget(BaseWidget *widget, QList<int> data);
 
-    void constructNewWidgetMenu(QMenu *menu);
     void constructNewWidgetList(QListWidget *list, QDialog *dialog);
 };
