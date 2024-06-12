@@ -3,4 +3,5 @@ Type=Application
 Name=QFRCDashboard
 Comment=Reliable, high-performance dashboard for FRC.
 Exec=QFRCDashboard
-Icon="stroke-cap-square"
+Icon=QFRCDashboard
+Categories=Education;Utility

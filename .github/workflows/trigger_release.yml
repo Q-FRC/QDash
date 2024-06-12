@@ -57,7 +57,7 @@ jobs:
           draft: true
           prerelease: false
           files: |
-            # QFRCDashboard-Linux-${{ env.VERSION }}.tar.gz
+            QFRCDashboard-Linux-${{ env.VERSION }}.tar.gz
             QFRCDashboard-Linux-${{ env.VERSION }}-x86_64.AppImage
             QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip
-            QFRCDashboard-${{ env.VERSION }}.tar.gz
+            # QFRCDashboard-${{ env.VERSION }}.tar.gz

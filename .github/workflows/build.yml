@@ -33,6 +33,7 @@ jobs:
       INSTALL_DIR: "install"
       INSTALL_APPIMAGE_DIR: "install-appdir"
       BUILD_DIR: "build"
+      VERSION: "0.9.0"
 
     steps:
     - uses: actions/checkout@v3
@@ -62,7 +63,7 @@ jobs:
       run: |
         cd allwpilib
         git apply ../.github/patches/No-Werror.patch
-        sed -i 's/protobuf/Protobuf/g' wpiutil/wpiutil-config.cmake.in
+        git apply ../.github/patches/Protobuf-Fix.patch
         cd ..
 
     - name: 'Install Python Dependencies (Linux)'
@@ -142,9 +143,31 @@ jobs:
 
         ./linuxdeploy-x86_64.AppImage --appdir ${{ env.INSTALL_APPIMAGE_DIR }} --output appimage --plugin qt
 
+    - name: Upload binary tarball (Linux)
+      if: runner.os == 'Linux'
+      uses: actions/upload-artifact@v3
+      with:
+        name: QFRCDashboard-${{ runner.os }}-Qt6-${{ env.VERSION }}-${{ inputs.build_type }}
+        path: QFRCDashboard.tar.gz
+
+    - name: Upload AppImage (Linux)
+      if: runner.os == 'Linux'
+      uses: actions/upload-artifact@v3
+      with:
+        name: QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}-x86_64.AppImage
+        path: QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}-x86_64.AppImage
+
+
   build-windows:
     name: "Build - Windows"
     runs-on: windows-2022
+
+    env:
+      VERSION: "0.9.0"
+      BUILD_WIN_DIR: "winbuild"
+      INSTALL_WIN_DIR: "install-win"
+      NTCORE_INSTALL_DIR: "install-ntcore"
+
     steps:
       - uses: ilammy/msvc-dev-cmd@v1
 
@@ -184,6 +207,7 @@ jobs:
         run: |
           cd allwpilib
           git apply ../.github/patches/No-Werror.patch
+          git apply ../.github/patches/Protobuf-Fix.patch
           cd ..
 
       - name: 'Configure ntcore CMake (Windows)'
@@ -201,7 +225,7 @@ jobs:
 
       - name: 'Install ntcore (Windows)'
         run: |
-          cmake --install win-nt-build --prefix /usr
+          cmake --install win-nt-build --prefix ${{ env.NTCORE_INSTALL_DIR }}
         env:
           SCCACHE_GHA_ENABLED: "true"
 
@@ -213,11 +237,22 @@ jobs:
 
       - name: 'Build (Windows)'
         run: |
-          cmake -S . -B winbuild
-          cmake --build winbuild --parallel $(nproc)
+          cmake -S . -B ${{ env.BUILD_WIN_DIR }} -Dntcore_ROOT=${{ env.NTCORE_INSTALL_DIR }}
+          cmake --build ${{ env.BUILD_WIN_DIR }} --parallel $(nproc)
         env:
           SCCACHE_GHA_ENABLED: "true"
 
       - name: Package (Windows)
         run: |
-          cmake --install winbuild --prefix install --component portable
+          cmake --install ${{ env.BUILD_WIN_DIR }} --prefix ${{ env.INSTALL_WIN_DIR }} --component portable
+
+      ##
+      # UPLOAD BUILDS
+      ##
+
+      - name: Upload binary zip (Windows, portable)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v3
+        with:
+          name: QFRCDashboard-${{ matrix.name }}-Portable-${{ env.VERSION }}-${{ inputs.build_type }}
+          path: ${{ env.INSTALL_WIN_DIR }}/**

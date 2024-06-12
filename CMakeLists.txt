@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.12)
 
 project(QFRCDashboard VERSION 0.1 LANGUAGES CXX)
 
@@ -81,10 +81,15 @@ set(PROJECT_SOURCES
         include/stores/FilterStore.h
 )
 
+if(WIN32)
+    set(RCS_FILE ${CMAKE_CURRENT_SOURCE_DIR}/QFRCDashboard.rc)
+endif()
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(QFRCDashboard
         MANUAL_FINALIZATION
         fields.qrc
+        ${RCS_FILE}
         ${PROJECT_SOURCES}
     )
 endif()
@@ -104,4 +109,7 @@ if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(QFRCDashboard)
 endif()
 
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/QFRCDashboard.desktop DESTINATION "share/applications")
+if(UNIX AND NOT(APPLE))
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/QFRCDashboard.desktop DESTINATION "share/applications")
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/QFRCDashboard.svg DESTINATION "share/icons/hicolor/scalable/apps")
+endif()
