@@ -232,8 +232,10 @@ void MainWindow::loadObject(const QJsonDocument &doc) {
         for (QJsonValueRef wref : widgets) {
             QJsonObject widgetObject = wref.toObject();
 
+            QString topic = widgetObject.value("Topic").toString("");
+
             WidgetTypes type = (WidgetTypes) widgetObject.value("widgetType").toInt();
-            BaseWidget *widget = BaseWidget::defaultWidgetFromTopic("", type);
+            BaseWidget *widget = BaseWidget::defaultWidgetFromTopic(topic, type);
             widget->setParent(this);
             widget->installEventFilter(this);
 

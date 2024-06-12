@@ -3,6 +3,7 @@
 
 BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &topic, const bool &defaultValue, const QString &title) : BaseWidget(WidgetTypes::BooleanCheckbox, title, topic)
 {
+    m_entry = TopicStore::subscribe(topic.toStdString(), this);
     m_value = defaultValue;
 
     m_checkbox = new QCheckBox(this);

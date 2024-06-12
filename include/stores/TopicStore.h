@@ -15,10 +15,14 @@ class TopicStore : public QObject
 private:
     static QHash<std::string, nt::NetworkTableEntry *> topicEntryMap;
     static QMultiHash<std::string, BaseWidget *> topicSubscriberMap;
+
+    // little messy but its alright
+    static QHash<std::pair<std::string, BaseWidget *>, NT_Listener> topicListenerMap;
 public:
     TopicStore();
 
     static nt::NetworkTableEntry *subscribe(std::string ntTopic, BaseWidget *subscriber);
+    static nt::NetworkTableEntry *subscribeWriteOnly(std::string ntTopic, BaseWidget *subscriber);
 
     static void unsubscribe(std::string ntTopic, BaseWidget *subscriber);
     static void unsubscribe(nt::NetworkTableEntry *entry, BaseWidget *subscriber);

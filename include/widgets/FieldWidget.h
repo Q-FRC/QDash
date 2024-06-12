@@ -22,7 +22,7 @@ protected:
     double m_width;
     double m_length;
 public:
-    FieldWidget(const QString &topic = "", QVariantList defaultValue = QVariantList{}, const QString &title = "", bool fromSendable = false);
+    FieldWidget(const QString &topic = "", QVariantList defaultValue = QVariantList{}, const QString &title = "");
     ~FieldWidget();
 
     double robotWidth();

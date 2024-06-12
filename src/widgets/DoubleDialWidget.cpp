@@ -4,6 +4,8 @@
 #include <QApplication>
 
 DoubleDialWidget::DoubleDialWidget(const QString &topic, const double &defaultValue, const QString &title) : DoubleDisplayWidget(topic, defaultValue, title) {
+    m_entry = TopicStore::subscribe(topic.toStdString(), this);
+
     m_dial = new BetterDial(this);
     m_type = WidgetTypes::DoubleDial;
 

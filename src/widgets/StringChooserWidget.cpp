@@ -6,9 +6,9 @@
 
 StringChooserWidget::StringChooserWidget(const QString &topic, const QString &defaultValue, const QString &title) : BaseWidget(WidgetTypes::SendableChooser, title, topic),
     m_active(TopicStore::subscribe(topic.toStdString() + "/active", this)),
-    m_default(TopicStore::subscribe(topic.toStdString() + "/default", this)),
+    m_default(TopicStore::subscribeWriteOnly(topic.toStdString() + "/default", this)),
     m_choices(TopicStore::subscribe(topic.toStdString() + "/options", this)),
-    m_selected(TopicStore::subscribe(topic.toStdString() + "/selected", this))
+    m_selected(TopicStore::subscribeWriteOnly(topic.toStdString() + "/selected", this))
 {
     m_value = QString::fromStdString(defaultValue.isEmpty() ? m_active->GetString("") : defaultValue.toStdString());
 
@@ -44,15 +44,18 @@ StringChooserWidget::~StringChooserWidget() {
 void StringChooserWidget::setTopic(const QString &topic) {
     BaseWidget::setTopic(topic);
 
-    TopicStore::unsubscribe(m_active, this);
-    TopicStore::unsubscribe(m_default, this);
-    TopicStore::unsubscribe(m_choices, this);
-    TopicStore::unsubscribe(m_selected, this);
+    if (m_topic == topic)
+        return;
+
+    if (m_active != nullptr) TopicStore::unsubscribe(m_active, this);
+    if (m_default != nullptr) TopicStore::unsubscribe(m_default, this);
+    if (m_choices != nullptr) TopicStore::unsubscribe(m_choices, this);
+    if (m_selected != nullptr) TopicStore::unsubscribe(m_selected, this);
 
     m_active = TopicStore::subscribe(topic.toStdString() + "/active", this);
-    m_default = TopicStore::subscribe(topic.toStdString() + "/default", this);
+    m_default = TopicStore::subscribeWriteOnly(topic.toStdString() + "/default", this);
     m_choices = TopicStore::subscribe(topic.toStdString() + "/options", this);
-    m_selected = TopicStore::subscribe(topic.toStdString() + "/selected", this);
+    m_selected = TopicStore::subscribeWriteOnly(topic.toStdString() + "/selected", this);
 
     setValue(nt::Value());
 }

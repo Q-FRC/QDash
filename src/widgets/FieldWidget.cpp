@@ -1,11 +1,13 @@
 #include "widgets/FieldWidget.h"
+#include "stores/TopicStore.h"
 
 #include <QJsonArray>
 #include <QResizeEvent>
 
-FieldWidget::FieldWidget(const QString &topic, QVariantList defaultValue, const QString &title, bool fromSendable)
+FieldWidget::FieldWidget(const QString &topic, QVariantList defaultValue, const QString &title)
     : BaseWidget(WidgetTypes::Field, title, topic)
 {
+    m_entry = TopicStore::subscribe(topic.toStdString(), this);
     m_value = defaultValue;
 
     m_imageLabel = new FieldImage(this);
@@ -15,9 +17,6 @@ FieldWidget::FieldWidget(const QString &topic, QVariantList defaultValue, const 
 
     m_layout->addWidget(m_imageLabel, 1, 0, 3, 1, Qt::AlignHCenter);
 
-    if (fromSendable) {
-        setTopic(topic + "/Robot");
-    }
     m_ready = true;
 }
 

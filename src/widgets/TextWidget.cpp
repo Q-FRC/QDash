@@ -7,6 +7,7 @@
 
 TextWidget::TextWidget(const WidgetTypes &type, const QString &topic, const QString &defaultText, const QString &title) : BaseWidget::BaseWidget(type, title, topic)
 {
+    m_entry = TopicStore::subscribe(topic.toStdString(), this);
     m_text = new QLineEdit(defaultText, this);
 
     m_layout->addWidget(m_text, 1, 0, 3, 1);

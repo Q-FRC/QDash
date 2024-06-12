@@ -3,6 +3,8 @@
 
 EnumWidget::EnumWidget(const QString &topic, const QString &defaultValue, const QString &title) : BaseWidget(WidgetTypes::EnumWidget, title, topic)
 {
+    m_entry = TopicStore::subscribe(topic.toStdString(), this);
+
     m_value = defaultValue;
     m_colorWidget = new ShapedFrame(Globals::FrameShape::Rectangle, this);
 

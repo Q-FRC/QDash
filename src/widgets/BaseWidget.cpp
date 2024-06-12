@@ -26,9 +26,9 @@
 #include <QMouseEvent>
 
 BaseWidget::BaseWidget(const WidgetTypes &type, const QString &title, const QString &topic)
-    : m_entry(TopicStore::subscribe(topic.toStdString(), this))
 {
     m_type = type;
+    m_topic = topic;
 
     m_layout = new QGridLayout(this);
     m_title = new QLineEdit(title, this);
@@ -86,12 +86,16 @@ void BaseWidget::setTitle(const QString &title)
 
 QString BaseWidget::topic()
 {
-    return QString::fromStdString(m_entry->GetName());
+    return m_topic;
 }
 
 void BaseWidget::setTopic(const QString &topic)
 {
-    TopicStore::unsubscribe(m_entry, this);
+    if (m_topic == topic)
+        return;
+
+    m_topic = topic;
+    if (m_entry != nullptr) TopicStore::unsubscribe(m_entry, this);
     m_entry = TopicStore::subscribe(topic.toStdString(), this);
 }
 
@@ -187,7 +191,7 @@ QJsonObject BaseWidget::saveObject() {
 }
 
 WidgetData BaseWidget::fromJson(QJsonObject obj, int tabIdx) {
-    int offset = BaseWidget::staticMetaObject.propertyOffset();
+    int offset = staticMetaObject.propertyOffset();
     int propertyCount = metaObject()->propertyCount();
 
     for (int i = offset; i < propertyCount; ++i) {
@@ -236,7 +240,9 @@ BaseWidget *BaseWidget::defaultWidgetFromTopic(QString ntTopic, WidgetTypes type
 
     BaseWidget *baseWidget;
 
-#define REGISTER_WIDGET_TYPE(widgetType, widget) if (widgetType == type) baseWidget = new widget(ntTopic); else
+#define REGISTER_WIDGET_TYPE(widgetType, widget) if (widgetType == type) { \
+    baseWidget = new widget(ntTopic); \
+} else
 
     REGISTER_WIDGET_TYPE(WidgetTypes::BooleanCheckbox, BooleanCheckboxWidget)
     REGISTER_WIDGET_TYPE(WidgetTypes::BooleanDisplay, BooleanDisplayWidget)

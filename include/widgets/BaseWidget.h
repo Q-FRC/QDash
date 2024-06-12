@@ -33,6 +33,8 @@ protected:
     QLineEdit *m_title;
     bool m_ready = false;
 
+    QString m_topic;
+
     ResizeDirection m_resize = NONE;
 
     nt::NetworkTableEntry *m_entry;

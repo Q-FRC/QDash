@@ -5,6 +5,7 @@
 
 QHash<std::string, nt::NetworkTableEntry *> TopicStore::topicEntryMap{};
 QMultiHash<std::string, BaseWidget *> TopicStore::topicSubscriberMap{};
+QHash<std::pair<std::string, BaseWidget *>, NT_Listener> TopicStore::topicListenerMap{};
 
 TopicStore::TopicStore()
 {
@@ -38,9 +39,25 @@ nt::NetworkTableEntry *TopicStore::subscribe(std::string ntTopic, BaseWidget *su
 
     updateWidget();
 
-    Globals::inst.AddListener(entry->GetTopic(), nt::EventFlags::kValueAll, updateWidget);
-    return topicEntryMap.value(ntTopic);
-    // TODO: account for multi-topic subscriptions and sendables
+    NT_Listener listener = Globals::inst.AddListener(entry->GetTopic(), nt::EventFlags::kValueAll, updateWidget);
+
+    topicListenerMap.insert({ntTopic, subscriber}, listener);
+    return entry;
+}
+
+nt::NetworkTableEntry *TopicStore::subscribeWriteOnly(std::string ntTopic, BaseWidget *subscriber) {
+    if (!topicEntryMap.contains(ntTopic)) {
+        nt::NetworkTableEntry *entry =
+            new nt::NetworkTableEntry(nt::GetEntry(Globals::inst.GetHandle(), ntTopic));
+
+        topicEntryMap.insert(ntTopic, entry);
+    }
+
+    if (!topicSubscriberMap.contains(ntTopic, subscriber)) topicSubscriberMap.insert(ntTopic, subscriber);
+
+    nt::NetworkTableEntry *entry = topicEntryMap.value(ntTopic);
+
+    return entry;
 }
 
 void TopicStore::unsubscribe(std::string ntTopic, BaseWidget *subscriber) {
@@ -48,6 +65,12 @@ void TopicStore::unsubscribe(std::string ntTopic, BaseWidget *subscriber) {
     if (!topicSubscriberMap.contains(ntTopic, subscriber)) return;
 
     topicSubscriberMap.remove(ntTopic, subscriber);
+
+    std::pair listenerMapPair = {ntTopic, subscriber};
+    if (topicListenerMap.contains(listenerMapPair)) {
+        Globals::inst.RemoveListener(topicListenerMap.value(listenerMapPair));
+        topicListenerMap.remove(listenerMapPair);
+    }
 
     if (!topicSubscriberMap.contains(ntTopic)) {
         nt::NetworkTableEntry *entry = topicEntryMap.value(ntTopic);
