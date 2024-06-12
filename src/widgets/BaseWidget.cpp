@@ -137,20 +137,92 @@ void BaseWidget::paintEvent(QPaintEvent *event) {
 QJsonObject BaseWidget::saveObject() {
     QJsonObject object{};
 
-    object.insert("title", title());
-    object.insert("topic", QString::fromStdString(m_entry->GetName()));
-    object.insert("titleFont", titleFont().toString());
     object.insert("widgetType", (int) m_type);
+
+    int offset = BaseWidget::staticMetaObject.propertyOffset();
+    int propertyCount = metaObject()->propertyCount();
+
+    for (int i = offset; i < propertyCount; ++i) {
+        QMetaProperty property = metaObject()->property(i);
+        QString propertyName(property.name());
+
+        int id = property.typeId();
+
+#define PROPERTY_FUNCTION(type, function) if (id == type) object.insert(propertyName, function(property)); else
+
+        PROPERTY_FUNCTION(QMetaType::Double, writeDoubleProperty)
+        PROPERTY_FUNCTION(QMetaType::Int, writeIntProperty)
+        PROPERTY_FUNCTION(QMetaType::Bool, writeBoolProperty)
+        PROPERTY_FUNCTION(QMetaType::QColor, writeColorProperty)
+        PROPERTY_FUNCTION(QMetaType::QVariantMap, writeMapProperty)
+        PROPERTY_FUNCTION(QMetaType::QVariantList, writeListProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::File, writeFileProperty)
+        PROPERTY_FUNCTION(QMetaType::QFont, writeFontProperty)
+        PROPERTY_FUNCTION(QMetaType::QString, writeStringProperty)
+        PROPERTY_FUNCTION(QMetaType::QUrl, writeStringProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::FrameShape, writeShapeProperty)
+        { // else
+            qCritical() << "Bad metatype for property" << property.name() << (QMetaType::Type) id;
+            continue;
+        } // else
+
+#undef PROPERTY_FUNCTION
+    }
 
     return object;
 }
 
-std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int tabIdx) {
-    WidgetTypes widgetType = (WidgetTypes) obj.value("widgetType").toInt();
+WidgetData BaseWidget::fromJson(QJsonObject obj, int tabIdx) {
+    int offset = BaseWidget::staticMetaObject.propertyOffset();
+    int propertyCount = metaObject()->propertyCount();
+
+    for (int i = offset; i < propertyCount; ++i) {
+        QMetaProperty property = metaObject()->property(i);
+        QString propertyName(property.name());
+        if (!obj.contains(propertyName)) {
+            continue;
+        }
+
+        QJsonValue value = obj.value(propertyName);
+        int id = property.typeId();
+
+#define PROPERTY_FUNCTION(type, function) if (id == type) property.write(this, function(property, value)); else
+
+        PROPERTY_FUNCTION(QMetaType::Double, readDoubleProperty)
+        PROPERTY_FUNCTION(QMetaType::Int, readIntProperty)
+        PROPERTY_FUNCTION(QMetaType::Bool, readBoolProperty)
+        PROPERTY_FUNCTION(QMetaType::QColor, readColorProperty)
+        PROPERTY_FUNCTION(QMetaType::QVariantMap, readMapProperty)
+        PROPERTY_FUNCTION(QMetaType::QVariantList, readListProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::File, readFileProperty)
+        PROPERTY_FUNCTION(QMetaType::QFont, readFontProperty)
+        PROPERTY_FUNCTION(QMetaType::QString, readStringProperty)
+        PROPERTY_FUNCTION(QMetaType::QUrl, readStringProperty)
+        PROPERTY_FUNCTION(CustomMetaTypes::FrameShape, readShapeProperty)
+        { // else
+            qCritical() << "Bad metatype for property" << property.name() << (QMetaType::Type) id;
+            continue;
+        } // else
+
+#undef PROPERTY_FUNCTION
+    }
+
+    QJsonArray geometry = obj.value("geometry").toArray({});
+    WidgetData data;
+    data.tabIdx = tabIdx;
+    data.row = geometry.at(0).toInt(0);
+    data.col = geometry.at(1).toInt(0);
+    data.rowSpan = geometry.at(2).toInt(1);
+    data.colSpan = geometry.at(3).toInt(1);
+
+    return data;
+}
+
+BaseWidget *BaseWidget::defaultWidgetFromTopic(QString ntTopic, WidgetTypes type) {
 
     BaseWidget *baseWidget;
 
-#define REGISTER_WIDGET_TYPE(type, widget) if (widgetType == type) baseWidget = widget::fromJson(obj); else
+#define REGISTER_WIDGET_TYPE(widgetType, widget) if (widgetType == type) baseWidget = new widget(ntTopic); else
 
     REGISTER_WIDGET_TYPE(WidgetTypes::BooleanCheckbox, BooleanCheckboxWidget)
     REGISTER_WIDGET_TYPE(WidgetTypes::BooleanDisplay, BooleanDisplayWidget)
@@ -172,33 +244,101 @@ std::pair<BaseWidget *, WidgetData> BaseWidget::fromJson(QJsonObject obj, int ta
 
     // implicit-condition: StringDisplay
     { // else
-        baseWidget = StringDisplayWidget::fromJson(obj);
+        baseWidget = new StringDisplayWidget(ntTopic);
     } // else
 
 #undef REGISTER_WIDGET_TYPE
 
-    QFont titleFont;
-    titleFont.fromString(obj.value("titleFont").toString(qApp->font().toString()));
-    baseWidget->setTitleFont(titleFont);
-
-    QJsonArray geometry = obj.value("geometry").toArray({});
-    WidgetData data;
-    data.tabIdx = tabIdx;
-    data.row = geometry.at(0).toInt(0);
-    data.col = geometry.at(1).toInt(0);
-    data.rowSpan = geometry.at(2).toInt(1);
-    data.colSpan = geometry.at(3).toInt(1);
-
-    return std::make_pair(baseWidget, data);
+    return baseWidget;
 }
 
-BaseWidget *BaseWidget::defaultWidgetFromTopic(QString ntTopic, WidgetTypes type) {
-    // construct a barebones JSON object
-    // and use the existing architecture to make a "default" widget
-    QJsonObject obj{};
-    obj.insert("topic", ntTopic);
-    obj.insert("widgetType", (int) type);
+// JSON stuff
+QVariant BaseWidget::readDoubleProperty(const QMetaProperty &property, const QJsonValue &value) {
+    return value.toDouble(property.read(this).toDouble());
+}
 
-    auto widget = BaseWidget::fromJson(obj, 0);
-    return widget.first;
+QVariant BaseWidget::readIntProperty(const QMetaProperty &property, const QJsonValue &value) {
+    return value.toInt(property.read(this).toInt());
+}
+
+QVariant BaseWidget::readBoolProperty(const QMetaProperty &property, const QJsonValue &value) {
+    return value.toBool(property.read(this).toBool());
+}
+
+QVariant BaseWidget::readColorProperty(const QMetaProperty &property, const QJsonValue &value) {
+    return QColor(value.toString(property.read(this).value<QColor>().name()));
+}
+
+QVariant BaseWidget::readMapProperty(const QMetaProperty &property, const QJsonValue &value) {
+    QVariantMap map = value.toObject().toVariantMap();
+    return map.empty() ? property.read(this).toMap() : map;
+}
+
+QVariant BaseWidget::readListProperty(const QMetaProperty &property, const QJsonValue &value) {
+    QVariantList list = value.toArray().toVariantList();
+    return list.empty() ? property.read(this).toList() : list;
+}
+
+QVariant BaseWidget::readFileProperty(const QMetaProperty &property, const QJsonValue &value) {
+    return QVariant::fromValue<Globals::File>(Globals::File{value.toString(property.read(this).value<Globals::File>().fileName)});
+}
+
+QVariant BaseWidget::readFontProperty(const QMetaProperty &property, const QJsonValue &value) {
+    return QVariant::fromValue<QFont>(QFont(value.toString(property.read(this).value<QFont>().toString())));
+}
+
+QVariant BaseWidget::readStringProperty(const QMetaProperty &property, const QJsonValue &value) {
+    return value.toString(property.read(this).toString());
+}
+
+QVariant BaseWidget::readShapeProperty(const QMetaProperty &property, const QJsonValue &value) {
+    return QVariant::fromValue<Globals::FrameShape>(Globals::shapeNameMap.value(
+        value.toString(
+            Globals::shapeNameMap.key(property.read(this).value<Globals::FrameShape>()))));
+}
+
+// Write
+
+QJsonValue BaseWidget::writeDoubleProperty(const QMetaProperty &property) {
+    return QJsonValue(property.read(this).toDouble());
+}
+
+QJsonValue BaseWidget::writeIntProperty(const QMetaProperty &property) {
+    return QJsonValue(property.read(this).toInt());
+}
+
+QJsonValue BaseWidget::writeBoolProperty(const QMetaProperty &property) {
+    return QJsonValue(property.read(this).toBool());
+}
+
+QJsonValue BaseWidget::writeColorProperty(const QMetaProperty &property) {
+    return QJsonValue(property.read(this).value<QColor>().name());
+}
+
+QJsonValue BaseWidget::writeMapProperty(const QMetaProperty &property) {
+    return QJsonValue(
+        QJsonObject::fromVariantMap(
+            property.read(this).toMap()));
+}
+
+QJsonValue BaseWidget::writeListProperty(const QMetaProperty &property) {
+    return QJsonValue(
+        QJsonArray::fromVariantList(
+            property.read(this).toList()));
+}
+
+QJsonValue BaseWidget::writeFileProperty(const QMetaProperty &property) {
+    return QJsonValue(property.read(this).value<Globals::File>().fileName);
+}
+
+QJsonValue BaseWidget::writeFontProperty(const QMetaProperty &property) {
+    return QJsonValue(property.read(this).value<QFont>().toString());
+}
+
+QJsonValue BaseWidget::writeStringProperty(const QMetaProperty &property) {
+    return QJsonValue(property.read(this).toString());
+}
+
+QJsonValue BaseWidget::writeShapeProperty(const QMetaProperty &property) {
+    return QJsonValue(Globals::shapeNameMap.key(property.read(this).value<Globals::FrameShape>()));
 }

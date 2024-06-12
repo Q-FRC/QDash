@@ -5,7 +5,7 @@
 #include <QMenu>
 #include <QFontDialog>
 
-TextWidget::TextWidget(const WidgetTypes &type, const QString &title, const QString &defaultText, const QString &topic) : BaseWidget::BaseWidget(type, title, topic)
+TextWidget::TextWidget(const WidgetTypes &type, const QString &topic, const QString &defaultText, const QString &title) : BaseWidget::BaseWidget(type, title, topic)
 {
     m_text = new QLineEdit(defaultText, this);
 
@@ -47,13 +47,4 @@ QMenu *TextWidget::constructContextMenu(WidgetData data) {
     });
 
     return menu;
-}
-
-QJsonObject TextWidget::saveObject() {
-    QJsonObject object = BaseWidget::saveObject();
-
-    object.insert("textFont", font().toString());
-    object.insert("text", text());
-
-    return object;
 }

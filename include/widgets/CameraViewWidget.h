@@ -18,14 +18,11 @@ protected:
     QUrl m_url = QUrl();
 public:
     // blank param added to ensure meta type safety
-    CameraViewWidget(const QString &title, const QUrl &url, const QString &);
+    CameraViewWidget(const QString &title = "", const QUrl &url = QUrl());
     ~CameraViewWidget();
 
     QUrl url();
     void setUrl(const QUrl &url);
-
-    QJsonObject saveObject() override;
-    static BaseWidget * fromJson(QJsonObject obj);
 };
 
 #endif // CAMERAVIEWWIDGET_H

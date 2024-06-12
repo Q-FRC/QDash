@@ -4,7 +4,7 @@
 #include <QKeyEvent>
 #include <QApplication>
 
-DoubleDisplayWidget::DoubleDisplayWidget(const QString &title, const double &defaultValue, const QString &topic) : TextWidget(WidgetTypes::DoubleDisplay, title, QString::number(defaultValue), topic)
+DoubleDisplayWidget::DoubleDisplayWidget(const QString &topic, const double &defaultValue, const QString &title) : TextWidget(WidgetTypes::DoubleDisplay, topic, QString::number(defaultValue), title)
 {
     m_value = defaultValue;
     m_ready = true;
@@ -19,27 +19,6 @@ void DoubleDisplayWidget::setValue(const nt::Value &value) {
         m_value = value.GetDouble();
         setText(QString::number(m_value));
     }
-}
-
-QJsonObject DoubleDisplayWidget::saveObject() {
-    QJsonObject object = TextWidget::saveObject();
-
-    object.insert("value", m_value);
-
-    return object;
-}
-
-BaseWidget * DoubleDisplayWidget::fromJson(QJsonObject obj) {
-    DoubleDisplayWidget *widget = new DoubleDisplayWidget(
-        obj.value("title").toString(""),
-        obj.value("value").toDouble(0.),
-        obj.value("topic").toString(""));
-
-    QFont font;
-    font.fromString(obj.value("textFont").toString(qApp->font().toString()));
-    widget->setFont(font);
-
-    return widget;
 }
 
 void DoubleDisplayWidget::keyPressEvent(QKeyEvent *event) {

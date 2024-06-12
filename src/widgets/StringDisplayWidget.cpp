@@ -3,7 +3,7 @@
 
 #include <QApplication>
 
-StringDisplayWidget::StringDisplayWidget(const QString &title, const QString &defaultValue, const QString &topic) : TextWidget(WidgetTypes::StringDisplay, title, defaultValue, topic)
+StringDisplayWidget::StringDisplayWidget(const QString &topic, const QString &defaultValue, const QString &title) : TextWidget(WidgetTypes::StringDisplay, topic, defaultValue, title)
 {
     m_value = defaultValue;
     m_ready = true;
@@ -11,27 +11,6 @@ StringDisplayWidget::StringDisplayWidget(const QString &title, const QString &de
 
 StringDisplayWidget::~StringDisplayWidget() {
     TopicStore::unsubscribe(m_entry, this);
-}
-
-QJsonObject StringDisplayWidget::saveObject() {
-    QJsonObject object = TextWidget::saveObject();
-
-    object.insert("value", m_value);
-
-    return object;
-}
-
-BaseWidget * StringDisplayWidget::fromJson(QJsonObject obj) {
-    StringDisplayWidget *widget = new StringDisplayWidget(
-        obj.value("title").toString(""),
-        obj.value("value").toString(""),
-        obj.value("topic").toString(""));
-
-    QFont font;
-    font.fromString(obj.value("textFont").toString(qApp->font().toString()));
-    widget->setFont(font);
-
-    return widget;
 }
 
 void StringDisplayWidget::setValue(const nt::Value &value) {

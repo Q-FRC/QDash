@@ -3,7 +3,7 @@
 
 #include <QApplication>
 
-DoubleDialWidget::DoubleDialWidget(const QString &title, const double &defaultValue, const QString &topic) : DoubleDisplayWidget(title, defaultValue, topic) {
+DoubleDialWidget::DoubleDialWidget(const QString &topic, const double &defaultValue, const QString &title) : DoubleDisplayWidget(topic, defaultValue, title) {
     m_dial = new BetterDial(this);
     m_type = WidgetTypes::DoubleDial;
 
@@ -55,16 +55,6 @@ void DoubleDialWidget::setStartingAngle(double angle) {
     m_dial->setStartingAngle(angle * M_PI / 180.);
 }
 
-QJsonObject DoubleDialWidget::saveObject() {
-    QJsonObject object = DoubleDisplayWidget::saveObject();
-
-    object.insert("min", min());
-    object.insert("max", max());
-    object.insert("startingAngle", m_startingAngle);
-
-    return object;
-}
-
 void DoubleDialWidget::setValue(const nt::Value &value) {
     if (!m_text->hasFocus()) {
         m_value = value.GetDouble();
@@ -74,24 +64,6 @@ void DoubleDialWidget::setValue(const nt::Value &value) {
 
         if (!m_dial->isDragging()) m_dial->setValue(m_fakeValue);
     }
-}
-
-BaseWidget * DoubleDialWidget::fromJson(QJsonObject obj) {
-    DoubleDialWidget *widget = new DoubleDialWidget(
-        obj.value("title").toString(""),
-        obj.value("value").toDouble(0.),
-        obj.value("topic").toString(""));
-
-    QFont font;
-    font.fromString(obj.value("textFont").toString(qApp->font().toString()));
-    widget->setFont(font);
-
-    widget->setMin(obj.value("min").toDouble(0.));
-    widget->setMax(obj.value("max").toDouble(360.));
-
-    widget->setStartingAngle(obj.value("startingAngle").toDouble(180.));
-
-    return widget;
 }
 
 void DoubleDialWidget::keyPressEvent(QKeyEvent *event) {

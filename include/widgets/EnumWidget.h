@@ -18,7 +18,7 @@ protected:
     QVariantMap m_colors{};
     Globals::FrameShape m_shape;
 public:
-    EnumWidget(const QString &title, const QString &defaultValue, const QString &topic);
+    EnumWidget(const QString &topic = "", const QString &defaultValue = "", const QString &title = "");
     ~EnumWidget();
 
     QVariantMap colors();
@@ -28,7 +28,4 @@ public:
     void setShape(Globals::FrameShape shape);
 
     void setValue(const nt::Value &value) override;
-
-    QJsonObject saveObject() override;
-    static BaseWidget * fromJson(QJsonObject obj);
 };

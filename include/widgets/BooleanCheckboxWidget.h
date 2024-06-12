@@ -17,16 +17,13 @@ protected:
 
     QCheckBox *m_checkbox;
 public:
-    BooleanCheckboxWidget(const QString &title, const bool &defaultValue, const QString &topic);
+    BooleanCheckboxWidget(const QString &topic = "", const bool &defaultValue = false, const QString &title = "");
     ~BooleanCheckboxWidget();
 
     int checkboxSize();
     void setCheckboxSize(int size);
 
     void setValue(const nt::Value &value) override;
-
-    QJsonObject saveObject() override;
-    static BaseWidget * fromJson(QJsonObject obj);
 };
 
 #endif // BOOLEANCHECKBOXWIDGET_H

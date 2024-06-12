@@ -20,7 +20,7 @@ protected:
     QColor m_falseColor = Qt::red;
     Globals::FrameShape m_shape;
 public:
-    BooleanDisplayWidget(const QString &title, const bool &defaultValue, const QString &topic);
+    BooleanDisplayWidget(const QString &topic = "", const bool &defaultValue = false, const QString &title = "");
     ~BooleanDisplayWidget();
 
     QColor trueColor();
@@ -33,7 +33,4 @@ public:
     void setShape(Globals::FrameShape shape);
 
     void setValue(const nt::Value &value) override;
-
-    QJsonObject saveObject() override;
-    static BaseWidget * fromJson(QJsonObject obj);
 };

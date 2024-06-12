@@ -1,7 +1,7 @@
 #include "widgets/EnumWidget.h"
 #include "stores/TopicStore.h"
 
-EnumWidget::EnumWidget(const QString &title, const QString &defaultValue, const QString &topic) : BaseWidget(WidgetTypes::EnumWidget, title, topic)
+EnumWidget::EnumWidget(const QString &topic, const QString &defaultValue, const QString &title) : BaseWidget(WidgetTypes::EnumWidget, title, topic)
 {
     m_value = defaultValue;
     m_colorWidget = new ShapedFrame(Globals::FrameShape::Rectangle, this);
@@ -29,39 +29,6 @@ Globals::FrameShape EnumWidget::shape() {
 void EnumWidget::setShape(Globals::FrameShape shape) {
     m_shape = shape;
     m_colorWidget->setShape(shape);
-}
-
-QJsonObject EnumWidget::saveObject() {
-    QJsonObject object = BaseWidget::saveObject();
-
-    object.insert("value", m_value);
-
-    QJsonObject colorMap{};
-    QMapIterator<QString, QVariant> iter(m_colors);
-
-    while (iter.hasNext()) {
-        iter.next();
-
-        colorMap.insert(iter.key(), iter.value().value<QColor>().name());
-    }
-
-    object.insert("colors", colorMap);
-    object.insert("shape", Globals::shapeNameMap.key(m_shape));
-
-    return object;
-}
-
-BaseWidget * EnumWidget::fromJson(QJsonObject obj) {
-    EnumWidget *widget = new EnumWidget(
-        obj.value("title").toString(""),
-        obj.value("value").toString(""),
-        obj.value("topic").toString(""));
-
-    QVariantMap variantColorMap = obj.value("colors").toObject({}).toVariantMap();
-
-    widget->setColors(variantColorMap);
-    widget->setShape(Globals::shapeNameMap.value(obj.value("shape").toString("Circle")));
-    return widget;
 }
 
 void EnumWidget::setValue(const nt::Value &value) {

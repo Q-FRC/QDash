@@ -9,8 +9,9 @@ static double FieldLength = 8.2296 * 2.;
 
 FieldImage::FieldImage(QWidget *parent) : QLabel(parent) {}
 
-void FieldImage::setValue(std::span<double> value) {
+void FieldImage::setValue(std::span<const double> value) {
     m_value = value;
+    setImage(m_image); // ensure proper scaling and whatnot
 }
 
 void FieldImage::setRobotWidth(double width) {
@@ -34,6 +35,7 @@ void FieldImage::setImage(Globals::File image) {
     m_imageHeight = scaled.height();
 
     setPixmap(QPixmap::fromImage(scaled));
+    m_image = image;
 }
 
 void FieldImage::paintEvent(QPaintEvent *event) {
@@ -76,8 +78,8 @@ void FieldImage::paintEvent(QPaintEvent *event) {
     // ;)
     QPolygonF polygon;
     polygon << robotTopLeft
-            << robotTopLeft + QPointF(robotLength, robotWidth / 2.)
-            << robotTopLeft + QPointF(0, robotWidth)
+            << robotTopLeft + QPointF(robotWidth, robotLength / 2.)
+            << robotTopLeft + QPointF(0, robotLength)
             << robotTopLeft;
 
     painter.drawPolygon(polygon);

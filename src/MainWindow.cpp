@@ -217,10 +217,9 @@ void MainWindow::loadObject(const QJsonDocument &doc) {
         for (QJsonValueRef wref : widgets) {
             QJsonObject widgetObject = wref.toObject();
 
-            auto widgetData = BaseWidget::fromJson(widgetObject, tabIdx);
-
-            BaseWidget *widget = widgetData.first;
-            WidgetData data = widgetData.second;
+            WidgetTypes type = (WidgetTypes) widgetObject.value("widgetType").toInt();
+            BaseWidget *widget = BaseWidget::defaultWidgetFromTopic("", type);
+            WidgetData data = widget->fromJson(widgetObject, tabIdx);
 
             m_widgets.insert(widget, data);
         } // widgets

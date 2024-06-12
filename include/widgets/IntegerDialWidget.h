@@ -24,7 +24,7 @@ protected:
 
     void keyPressEvent(QKeyEvent *event) override;
 public:
-    IntegerDialWidget(const QString &title, const int &defaultValue, const QString &topic);
+    IntegerDialWidget(const QString &topic = "", const int &defaultValue = 0, const QString &title = "");
     ~IntegerDialWidget();
 
     int min();
@@ -38,9 +38,6 @@ public:
     void setStartingAngle(double angle);
 
     void setValue(const nt::Value &value) override;
-
-    QJsonObject saveObject() override;
-    static BaseWidget * fromJson(QJsonObject obj);
 };
 
 #endif // IntegerDialWIDGET_H

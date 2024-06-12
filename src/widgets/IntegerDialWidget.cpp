@@ -3,7 +3,7 @@
 
 #include <QApplication>
 
-IntegerDialWidget::IntegerDialWidget(const QString &title, const int &defaultValue, const QString &topic) : IntegerDisplayWidget(title, defaultValue, topic) {
+IntegerDialWidget::IntegerDialWidget(const QString &topic, const int &defaultValue, const QString &title) : IntegerDisplayWidget(topic, defaultValue, title) {
     m_dial = new BetterDial(this);
     m_type = WidgetTypes::IntegerDial;
 
@@ -54,16 +54,6 @@ void IntegerDialWidget::setStartingAngle(double angle) {
     m_dial->setStartingAngle(angle * M_PI / 180.);
 }
 
-QJsonObject IntegerDialWidget::saveObject() {
-    QJsonObject object = IntegerDisplayWidget::saveObject();
-
-    object.insert("min", min());
-    object.insert("max", max());
-    object.insert("startingAngle", m_startingAngle);
-
-    return object;
-}
-
 void IntegerDialWidget::setValue(const nt::Value &value) {
     if (!m_text->hasFocus()) {
         m_value = value.GetInteger();
@@ -71,24 +61,6 @@ void IntegerDialWidget::setValue(const nt::Value &value) {
 
         if (!m_dial->isDragging()) m_dial->setValue(m_value);
     }
-}
-
-BaseWidget * IntegerDialWidget::fromJson(QJsonObject obj) {
-    IntegerDialWidget *widget = new IntegerDialWidget(
-        obj.value("title").toString(""),
-        obj.value("value").toInt(0),
-        obj.value("topic").toString(""));
-
-    QFont font;
-    font.fromString(obj.value("textFont").toString(qApp->font().toString()));
-    widget->setFont(font);
-
-    widget->setMin(obj.value("min").toInt(0));
-    widget->setMax(obj.value("max").toInt(1000));
-
-    widget->setStartingAngle(obj.value("startingAngle").toDouble(180.));
-
-    return widget;
 }
 
 void IntegerDialWidget::keyPressEvent(QKeyEvent *event) {

@@ -14,11 +14,8 @@ protected:
 
     void keyPressEvent(QKeyEvent *event) override;
 public:
-    DoubleDisplayWidget(const QString &title, const double &defaultValue, const QString &topic);
+    DoubleDisplayWidget(const QString &topic = "", const double &defaultValue = 0., const QString &title = "");
     ~DoubleDisplayWidget();
 
     void setValue(const nt::Value &value) override;
-
-    QJsonObject saveObject() override;
-    static BaseWidget * fromJson(QJsonObject obj);
 };

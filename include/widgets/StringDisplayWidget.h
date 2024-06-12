@@ -12,11 +12,8 @@ protected:
 
     void keyPressEvent(QKeyEvent *event) override;
 public:
-    StringDisplayWidget(const QString &title, const QString &defaultValue, const QString &topic);
+    StringDisplayWidget(const QString &topic = "", const QString &defaultValue = "", const QString &title = "");
     ~StringDisplayWidget();
 
     void setValue(const nt::Value &value) override;
-
-    QJsonObject saveObject() override;
-    static BaseWidget * fromJson(QJsonObject obj);
 };

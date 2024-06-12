@@ -2,7 +2,7 @@
 #include "Globals.h"
 #include "stores/TopicStore.h"
 
-StringChooserWidget::StringChooserWidget(const QString &title, const QString &defaultValue, const QString &topic) : BaseWidget(WidgetTypes::SendableChooser, title, topic),
+StringChooserWidget::StringChooserWidget(const QString &topic, const QString &defaultValue, const QString &title) : BaseWidget(WidgetTypes::SendableChooser, title, topic),
     m_active(TopicStore::subscribe(topic.toStdString() + "/active", this)),
     m_default(TopicStore::subscribe(topic.toStdString() + "/default", this)),
     m_choices(TopicStore::subscribe(topic.toStdString() + "/options", this)),
@@ -39,17 +39,20 @@ StringChooserWidget::~StringChooserWidget() {
     TopicStore::unsubscribe(m_selected, this);
 }
 
-QJsonObject StringChooserWidget::saveObject() {
-    QJsonObject object = BaseWidget::saveObject();
+void StringChooserWidget::setTopic(const QString &topic) {
+    BaseWidget::setTopic(topic);
 
-    return object;
-}
+    TopicStore::unsubscribe(m_active, this);
+    TopicStore::unsubscribe(m_default, this);
+    TopicStore::unsubscribe(m_choices, this);
+    TopicStore::unsubscribe(m_selected, this);
 
-BaseWidget * StringChooserWidget::fromJson(QJsonObject obj) {
-    return new StringChooserWidget(
-        obj.value("title").toString(""),
-        "",
-        obj.value("topic").toString(""));
+    m_active = TopicStore::subscribe(topic.toStdString() + "/active", this);
+    m_default = TopicStore::subscribe(topic.toStdString() + "/default", this);
+    m_choices = TopicStore::subscribe(topic.toStdString() + "/options", this);
+    m_selected = TopicStore::subscribe(topic.toStdString() + "/selected", this);
+
+    setValue(nt::Value());
 }
 
 void StringChooserWidget::setValue(const nt::Value &value) {

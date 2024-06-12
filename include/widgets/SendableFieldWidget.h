@@ -1,12 +1,13 @@
 #ifndef SENDABLEFIELDWIDGET_H
 #define SENDABLEFIELDWIDGET_H
 
-#include "widgets/BaseWidget.h"
+#include "widgets/FieldWidget.h"
 
-class SendableFieldWidget
+class SendableFieldWidget : public FieldWidget
 {
 public:
-    static BaseWidget *fromJson(QJsonObject obj);
+    SendableFieldWidget(QString topic = "") : FieldWidget(topic + "/Robot") {}
+    ~SendableFieldWidget();
 };
 
 #endif // SENDABLEFIELDWIDGET_H

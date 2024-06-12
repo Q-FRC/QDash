@@ -24,7 +24,7 @@ protected:
 
     nt::NetworkTableEntry *m_entry;
 public:
-    BaseWidget(const WidgetTypes &type, const QString &title, const QString &topic);
+    explicit BaseWidget(const WidgetTypes &type = WidgetTypes::StringDisplay, const QString &title = "", const QString &topic = "");
     ~BaseWidget();
 
     bool ready();
@@ -37,7 +37,7 @@ public:
     void setTitle(const QString &title);
 
     QString topic();
-    void setTopic(const QString &topic);
+    virtual void setTopic(const QString &topic);
 
     virtual QMenu *constructContextMenu(WidgetData data);
 
@@ -45,12 +45,34 @@ public:
 
     void paintEvent(QPaintEvent *event);
 
-    virtual QJsonObject saveObject();
+    QJsonObject saveObject();
+    WidgetData fromJson(QJsonObject obj, int tabIdx);
 
-    static std::pair<BaseWidget *, WidgetData> fromJson(QJsonObject obj, int tabIdx);
     static BaseWidget *defaultWidgetFromTopic(QString ntTopic, WidgetTypes type);
 
 signals:
     void reconfigRequested(BaseWidget *widget, WidgetData data);
     void deleteRequested();
+private:
+    QVariant readDoubleProperty(const QMetaProperty &property, const QJsonValue &value);
+    QVariant readIntProperty(const QMetaProperty &property, const QJsonValue &value);
+    QVariant readBoolProperty(const QMetaProperty &property, const QJsonValue &value);
+    QVariant readColorProperty(const QMetaProperty &property, const QJsonValue &value);
+    QVariant readMapProperty(const QMetaProperty &property, const QJsonValue &value);
+    QVariant readListProperty(const QMetaProperty &property, const QJsonValue &value);
+    QVariant readFileProperty(const QMetaProperty &property, const QJsonValue &value);
+    QVariant readFontProperty(const QMetaProperty &property, const QJsonValue &value);
+    QVariant readStringProperty(const QMetaProperty &property, const QJsonValue &value);
+    QVariant readShapeProperty(const QMetaProperty &property, const QJsonValue &value);
+
+    QJsonValue writeDoubleProperty(const QMetaProperty &property);
+    QJsonValue writeIntProperty(const QMetaProperty &property);
+    QJsonValue writeBoolProperty(const QMetaProperty &property);
+    QJsonValue writeColorProperty(const QMetaProperty &property);
+    QJsonValue writeMapProperty(const QMetaProperty &property);
+    QJsonValue writeListProperty(const QMetaProperty &property);
+    QJsonValue writeFileProperty(const QMetaProperty &property);
+    QJsonValue writeFontProperty(const QMetaProperty &property);
+    QJsonValue writeStringProperty(const QMetaProperty &property);
+    QJsonValue writeShapeProperty(const QMetaProperty &property);
 };

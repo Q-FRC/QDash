@@ -1,6 +1,6 @@
  #include "widgets/CameraViewWidget.h"
 
-CameraViewWidget::CameraViewWidget(const QString &title, const QUrl &url, const QString &) : BaseWidget(WidgetTypes::CameraView, title, "")
+CameraViewWidget::CameraViewWidget(const QString &title, const QUrl &url) : BaseWidget(WidgetTypes::CameraView, title, "")
 {
     m_videoWidget = new QVideoWidget(this);
 
@@ -23,19 +23,4 @@ QUrl CameraViewWidget::url() {
 void CameraViewWidget::setUrl(const QUrl &url) {
     m_player->setSource(url);
     m_player->play();
-}
-
-QJsonObject CameraViewWidget::saveObject() {
-    QJsonObject object = BaseWidget::saveObject();
-
-    object.insert("url", url().toString());
-
-    return object;
-}
-
-BaseWidget * CameraViewWidget::fromJson(QJsonObject obj) {
-    return new CameraViewWidget(
-        obj.value("title").toString(""),
-        QUrl(obj.value("url").toString("")),
-        "");
 }

@@ -24,13 +24,12 @@ protected:
 
     qsizetype m_flashCounter = 0;
 public:
-    StringChooserWidget(const QString &title, const QString &defaultValue, const QString &topic);
+    StringChooserWidget(const QString &topic = "", const QString &defaultValue = "", const QString &title = "");
     ~StringChooserWidget();
 
-    void setValue(const nt::Value &value) override;
+    void setTopic(const QString &topic) override;
 
-    QJsonObject saveObject() override;
-    static BaseWidget * fromJson(QJsonObject obj);
+    void setValue(const nt::Value &value) override;
 };
 
 #endif // STRINGCHOOSERWIDGET_H

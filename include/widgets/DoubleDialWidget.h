@@ -33,7 +33,7 @@ protected:
 
     void keyPressEvent(QKeyEvent *event) override;
 public:
-    DoubleDialWidget(const QString &title, const double &defaultValue, const QString &topic);
+    DoubleDialWidget(const QString &topic = "", const double &defaultValue = 0., const QString &title = "");
     ~DoubleDialWidget();
 
     double min();
@@ -47,9 +47,6 @@ public:
     void setStartingAngle(double angle);
 
     void setValue(const nt::Value &value) override;
-
-    QJsonObject saveObject() override;
-    static BaseWidget * fromJson(QJsonObject obj);
 };
 
 #endif // DOUBLEDIALWIDGET_H

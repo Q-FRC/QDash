@@ -12,7 +12,7 @@ class TextWidget : public BaseWidget
 protected:
     QLineEdit *m_text;
 public:
-    TextWidget(const WidgetTypes &type, const QString &title, const QString &defaultText, const QString &topic);
+    TextWidget(const WidgetTypes &type, const QString &topic, const QString &defaultText, const QString &title);
     ~TextWidget();
     
     QString text();
@@ -22,7 +22,4 @@ public:
     void setFont(const QFont &font);
 
     QMenu *constructContextMenu(WidgetData data) override;
-
-    virtual QJsonObject saveObject() override;
-    static BaseWidget * fromJson(QJsonObject obj);
 };
