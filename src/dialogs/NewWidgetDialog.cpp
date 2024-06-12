@@ -3,12 +3,12 @@
 
 #include <QColorDialog>
 
+// TODO: make it work first time around
 NewWidgetDialog::NewWidgetDialog(std::string ntTopic)
 {
+    m_entry = nt::GetEntry(Globals::inst, ntTopic);
     NT_Type type = nt::GetTopicType(nt::GetTopic(Globals::inst, ntTopic));
-    qDebug() << type;
-
-    qDebug() << nt::GetTopicName(nt::GetTopic(Globals::inst, ntTopic));
+    qDebug() << nt::GetTopicExists(m_entry);
 
     m_isBooleanDisplay = (type == NT_BOOLEAN);
 
@@ -27,11 +27,13 @@ NewWidgetDialog::NewWidgetDialog(std::string ntTopic)
 
         m_trueColorEdit = new QLineEdit(QColor(Qt::green).name(), m_trueColorInput);
         m_trueColorSelect = new QPushButton("Select Color...", m_trueColorInput);
-        m_trueColorAction = new QAction("Select Color...", m_trueColorSelect);
 
-        m_trueColorSelect->addAction(m_trueColorAction);
+        m_trueColorInputLayout->addWidget(m_trueColorEdit);
+        m_trueColorInputLayout->addWidget(m_trueColorSelect);
 
-        connect(m_trueColorAction, &QAction::triggered, this, [this] {
+        m_trueColorInput->setLayout(m_trueColorInputLayout);
+
+        connect(m_trueColorSelect, &QPushButton::clicked, this, [this](bool) {
             QColor color = QColorDialog::getColor(QColor::fromString(m_falseColorEdit->text()), this);
 
             m_trueColorEdit->setText(color.name());
@@ -39,18 +41,20 @@ NewWidgetDialog::NewWidgetDialog(std::string ntTopic)
 
         m_layout->addRow(m_trueColorLabel, m_trueColorInput);
 
-        m_trueColorLabel = new QLabel("True Color:", this);
+        m_falseColorLabel = new QLabel("False Color:", this);
 
         m_falseColorInput = new QWidget(this);
         m_falseColorInputLayout = new QHBoxLayout(m_falseColorInput);
 
         m_falseColorEdit = new QLineEdit(QColor(Qt::red).name(), m_falseColorInput);
         m_falseColorSelect = new QPushButton("Select Color...", m_falseColorInput);
-        m_falseColorAction = new QAction("Select Color...", m_falseColorSelect);
 
-        m_falseColorSelect->addAction(m_falseColorAction);
+        m_falseColorInputLayout->addWidget(m_falseColorEdit);
+        m_falseColorInputLayout->addWidget(m_falseColorSelect);
 
-        connect(m_falseColorAction, &QAction::triggered, this, [this] {
+        m_falseColorInput->setLayout(m_falseColorInputLayout);
+
+        connect(m_falseColorSelect, &QPushButton::clicked, this, [this](bool) {
             QColor color = QColorDialog::getColor(QColor::fromString(m_falseColorEdit->text()), this);
 
             m_falseColorEdit->setText(color.name());
@@ -102,4 +106,6 @@ NewWidgetDialog::NewWidgetDialog(std::string ntTopic)
     });
 }
 
-NewWidgetDialog::~NewWidgetDialog() {}
+NewWidgetDialog::~NewWidgetDialog() {
+    nt::ReleaseEntry(m_entry);
+}

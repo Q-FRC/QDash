@@ -16,6 +16,7 @@ class NewWidgetDialog : public QDialog
         Q_OBJECT
 private:
     QFormLayout *m_layout;
+    NT_Entry m_entry;
 
     bool m_isBooleanDisplay;
 
@@ -27,14 +28,12 @@ private:
     QHBoxLayout *m_trueColorInputLayout;
     QLineEdit *m_trueColorEdit;
     QPushButton *m_trueColorSelect;
-    QAction *m_trueColorAction;
 
     QLabel *m_falseColorLabel;
     QWidget *m_falseColorInput;
     QHBoxLayout *m_falseColorInputLayout;
     QLineEdit *m_falseColorEdit;
     QPushButton *m_falseColorSelect;
-    QAction *m_falseColorAction;
 
     QLabel *m_rowLabel;
     QSpinBox *m_rowInput;

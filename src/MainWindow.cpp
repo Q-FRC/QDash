@@ -17,7 +17,7 @@ MainWindow::MainWindow()
     // the previously set widget is destroyed.
     m_tabWidget = new TabWidget(QPoint(3, 3));
 
-    BooleanDisplayWidget *boolean = new BooleanDisplayWidget("Test", "yoooo", "cryaboutit");
+    BooleanDisplayWidget *boolean = new BooleanDisplayWidget("Test", "yoooo", "deez");
     boolean->setTrueColor(Qt::blue);
     boolean->setFalseColor(Qt::yellow);
 
