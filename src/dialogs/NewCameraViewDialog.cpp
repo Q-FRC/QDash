@@ -10,7 +10,11 @@ NewCameraViewDialog::NewCameraViewDialog() : NewWidgetDialog("")
 
     connect(m_buttonBox, &QDialogButtonBox::accepted, this, [this] {
         QString name = m_nameInput->text();
-        QList<int> data({m_rowInput->value(), m_columnInput->value(), m_rowSpanInput->value(), m_columnSpanInput->value()});
+        WidgetData data;
+        data.row = m_rowInput->value();
+        data.col = m_columnInput->value();
+        data.rowSpan = m_rowSpanInput->value();
+        data.colSpan = m_columnSpanInput->value();
 
         CameraViewWidget *widget = new CameraViewWidget(name, QUrl(m_urlEdit->text()));
 

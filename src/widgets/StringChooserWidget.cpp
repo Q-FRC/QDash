@@ -25,8 +25,7 @@ StringChooserWidget::StringChooserWidget(const QString &title, const QString &to
         m_active.SetString(text.toStdString());
     });
 
-    m_layout->addWidget(m_title, 0, 0, Qt::AlignHCenter | Qt::AlignCenter);
-    m_layout->addWidget(m_chooser, 1, 0, Qt::AlignHCenter | Qt::AlignCenter);
+    m_layout->addWidget(m_chooser, 1, 0);
 
     m_layout->setColumnStretch(0, -1);
 }

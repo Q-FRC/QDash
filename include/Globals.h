@@ -19,3 +19,11 @@ enum class TopicTypes {
 extern QStringList ntTopics;
 extern QMap<QString, TopicTypes> availableTopics;
 }
+
+typedef struct WidgetData {
+    int tabIdx;
+    int row;
+    int col;
+    int rowSpan;
+    int colSpan;
+} WidgetData;

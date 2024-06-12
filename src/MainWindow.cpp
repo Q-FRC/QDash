@@ -70,26 +70,24 @@ MainWindow::MainWindow()
             QWidget *tab = m_centralWidget->widget(index);
             m_centralWidget->removeTab(index);
             m_tabWidgets.remove(index);
-            QMapIterator<BaseWidget *, QList<int>> iterator(m_widgets);
+            QMapIterator<BaseWidget *, WidgetData> iterator(m_widgets);
 
             while (iterator.hasNext())
             {
                 iterator.next();
                 BaseWidget *widget = iterator.key();
-                QList<int> data = iterator.value();
-                if (data.at(4) == index) {
+                WidgetData data = iterator.value();
+                if (data.tabIdx == index) {
                     m_widgets.remove(widget);
-                } else if (data.at(4) > index) {
-                    QList<int> newData;
-                    newData.append(data.mid(0, 4));
-                    newData.append(data.at(4) - 1);
+                } else if (data.tabIdx > index) {
+                    data.tabIdx -= 1;
 
                     m_widgets.remove(widget);
-                    m_widgets.insert(widget, newData);
+                    m_widgets.insert(widget, data);
                 }
             }
 
-            delete tab;
+//            delete tab;
         }
     });
 
@@ -110,11 +108,14 @@ MainWindow::MainWindow()
             QListWidget *list = new QListWidget(this);
             QDialog *listDialog = new QDialog;
             QVBoxLayout *listLayout = new QVBoxLayout(listDialog);
-            QDialogButtonBox *box = new QDialogButtonBox(QDialogButtonBox::StandardButton::Ok | QDialogButtonBox::StandardButton::Cancel);
+            QDialogButtonBox *box = new QDialogButtonBox(QDialogButtonBox::StandardButton::Cancel);
+
+            connect(box, &QDialogButtonBox::rejected, listDialog, &QDialog::close);
 
             listLayout->addWidget(list);
             listLayout->addWidget(box);
 
+            // TODO: Separate this logic into a separate class.
             constructNewWidgetList(list, listDialog);
 
             listDialog->open();
@@ -148,24 +149,34 @@ MainWindow::~MainWindow() {}
 
 void MainWindow::update()
 {
-    QMapIterator<BaseWidget *, QList<int>> iterator(m_widgets);
+    QMapIterator<BaseWidget *, WidgetData> iterator(m_widgets);
 
     while (iterator.hasNext())
     {
         iterator.next();
         iterator.key()->update();
         if (m_needsRelay) {
-            QList<int> data = iterator.value();
-            TabWidget *tabWidget = m_tabWidgets.at(data.at(0));
+            WidgetData data = iterator.value();
+            TabWidget *tabWidget = m_tabWidgets.at(data.tabIdx);
 
             if (tabWidget != nullptr) {
                 tabWidget->layout()->removeWidget(iterator.key());
-                tabWidget->layout()->addWidget(iterator.key(), data[1], data[2], data[3], data[4]);
+                tabWidget->layout()->addWidget(iterator.key(), data.row, data.col, data.rowSpan, data.colSpan);
+
+                for (int i = 0; i < data.rowSpan; ++i) {
+                    tabWidget->layout()->setRowStretch(data.row + i, 1);
+                }
+
+                for (int i = 0; i < data.colSpan; ++i) {
+                    tabWidget->layout()->setColumnStretch(data.col + i, 1);
+                }
             }
         }
     } 
     
     m_needsRelay = false;
+
+    repaint();
 
     setWindowTitle("QFRCDashboard (" + Globals::server + ") - " + (Globals::inst.IsConnected() ? "" : "Not ") + "Connected");
 }
@@ -174,20 +185,22 @@ void MainWindow::setNeedsRelay(bool needsRelay) {
     m_needsRelay = needsRelay;
 }
 
-QList<int> MainWindow::getWidgetData(BaseWidget *widget) {
+WidgetData MainWindow::getWidgetData(BaseWidget *widget) {
     return m_widgets.value(widget);
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
     BaseWidget *widgetPressed = nullptr;
 
-    QMapIterator<BaseWidget *, QList<int>> iterator(m_widgets);
+    QMapIterator<BaseWidget *, WidgetData> iterator(m_widgets);
 
     while (iterator.hasNext())
     {
         iterator.next();
-        if (iterator.key()->geometry().contains(event->pos()) && iterator.value().at(0) == m_centralWidget->currentIndex()) {
-            widgetPressed = iterator.key();
+        BaseWidget *widget = iterator.key();
+        WidgetData data = iterator.value();
+        if (widget->geometry().contains(event->pos()) && data.tabIdx == m_centralWidget->currentIndex()) {
+            widgetPressed = widget;
             break;
         }
     }
@@ -203,10 +216,11 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
             ResizeDialog *dialog = new ResizeDialog(m_widgets.value(widgetPressed));
             dialog->show();
 
-            connect(dialog, &ResizeDialog::finished, this, [this, widgetPressed](QList<int> data) {
-                QList<int> finalData({m_centralWidget->currentIndex(), data[0], data[1], data[2], data[3]});
+            connect(dialog, &ResizeDialog::finished, this, [this, widgetPressed](WidgetData data) {
+                data.tabIdx = m_centralWidget->currentIndex();
+
                 m_widgets.remove(widgetPressed);
-                m_widgets.insert(widgetPressed, finalData);
+                m_widgets.insert(widgetPressed, data);
 
                 setNeedsRelay(true);
             });
@@ -217,6 +231,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
 
         connect(deleteAction, &QAction::triggered, this, [this, widgetPressed](bool) {
             m_widgets.remove(widgetPressed);
+            m_needsRelay = true;
             delete widgetPressed;
         });
 
@@ -224,9 +239,9 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     }
 }
 
-void MainWindow::newWidget(BaseWidget *widget, QList<int> data) {
-    QList<int> finalData({m_centralWidget->currentIndex(), data[0], data[1], data[2], data[3]});
-    m_widgets.insert(widget, finalData);
+void MainWindow::newWidget(BaseWidget *widget, WidgetData data) {
+    data.tabIdx = m_centralWidget->currentIndex();
+    m_widgets.insert(widget, data);
 
     m_needsRelay = true;
 }
@@ -238,6 +253,7 @@ void MainWindow::showNewWidgetDialog(NewWidgetDialog::WidgetTypes widgetType, st
     connect(dialog, &NewWidgetDialog::widgetReady, this, &MainWindow::newWidget);
 }
 
+// TODO: Separate this logic into a separate class.
 void MainWindow::constructNewWidgetList(QListWidget *list, QDialog *dialog) {
     list->clear();
     QMapIterator<QString, Globals::TopicTypes> iterator(Globals::availableTopics);

@@ -54,7 +54,12 @@ NewBooleanDisplayDialog::NewBooleanDisplayDialog(std::string ntTopic) : NewWidge
         QString name = m_nameInput->text();
         QColor trueColor = m_trueColorEdit->text();
         QColor falseColor = m_falseColorEdit->text();
-        QList<int> data({m_rowInput->value(), m_columnInput->value(), m_rowSpanInput->value(), m_columnSpanInput->value()});
+
+        WidgetData data;
+        data.row = m_rowInput->value();
+        data.col = m_columnInput->value();
+        data.rowSpan = m_rowSpanInput->value();
+        data.colSpan = m_columnSpanInput->value();
 
         BooleanDisplayWidget *widget = new BooleanDisplayWidget(name, false, QString::fromStdString(ntTopic));
         widget->setTrueColor(trueColor);

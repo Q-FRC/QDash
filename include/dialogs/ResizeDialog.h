@@ -1,7 +1,6 @@
 #pragma once
 
-#include "widgets/TabWidget.h"
-#include "widgets/BaseWidget.h"
+#include "Globals.h"
 
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -29,9 +28,9 @@ private:
 
     QDialogButtonBox *m_buttonBox;
 public:
-    ResizeDialog(QList<int> widgetData);
+    ResizeDialog(WidgetData widgetData);
     virtual ~ResizeDialog();
 
 signals:
-    void finished(QList<int> data);
+    void finished(WidgetData data);
 };

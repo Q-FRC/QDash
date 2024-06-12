@@ -10,8 +10,7 @@ CameraViewWidget::CameraViewWidget(const QString &title, const QUrl &url) : Base
 
     m_player->play();
 
-    m_layout->addWidget(m_title, 0, 0);//, Qt::AlignHCenter | Qt::AlignCenter);
-    m_layout->addWidget(m_videoWidget, 1, 0, 1, 4);//, Qt::AlignHCenter | Qt::AlignCenter);
+    m_layout->addWidget(m_videoWidget, 1, 0, 1, 4);
 }
 
 CameraViewWidget::~CameraViewWidget() {}

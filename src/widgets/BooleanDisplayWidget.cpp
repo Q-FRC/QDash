@@ -5,7 +5,6 @@ BooleanDisplayWidget::BooleanDisplayWidget(const QString &title, const bool &def
     m_value = defaultValue;
     m_colorWidget = new QFrame(this);
 
-    m_layout->addWidget(m_title, 0, 0, 1, 1, Qt::AlignHCenter | Qt::AlignCenter);
     m_layout->addWidget(m_colorWidget, 1, 0, 3, 1);
 }
 

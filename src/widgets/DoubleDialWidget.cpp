@@ -10,8 +10,8 @@ DoubleDialWidget::DoubleDialWidget(const QString &title, const double &defaultVa
 
     m_layout->removeWidget(m_text);
 
-    m_layout->addWidget(m_dial, 1, 0, 2, 1, Qt::AlignCenter);
-    m_layout->addWidget(m_text, 3, 0, Qt::AlignCenter);
+    m_layout->addWidget(m_dial, 1, 0, 2, 1);
+    m_layout->addWidget(m_text, 3, 0);
 
     connect(m_dial, &QAbstractSlider::sliderMoved, this, [this](int position) {
         m_entry.SetDouble(position / 100.);

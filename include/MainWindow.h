@@ -15,6 +15,7 @@
 #include <QListWidget>
 
 #include "dialogs/NewWidgetDialog.h"
+#include "Globals.h"
 
 class MainWindow : public QMainWindow
 {
@@ -36,7 +37,7 @@ private:
      * - rowspan
      * - colspan
     */
-    QMap<BaseWidget *, QList<int>> m_widgets;
+    QMap<BaseWidget *, WidgetData> m_widgets;
 
     bool m_needsRelay = true;
 
@@ -47,12 +48,12 @@ public:
     void update();
 
     void setNeedsRelay(bool needsRelay);
-    QList<int> getWidgetData(BaseWidget *widget);
+    WidgetData getWidgetData(BaseWidget *widget);
 
     void showNewWidgetDialog(NewWidgetDialog::WidgetTypes widgetType, std::string topic);
 
 public slots:
-    void newWidget(BaseWidget *widget, QList<int> data);
+    void newWidget(BaseWidget *widget, WidgetData data);
 
     void constructNewWidgetList(QListWidget *list, QDialog *dialog);
 };

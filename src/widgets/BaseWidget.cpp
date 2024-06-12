@@ -9,8 +9,12 @@ BaseWidget::BaseWidget(const QString &title, const QString &topic)
     m_title = new QLineEdit(title, this);
     m_entry = Globals::inst.GetEntry(topic.toStdString());
 
+    m_layout->addWidget(m_title, 0, 0);
+
     setStyleSheet("background-color: black; border: 1px solid white; color: white;");
     m_title->setStyleSheet("border: none; border-bottom: 2px solid white;");
+
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 QFont BaseWidget::titleFont()

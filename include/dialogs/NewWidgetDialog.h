@@ -2,6 +2,7 @@
 #define NEWWIDGETDIALOG_H
 #include "networktables/NetworkTableEntry.h"
 
+#include "Globals.h"
 #include "widgets/BaseWidget.h"
 
 #include <QDialog>
@@ -52,7 +53,7 @@ public:
     static NewWidgetDialog *fromWidgetType(WidgetTypes type, std::string ntTopic);
 
 signals:
-    void widgetReady(BaseWidget *widget, QList<int> data);
+    void widgetReady(BaseWidget *widget, WidgetData data);
 };
 
 #endif // NEWWIDGETDIALOG_H

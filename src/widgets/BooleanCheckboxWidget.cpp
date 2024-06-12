@@ -6,8 +6,7 @@ BooleanCheckboxWidget::BooleanCheckboxWidget(const QString &title, const bool &d
 
     m_checkbox = new QCheckBox(this);
 
-    m_layout->addWidget(m_title, 0, 0, Qt::AlignHCenter | Qt::AlignCenter);
-    m_layout->addWidget(m_checkbox, 1, 0, Qt::AlignHCenter | Qt::AlignCenter);
+    m_layout->addWidget(m_checkbox, 1, 0);
 
     connect(m_checkbox, &QCheckBox::stateChanged, this, [this](int state) {
         m_entry.SetBoolean(state == Qt::Checked);

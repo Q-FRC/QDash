@@ -18,7 +18,11 @@ NewDoubleDialDialog::NewDoubleDialDialog(std::string ntTopic) : NewWidgetDialog(
 
     connect(m_buttonBox, &QDialogButtonBox::accepted, this, [this, ntTopic] {
         QString name = m_nameInput->text();
-        QList<int> data({m_rowInput->value(), m_columnInput->value(), m_rowSpanInput->value(), m_columnSpanInput->value()});
+        WidgetData data;
+        data.row = m_rowInput->value();
+        data.col = m_columnInput->value();
+        data.rowSpan = m_rowSpanInput->value();
+        data.colSpan = m_columnSpanInput->value();
 
         DoubleDialWidget *widget = new DoubleDialWidget(name, 0., QString::fromStdString(ntTopic));
         widget->setRange(m_minInput->value(), m_maxInput->value());
