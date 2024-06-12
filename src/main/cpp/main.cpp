@@ -39,7 +39,9 @@ int main(int argc, char **argv) {
     QTimer *networkTimer = new QTimer(window);
     QWidget::connect(networkTimer, &QTimer::timeout, eventData, [eventData] {
         eventData->updateRankingData();
-        eventData->updateEventData();
+        eventData->updateLastMatchData();
+        eventData->updateCurrentMatchData();
+        eventData->updateNextMatchData();
     });
     networkTimer->start(4000);
 

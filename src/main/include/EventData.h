@@ -21,10 +21,11 @@ inline void swap(QJsonValueRef v1, QJsonValueRef v2)
 class EventData : public QWidget
 {
 private:
-    QLabel *redLabel(int row, int column);
-    QLabel *blueLabel(int row, int column);
+    QLabel *redLabel(QGridLayout *layout, int row, int column);
+    QLabel *blueLabel(QGridLayout *layout, int row, int column);
 
-    const QJsonArray sortedMatches(QJsonArray matches);
+    const QJsonArray sortMatches(QJsonArray matches);
+    int lastPlayedMatchIndex(const QJsonArray &matches);
     void setTeamNumbers(const QJsonValue match, QList<QLabel *> redTeamLabels, QList<QLabel *> blueTeamLabels);
     void setMatchScore(const QJsonValue match, QLabel *redScoreLabel, QLabel *blueScoreLabel);
 
@@ -34,11 +35,13 @@ private:
 
     QLabel *m_teamNumberLabel;
 
+    // RANK
     QVBoxLayout *m_rankLayout;
     QLabel *m_rankNumberLabel;
     QLabel *m_rankScoreLabel;
     QLabel *m_recordLabel;
 
+    // LAST MATCH
     QGridLayout *m_lastMatchLayout;
     QLabel *m_lastMatchCode;
 
@@ -53,9 +56,39 @@ private:
     QLabel *m_lastBlue2Team;
     QLabel *m_lastBlue3Team;
     QLabel *m_lastBlueScore;
+
+    // CURRENT MATCH
+    QGridLayout *m_currentMatchLayout;
+    QLabel *m_currentMatchCode;
+
+    QList<QLabel *> m_currentRedTeams;
+    QLabel *m_currentRed1Team;
+    QLabel *m_currentRed2Team;
+    QLabel *m_currentRed3Team;
+
+    QList<QLabel *> m_currentBlueTeams;
+    QLabel *m_currentBlue1Team;
+    QLabel *m_currentBlue2Team;
+    QLabel *m_currentBlue3Team;
+
+    // NEXT MATCH
+    QGridLayout *m_nextMatchLayout;
+    QLabel *m_nextMatchCode;
+
+    QList<QLabel *> m_nextRedTeams;
+    QLabel *m_nextRed1Team;
+    QLabel *m_nextRed2Team;
+    QLabel *m_nextRed3Team;
+
+    QList<QLabel *> m_nextBlueTeams;
+    QLabel *m_nextBlue1Team;
+    QLabel *m_nextBlue2Team;
+    QLabel *m_nextBlue3Team;
 public:
     EventData();
 
     void updateRankingData();
-    void updateEventData();
+    void updateLastMatchData();
+    void updateCurrentMatchData();
+    void updateNextMatchData();
 };

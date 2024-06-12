@@ -42,7 +42,7 @@ PitChecklist::PitChecklist() {
 
     m_mechanicalLayout->addRow(m_mechanicalLabel);
 
-    for (size_t i = 0; i < mechanicalCheckList.size(); ++i) {
+    for (qsizetype i = 0; i < mechanicalCheckList.size(); ++i) {
         QCheckBox *box = new QCheckBox(mechanicalCheckList[i], m_mechanicalWidget);
 
         box->setCheckable(true);
@@ -65,7 +65,7 @@ PitChecklist::PitChecklist() {
 
     m_electricalLayout->addRow(m_electricalLabel);
 
-    for (size_t i = 0; i < electricalCheckList.size(); ++i) {
+    for (qsizetype i = 0; i < electricalCheckList.size(); ++i) {
         QCheckBox *box = new QCheckBox(electricalCheckList[i], m_electricalWidget);
         box->setCheckable(true);
 
@@ -87,7 +87,7 @@ PitChecklist::PitChecklist() {
 
     m_controlsLayout->addRow(m_controlsLabel);
 
-    for (size_t i = 0; i < controlsCheckList.size(); ++i) {
+    for (qsizetype i = 0; i < controlsCheckList.size(); ++i) {
         QCheckBox *box = new QCheckBox(controlsCheckList[i], m_controlsWidget);
         box->setCheckable(true);
 

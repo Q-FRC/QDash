@@ -41,41 +41,56 @@ void setFontColor(QLabel *label, QString color)
 }
 
 // Gets a QLabel for a red team/score and adds it to the match layout at the specified position.
-QLabel *EventData::redLabel(int row, int column)
+QLabel *EventData::redLabel(QGridLayout *layout, int row, int column)
 {
     QLabel *label = new QLabel("180", this);
     label->setStyleSheet("background-color: #FFEEEE;\n"
                          "border: 1px solid gray;\n"
                          "color: #222020;");
-    setFontSize(label, 20);
+    setFontSize(label, 28);
 
-    m_lastMatchLayout->addWidget(label, row, column);
+    layout->addWidget(label, row, column);
     return label;
 }
 
 // Gets a QLabel for a blue team/score and adds it to the match layout at the specified position.
-QLabel *EventData::blueLabel(int row, int column)
+QLabel *EventData::blueLabel(QGridLayout *layout, int row, int column)
 {
     QLabel *label = new QLabel("180", this);
     label->setStyleSheet("background-color: #EEEEFF;\n"
                          "border: 1px solid gray;\n"
                          "color: #222020;");
-    setFontSize(label, 20);
+    setFontSize(label, 28);
 
-    m_lastMatchLayout->addWidget(label, row, column);
+    layout->addWidget(label, row, column);
     return label;
 }
 
 // Sort matches by time, earliest first.
-const QJsonArray EventData::sortedMatches(QJsonArray matches)
+const QJsonArray EventData::sortMatches(QJsonArray matches)
 {
-
     std::sort(matches.begin(), matches.end(), [](const QJsonValue &value1, const QJsonValue &value2)
-              {
-                  return value1["time"].toInteger() < value2["time"].toInteger();
-              });
+              { return value1["time"].toInteger() < value2["time"].toInteger(); });
 
     return matches;
+}
+
+// Get the index of the last played match. Matches list MUST be sorted.
+int EventData::lastPlayedMatchIndex(const QJsonArray &matches)
+{
+    // Get the last played match.
+    // Search backwards until a match has an actual score, not -1 or null,
+    // indicating that it's been played.
+    for (qsizetype i = matches.size() - 1; i > 0; --i)
+    {
+        QJsonValue score = matches[i]["alliances"]["red"]["score"];
+
+        if (!score.isNull() && score.toInteger() != -1 && !score.isUndefined())
+        {
+            return i;
+        }
+    }
+    return 0;
 }
 
 // Set the specified list of labels to use the team numbers for a match.
@@ -197,27 +212,77 @@ EventData::EventData()
     m_lastMatchLayout->setSpacing(0);
 
     // Code
-    m_lastMatchCode = new QLabel("Last Match: qm48", this);
-    setFontSize(m_lastMatchCode, 40);
+    m_lastMatchCode = new QLabel("Last Match:\nqm48", this);
+    setFontSize(m_lastMatchCode, 35);
     m_lastMatchLayout->addWidget(m_lastMatchCode, 0, 0, 1, 4, Qt::AlignCenter);
 
     // Red Teams
-    m_lastRed1Team = redLabel(1, 0);
-    m_lastRed2Team = redLabel(1, 1);
-    m_lastRed3Team = redLabel(1, 2);
-    m_lastRedScore = redLabel(1, 3);
+    m_lastRed1Team = redLabel(m_lastMatchLayout, 1, 0);
+    m_lastRed2Team = redLabel(m_lastMatchLayout, 1, 1);
+    m_lastRed3Team = redLabel(m_lastMatchLayout, 1, 2);
+    m_lastRedScore = redLabel(m_lastMatchLayout, 1, 3);
 
     m_lastRedTeams = QList{m_lastRed1Team, m_lastRed2Team, m_lastRed3Team};
 
     // Blue Teams
-    m_lastBlue1Team = blueLabel(2, 0);
-    m_lastBlue2Team = blueLabel(2, 1);
-    m_lastBlue3Team = blueLabel(2, 2);
-    m_lastBlueScore = blueLabel(2, 3);
+    m_lastBlue1Team = blueLabel(m_lastMatchLayout, 2, 0);
+    m_lastBlue2Team = blueLabel(m_lastMatchLayout, 2, 1);
+    m_lastBlue3Team = blueLabel(m_lastMatchLayout, 2, 2);
+    m_lastBlueScore = blueLabel(m_lastMatchLayout, 2, 3);
 
     m_lastBlueTeams = QList{m_lastBlue1Team, m_lastBlue2Team, m_lastBlue3Team};
 
     m_layout->addLayout(m_lastMatchLayout, 1, 1, Qt::AlignCenter | Qt::AlignTop);
+
+    // CURRENT MATCH
+    m_currentMatchLayout = new QGridLayout;
+    m_currentMatchLayout->setSpacing(0);
+
+    // Code
+    m_currentMatchCode = new QLabel("Match On Field:\nqm59", this);
+    setFontSize(m_currentMatchCode, 35);
+    m_currentMatchLayout->addWidget(m_currentMatchCode, 0, 0, 1, 3, Qt::AlignCenter);
+
+    // Red Teams
+    m_currentRed1Team = redLabel(m_currentMatchLayout, 1, 0);
+    m_currentRed2Team = redLabel(m_currentMatchLayout, 1, 1);
+    m_currentRed3Team = redLabel(m_currentMatchLayout, 1, 2);
+
+    m_currentRedTeams = QList{m_currentRed1Team, m_currentRed2Team, m_currentRed3Team};
+
+    // Blue Teams
+    m_currentBlue1Team = blueLabel(m_currentMatchLayout, 2, 0);
+    m_currentBlue2Team = blueLabel(m_currentMatchLayout, 2, 1);
+    m_currentBlue3Team = blueLabel(m_currentMatchLayout, 2, 2);
+
+    m_currentBlueTeams = QList{m_currentBlue1Team, m_currentBlue2Team, m_currentBlue3Team};
+
+    m_layout->addLayout(m_currentMatchLayout, 2, 0, Qt::AlignCenter | Qt::AlignTop);
+
+    // NEXT MATCH
+    m_nextMatchLayout = new QGridLayout;
+    m_nextMatchLayout->setSpacing(0);
+
+    // Code
+    m_nextMatchCode = new QLabel("Next Match:\nqm59", this);
+    setFontSize(m_nextMatchCode, 35);
+    m_nextMatchLayout->addWidget(m_nextMatchCode, 0, 0, 1, 3, Qt::AlignCenter);
+
+    // Red Teams
+    m_nextRed1Team = redLabel(m_nextMatchLayout, 1, 0);
+    m_nextRed2Team = redLabel(m_nextMatchLayout, 1, 1);
+    m_nextRed3Team = redLabel(m_nextMatchLayout, 1, 2);
+
+    m_nextRedTeams = QList{m_nextRed1Team, m_nextRed2Team, m_nextRed3Team};
+
+    // Blue Teams
+    m_nextBlue1Team = blueLabel(m_nextMatchLayout, 2, 0);
+    m_nextBlue2Team = blueLabel(m_nextMatchLayout, 2, 1);
+    m_nextBlue3Team = blueLabel(m_nextMatchLayout, 2, 2);
+
+    m_nextBlueTeams = QList{m_nextBlue1Team, m_nextBlue2Team, m_nextBlue3Team};
+
+    m_layout->addLayout(m_nextMatchLayout, 2, 1, Qt::AlignCenter | Qt::AlignTop);
 }
 
 void EventData::updateRankingData()
@@ -250,7 +315,7 @@ void EventData::updateRankingData()
             { qDebug() << reply->error(); });
 }
 
-void EventData::updateEventData()
+void EventData::updateLastMatchData()
 {
     QNetworkRequest request;
     request.setUrl(QUrl("https://thebluealliance.com/api/v3/team/" + Constants::TEAM_NUMBER + "/event/" + Constants::EVENT_CODE + "/matches/simple"));
@@ -263,19 +328,79 @@ void EventData::updateEventData()
                 const QByteArray data = reply->read(reply->bytesAvailable());
 
                 const QJsonDocument json = QJsonDocument::fromJson(data);
-                const QJsonArray jsonArray = json.array();
+                const QJsonArray matches = sortMatches(json.array());
 
-                // const QJsonValue match = latestMatch(jsonArray);
-                const QJsonValue match = sortedMatches(jsonArray)[jsonArray.size() - 1];
+                const QJsonValue match = matches[lastPlayedMatchIndex(matches)];
 
                 // Match Code
                 const QString matchKey = match["key"].toString();
 
-                m_lastMatchCode->setText("Last Match: " + matchKey);
+                m_lastMatchCode->setText("Last Match:\n" + matchKey);
 
                 // Set team numbers
                 setTeamNumbers(match, m_lastRedTeams, m_lastBlueTeams);
                 setMatchScore(match, m_lastRedScore, m_lastBlueScore); });
+
+    connect(reply, &QNetworkReply::errorOccurred, this, [=]
+            { qDebug() << reply->error(); });
+}
+
+void EventData::updateCurrentMatchData()
+{
+    QNetworkRequest request;
+    request.setUrl(QUrl("https://thebluealliance.com/api/v3/event/" + Constants::EVENT_CODE + "/matches/simple"));
+    request.setRawHeader("X-TBA-Auth-Key", Constants::AUTH_KEY);
+
+    QNetworkReply *reply = m_manager->get(request);
+
+    connect(reply, &QNetworkReply::readyRead, this, [this, reply]
+            {
+                const QByteArray data = reply->read(reply->bytesAvailable());
+
+                const QJsonDocument json = QJsonDocument::fromJson(data);
+                const QJsonArray matches = sortMatches(json.array());
+
+                const QJsonValue match = matches[lastPlayedMatchIndex(matches)];
+
+                // Match Code
+                const QString matchKey = match["key"].toString();
+
+                m_currentMatchCode->setText("Match On Field:\n" + matchKey);
+
+                // Set team numbers
+                setTeamNumbers(match, m_currentRedTeams, m_currentBlueTeams); });
+
+    connect(reply, &QNetworkReply::errorOccurred, this, [=]
+            { qDebug() << reply->error(); });
+}
+
+void EventData::updateNextMatchData()
+{
+    QNetworkRequest request;
+    request.setUrl(QUrl("https://thebluealliance.com/api/v3/team/" + Constants::TEAM_NUMBER + "/event/" + Constants::EVENT_CODE + "/matches/simple"));
+    request.setRawHeader("X-TBA-Auth-Key", Constants::AUTH_KEY);
+
+    QNetworkReply *reply = m_manager->get(request);
+
+    connect(reply, &QNetworkReply::readyRead, this, [this, reply]
+            {
+                const QByteArray data = reply->read(reply->bytesAvailable());
+
+                const QJsonDocument json = QJsonDocument::fromJson(data);
+                const QJsonArray matches = sortMatches(json.array());
+
+                int index = lastPlayedMatchIndex(matches);
+                index = matches.size() > index ? index : index + 1;
+
+                const QJsonValue match = matches[index];
+
+                // Match Code
+                const QString matchKey = match["key"].toString();
+
+                m_nextMatchCode->setText("Next Match:\n" + matchKey);
+
+                // Set team numbers
+                setTeamNumbers(match, m_nextRedTeams, m_nextBlueTeams); });
 
     connect(reply, &QNetworkReply::errorOccurred, this, [=]
             { qDebug() << reply->error(); });
