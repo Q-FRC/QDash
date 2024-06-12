@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "dialogs/ResizeDialog.h"
 #include "dialogs/NewWidgetDialog.h"
+#include "dialogs/NewCameraViewDialog.h"
 
 #include "ntcore/networktables/NetworkTableInstance.h"
 
@@ -121,6 +122,24 @@ MainWindow::MainWindow()
     });
 
     m_menubar->addAction(newWidgetAction);
+
+    QAction *cameraAction = new QAction("New &Camera View");
+
+    connect(cameraAction, &QAction::triggered, this, [this, newTab](bool) {
+        if (m_tabWidgets.length() == 0) {
+            QMessageBox::StandardButton warning = QMessageBox::warning(this, "Cannot Add Widget", "You must select a tab before adding a widget.\nWould you like to add a tab now?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+            if (warning == QMessageBox::StandardButton::Yes) {
+                newTab->trigger();
+            }
+        } else {
+            NewCameraViewDialog *dialog = new NewCameraViewDialog;
+            dialog->open();
+
+            connect(dialog, &NewWidgetDialog::widgetReady, this, &MainWindow::newWidget);
+        }
+    });
+
+    m_menubar->addAction(cameraAction);
 
     update();
 }

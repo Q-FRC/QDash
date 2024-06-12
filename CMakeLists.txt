@@ -9,8 +9,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets MultimediaWidgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets MultimediaWidgets)
 find_package(wpilib REQUIRED)
 
 set(PROJECT_SOURCES
@@ -27,6 +27,7 @@ set(PROJECT_SOURCES
         src/widgets/BooleanCheckboxWidget.cpp
         src/widgets/DoubleDialWidget.cpp
         src/widgets/StringChooserWidget.cpp
+        src/widgets/CameraViewWidget.cpp
 
         src/dialogs/ResizeDialog.cpp
         src/dialogs/NewWidgetDialog.cpp
@@ -36,6 +37,7 @@ set(PROJECT_SOURCES
         src/dialogs/NewBooleanDisplayDialog.cpp
         src/dialogs/NewDoubleDialDialog.cpp
         src/dialogs/NewStringChooserDialog.cpp
+        src/dialogs/NewCameraViewDialog.cpp
 
         # =======================================
 
@@ -51,6 +53,7 @@ set(PROJECT_SOURCES
         include/widgets/BooleanCheckboxWidget.h
         include/widgets/DoubleDialWidget.h
         include/widgets/StringChooserWidget.h
+        include/widgets/CameraViewWidget.h
 
         include/dialogs/ResizeDialog.h
         include/dialogs/NewWidgetDialog.h
@@ -60,6 +63,7 @@ set(PROJECT_SOURCES
         include/dialogs/NewBooleanDisplayDialog.h
         include/dialogs/NewDoubleDialDialog.h
         include/dialogs/NewStringChooserDialog.h
+        include/dialogs/NewCameraViewDialog.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -69,7 +73,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     )
 endif()
 
-target_link_libraries(QFRCDashboard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ntcore)
+target_link_libraries(QFRCDashboard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::MultimediaWidgets ntcore)
 
 target_include_directories(QFRCDashboard PRIVATE include/)
 
