@@ -4,6 +4,7 @@
 #include "dialogs/NewStringDisplayDialog.h"
 #include "dialogs/NewDoubleDisplayDialog.h"
 #include "dialogs/NewDoubleDialDialog.h"
+#include "dialogs/NewStringChooserDialog.h"
 
 #include "Globals.h"
 
@@ -73,6 +74,10 @@ NewWidgetDialog *NewWidgetDialog::fromWidgetType(NewWidgetDialog::WidgetTypes ty
     }
     case WidgetTypes::DoubleDial: {
         return new NewDoubleDialDialog(ntTopic);
+        break;
+    }
+    case WidgetTypes::SendableChooser: {
+        return new NewStringChooserDialog(ntTopic);
         break;
     }
     case WidgetTypes::StringDisplay:

@@ -45,7 +45,8 @@ public:
         BooleanDisplay,
         StringDisplay,
         DoubleDisplay,
-        DoubleDial
+        DoubleDial,
+        SendableChooser
     };
 
     static NewWidgetDialog *fromWidgetType(WidgetTypes type, std::string ntTopic);

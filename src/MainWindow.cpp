@@ -76,6 +76,7 @@ MainWindow::MainWindow()
     m_menubar->addMenu(tabMenu);
 
     QMenu *newWidgetMenu = new QMenu("&New Widget");
+    newWidgetMenu->setStyleSheet("QMenu { menu-scrollable: 1; }");
     connect(newWidgetMenu, &QMenu::aboutToShow, this, [this, newWidgetMenu, newTab] {
         if (m_tabWidgets.length() == 0) {
             QMessageBox::StandardButton warning = QMessageBox::warning(this, "Cannot Add Widget", "You must select a tab before adding a widget.\nWould you like to add a tab now?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
@@ -180,12 +181,16 @@ void MainWindow::showNewWidgetDialog(NewWidgetDialog::WidgetTypes widgetType, st
 
 void MainWindow::constructNewWidgetMenu(QMenu *menu) {
     menu->clear();
-    for (int i = 0; i < Globals::availableTopics.length(); ++i) {
-        QString topicName = Globals::availableTopics.at(i);
-        nt::NetworkTableType topicType = Globals::inst.GetTopic(topicName.toStdString()).GetType();
+    QMapIterator<QString, Globals::TopicTypes> iterator(Globals::availableTopics);
+
+    while (iterator.hasNext())
+    {
+        iterator.next();
+        QString topicName = iterator.key();
+        Globals::TopicTypes topicType = iterator.value();
 
         switch(topicType) {
-        case nt::NetworkTableType::kBoolean: {
+        case Globals::TopicTypes::Boolean: {
             QMenu *boolMenu = new QMenu(topicName, menu);
 
             QAction *checkboxAction = new QAction("Checkbox", this);
@@ -205,7 +210,7 @@ void MainWindow::constructNewWidgetMenu(QMenu *menu) {
             menu->addMenu(boolMenu);
             break;
         }
-        case nt::NetworkTableType::kDouble: {
+        case Globals::TopicTypes::Double: {
             QMenu *doubleMenu = new QMenu(topicName, menu);
 
             QAction *displayAction = new QAction("Number Display", this);
@@ -225,7 +230,16 @@ void MainWindow::constructNewWidgetMenu(QMenu *menu) {
             menu->addMenu(doubleMenu);
             break;
         }
-        case nt::NetworkTableType::kString:
+        case Globals::TopicTypes::SendableChooser: {
+            QAction *chooserAction = new QAction(topicName, this);
+            menu->addAction(chooserAction);
+
+            connect(chooserAction, &QAction::triggered, this, [this, topicName](bool) {
+                showNewWidgetDialog(NewWidgetDialog::WidgetTypes::SendableChooser, topicName.toStdString());
+            });
+            break;
+        }
+        case Globals::TopicTypes::String:
         default: {
             QAction *stringAction = new QAction(topicName, this);
             menu->addAction(stringAction);
