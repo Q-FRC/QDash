@@ -39,17 +39,15 @@ Windows, Linux, and macOS builds are available via GitHub Actions. Currently, al
 
 [![Release](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_release.yml/badge.svg)](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_release.yml)
 
-NOTE: Windows Release builds require the Visual C++ runtime to be installed. For convenience, an executable has been included to install the runtime in the portable build.
-
 Development/debug builds are also available on a per-commit basis. These builds are generally unstable, have far larger executable sizes, and will perform slower, but are useful for users who wish to have the latest features or for developers who want to contribute and test.
 
 [![Debug](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_builds.yml/badge.svg)](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_builds.yml)
 
 ## Forking
-Follow the [GPL3](LICENSE) of this project, credit the original project, and make it clear that your application is not QFRCDashboard itself. Cool? Cool.
+Follow the [GPL3](LICENSE) of this project, credit the original project, and make it clear that your application is not QFRCDashboard itself.
 
 ## Contributing
-Code is code. Write code. I accept the code. Thumbs up, handshake, wahoo
+Write code.
 
 ## Building
 This project uses CMake. Additionally, you must initialize git submodules first.
