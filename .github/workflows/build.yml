@@ -19,18 +19,21 @@ jobs:
 
           - os: ubuntu-20.04
             qt_host: linux
-            qt_version: '6.6.0'
+            qt_version: '6.8.0'
             qt_modules: 'qtmultimedia qtcharts qtwaylandcompositor'
+            qt_arch: 'linux_gcc_64'
 
           - os: windows-2022
             qt_host: windows
-            qt_version: '6.6.0'
+            qt_version: '6.8.0'
             qt_modules: 'qtmultimedia qtcharts'
+            qt_arch: 'win64_msvc2022_64'
 
-          - os: macOS-12
+          - os: macos-latest
             qt_host: mac
-            qt_version: '6.6.0'
+            qt_version: '6.7.2'
             qt_modules: 'qtmultimedia qtcharts'
+            qt_arch: 'clang_64'
 
     runs-on: ${{ matrix.os }}
 
@@ -69,16 +72,18 @@ jobs:
     - uses: ilammy/msvc-dev-cmd@v1
       if: runner.os == 'Windows'
 
-    - uses: repolevedavaj/install-nsis@v1.0.1
+    - uses: repolevedavaj/install-nsis@v1.0.2
       if: runner.os == 'Windows'
       with:
-        nsis-version: 3.08
+        nsis-version: 3.09
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v3.3.0
       with:
-        version: 6.6.0
+        version: ${{ matrix.qt_version }}
         modules: ${{ matrix.qt_modules }}
+        arch: ${{ matrix.qt_arch }}
+        aqtversion: ==3.1.*
         cache: true
 
     - name: Set up Python 3.8 (macOS)
@@ -121,14 +126,6 @@ jobs:
       run: |
         cmake --build ${{ env.BUILD_DIR }} --parallel $(nproc) --config ${{ inputs.build_type }}
 
-    - name: Test
-      if: inputs.build_type == 'Debug'
-      working-directory: ${{ env.BUILD_DIR }}/tests
-      shell: bash
-      run: |
-        export QT_QPA_PLATFORM=minimal
-        ctest --build-config ${{ inputs.build_type }} --verbose
-
     - name: Package (Linux)
       if: runner.os == 'Linux'
       run: |
@@ -147,12 +144,13 @@ jobs:
         cmake --install ${{ env.BUILD_DIR }} --prefix ${{ env.INSTALL_APPIMAGE_DIR }}/usr
 
         export OUTPUT="QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}-x86_64.AppImage"
+        export QML_SOURCES_PATHS="${{ runner.workspace }}/Qt/${{ matrix.qt_version }}/gcc_64/qml:${{ github.workspace }}"
 
         chmod +x linuxdeploy-*.AppImage
 
-        mkdir -p ${{ env.INSTALL_APPIMAGE_DIR }}/usr/plugins/iconengines
+        mkdir -p ${{ env.INSTALL_APPIMAGE_DIR }}/usr/plugins/
 
-        cp -r /home/runner/work/QFRCDashboard/Qt/${{ matrix.qt_version }}/gcc_64/plugins/iconengines/* ${{ env.INSTALL_APPIMAGE_DIR }}/usr/plugins/iconengines
+        cp -r ${{ runner.workspace }}/Qt/${{ matrix.qt_version }}/gcc_64/plugins/ ${{ env.INSTALL_APPIMAGE_DIR }}/usr/
 
         cp /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1 ${{ env.INSTALL_APPIMAGE_DIR }}/usr/lib/
         cp /usr/lib/x86_64-linux-gnu/libssl.so.1.1 ${{ env.INSTALL_APPIMAGE_DIR }}/usr/lib/
@@ -162,16 +160,18 @@ jobs:
     - name: Package (macOS)
       if: runner.os == 'macOS'
       run: |
-        export PATH="$PATH;${{ runner.workspace }}/Qt/6.6.0/*/bin"
+        export PATH="$PATH;${{ runner.workspace }}/Qt/${{ matrix.qt_version }}/*/bin"
+        export QML_DIR_PATH="${{ github.workspace }}"
+        export QML_SOURCES_PATHS="${{ runner.workspace }}/Qt/${{ matrix.qt_version }}/macos/qml"
 
         cd ${{ env.BUILD_DIR }}
-        macdeployqt QFRCDashboard.app
+        macdeployqt Dashboard.app -qmldir=$QML_DIR_PATH -qmlimport=$QML_SOURCES_PATHS
         ls
 
-        sudo codesign --sign - --deep --force --entitlements ../program_info/App.entitlements --options runtime QFRCDashboard.app/Contents/MacOS/QFRCDashboard
-        chmod a+x QFRCDashboard.app/Contents/MacOS/QFRCDashboard
-        cp ../program_info/QFRCDashboard.icns QFRCDashboard.app/Contents/Resources
-        tar czf ../QFRCDashboard.tar.gz QFRCDashboard.app
+        sudo codesign --sign - --deep --force --entitlements ../program_info/App.entitlements --options runtime Dashboard.app/Contents/MacOS/Dashboard
+        chmod a+x Dashboard.app/Contents/MacOS/Dashboard
+        cp ../program_info/QFRCDashboard.icns Dashboard.app/Contents/Resources
+        tar czf ../QFRCDashboard.tar.gz Dashboard.app
 
     - name: Package (Windows, Portable)
       if: runner.os == 'Windows'
@@ -181,10 +181,11 @@ jobs:
         cmake --install ${{ env.BUILD_DIR }}\_deps\protobuf-build --prefix ${{ env.PROTOBUF_INSTALL_DIR }}
 
         mkdir ${{ env.INSTALL_DIR }}
-        set PATH=%PATH%;"${{ runner.workspace }}\Qt\6.6.0\msvc2019_64\bin"
+        set PATH=%PATH%;"${{ runner.workspace }}\Qt\${{ matrix.qt_version }}\${{ matrix.qt_arch }}\bin"
 
-        windeployqt ${{ env.BUILD_DIR }}\QFRCDashboard.exe --dir ${{ env.INSTALL_DIR }}
-        cp ${{ env.BUILD_DIR }}\QFRCDashboard.exe ${{ env.INSTALL_DIR }}
+        windeployqt ${{ env.BUILD_DIR }}\Dashboard.exe --dir ${{ env.INSTALL_DIR }} --qmldir ${{ github.workspace }} --qmlimport %QML2_IMPORT_PATH%
+        cp ${{ env.BUILD_DIR }}\Dashboard.exe ${{ env.INSTALL_DIR }}
+        cp -r ${{ runner.workspace }}\Qt\${{ matrix.qt_version }}\msvc2022_64\qml ${{ env.INSTALL_DIR }}
 
         if "${{ inputs.build_type }}" == "Debug" (
           cp C:\Windows\System32\ucrtbased.dll ${{ env.INSTALL_DIR }}
@@ -242,4 +243,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: QFRCDashboard-${{ runner.os }}-Setup-${{ env.VERSION }}-${{ inputs.build_type }}
-        path: QFRCDashboard-Setup.exe
+        path: Dashboard-Setup.exe

@@ -1,30 +1,19 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.16)
 
-project(QFRCDashboard VERSION 1.0.0 LANGUAGES CXX)
+set(Dashboard_APP_NAME QFRCDashboard)
+set(Dashboard_EXEC_NAME Dashboard)
+set(Dashboard_ORG_NAME "Q-FRC")
+set(Dashboard_GIT_REPO https://github.com/${Dashboard_ORG_NAME}/${Dashboard_EXEC_NAME})
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS "lib/ui/")
+project(QFRCDashboard VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(Qt6 6.7 REQUIRED COMPONENTS Quick Multimedia)
+add_subdirectory(3rd_party EXCLUDE_FROM_ALL)
 
-option(WITH_TESTS "Build tests" ON)
-
-set(QTCOMPONENTS Widgets MultimediaWidgets Charts)
-
-if(WITH_TESTS)
-    set(QTCOMPONENTS ${QTCOMPONENTS} Test)
-endif()
-
-find_package(QT NAMES Qt6 REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS ${QTCOMPONENTS})
-
-set(Dashboard_ORG_NAME "binex-dsk")
-set(Dashboard_APP_NAME "QFRCDashboard")
-set(Dashboard_GIT_REPO "https://github.com/binex-dsk/QFRCDashboard")
+qt_standard_project_setup(REQUIRES 6.7)
 
 if(WIN32)
     set(RCS_FILE ${CMAKE_CURRENT_BINARY_DIR}/program_info/${Dashboard_APP_NAME}.rc)
@@ -61,69 +50,129 @@ string(TIMESTAMP TODAY "%Y-%m-%d")
 set(Dashboard_BUILD_TIMESTAMP "${TODAY}")
 
 add_subdirectory("program_info")
-add_subdirectory(lib)
 find_package(ntcore)
 find_package(Protobuf)
 
-set(QAPPLICATION_CLASS QApplication)
-add_subdirectory("SingleApplication")
+set(QRC_FILES fields.qrc)
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(QFRCDashboard
-        MANUAL_FINALIZATION
-        main.cpp
-        ${RCS_FILE}
-        lib/fields.qrc
-        lib/theme/qrc/breeze.qrc
-        lib/icons.qrc
-    )
-endif()
+qt_add_executable(${Dashboard_EXEC_NAME}
+    main.cpp
+    ${QRC_FILES}
+)
 
-target_link_libraries(QFRCDashboard PRIVATE QFRCDashboardLib SingleApplication::SingleApplication Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::MultimediaWidgets Qt${QT_VERSION_MAJOR}::Charts ntcore BuildConfig)
+set_source_files_properties(Constants.qml
+    PROPERTIES
+    QT_QML_SINGLETON_TYPE true
+)
 
-target_include_directories(QFRCDashboard PRIVATE "$<TARGET_PROPERTY:ntcore,INTERFACE_INCLUDE_DIRECTORIES>")
-target_include_directories(QFRCDashboard PRIVATE lib/ui/)
-target_include_directories(QFRCDashboard PRIVATE lib/include)
-target_include_directories(QFRCDashboard PRIVATE ${_Dashboard_AUTOGEN}/include)
-target_include_directories(QFRCDashboard PRIVATE lib/)
+set(QML_ELEMENTS
+    Main
+    Constants
 
-# courtesy of Cristian Adam
-# enable CMake support for all targets (wpilib, protobuf, lib, tests...)
-function(ccache_handle_debug_msvc)
-    if (MSVC)
-        foreach(config DEBUG RELWITHDEBINFO)
-            foreach(lang C CXX)
-                set(flags_var "CMAKE_${lang}_FLAGS_${config}")
-                string(REPLACE "/Zi" "/Z7" ${flags_var} "${${flags_var}}")
-                set(${flags_var} "${${flags_var}}" PARENT_SCOPE)
-            endforeach()
-        endforeach()
-    endif()
-endfunction()
+    items/MainScreen
+    items/Tab
+    items/GridHandler
 
-ccache_handle_debug_msvc()
+    widgets/BaseWidget
+    widgets/ResizeAnchor
+    widgets/DoubleSpinBox
 
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-  set_property(TARGET QFRCDashboard PROPERTY WIN32_EXECUTABLE true)
-endif()
+    widgets/primitive/TextWidget
+    widgets/primitive/IntWidget
+    widgets/primitive/IntDialWidget
+    widgets/primitive/DoubleWidget
+    widgets/primitive/DoubleDialWidget
+    widgets/primitive/BoolWidget
+    widgets/primitive/EnumWidget
+    widgets/primitive/ColorWidget
+
+    widgets/primitive/ShapeHandler
+
+    widgets/sendable/FMSInfo
+    widgets/sendable/Field2d
+    widgets/sendable/Command
+    widgets/sendable/StringChooser
+
+    widgets/misc/CameraView
+
+    dialogs/TopicView
+    dialogs/TabNameDialog
+    dialogs/TabSizeDialog
+    dialogs/WidgetConfig
+    dialogs/ServerDialog
+)
+
+set(ELEMENTS
+    Globals
+    Constants
+    SettingsManager
+    TitleManager
+
+    models/TabWidgetsModel
+    models/TabListModel
+    models/TopicListModel
+    models/CameraListModel
+    models/MapModel
+
+    stores/TopicStore
+)
+
+foreach(ELEMENT ${ELEMENTS})
+    set(HEADERS ${HEADERS} include/${ELEMENT}.h)
+    set(SOURCES ${SOURCES} src/${ELEMENT}.cpp)
+endforeach()
+
+foreach(QML ${QML_ELEMENTS})
+    set(QML_FILES ${QML_FILES} ${QML}.qml)
+endforeach()
+
+set(HEADERS
+    ${HEADERS}
+    include/Flags.h
+    include/MetaObjectHelper.h
+)
+
+add_subdirectory(buildconfig)
+
+qt_add_qml_module(${Dashboard_EXEC_NAME}
+    URI QFRCDashboard
+    VERSION 1.0
+    QML_FILES ${QML_FILES}
+
+    SOURCES ${SOURCES} ${HEADERS}
+)
+
+# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
+# If you are developing for iOS or macOS you should consider setting an
+# explicit, fixed bundle identifier manually though.
+set_target_properties(${Dashboard_EXEC_NAME} PROPERTIES
+    #    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.${Dashboard_EXEC_NAME}
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE TRUE
+    WIN32_EXECUTABLE TRUE
+)
+
+target_link_libraries(${Dashboard_EXEC_NAME}
+    PRIVATE Qt6::Quick
+    Qt6::Multimedia
+    BuildConfig
+    ntcore
+)
+
+target_include_directories(${Dashboard_EXEC_NAME} PRIVATE include/)
+target_include_directories(${Dashboard_EXEC_NAME} PRIVATE include/models)
+target_include_directories(${Dashboard_EXEC_NAME} PRIVATE include/stores)
+target_include_directories(${Dashboard_EXEC_NAME} PRIVATE "$<TARGET_PROPERTY:ntcore,INTERFACE_INCLUDE_DIRECTORIES>")
 
 include(GNUInstallDirs)
-install(TARGETS QFRCDashboard
+install(TARGETS ${Dashboard_EXEC_NAME}
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-install(
-    CODE "file(WRITE \"\${CMAKE_INSTALL_PREFIX}/qt.conf\" \" \")"
-    COMPONENT Runtime
-)
-
-if(WITH_TESTS)
-    add_subdirectory(tests)
-endif()
-
-set_target_properties(QFRCDashboard PROPERTIES
+set_target_properties(${Dashboard_EXEC_NAME} PROPERTIES
     MACOSX_BUNDLE TRUE
 )
 
@@ -140,8 +189,4 @@ if(UNIX AND APPLE)
 
     # install as bundle
     set(INSTALL_BUNDLE "full")
-endif()
-
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(QFRCDashboard)
 endif()

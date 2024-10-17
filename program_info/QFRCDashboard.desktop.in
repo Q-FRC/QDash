@@ -2,6 +2,6 @@
 Type=Application
 Name=@Dashboard_APP_NAME@
 Comment=Reliable, high-performance dashboard for FRC.
-Exec=@Dashboard_APP_NAME@
+Exec=@Dashboard_EXEC_NAME@
 Icon=@Dashboard_APP_NAME@
 Categories=Education;Utility

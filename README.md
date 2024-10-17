@@ -3,16 +3,6 @@ A reliable, high-performance, low-footprint dashboard for use with FRC.
 
 A mirror of this repository is available on my [Gitea](https://git.swurl.xyz/swirl/qfrcdashboard.git) instance.
 
-# Key Features
-- Small RAM/CPU footprint
-- Customizable fonts for title & text (i.e. big numbers)
-- Enum widget: different colors for different string values
-- Powerful, customizable graphs
-- Simple, semi-modern look & feel
-- Support for swerve display, FMS information, field widget
-- Different shapes for colored widgets (bool/enum)
-- Run commands
-
 ## Lightweight
 Dashboards don't have to be resource hogs. In fact, dashboards should be designed to take up as few resources as possible. Dashboards that use up resources like nobody's business will cause **packet loss** and **comms issues** when run on driver stations!
 
@@ -20,19 +10,18 @@ Because of this, QFRCDashboard has been specifically designed to use up as few r
 
 | Metric            | Shuffleboard  | QFRCDashboard |
 | ----------------- | ------------- | ------------- |
-| Memory (Base)     | 530MB         | <200MB        |
-| Memory (Heavy Use)| 600MB-1.2GB   | 200-250MB     |
+| Memory (Base)     | 530MB         | 100MB         |
+| Memory (Heavy Use)| 600MB-1.2GB   | 150MB         |
 | CPU (Base)        | 2-10%         | 0-1%          |
-| CPU (Heavy Use)   | 10-30%        | 0-3%          |
+| CPU (Heavy Use)   | 10-30%        | 0-2%          |
 
 Network activity hasn't been specifically measured, but expect better network performance out of QFRCDashboard. (Note that Shuffleboard's numbers may vary. Sometimes I've seen it eat the entire CPU on computers 5x as powerful as mine.)
 
 QFRCDashboard excels with its lightweight performance thanks to many factors:
-- The efficiency of C++ and Qt vs. Java and JavaFX
+- Qt & QML's high efficiency
 - No menu that subscribes to every topic at once
 - Shared subscriptions between duplicate topics
 - Widgets only update and repaint when they need to
-- Minimal, deferred repaints
 
 ## Download
 Windows, Linux, and macOS builds are available via GitHub Actions. Currently, all use WPILib 2024.3.1. Release builds are available either through Actions or in the releases tab:
@@ -106,6 +95,3 @@ cmake --build .
 C:\Qt6\6.6.1\msvc2019_64\bin\windeployqt.exe .
 ```
 OR use [CLion](https://www.jetbrains.com/clion/) or Qt Creator from the online installer.
-
-## Miscellaneous Notes
-QFRCDashboard is created solely for the purpose of A RELIABLE, LOW-OVERHEAD FRC dashboard. QFRCDashboard is NOT created with eye-candy or intense theming in mind. Contributions and suggestions to theming will be accepted and worked on, but without user request or contribution, QFRCDashboard will see very few updates to theming.

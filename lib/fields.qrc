@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="2023Field.png">images/2023-field.png</file>
-        <file alias="2024Field.png">images/2024-field.png</file>
-    </qresource>
-</RCC>

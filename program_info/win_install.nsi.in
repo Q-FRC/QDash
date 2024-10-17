@@ -8,7 +8,7 @@ Name "@Dashboard_APP_NAME@"
 InstallDir "$LOCALAPPDATA\Programs\@Dashboard_APP_NAME@"
 InstallDirRegKey HKCU "Software\@Dashboard_APP_NAME@" "InstallDir"
 RequestExecutionLevel user
-OutFile "../@Dashboard_APP_NAME@-Setup.exe"
+OutFile "../@Dashboard_EXEC_NAME@-Setup.exe"
 
 !define MUI_ICON "../program_info/@Dashboard_APP_NAME@.ico"
 
@@ -21,7 +21,7 @@ OutFile "../@Dashboard_APP_NAME@-Setup.exe"
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
-!define MUI_FINISHPAGE_RUN "$InstDir\@Dashboard_APP_NAME@.exe"
+!define MUI_FINISHPAGE_RUN "$InstDir\@Dashboard_EXEC_NAME@.exe"
 !insertmacro MUI_PAGE_FINISH
 
 !insertmacro MUI_UNPAGE_CONFIRM
@@ -59,18 +59,18 @@ Section "@Dashboard_APP_NAME@"
 
   SectionIn RO
 
-  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @Dashboard_APP_NAME@.exe /F'
+  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @Dashboard_EXEC_NAME@.exe /F'
 
   SetOutPath $INSTDIR
 
-  File "@Dashboard_APP_NAME@.exe"
+  File "@Dashboard_EXEC_NAME@.exe"
   File *.dll
   File /r "iconengines"
   File /r "imageformats"
-  File /r "multimedia"
   File /r "platforms"
-  File /r "styles"
   File /r "tls"
+  File /r "multimedia"
+  File /r "qml"
 
   ; Write the installation path into the registry
   WriteRegStr HKCU Software\@Dashboard_APP_NAME@ "InstallDir" "$INSTDIR"
@@ -81,7 +81,7 @@ Section "@Dashboard_APP_NAME@"
   ${If} ${Errors}
     !define UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\@Dashboard_APP_NAME@"
     WriteRegStr HKCU "${UNINST_KEY}" "DisplayName" "@Dashboard_APP_NAME@"
-    WriteRegStr HKCU "${UNINST_KEY}" "DisplayIcon" "$INSTDIR\@Dashboard_APP_NAME@.exe"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayIcon" "$INSTDIR\@Dashboard_EXEC_NAME@.exe"
     WriteRegStr HKCU "${UNINST_KEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
     WriteRegStr HKCU "${UNINST_KEY}" "QuietUninstallString" '"$INSTDIR\uninstall.exe" /S'
     WriteRegStr HKCU "${UNINST_KEY}" "InstallLocation" "$INSTDIR"
@@ -102,13 +102,13 @@ SectionEnd
 
 Section "Start Menu Shortcut" SM_SHORTCUTS
 
-  CreateShortcut "$SMPROGRAMS\@Dashboard_APP_NAME@.lnk" "$INSTDIR\@Dashboard_APP_NAME@.exe" "" "$INSTDIR\@Dashboard_APP_NAME@.exe" 0
+  CreateShortcut "$SMPROGRAMS\@Dashboard_EXEC_NAME@.lnk" "$INSTDIR\@Dashboard_EXEC_NAME@.exe" "" "$INSTDIR\@Dashboard_EXEC_NAME@.exe" 0
 
 SectionEnd
 
 Section /o "Desktop Shortcut" DESKTOP_SHORTCUTS
 
-  CreateShortcut "$DESKTOP\@Dashboard_APP_NAME@.lnk" "$INSTDIR\@Dashboard_APP_NAME@.exe" "" "$INSTDIR\@Dashboard_APP_NAME@.exe" 0
+  CreateShortcut "$DESKTOP\@Dashboard_EXEC_NAME@.lnk" "$INSTDIR\@Dashboard_EXEC_NAME@.exe" "" "$INSTDIR\@Dashboard_EXEC_NAME@.exe" 0
 
 SectionEnd
 
@@ -118,12 +118,12 @@ SectionEnd
 
 Section "Uninstall"
 
-  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @Dashboard_APP_NAME@.exe /F'
+  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @Dashboard_EXEC_NAME@.exe /F'
 
   DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\@Dashboard_APP_NAME@"
   DeleteRegKey HKCU SOFTWARE\@Dashboard_APP_NAME@
 
-  Delete $INSTDIR\@Dashboard_APP_NAME@.exe
+  Delete $INSTDIR\@Dashboard_EXEC_NAME@.exe
   Delete $INSTDIR\qt.conf
   Delete $INSTDIR\*.dll
 
@@ -134,8 +134,8 @@ Section "Uninstall"
   RMDir /r $INSTDIR\platforms
   RMDir /r $INSTDIR\styles
 
-  Delete "$SMPROGRAMS\@Dashboard_APP_NAME@.lnk"
-  Delete "$DESKTOP\@Dashboard_APP_NAME@.lnk"
+  Delete "$SMPROGRAMS\@Dashboard_EXEC_NAME@.lnk"
+  Delete "$DESKTOP\@Dashboard_EXEC_NAME@.lnk"
 
   RMDir "$INSTDIR"
 
@@ -149,7 +149,7 @@ Function .onInit
 ${GetParameters} $R0
 ${GetOptions} $R0 "/NoShortcuts" $R1
 ${IfNot} ${Errors}
-${OrIf} ${FileExists} "$InstDir\@Dashboard_APP_NAME@.exe"
+${OrIf} ${FileExists} "$InstDir\@Dashboard_EXEC_NAME@.exe"
   !insertmacro UnselectSection ${SM_SHORTCUTS}
   !insertmacro UnselectSection ${DESKTOP_SHORTCUTS}
 ${EndIf}
