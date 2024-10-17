@@ -40,14 +40,20 @@ jobs:
         shell: bash
         run: |
           mv ${{ github.workspace }}/QFRCDashboard-source QFRCDashboard-${{ env.VERSION }}
+          ls
+          echo
+          echo
           ls *
+          echo
+          echo
+
           mv QFRCDashboard-Linux-Binary*/QFRCDashboard.tar.gz QFRCDashboard-Linux-Binary-${{ env.VERSION }}.tar.gz
           mv QFRCDashboard-*.AppImage/QFRCDashboard-*.AppImage QFRCDashboard-Linux-${{ env.VERSION }}-x86_64.AppImage
           mv QFRCDashboard-Windows-Setup*/Dashboard* QFRCDashboard-Windows-Setup-${{ env.VERSION }}.exe
 
           tar xf QFRCDashboard-macOS*/QFRCDashboard.tar.gz
 
-          mv QFRCDashboard*.app QFRCDashboard-macOS-${{ env.VERSION }}.app
+          mv *Dashboard*.app QFRCDashboard-macOS-${{ env.VERSION }}.app
 
           zip -r QFRCDashboard-macOS-${{ env.VERSION }}.zip QFRCDashboard-macOS-${{ env.VERSION }}.app
 
