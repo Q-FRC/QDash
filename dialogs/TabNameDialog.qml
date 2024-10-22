@@ -51,7 +51,6 @@ Dialog {
                 DialogButtonBox.buttonRole: DialogButtonBox.RejectRole
             }
 
-            width: tabName.width
             font.pixelSize: 15
 
             onAccepted: tabNameDialog.accept()

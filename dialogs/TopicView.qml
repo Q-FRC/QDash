@@ -8,14 +8,14 @@ Row {
     id: tv
     z: 4
 
-    property alias menuAnim : menuAnim
+    property alias menuAnim: menuAnim
 
     property bool isCamera: false
 
     property string closedText: isCamera ? "<<" : ">>"
     property string openText: isCamera ? ">>" : "<<"
 
-    width: (parent.width / 3) + tabs.height
+    width: (parent.width / 3) + 40
     height: parent.height
 
     SmoothedAnimation {
@@ -49,8 +49,8 @@ Row {
         id: button
         text: closedText
 
-        width: isCamera ? tabs.height : 0
-        height: isCamera ? width : 0
+        width: isCamera ? 40 : 0
+        height: isCamera ? 40 : 0
 
         onClicked: {
             if (text === closedText) {
@@ -106,9 +106,11 @@ Row {
                         if (!topicView.contains(global)) {
                             if (!ready) {
                                 if (isCamera) {
-                                    cameraAdd(model.name, model.source, model.urls)
+                                    cameraAdd(model.name, model.source,
+                                              model.urls)
                                 } else {
-                                    widgetAdd(model.name, model.topic, model.type)
+                                    widgetAdd(model.name, model.topic,
+                                              model.type)
                                 }
 
                                 ready = true
@@ -214,7 +216,6 @@ Row {
 
                     font.pixelSize: 17
                 }
-
             }
         }
     }
@@ -223,8 +224,8 @@ Row {
         id: button2
         text: closedText
 
-        width: !isCamera ? tabs.height : 0
-        height: !isCamera ? width : 0
+        width: !isCamera ? 40 : 0
+        height: !isCamera ? 40 : 0
 
         onClicked: {
             if (text === closedText) {
@@ -236,5 +237,4 @@ Row {
             }
         }
     }
-
 }

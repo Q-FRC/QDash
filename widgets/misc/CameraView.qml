@@ -38,6 +38,7 @@ BaseWidget {
     }
 
     Rectangle {
+        color: "transparent"
         anchors {
             top: titleField.bottom
             left: parent.left
@@ -57,7 +58,6 @@ BaseWidget {
             source: ""
 
             function restartVideo() {
-                console.log("Restarting.")
                 player.play()
             }
 
@@ -74,7 +74,6 @@ BaseWidget {
             }
 
             onSourceChanged: {
-                console.log(source)
                 reconnect()
             }
 

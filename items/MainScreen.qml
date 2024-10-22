@@ -63,12 +63,14 @@ Rectangle {
             let w = currentTab().latestWidget
             if (!w.caught) {
                 w.cancelDrag()
-                if (fromList) currentTab().removeLatest()
+                if (fromList)
+                    currentTab().removeLatest()
             } else {
                 let p = currentTab().gridHandler.occupied()
                 if (p.x === -1 || p.y === -1) {
                     w.cancelDrag()
-                    if (fromList) currentTab().removeLatest()
+                    if (fromList)
+                        currentTab().removeLatest()
                 } else {
                     w.mrow = p.x
                     w.mcolumn = p.y
@@ -80,7 +82,6 @@ Rectangle {
             }
         }
     }
-
 
     TopicView {
         id: tv
@@ -109,9 +110,9 @@ Rectangle {
             menuAnim.start()
         }
 
-        onDragging: pos => drag(pos, true);
+        onDragging: pos => drag(pos, true)
 
-        onDropped: pos => drop(pos, true);
+        onDropped: pos => drop(pos, true)
     }
 
     TopicView {
@@ -293,6 +294,8 @@ Rectangle {
             left: parent.left
             right: parent.right
             bottom: parent.bottom
+
+            topMargin: 0
         }
 
         currentIndex: tabs.currentIndex
@@ -315,11 +318,16 @@ Rectangle {
 
     TabBar {
         id: tabs
+        height: 40
 
         anchors {
             top: parent.top
             left: tv.right
             right: cl.left
+
+            leftMargin: 0
+            rightMargin: 0
+            topMargin: 0
         }
 
         position: TabBar.Footer
@@ -335,6 +343,7 @@ Rectangle {
 
                 font.pixelSize: 18
                 width: Math.max(100, tabs.width / 6)
+                height: 40
 
                 contentItem: Label {
                     font.pixelSize: 18
@@ -348,8 +357,8 @@ Rectangle {
 
                 background: Rectangle {
                     implicitWidth: parent.width
-                    topLeftRadius: 7
-                    topRightRadius: 7
+                    topLeftRadius: 12
+                    topRightRadius: 12
                     color: index !== tabs.currentIndex ? Constants.tab : Constants.palette.text
                 }
             }
