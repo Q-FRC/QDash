@@ -16,20 +16,20 @@ Dialog {
         settings.ip = ip.text
     }
 
-    Column {
+    standardButtons: Dialog.Ok | Dialog.Cancel
+
+    Shortcut {
+        onActivated: reject()
+        sequence: Qt.Key_Escape
+    }
+
+    ColumnLayout {
         anchors.fill: parent
         spacing: 5
 
-        CheckBox {
-            id: useTeam
-            text: "Use Team Number?"
-
-            checked: settings.useTeam
-
-            font.pixelSize: 17
-        }
-
-        Row {
+        RowLayout {
+            Layout.fillWidth: true
+            uniformCellSizes: true
             Text {
                 text: "Port:"
                 font.pixelSize: 17
@@ -48,7 +48,9 @@ Dialog {
             }
         }
 
-        Row {
+        RowLayout {
+            Layout.fillWidth: true
+            uniformCellSizes: true
             Text {
                 text: useTeam.checked ? "Team Number:" : "IP Address:"
                 font.pixelSize: 17
@@ -68,28 +70,14 @@ Dialog {
             }
         }
 
-        DialogButtonBox {
-            Shortcut {
-                context: Qt.WidgetWithChildrenShortcut
-                sequences: [Qt.Key_Escape]
+        CheckBox {
+            Layout.fillWidth: true
+            id: useTeam
+            text: "Use Team Number?"
 
-                onActivated: serverDialog.reject()
-            }
+            checked: settings.useTeam
 
-            Button {
-                text: qsTr("Ok")
-                DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
-            }
-            Button {
-                text: qsTr("Cancel")
-                DialogButtonBox.buttonRole: DialogButtonBox.RejectRole
-            }
-
-            width: parent.width
-            font.pixelSize: 15
-
-            onAccepted: serverDialog.accept()
-            onRejected: serverDialog.reject()
+            font.pixelSize: 17
         }
     }
 }

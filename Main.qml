@@ -14,6 +14,7 @@ ApplicationWindow {
         contentWidth: parent.width
 
         Menu {
+            contentWidth: 210
             title: qsTr("&Settings")
             Action {
                 text: qsTr("&Server Settings...")
@@ -64,6 +65,7 @@ ApplicationWindow {
         }
 
         Menu {
+            contentWidth: 175
             title: qsTr("&File")
             Action {
                 text: qsTr("&Save")
@@ -71,7 +73,7 @@ ApplicationWindow {
                 shortcut: "Ctrl+S"
             }
             Action {
-                text: qsTr("Save &As...")
+                text: qsTr("Save &As")
                 onTriggered: screen.saveAsAction()
                 shortcut: "Ctrl+Shift+S"
             }

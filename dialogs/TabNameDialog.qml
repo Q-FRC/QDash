@@ -18,43 +18,31 @@ Dialog {
         tabName.text = txt
     }
 
-    Column {
+    standardButtons: Dialog.Ok | Dialog.Cancel
+
+    Shortcut {
+        onActivated: reject()
+        sequence: Qt.Key_Escape
+    }
+
+    ColumnLayout {
         anchors.fill: parent
         spacing: 5
 
         Text {
+            Layout.fillWidth: true
+
             text: "Input new tab name:"
             font.pixelSize: 20
             color: Constants.palette.text
         }
 
         TextField {
+            Layout.fillWidth: true
+
             id: tabName
             font.pixelSize: 20
             placeholderText: "New Tab"
-        }
-
-        DialogButtonBox {
-            Shortcut {
-                context: Qt.WidgetWithChildrenShortcut
-                sequences: [Qt.Key_Escape]
-
-                onActivated: tabNameDialog.reject()
-            }
-
-            Button {
-                text: qsTr("Ok")
-                DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
-            }
-            Button {
-                text: qsTr("Cancel")
-                DialogButtonBox.buttonRole: DialogButtonBox.RejectRole
-            }
-
-            font.pixelSize: 15
-
-            onAccepted: tabNameDialog.accept()
-            onRejected: tabNameDialog.reject()
         }
     }
 }

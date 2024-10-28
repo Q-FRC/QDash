@@ -111,7 +111,7 @@ Repeater {
         required property int modelData
 
         color: Constants.palette.bg
-        z: 1
+        z: 2
         border {
             color: "gray"
             width: 2

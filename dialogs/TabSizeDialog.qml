@@ -19,11 +19,21 @@ Dialog {
         rowValue.value = rows
     }
 
-    Column {
+    standardButtons: Dialog.Ok | Dialog.Cancel
+
+    Shortcut {
+        onActivated: reject()
+        sequence: Qt.Key_Escape
+    }
+
+    ColumnLayout {
         anchors.fill: parent
         spacing: 5
 
-        Row {
+        RowLayout {
+            Layout.fillWidth: true
+            uniformCellSizes: true
+
             Text {
                 text: "Columns:"
                 font.pixelSize: 17
@@ -39,7 +49,10 @@ Dialog {
             }
         }
 
-        Row {
+        RowLayout {
+            Layout.fillWidth: true
+            uniformCellSizes: true
+
             Text {
                 text: "Rows:"
                 font.pixelSize: 17
@@ -53,30 +66,6 @@ Dialog {
 
                 font.pixelSize: 17
             }
-        }
-
-        DialogButtonBox {
-            Shortcut {
-                context: Qt.WidgetWithChildrenShortcut
-                sequences: [Qt.Key_Escape]
-
-                onActivated: tabSizeDialog.reject()
-            }
-
-            Button {
-                text: qsTr("Ok")
-                DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
-            }
-            Button {
-                text: qsTr("Cancel")
-                DialogButtonBox.buttonRole: DialogButtonBox.RejectRole
-            }
-
-            width: parent.width
-            font.pixelSize: 15
-
-            onAccepted: tabSizeDialog.accept()
-            onRejected: tabSizeDialog.reject()
         }
     }
 }

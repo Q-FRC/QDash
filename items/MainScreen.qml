@@ -33,6 +33,7 @@ Rectangle {
     Component.onCompleted: {
         if (settings.loadRecent && !settings.recentFiles.empty) {
             filename = settings.recentFiles[0]
+            if (filename === "" || filename === null) return;
             tlm.load(filename)
         }
     }
@@ -282,6 +283,22 @@ Rectangle {
 
     function serverSettings() {
         serverDialog.open()
+    }
+
+    Text {
+        color: Constants.palette.text
+        font.pixelSize: 20
+
+        horizontalAlignment: Text.AlignHCenter
+
+        text: "Welcome to QFRCDashboard!\n" +
+              "To get started, connect to your robot WiFi\n" +
+              "and go to Settings -> Server Settings (Ctrl+E).\n" +
+              "Add a tab with Ctrl+T, and add a widget\n" +
+              "through the arrow menu on the left."
+
+        anchors.centerIn: parent
+        z: 0
     }
 
     SwipeView {

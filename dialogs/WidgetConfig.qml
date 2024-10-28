@@ -17,6 +17,15 @@ Dialog {
         color: Constants.palette.dialogBg
     }
 
+    standardButtons: Dialog.Ok | Dialog.Cancel
+
+    onAccepted: getValues()
+
+    Shortcut {
+        onActivated: reject()
+        sequence: Qt.Key_Escape
+    }
+
     ColorDialog {
         id: colorDialog
     }
@@ -87,7 +96,7 @@ Dialog {
     ListView {
         anchors {
             top: parent.top
-            bottom: buttonBox.bottom
+            bottom: parent.bottom
             left: parent.left
             right: parent.right
 
@@ -502,28 +511,6 @@ Dialog {
                     }
                 }
             }
-        }
-    }
-
-    DialogButtonBox {
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
-
-            margins: 8
-        }
-
-        id: buttonBox
-        standardButtons: DialogButtonBox.Ok | DialogButtonBox.Cancel
-
-        onAccepted: {
-            getValues()
-            widgetConf.accept()
-        }
-
-        onRejected: {
-            widgetConf.reject()
         }
     }
 }
