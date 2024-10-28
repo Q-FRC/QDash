@@ -49,17 +49,40 @@ ApplicationWindow {
                 title: qsTr("&Accent")
 
                 Repeater {
-                    model: ["Red", "Blue", "Purple"]
+                    model: accents
 
                     MenuItem {
-                        text: "&" + modelData
+                        function toTitleCase(str) {
+                            return str.replace(
+                                        /\w\S*/g,
+                                        text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+                                        );
+                        }
+
+                        text: "&" + toTitleCase(model.name)
                         checkable: true
-                        checked: settings.accent === modelData.toLowerCase()
+                        checked: settings.accent === model.name
                         onCheckedChanged: {
                             if (checked)
-                                Constants.setAccent(modelData.toLowerCase())
+                                Constants.setAccent(model.name)
                         }
                     }
+                }
+            }
+
+            Menu {
+                title: qsTr("&Custom Accents")
+                MenuItem {
+                    text: "&Edit Accents..."
+                    onTriggered: screen.editAccents()
+                }
+                MenuItem {
+                    text: "Export Accents..."
+                    onTriggered: screen.exportAccentsAction()
+                }
+                MenuItem {
+                    text: "Import Accents..."
+                    onTriggered: screen.importAccentsAction()
                 }
             }
         }

@@ -14,6 +14,6 @@ void Setting::setValue(const QVariant &value) const {
 }
 
 const Setting Settings::RecentFiles{"recentFiles", QStringList{}};
-const Setting Settings::LoadRecent{"loadRecent", false};
+const Setting Settings::LoadRecent{"loadRecent", true};
 const Setting Settings::Theme{"theme", "dark"};
 const Setting Settings::Accent{"accent", "red"};

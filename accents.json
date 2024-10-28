@@ -1,0 +1,32 @@
+[
+    {
+        "accent": "#c10000",
+        "light": "#ff2727",
+        "name": "red"
+    },
+    {
+        "accent": "#0024c2",
+        "light": "#4520ff",
+        "name": "blue"
+    },
+    {
+        "accent": "#a100a1",
+        "light": "#b400e1",
+        "name": "purple"
+    },
+    {
+        "accent": "#00aa00",
+        "light": "#00dd00",
+        "name": "green"
+    },
+    {
+        "accent": "#000000",
+        "light": "#555555",
+        "name": "black"
+    },
+    {
+        "accent": "#FFFFFF",
+        "light": "#BBBBBB",
+        "name": "white"
+    }
+]

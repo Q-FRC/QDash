@@ -53,7 +53,8 @@ add_subdirectory("program_info")
 find_package(ntcore)
 find_package(Protobuf)
 
-set(QRC_FILES fields.qrc)
+set(QRC_FILES fields.qrc
+    accents.qrc)
 
 qt_add_executable(${Dashboard_EXEC_NAME}
     main.cpp
@@ -72,6 +73,7 @@ set(QML_ELEMENTS
     items/MainScreen
     items/Tab
     items/GridHandler
+    items/AccentDisplay
 
     widgets/BaseWidget
     widgets/ResizeAnchor
@@ -100,6 +102,7 @@ set(QML_ELEMENTS
     dialogs/TabSizeDialog
     dialogs/WidgetConfig
     dialogs/ServerDialog
+    dialogs/AccentEditor
 )
 
 set(ELEMENTS
@@ -113,6 +116,7 @@ set(ELEMENTS
     models/TopicListModel
     models/CameraListModel
     models/MapModel
+    models/AccentsListModel
 
     stores/TopicStore
 )

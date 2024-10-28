@@ -3,6 +3,7 @@
 #include <QQmlContext>
 #include <TabListModel.h>
 
+#include "AccentsListModel.h"
 #include "BuildConfig.h"
 #include "CameraListModel.h"
 #include "Flags.h"
@@ -22,11 +23,19 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(BuildConfig.versionString());
 
     TopicStore store(&app);
+
     TopicListModel *topics = new TopicListModel(store, &app);
+
     SettingsManager *settings = new SettingsManager(&app);
+
     TabListModel *tlm = new TabListModel(settings, &app);
+
     CameraListModel *clm = new CameraListModel(store, &app);
+
     TitleManager *title = new TitleManager(&app);
+
+    AccentsListModel *accents = new AccentsListModel(&app);
+    accents->load();
 
     Globals::inst.AddConnectionListener(true, [topics, &store, clm, title] (const nt::Event &event) {
         bool connected = event.Is(nt::EventFlags::kConnected);
@@ -88,6 +97,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("topicStore", &store);
     engine.rootContext()->setContextProperty("tlm", tlm);
     engine.rootContext()->setContextProperty("titleManager", title);
+    engine.rootContext()->setContextProperty("accents", accents);
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,

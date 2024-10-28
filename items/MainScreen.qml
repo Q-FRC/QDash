@@ -285,6 +285,54 @@ Rectangle {
         serverDialog.open()
     }
 
+    /** CUSTOM ACCENTS */
+    AccentEditor {
+        id: accentEditor
+    }
+
+    function editAccents() {
+        accentEditor.open()
+    }
+
+    FileDialog {
+        id: saveAccentDialog
+        currentFolder: StandardPaths.writableLocation(
+                           StandardPaths.HomeLocation)
+        fileMode: FileDialog.SaveFile
+        defaultSuffix: "json"
+        selectedNameFilter.index: 0
+        nameFilters: ["JSON files (*.json)", "All files (*)"]
+    }
+
+    function exportAccents() {
+        accents.exportJson(saveAccentDialog.selectedFile)
+    }
+
+    function exportAccentsAction() {
+        saveAccentDialog.accepted.connect(exportAccents)
+        saveAccentDialog.open()
+    }
+
+    FileDialog {
+        id: loadAccentDialog
+        currentFolder: StandardPaths.writableLocation(
+                           StandardPaths.HomeLocation)
+        fileMode: FileDialog.OpenFile
+        defaultSuffix: "json"
+        selectedNameFilter.index: 0
+        nameFilters: ["JSON files (*.json)", "All files (*)"]
+    }
+
+    function importAccents() {
+        accents.importJson(loadAccentDialog.selectedFile)
+    }
+
+    function importAccentsAction() {
+        loadAccentDialog.accepted.connect(importAccents)
+        loadAccentDialog.open()
+    }
+
+    /** CONTENT */
     Text {
         color: Constants.palette.text
         font.pixelSize: 20

@@ -29,22 +29,9 @@ QtObject {
 
     function setAccent(newAccent) {
         settings.accent = newAccent
-        switch (newAccent) {
-        case "red":
-            accent = "#ec202a"
-            tab = "#ec5a5c"
-            break
-        case "blue":
-            accent = "#0024c2"
-            tab = "#4520ff"
-            break
-        case "purple":
-            accent = "#a100a1"
-            tab = "#b400e1"
-            break
-        default:
-            break;
-        }
+
+        accent = accents.accent(newAccent);
+        tab = accents.light(newAccent);
     }
 
     property QtObject midnight: QtObject {
