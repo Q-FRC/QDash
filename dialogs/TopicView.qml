@@ -6,7 +6,7 @@ import QFRCDashboard
 
 Row {
     id: tv
-    z: 4
+    z: 5
 
     property alias menuAnim: menuAnim
 

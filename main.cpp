@@ -81,6 +81,16 @@ int main(int argc, char *argv[])
         }
     });
 
+    nt::NetworkTableEntry tabEntry = Globals::inst.GetEntry("/QFRCDashboard/Tab");
+    Globals::inst.AddListener(tabEntry, nt::EventFlags::kValueAll, [tlm] (const nt::Event &event) {
+        std::string_view value = event.GetValueEventData()->value.GetString();
+        QString qvalue = QString::fromStdString(std::string{value});
+
+        QMetaObject::invokeMethod(tlm, [tlm, qvalue] {
+            tlm->selectTab(qvalue);
+        });
+    });
+
     qmlRegisterUncreatableMetaObject(
         QFDFlags::staticMetaObject,
         "QFDFlags",

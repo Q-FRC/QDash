@@ -198,6 +198,25 @@ void TabListModel::load(const QString &filename)
     file.close();
 }
 
+int TabListModel::selectedTab() const
+{
+    return m_selectedTab;
+}
+
+void TabListModel::selectTab(const QString &tab)
+{
+    for (size_t i = 0; i < rowCount(); ++i) {
+        Tab t = m_data.at(i);
+        if (t.title == tab) {
+            m_selectedTab = i;
+            emit selectedTabChanged();
+            return;
+        }
+    }
+
+    qWarning() << "Selected tab" << tab << "does not exist.";
+}
+
 QHash<int, QByteArray> TabListModel::roleNames() const
 {
     QHash<int,QByteArray> rez;

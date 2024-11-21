@@ -9,7 +9,7 @@ Rectangle {
     id: rect
     width: 100
     height: 100
-    z: 2
+    z: 3
 
     radius: 12
 
@@ -140,7 +140,7 @@ Rectangle {
 
                            rect.beginDrag = Qt.point(parent.x, parent.y)
                            rect.Drag.hotSpot = Qt.point(mouse.x, mouse.y)
-                           parent.z = 3
+                           parent.z = 4
 
                            resizeBegin(rect.Drag)
                        }
@@ -170,7 +170,7 @@ Rectangle {
                 rect.Drag.drop()
 
                 // dragEnd(rect.Drag)
-                parent.z = 2
+                parent.z = 3
                 cancelDrag()
             }
         }
@@ -236,7 +236,7 @@ Rectangle {
         rect.beginDrag = Qt.point(rect.x, rect.y)
         rect.beginResize = Qt.rect(rect.x, rect.y, rect.width, rect.height)
         rect.Drag.hotSpot = Qt.point(mouse.x, mouse.y)
-        rect.z = 3
+        rect.z = 4
 
         resizeBegin(rect.Drag)
     }
@@ -259,7 +259,7 @@ Rectangle {
 
             resizeEnd(rect.Drag)
 
-            rect.z = 2
+            rect.z = 3
         }
     }
 

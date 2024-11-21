@@ -24,6 +24,7 @@ class TabListModel : public QAbstractListModel
     Q_OBJECT
     QML_ELEMENT
 
+    Q_PROPERTY(int selectedTab READ selectedTab NOTIFY selectedTabChanged FINAL)
 public:
     enum TLMRoleTypes {
         TITLE = Qt::UserRole,
@@ -56,6 +57,12 @@ public:
     Q_INVOKABLE void loadObject(const QJsonDocument &doc);
     Q_INVOKABLE void load(const QString &fileName = "");
 
+    int selectedTab() const;
+    void selectTab(const QString &tab);
+
+signals:
+    void selectedTabChanged();
+
 protected:
     QHash<int, QByteArray> roleNames() const override;
 
@@ -63,5 +70,6 @@ private:
     QList<Tab> m_data;
 
     SettingsManager *m_settings;
+    int m_selectedTab = 0;
 };
 #endif // TABLISTMODEL_H

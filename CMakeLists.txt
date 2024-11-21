@@ -53,8 +53,10 @@ add_subdirectory("program_info")
 find_package(ntcore)
 find_package(Protobuf)
 
-set(QRC_FILES fields.qrc
-    accents.qrc)
+set(QRC_FILES
+    fields.qrc
+    accents.qrc
+    icons.qrc)
 
 qt_add_executable(${Dashboard_EXEC_NAME}
     main.cpp
@@ -96,6 +98,7 @@ set(QML_ELEMENTS
     widgets/sendable/StringChooser
 
     widgets/misc/CameraView
+    widgets/misc/ErrorsWidget
 
     dialogs/TopicView
     dialogs/TabNameDialog

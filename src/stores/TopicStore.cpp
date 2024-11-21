@@ -228,6 +228,7 @@ QString TopicStore::typeString(QString topic)
     case nt::NetworkTableType::kFloat: return "double";
     case nt::NetworkTableType::kString: return "string";
     case nt::NetworkTableType::kInteger: return "int";
+    case nt::NetworkTableType::kStringArray: return "errors";
     default:
         return "";
     }

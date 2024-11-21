@@ -30,12 +30,18 @@ Rectangle {
         widgetConf.openUp(item)
     }
 
+    function setTab() {
+        swipe.setCurrentIndex(tlm.selectedTab)
+    }
+
     Component.onCompleted: {
         if (settings.loadRecent && !settings.recentFiles.empty) {
             filename = settings.recentFiles[0]
             if (filename === "" || filename === null) return;
             tlm.load(filename)
         }
+
+        tlm.onSelectedTabChanged.connect(setTab)
     }
 
     function drag(pos, fromList) {
@@ -76,7 +82,7 @@ Rectangle {
                     w.mrow = p.x
                     w.mcolumn = p.y
 
-                    w.z = 2
+                    w.z = 3
                     w.visible = true
                     w.cancelDrag()
                 }
