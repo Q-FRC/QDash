@@ -56,7 +56,9 @@ void TopicListModel::add(const QString &toAdd)
             bool append = false;
 
             if (isLast) {
-                if (hasType) {
+                if (parentItem && parentItem->data(TOPIC).toString() != "") {
+                    append = false;
+                } else if (hasType) {
                     if (sub == ".type") {
                         std::string value = type.GetString("invalid");
 
@@ -82,11 +84,8 @@ void TopicListModel::add(const QString &toAdd)
                             QString typeStr = QString::fromStdString(value);
                             parentItem->setData(typeStr, TYPE);
                         }
-
-                        append = false;
-                    } else {
-                        append = false;
                     }
+                    append = false;
                 } else {
                     append = true;
 
@@ -95,8 +94,13 @@ void TopicListModel::add(const QString &toAdd)
                 }
             } else {
                 append = true;
-                item->setData("", TLMRoleTypes::TOPIC);
-                item->setData("", TYPE);
+                if (parentItem && parentItem->text() == "CameraPublisher") {
+                    item->setData("/CameraPublisher/" + sub, TLMRoleTypes::TOPIC);
+                    item->setData("camera", TYPE);
+                } else {
+                    item->setData("", TLMRoleTypes::TOPIC);
+                    item->setData("", TYPE);
+                }
             }
 
             if (append) {

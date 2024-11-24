@@ -117,7 +117,6 @@ set(ELEMENTS
     models/TabWidgetsModel
     models/TabListModel
     models/TopicListModel
-    models/CameraListModel
     models/MapModel
     models/AccentsListModel
 

@@ -122,40 +122,6 @@ Rectangle {
         onDropped: pos => drop(pos, true)
     }
 
-    TopicView {
-        id: cl
-
-        isCamera: true
-
-        onAddCamera: (name, source, urls) => {
-                         currentTab().addCamera(name, source, urls)
-                     }
-
-        anchors {
-            right: parent.right
-            rightMargin: -(parent.width / 3)
-
-            top: parent.top
-            bottom: parent.bottom
-        }
-
-        onOpen: {
-            menuAnim.from = -(parent.width / 3)
-            menuAnim.to = 0
-            menuAnim.start()
-        }
-
-        onClose: {
-            menuAnim.to = -(parent.width / 3)
-            menuAnim.from = 0
-            menuAnim.start()
-        }
-
-        onDragging: pos => drag(pos, true)
-
-        onDropped: pos => drop(pos, true)
-    }
-
     TabNameDialog {
         id: tabNameDialog
     }
@@ -394,7 +360,7 @@ Rectangle {
         anchors {
             top: parent.top
             left: tv.right
-            right: cl.left
+            right: parent.right
 
             leftMargin: 0
             rightMargin: 0

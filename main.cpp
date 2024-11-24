@@ -5,7 +5,6 @@
 
 #include "AccentsListModel.h"
 #include "BuildConfig.h"
-#include "CameraListModel.h"
 #include "Flags.h"
 #include "Globals.h"
 #include "TitleManager.h"
@@ -30,36 +29,21 @@ int main(int argc, char *argv[])
 
     TabListModel *tlm = new TabListModel(settings, &app);
 
-    CameraListModel *clm = new CameraListModel(store, &app);
-
     TitleManager *title = new TitleManager(&app);
 
     AccentsListModel *accents = new AccentsListModel(&app);
     accents->load();
 
-    Globals::inst.AddConnectionListener(true, [topics, &store, clm, title] (const nt::Event &event) {
+    Globals::inst.AddConnectionListener(true, [topics, &store, title] (const nt::Event &event) {
         bool connected = event.Is(nt::EventFlags::kConnected);
 
         store.connect(connected);
 
         if (!connected) {
             QMetaObject::invokeMethod(topics, &TopicListModel::clear);
-            QMetaObject::invokeMethod(clm, &CameraListModel::clear);
             title->resetTitle();
         } else {
             title->setTitle("Connected (" + QString::fromStdString(event.GetConnectionInfo()->remote_ip) + ")");
-            QMetaObject::invokeMethod(clm, [=] {
-                // kind of hacky, but what works, works
-                QTimer::singleShot(1000, [=] {
-                    clm->clear();
-
-                    for (const std::string &st : Globals::inst.GetTable("/CameraPublisher")->GetSubTables()) {
-                        std::shared_ptr<nt::NetworkTable> subtable = Globals::inst.GetTable("/CameraPublisher")->GetSubTable(st);
-
-                        clm->add(subtable);
-                    }
-                });
-            });
         }
     });
 
@@ -103,7 +87,6 @@ int main(int argc, char *argv[])
 
     engine.rootContext()->setContextProperty("topics", topics);
     engine.rootContext()->setContextProperty("settings", settings);
-    engine.rootContext()->setContextProperty("cameras", clm);
     engine.rootContext()->setContextProperty("topicStore", &store);
     engine.rootContext()->setContextProperty("tlm", tlm);
     engine.rootContext()->setContextProperty("titleManager", title);

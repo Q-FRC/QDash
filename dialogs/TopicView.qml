@@ -10,10 +10,8 @@ Row {
 
     property alias menuAnim: menuAnim
 
-    property bool isCamera: false
-
-    property string closedText: isCamera ? "<<" : ">>"
-    property string openText: isCamera ? ">>" : "<<"
+    property string closedText: ">>"
+    property string openText: "<<"
 
     width: (parent.width / 3) + 40
     height: parent.height
@@ -21,7 +19,7 @@ Row {
     SmoothedAnimation {
         id: menuAnim
         target: tv
-        property: "anchors." + (isCamera ? "right" : "left") + "Margin"
+        property: "anchors." +  "left" + "Margin"
         duration: 500
     }
 
@@ -29,38 +27,13 @@ Row {
     signal close
 
     signal addWidget(string name, string topic, string type)
-    signal addCamera(string name, string source, var urls)
     signal dragging(point pos)
     signal dropped(point pos)
 
     function widgetAdd(name, topic, type) {
-        button2.text = closedText
+        button.text = closedText
         close()
         addWidget(name, topic, type)
-    }
-
-    function cameraAdd(name, source, urls) {
-        button.text = (closedText)
-        close()
-        addCamera(name, source, urls)
-    }
-
-    Button {
-        id: button
-        text: closedText
-
-        width: isCamera ? 40 : 0
-        height: isCamera ? 40 : 0
-
-        onClicked: {
-            if (text === closedText) {
-                open()
-                text = openText
-            } else {
-                close()
-                text = closedText
-            }
-        }
     }
 
     Rectangle {
@@ -87,7 +60,7 @@ Row {
 
             selectionModel: ItemSelectionModel {}
 
-            model: isCamera ? cameras : topics
+            model: topics
 
             delegate: Item {
                 DragHandler {
@@ -105,13 +78,8 @@ Row {
                         let global = mapToItem(topicView, centroid.position)
                         if (!topicView.contains(global)) {
                             if (!ready) {
-                                if (isCamera) {
-                                    cameraAdd(model.name, model.source,
-                                              model.urls)
-                                } else {
-                                    widgetAdd(model.name, model.topic,
-                                              model.type)
-                                }
+                                widgetAdd(model.name, model.topic,
+                                          model.type)
 
                                 ready = true
                             }
@@ -210,7 +178,7 @@ Row {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
                     clip: true
-                    text: isCamera ? "" : model.type
+                    text: model.type
 
                     color: Constants.palette.text
 
@@ -221,11 +189,11 @@ Row {
     }
 
     Button {
-        id: button2
+        id: button
         text: closedText
 
-        width: !isCamera ? 40 : 0
-        height: !isCamera ? 40 : 0
+        width: 40
+        height: 40
 
         onClicked: {
             if (text === closedText) {
