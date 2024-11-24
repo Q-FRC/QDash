@@ -1,10 +1,12 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 import QtQuick.Shapes 2.15
 
 import QFRCDashboard
 
 BaseWidget {
+    id: widget
     property string item_topic
 
     // @disable-check M311
@@ -15,9 +17,6 @@ BaseWidget {
     property string itemValue
 
     property list<var> item_colorMap: []
-
-    property string colorMapValueType: "color"
-    property string colorMapValueName: "Color"
 
     Menu {
         id: switchMenu
@@ -36,7 +35,7 @@ BaseWidget {
             let obj = item_colorMap[i];
 
             if (obj["Value"] === value) {
-                return obj[colorMapValueName]
+                return obj["Color"]
             }
         }
 
@@ -94,5 +93,111 @@ BaseWidget {
         model.topic = item_topic
 
         updateTopic(model.topic, topicStore.getValue(model.topic))
+    }
+
+    BaseConfigDialog {
+        id: config
+
+        height: 450
+
+        function openDialog() {
+            topicField.open()
+            titleFontField.open()
+            colorTable.open()
+            shapeField.open()
+
+            open()
+        }
+
+        onAccepted: {
+            topicField.accept()
+            titleFontField.accept()
+            colorTable.accept()
+            shapeField.accept()
+        }
+
+        ScrollView {
+            clip: true
+
+            anchors {
+                top: parent.top
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+
+                topMargin: 50
+                bottomMargin: 45
+
+                leftMargin: 5
+                rightMargin: 5
+            }
+
+            ColumnLayout {
+                id: layout
+                spacing: 25
+                anchors.fill: parent
+                clip: true
+
+                SectionHeader {
+                    label: "Font Settings"
+                }
+
+                LabeledSpinBox {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+
+                    id: titleFontField
+
+                    label: "Title Font Size"
+
+                    bindedProperty: "item_titleFontSize"
+                    bindTarget: widget
+                }
+
+                SectionHeader {
+                    label: "Color Settings"
+                }
+
+                ColorTable {
+                    id: colorTable
+
+                    Layout.fillWidth: true
+                    clip: true
+
+                    label: "Color Map"
+
+                    bindedProperty: "item_colorMap"
+                    bindTarget: widget
+                }
+
+                LabeledComboBox {
+                    id: shapeField
+
+                    Layout.fillWidth: true
+                    choices: shapeChoices
+
+                    label: "Shape"
+
+                    bindedProperty: "item_shape"
+                    bindTarget: widget
+                }
+
+                SectionHeader {
+                    label: "NT Settings"
+                }
+
+                LabeledTextField {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+
+                    id: topicField
+
+                    label: "Topic"
+
+                    bindedProperty: "item_topic"
+                    bindTarget: widget
+                }
+            }
+        }
     }
 }

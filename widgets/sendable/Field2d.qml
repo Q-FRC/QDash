@@ -1,11 +1,13 @@
 import QtQuick 6.2
 import QtQuick.Controls 2.15
-import QtQuick.Layouts 2.15
+import QtQuick.Layouts 6.6
 import QtQuick.Shapes 2.15
 
 import QFRCDashboard
 
 BaseWidget {
+    id: widget
+
     property string item_topic
 
     property bool item_useVerticalField: false
@@ -120,7 +122,7 @@ BaseWidget {
             let realFieldY = field.y + (field.height - field.paintedHeight) / 2
 
             let startPoint = item_useVerticalField ? Qt.point(realFieldX + field.paintedWidth - width, realFieldY + field.paintedHeight)
-                  : Qt.point(realFieldX, realFieldY + field.paintedHeight)
+                                                   : Qt.point(realFieldX, realFieldY + field.paintedHeight)
 
             x = startPoint.x + xPixels
             y = startPoint.y - yPixels - height
@@ -198,5 +200,200 @@ BaseWidget {
         model.topic = item_topic
 
         robot.update()
+    }
+
+    BaseConfigDialog {
+        id: config
+
+        height: 550
+        width: 450
+
+        function openDialog() {
+            topicField.open()
+            titleFontField.open()
+            robotShapeField.open()
+            colorField.open()
+            robotWField.open()
+            robotLField.open()
+            vertField.open()
+            mirrorRedField.open()
+            fieldField.open()
+
+            open()
+        }
+
+        onAccepted: {
+            topicField.accept()
+            titleFontField.accept()
+            robotShapeField.accept()
+            colorField.accept()
+            robotWField.accept()
+            robotLField.accept()
+            vertField.accept()
+            mirrorRedField.accept()
+            fieldField.accept()
+        }
+
+        ScrollView {
+            clip: true
+
+            anchors {
+                top: parent.top
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+
+                topMargin: 50
+                bottomMargin: 45
+
+                leftMargin: 5
+                rightMargin: 5
+            }
+
+            ColumnLayout {
+                id: layout
+                spacing: 25
+                anchors.fill: parent
+                clip: true
+
+                SectionHeader {
+                    label: "Font Settings"
+                }
+
+                LabeledSpinBox {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+
+                    id: titleFontField
+
+                    label: "Title Font Size"
+
+                    bindedProperty: "item_titleFontSize"
+                    bindTarget: widget
+                }
+
+                SectionHeader {
+                    label: "Robot Settings"
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    uniformCellSizes: true
+
+                    LabeledComboBox {
+                        id: robotShapeField
+
+                        Layout.fillWidth: true
+
+                        label: "Robot Shape"
+
+                        bindedProperty: "item_robotShape"
+                        bindTarget: widget
+
+                        choices: robotShapeChoices
+                    }
+
+                    ColorField {
+                        id: colorField
+
+                        Layout.fillWidth: true
+
+                        label: "Robot Color"
+
+                        bindedProperty: "item_robotColor"
+                        bindTarget: widget
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    uniformCellSizes: true
+
+                    LabeledDoubleSpinBox {
+                        id: robotWField
+
+                        Layout.fillWidth: true
+                        from: 0
+
+                        label: "Robot Width (m)"
+
+                        bindedProperty: "item_robotWidthMeters"
+                        bindTarget: widget
+
+                        stepSize: 0.1
+                    }
+
+                    LabeledDoubleSpinBox {
+                        id: robotLField
+
+                        Layout.fillWidth: true
+                        from: 0
+
+                        label: "Robot Length (m)"
+
+                        bindedProperty: "item_robotLengthMeters"
+                        bindTarget: widget
+
+                        stepSize: 0.1
+                    }
+                }
+
+                SectionHeader {
+                    label: "Field Settings"
+                }
+
+                RowLayout {
+                    uniformCellSizes: true
+                    Layout.fillWidth: true
+
+                    LabeledCheckbox {
+                        id: vertField
+                        Layout.fillWidth: true
+
+                        label: "Use Vertical Field"
+
+                        bindedProperty: "item_useVerticalField"
+                        bindTarget: widget
+                    }
+
+                    LabeledCheckbox {
+                        id: mirrorRedField
+                        Layout.fillWidth: true
+
+                        label: "Mirror for Red"
+
+                        bindedProperty: "item_mirrorForRedAlliance"
+                        bindTarget: widget
+                    }
+                }
+
+                LabeledComboBox {
+                    id: fieldField // lol
+                    Layout.fillWidth: true
+
+                    label: "Field Type"
+                    choices: fieldChoices
+
+                    bindedProperty: "item_field"
+                    bindTarget: widget
+                }
+
+                SectionHeader {
+                    label: "NT Settings"
+                }
+
+                LabeledTextField {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+
+                    id: topicField
+
+                    label: "Topic"
+
+                    bindedProperty: "item_topic"
+                    bindTarget: widget
+                }
+            }
+        }
     }
 }

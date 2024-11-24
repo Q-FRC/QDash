@@ -5,6 +5,7 @@
 
 #include "AccentsListModel.h"
 #include "BuildConfig.h"
+#include "Clipboard.h"
 #include "Flags.h"
 #include "Globals.h"
 #include "TitleManager.h"
@@ -33,6 +34,8 @@ int main(int argc, char *argv[])
 
     AccentsListModel *accents = new AccentsListModel(&app);
     accents->load();
+
+    Clipboard *clipboard = new Clipboard(&app);
 
     Globals::inst.AddConnectionListener(true, [topics, &store, title] (const nt::Event &event) {
         bool connected = event.Is(nt::EventFlags::kConnected);
@@ -91,6 +94,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("tlm", tlm);
     engine.rootContext()->setContextProperty("titleManager", title);
     engine.rootContext()->setContextProperty("accents", accents);
+    engine.rootContext()->setContextProperty("clipboard", clipboard);
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,

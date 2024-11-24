@@ -100,6 +100,17 @@ set(QML_ELEMENTS
     widgets/misc/CameraView
     widgets/misc/ErrorsWidget
 
+    widgets/config/BaseConfigDialog
+    widgets/config/LabeledTextField
+    widgets/config/LabeledCheckbox
+    widgets/config/LabeledSpinBox
+    widgets/config/LabeledDoubleSpinBox
+    widgets/config/LabeledComboBox
+    widgets/config/TitleComponent
+    widgets/config/ColorTable
+    widgets/config/ColorField
+    widgets/config/SectionHeader
+
     dialogs/TopicView
     dialogs/TabNameDialog
     dialogs/TabSizeDialog
@@ -113,6 +124,7 @@ set(ELEMENTS
     Constants
     SettingsManager
     TitleManager
+    Clipboard
 
     models/TabWidgetsModel
     models/TabListModel

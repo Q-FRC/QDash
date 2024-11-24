@@ -1,19 +1,21 @@
 import QtQuick
 import QtQuick.Controls 6.6
+import QtQuick.Layouts
 
 import QFRCDashboard
 
 BaseWidget {
+    id: widget
     property string item_topic
 
     property int item_fontSize: 15
     property double item_stepSize: 0.1
 
-    property double item_startAngle: 180
-    property double item_endAngle: 540
+    property double item_startAngle: -180
+    property double item_endAngle: 180
 
     property double item_lowerBound: 0
-    property double item_upperBound: 1000.0
+    property double item_upperBound: 100000.0
 
     Menu {
         id: switchMenu
@@ -158,5 +160,174 @@ BaseWidget {
 
         spin.value = topicStore.getValue(item_topic)
         dial.value = topicStore.getValue(item_topic)
+    }
+
+    BaseConfigDialog {
+        id: config
+
+        height: 600
+
+        function openDialog() {
+            topicField.open()
+            titleFontField.open()
+            fontField.open()
+
+            upField.open()
+            lowField.open()
+            stepField.open()
+            startField.open()
+            endField.open()
+
+            open()
+        }
+
+        onAccepted: {
+            topicField.accept()
+            titleFontField.accept()
+            fontField.accept()
+            upField.accept()
+            lowField.accept()
+            stepField.accept()
+            startField.accept()
+            endField.accept()
+        }
+
+        ColumnLayout {
+            id: layout
+            spacing: 25
+
+            anchors {
+                top: parent.top
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+
+                topMargin: config.headerHeight + 12
+                bottomMargin: 45
+
+                leftMargin: 5
+                rightMargin: 5
+            }
+
+            SectionHeader {
+                label: "Font Settings"
+            }
+
+            RowLayout {
+                uniformCellSizes: true
+
+                LabeledSpinBox {
+                    Layout.fillWidth: true
+
+                    id: titleFontField
+
+                    label: "Title Font Size"
+
+                    bindedProperty: "item_titleFontSize"
+                    bindTarget: widget
+                }
+
+                LabeledSpinBox {
+                    Layout.fillWidth: true
+
+                    id: fontField
+
+                    label: "Font Size"
+
+                    bindedProperty: "item_fontSize"
+                    bindTarget: widget
+                }
+            }
+
+            SectionHeader {
+                label: "Spin Box Settings"
+            }
+
+            RowLayout {
+                uniformCellSizes: true
+
+                LabeledDoubleSpinBox {
+                    Layout.fillWidth: true
+
+                    id: lowField
+
+                    label: "Lower Bound"
+
+                    bindedProperty: "item_lowerBound"
+                    bindTarget: widget
+                }
+
+                LabeledDoubleSpinBox {
+                    Layout.fillWidth: true
+
+                    id: upField
+
+                    label: "Upper Bound"
+
+                    bindedProperty: "item_upperBound"
+                    bindTarget: widget
+                }
+            }
+
+            LabeledDoubleSpinBox {
+                Layout.fillWidth: true
+
+                id: stepField
+
+                label: "Step Size"
+
+                bindedProperty: "item_stepSize"
+                bindTarget: widget
+
+                from: 0
+                stepSize: 0.1
+            }
+
+            SectionHeader {
+                label: "Dial Settings"
+            }
+
+            RowLayout {
+                uniformCellSizes: true
+
+                LabeledDoubleSpinBox {
+                    Layout.fillWidth: true
+
+                    id: startField
+
+                    label: "Start Angle"
+
+                    bindedProperty: "item_startAngle"
+                    bindTarget: widget
+                }
+
+                LabeledDoubleSpinBox {
+                    Layout.fillWidth: true
+
+                    id: endField
+
+                    label: "End Angle"
+
+                    bindedProperty: "item_endAngle"
+                    bindTarget: widget
+                }
+            }
+
+            SectionHeader {
+                label: "NT Settings"
+            }
+
+            LabeledTextField {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+
+                id: topicField
+
+                label: "Topic"
+
+                bindedProperty: "item_topic"
+                bindTarget: widget
+            }
+        }
     }
 }

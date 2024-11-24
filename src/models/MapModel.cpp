@@ -124,6 +124,18 @@ QVariantList MapModel::asList()
 
 }
 
+void MapModel::toList(const QVariantList &list)
+{
+    beginResetModel();
+    m_data.clear();
+    endResetModel();
+
+    for (const QVariant &v : list) {
+        QVariantMap m = v.toMap();
+        add(m.value("Value").toString(), m.value(m_valueName).toString());
+    }
+}
+
 QString MapModel::valueName() const
 {
     return m_valueName;

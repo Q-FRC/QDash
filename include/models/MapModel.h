@@ -39,6 +39,7 @@ public:
     Q_INVOKABLE void add(QString key = "", QString value = "");
     Q_INVOKABLE void remove(int row);
     Q_INVOKABLE QVariantList asList();
+    Q_INVOKABLE void toList(const QVariantList &list);
 
     QString valueName() const;
     void setValueName(const QString &newValueName);

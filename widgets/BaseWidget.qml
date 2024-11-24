@@ -106,7 +106,8 @@ Rectangle {
 
         MenuItem {
             text: "Configure"
-            onTriggered: openConf(rcMenu.parent)
+            // onTriggered: openConf(rcMenu.parent)
+            onTriggered: config.openDialog()
         }
 
         MenuItem {
@@ -300,5 +301,77 @@ Rectangle {
 
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
+    }
+
+    /**
+    * This is the "base" configuration dialog containing the NT and font settings.
+    * Copy it for your widget.
+    */
+    BaseConfigDialog {
+        // id: config
+
+        height: 450
+
+        function openDialog() {
+            topicField.open()
+            titleFontField.open()
+
+            open()
+        }
+
+        onAccepted: {
+            topicField.accept()
+            titleFontField.accept()
+        }
+
+        ColumnLayout {
+            id: layout
+            spacing: 25
+
+            anchors {
+                top: parent.top
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+
+                topMargin: parent.headerHeight + 12
+                bottomMargin: 45
+
+                leftMargin: 5
+                rightMargin: 5
+            }
+
+            SectionHeader {
+                label: "Font Settings"
+            }
+
+            LabeledSpinBox {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+
+                id: titleFontField
+
+                label: "Title Font Size"
+
+                bindedProperty: "item_titleFontSize"
+                bindTarget: rect
+            }
+
+            SectionHeader {
+                label: "NT Settings"
+            }
+
+            LabeledTextField {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+
+                id: topicField
+
+                label: "Topic"
+
+                bindedProperty: "item_topic"
+                bindTarget: rect
+            }
+        }
     }
 }
