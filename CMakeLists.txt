@@ -113,10 +113,17 @@ set(QML_ELEMENTS
 
     dialogs/TopicView
     dialogs/TabNameDialog
-    dialogs/TabSizeDialog
-    dialogs/WidgetConfig
-    dialogs/ServerDialog
+    dialogs/TabDialog
+
+    dialogs/ServerTab
+    dialogs/MiscTab
+    dialogs/AppearanceTab
+    dialogs/SettingsDialog
+    dialogs/SettingsTabButton
+    dialogs/AppearanceComboBox
+
     dialogs/AccentEditor
+    dialogs/AboutDialog
 )
 
 set(ELEMENTS

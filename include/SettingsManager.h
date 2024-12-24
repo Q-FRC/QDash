@@ -13,26 +13,24 @@ class SettingsManager : public QObject
     Q_PROPERTY(bool loadRecent READ loadRecent WRITE setLoadRecent NOTIFY loadRecentChanged FINAL)
     Q_PROPERTY(QStringList recentFiles READ recentFiles WRITE setRecentFiles NOTIFY recentFilesChanged FINAL)
     Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged FINAL)
+    Q_PROPERTY(QString accent READ accent WRITE setAccent NOTIFY accentChanged FINAL)
 
-    Q_PROPERTY(bool useTeam READ useTeam WRITE setUseTeam NOTIFY useTeamChanged FINAL)
+    Q_PROPERTY(int team READ team WRITE setTeam NOTIFY teamChanged FINAL)
+    Q_PROPERTY(int mode READ mode WRITE setMode NOTIFY modeChanged FINAL)
     Q_PROPERTY(QString ip READ ip WRITE setIp NOTIFY ipChanged FINAL)
-    Q_PROPERTY(int port READ getPort WRITE setPort NOTIFY portChanged FINAL)
-    Q_PROPERTY(QString switchTopic READ switchTopic WRITE setSwitchTopic NOTIFY switchTopicChanged FINAL)
+
 public:
     explicit SettingsManager(QObject *parent = nullptr);
 
     // NT
-    bool useTeam() const;
-    void setUseTeam(bool newUseTeam);
-
     QString ip() const;
     void setIp(const QString &newIp);
 
-    int getPort() const;
-    void setPort(int newPort);
+    int team() const;
+    void setTeam(int newTeam);
 
-    QString switchTopic() const;
-    void setSwitchTopic(const QString &newTopic);
+    int mode() const;
+    void setMode(int newMode);
 
     // other
     bool loadRecent() const;
@@ -52,17 +50,14 @@ public:
     void setAccent(const QString &newAccent);
 
 signals:
-    void useTeamChanged();
-    void ipChanged();
-    void portChanged();
-    void switchTopicChanged();
-
     void recentFilesChanged();
     void loadRecentChanged();
     void themeChanged();
     void accentChanged();
-private:
-    Q_PROPERTY(QString accent READ accent WRITE setAccent NOTIFY accentChanged FINAL)
+
+    void ipChanged();
+    void teamChanged();
+    void modeChanged();
 };
 
 #endif // SETTINGSMANAGER_H

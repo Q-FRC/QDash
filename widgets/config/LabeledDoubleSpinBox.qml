@@ -19,6 +19,8 @@ DoubleSpinBox {
     from: -1E9
     to: 1E9
 
+    height: 50
+
     font.pixelSize: 18
 
     function open() {

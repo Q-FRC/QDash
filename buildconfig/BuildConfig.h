@@ -1,8 +1,12 @@
 #pragma once
 #include <QString>
+#include <QObject>
+#include <QtQmlIntegration/QtQmlIntegration>
 
-class Config {
-   public:
+class Config : public QObject {
+    Q_OBJECT
+    QML_ELEMENT
+public:
     Config();
     QString APP_NAME;
     QString ORG_NAME;
@@ -28,7 +32,10 @@ class Config {
 
     /// tag-commit
     QString versionString() const;
+
+    Q_INVOKABLE QString buildInfo() const;
 };
 
-extern const Config BuildConfig;
+extern Config BuildConfig;
 
+Q_DECLARE_METATYPE(Config);

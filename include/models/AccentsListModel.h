@@ -55,6 +55,8 @@ public:
     Q_INVOKABLE void exportJson(const QString filename);
     Q_INVOKABLE void importJson(const QString filename);
 
+    Q_INVOKABLE QStringList names() const;
+
 protected:
     QHash<int, QByteArray> roleNames() const override;
 

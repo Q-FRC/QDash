@@ -57,6 +57,8 @@ public:
     Q_INVOKABLE void loadObject(const QJsonDocument &doc);
     Q_INVOKABLE void load(const QString &fileName = "");
 
+    Q_INVOKABLE void clear();
+
     int selectedTab() const;
     void selectTab(const QString &tab);
 

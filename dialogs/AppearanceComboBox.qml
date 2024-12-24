@@ -14,21 +14,25 @@ ComboBox {
     /** the target to bind the property to */
     required property var bindTarget
 
-    /** choices for the combobox */
     required property var choices
 
     id: combo
     model: choices
     font.pixelSize: 15
 
-    height: 50
+    function toTitleCase(str) {
+        return str.replace(
+                    /\w\S*/g,
+                    text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+                    );
+    }
 
     function open() {
-        currentIndex = indexOfValue(bindTarget[bindedProperty])
+        currentIndex = indexOfValue(toTitleCase(bindTarget[bindedProperty]))
     }
 
     function accept() {
-        bindTarget[bindedProperty] = currentText
+        bindTarget[bindedProperty] = currentText.toLowerCase()
     }
 
     delegate: ItemDelegate {

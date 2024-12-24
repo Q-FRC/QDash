@@ -6,10 +6,9 @@
 
 // STRUCTS //
 typedef struct {
-    bool teamNumber;
-    std::string server;
-    int port;
-    QString switchTopic;
+    int team;
+    std::string ip;
+    int mode;
 } ServerData;
 
 // NAMESPACES //

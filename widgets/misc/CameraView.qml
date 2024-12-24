@@ -46,8 +46,6 @@ BaseWidget {
                 --i
             }
         }
-
-        console.log(value)
     }
 
     function updateTopic(ntTopic, ntValue) {

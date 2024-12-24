@@ -131,54 +131,6 @@ void TabWidgetsModel::add(QString title, QString topic, QString type)
     emit unoccupiedCellsChanged();
 }
 
-void TabWidgetsModel::addCamera(QString name, QString source, QVariantList urls)
-{
-    Widget w;
-    w.title = name;
-    w.type = "camera";
-
-    w.properties.insert("name", name);
-    w.properties.insert("source", source);
-
-    QUrl url;
-    if (urls.empty()) {
-        url = source;
-    } else {
-        for (const QVariant &u : urls) {
-            // pure, unfaltered cancer
-            QString str = u.value<QVariant>().toString();
-
-            if (str.contains(".local")) {
-                continue;
-            }
-
-            url = str;
-        }
-
-        if (url.isEmpty()) {
-            url = urls.at(0).value<QVariant>().toString();
-        }
-    }
-
-    if (!url.isEmpty()) {
-        QStringList split = url.toString().split(":");
-        w.properties.insert("host", (split.at(0) + ":" + split.at(1)));;
-        w.properties.insert("port", split.at(2).split("/").at(0).toInt());
-    }
-
-    w.row = -1;
-    w.col = -1;
-
-    w.rowSpan = 1;
-    w.colSpan = 1;
-
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
-    m_data << w;
-    endInsertRows();
-
-    emit unoccupiedCellsChanged();
-}
-
 void TabWidgetsModel::setEqualTo(TabWidgetsModel *w)
 {
     beginResetModel();

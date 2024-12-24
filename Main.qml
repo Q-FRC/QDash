@@ -10,81 +10,27 @@ ApplicationWindow {
     visible: true
     title: titleManager.title
 
+    AccentEditor {
+        id: accentEditor
+
+        anchors.centerIn: Overlay.overlay
+    }
+
+    AboutDialog {
+        id: about
+    }
+
+    Shortcut {
+        sequence: "Ctrl+,"
+        onActivated: screen.settingsDialog()
+    }
+
     menuBar: MenuBar {
         contentWidth: parent.width
 
-        Menu {
-            contentWidth: 210
-            title: qsTr("&Settings")
-            Action {
-                text: qsTr("&Server Settings...")
-                onTriggered: screen.serverSettings()
-                shortcut: "Ctrl+E"
-            }
-            MenuItem {
-                text: "&Load Most Recent File?"
-                checkable: true
-                checked: settings.loadRecent
-                onCheckedChanged: settings.loadRecent = checked
-            }
-
-            Menu {
-                title: qsTr("&Theme")
-                Repeater {
-                    model: ["Light", "Dark", "Midnight"]
-
-                    MenuItem {
-                        text: "&" + modelData
-                        checkable: true
-                        checked: settings.theme === modelData.toLowerCase()
-                        onCheckedChanged: {
-                            if (checked)
-                                Constants.setTheme(modelData.toLowerCase())
-                        }
-                    }
-                }
-            }
-
-            Menu {
-                title: qsTr("&Accent")
-
-                Repeater {
-                    model: accents
-
-                    MenuItem {
-                        function toTitleCase(str) {
-                            return str.replace(
-                                        /\w\S*/g,
-                                        text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
-                                        );
-                        }
-
-                        text: "&" + toTitleCase(model.name)
-                        checkable: true
-                        checked: settings.accent === model.name
-                        onCheckedChanged: {
-                            if (checked)
-                                Constants.setAccent(model.name)
-                        }
-                    }
-                }
-            }
-
-            Menu {
-                title: qsTr("&Custom Accents")
-                MenuItem {
-                    text: "&Edit Accents..."
-                    onTriggered: screen.editAccents()
-                }
-                MenuItem {
-                    text: "Export Accents..."
-                    onTriggered: screen.exportAccentsAction()
-                }
-                MenuItem {
-                    text: "Import Accents..."
-                    onTriggered: screen.importAccentsAction()
-                }
-            }
+        MenuBarItem {
+            text: qsTr("&Settings")
+            onTriggered: screen.settingsDialog()
         }
 
         Menu {
@@ -112,7 +58,11 @@ ApplicationWindow {
 
                     delegate: MenuItem {
                         text: qsTr("&" + index + ". " + modelData)
-                        onTriggered: tlm.load(modelData)
+                        onTriggered: {
+                            if (modelData === "" || modelData === null) return;
+                            tlm.clear()
+                            tlm.load(modelData)
+                        }
                     }
                 }
             }
@@ -133,15 +83,9 @@ ApplicationWindow {
             }
 
             Action {
-                text: qsTr("Tab &Size")
-                onTriggered: screen.tabSize()
+                text: qsTr("Configu&re Tab")
+                onTriggered: screen.configTab()
                 shortcut: "Ctrl+R"
-            }
-
-            Action {
-                text: qsTr("&Rename Tab")
-                onTriggered: screen.renameTab()
-                shortcut: "Ctrl+N"
             }
         }
 
@@ -152,6 +96,11 @@ ApplicationWindow {
                 onTriggered: screen.paste()
                 shortcut: "Ctrl+V"
             }
+        }
+
+        MenuBarItem {
+            text: qsTr("&About")
+            onTriggered: about.open()
         }
     }
 

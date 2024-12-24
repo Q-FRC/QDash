@@ -123,8 +123,8 @@ void TabListModel::save(const QString &filename)
 QJsonDocument TabListModel::saveObject() const
 {
     QJsonObject doc;
-    doc.insert("useTeamNumber", m_settings->useTeam());
-    doc.insert("port", m_settings->getPort());
+    doc.insert("mode", m_settings->mode());
+    doc.insert("team", m_settings->team());
     doc.insert("ip", m_settings->ip());
 
     QJsonArray arr;
@@ -149,9 +149,9 @@ void TabListModel::loadObject(const QJsonDocument &doc)
 {
     QJsonObject ob = doc.object();
 
-    Globals::server.server = ob.value("ip").toString().toStdString();
-    Globals::server.port = ob.value("port").toInt();
-    Globals::server.teamNumber = ob.value("useTeamNumber").toBool();
+    Globals::server.ip = ob.value("ip").toString().toStdString();
+    Globals::server.team = ob.value("team").toInteger();
+    Globals::server.mode = ob.value("mode").toInteger();
 
     m_settings->reconnectServer();
 
@@ -190,12 +190,18 @@ void TabListModel::load(const QString &filename)
     QByteArray data = stream.readAll().toUtf8();
 
     QJsonDocument doc = QJsonDocument::fromJson(data);
-    beginResetModel();
-    m_data.clear();
-    endResetModel();
+
+    clear();
 
     loadObject(doc);
     file.close();
+}
+
+void TabListModel::clear()
+{
+    beginResetModel();
+    m_data.clear();
+    endResetModel();
 }
 
 int TabListModel::selectedTab() const

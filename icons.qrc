@@ -3,5 +3,11 @@
         <file alias="Warning">icons/warn.svg</file>
         <file alias="Information">icons/info.svg</file>
         <file alias="Critical">icons/crit.svg</file>
+        <file alias="NetworkLight">icons/netLight.svg</file>
+        <file alias="NetworkDark">icons/netDark.svg</file>
+        <file alias="AppearanceLight">icons/colorLight.svg</file>
+        <file alias="AppearanceDark">icons/colorDark.svg</file>
+        <file alias="MiscellaneousLight">icons/miscLight.svg</file>
+        <file alias="MiscellaneousDark">icons/miscDark.svg</file>
     </qresource>
 </RCC>

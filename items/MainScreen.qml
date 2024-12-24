@@ -26,10 +26,6 @@ Rectangle {
         onActivated: swipe.decrementCurrentIndex()
     }
 
-    function openConf(item) {
-        widgetConf.openUp(item)
-    }
-
     function setTab() {
         swipe.setCurrentIndex(tlm.selectedTab)
     }
@@ -42,6 +38,9 @@ Rectangle {
         }
 
         tlm.onSelectedTabChanged.connect(setTab)
+
+        Constants.setTheme(settings.theme)
+        Constants.setAccent(settings.accent)
     }
 
     function drag(pos, fromList) {
@@ -124,18 +123,12 @@ Rectangle {
 
     TabNameDialog {
         id: tabNameDialog
+        onAccepted: addTab()
     }
 
-    TabNameDialog {
-        id: tabRenameDialog
-    }
-
-    TabSizeDialog {
-        id: tabSizeDialog
-    }
-
-    WidgetConfig {
-        id: widgetConf
+    TabDialog {
+        id: tabConfigDialog
+        onAccepted: setTabConfig()
     }
 
     /** SAVE */
@@ -190,35 +183,22 @@ Rectangle {
 
     /** TAB SETTINGS */
     function addTab() {
-        tabNameDialog.accepted.disconnect(addTab)
         tlm.add(tabNameDialog.tabName.text)
         swipe.setCurrentIndex(swipe.count - 1)
     }
 
     function newTab() {
-        tabNameDialog.accepted.connect(addTab)
         tabNameDialog.openUp("")
     }
 
-    function tabRename() {
-        tabRenameDialog.accepted.disconnect(tabRename)
-        currentTab().setName(tabRenameDialog.tabName.text)
+    function setTabConfig() {
+        currentTab().setSize(tabConfigDialog.rows,
+                             tabConfigDialog.columns)
+        currentTab().setName(tabConfigDialog.name)
     }
 
-    function renameTab() {
-        tabRenameDialog.accepted.connect(tabRename)
-        tabRenameDialog.openUp(currentTab().name())
-    }
-
-    function setSize() {
-        tabSizeDialog.accepted.disconnect(setSize)
-        currentTab().setSize(tabSizeDialog.rowValue.value,
-                             tabSizeDialog.columnValue.value)
-    }
-
-    function tabSize() {
-        tabSizeDialog.accepted.connect(setSize)
-        tabSizeDialog.openUp(currentTab().rows(), currentTab().cols())
+    function configTab() {
+        tabConfigDialog.openUp(currentTab().rows(), currentTab().cols(), currentTab().name())
     }
 
     function currentTab() {
@@ -249,59 +229,12 @@ Rectangle {
     }
 
     /** SERVER SETTINGS */
-    ServerDialog {
-        id: serverDialog
+    SettingsDialog {
+        id: settingsDialog
     }
 
-    function serverSettings() {
-        serverDialog.open()
-    }
-
-    /** CUSTOM ACCENTS */
-    AccentEditor {
-        id: accentEditor
-    }
-
-    function editAccents() {
-        accentEditor.open()
-    }
-
-    FileDialog {
-        id: saveAccentDialog
-        currentFolder: StandardPaths.writableLocation(
-                           StandardPaths.HomeLocation)
-        fileMode: FileDialog.SaveFile
-        defaultSuffix: "json"
-        selectedNameFilter.index: 0
-        nameFilters: ["JSON files (*.json)", "All files (*)"]
-    }
-
-    function exportAccents() {
-        accents.exportJson(saveAccentDialog.selectedFile)
-    }
-
-    function exportAccentsAction() {
-        saveAccentDialog.accepted.connect(exportAccents)
-        saveAccentDialog.open()
-    }
-
-    FileDialog {
-        id: loadAccentDialog
-        currentFolder: StandardPaths.writableLocation(
-                           StandardPaths.HomeLocation)
-        fileMode: FileDialog.OpenFile
-        defaultSuffix: "json"
-        selectedNameFilter.index: 0
-        nameFilters: ["JSON files (*.json)", "All files (*)"]
-    }
-
-    function importAccents() {
-        accents.importJson(loadAccentDialog.selectedFile)
-    }
-
-    function importAccentsAction() {
-        loadAccentDialog.accepted.connect(importAccents)
-        loadAccentDialog.open()
+    function settingsDialog() {
+        settingsDialog.openDialog()
     }
 
     /** CONTENT */

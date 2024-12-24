@@ -246,6 +246,20 @@ void AccentsListModel::importJson(const QString filename)
     save();
 }
 
+QStringList AccentsListModel::names() const
+{
+    QStringList list;
+    for (const Accent &a : m_data) {
+        // convert to title case
+        QString name = a.name;
+        QChar first = name.at(0).toUpper();
+
+        list.append(first + name.last(name.size() - 1));
+    }
+
+    return list;
+}
+
 QHash<int, QByteArray> AccentsListModel::roleNames() const
 {
     QHash<int,QByteArray> rez;

@@ -19,19 +19,19 @@ jobs:
 
           - os: ubuntu-20.04
             qt_host: linux
-            qt_version: '6.8.0'
+            qt_version: '6.8.1'
             qt_modules: 'qtmultimedia qtcharts qtwaylandcompositor'
             qt_arch: 'linux_gcc_64'
 
           - os: windows-2022
             qt_host: windows
-            qt_version: '6.8.0'
+            qt_version: '6.8.1'
             qt_modules: 'qtmultimedia qtcharts'
             qt_arch: 'win64_msvc2022_64'
 
           - os: macos-latest
             qt_host: mac
-            qt_version: '6.7.2'
+            qt_version: '6.8.1'
             qt_modules: 'qtmultimedia qtcharts'
             qt_arch: 'clang_64'
 

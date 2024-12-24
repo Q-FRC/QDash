@@ -1,7 +1,7 @@
 #include "BuildConfig.h"
 #include <QObject>
 
-const Config BuildConfig;
+Config BuildConfig;
 
 Config::Config()
 {
@@ -43,4 +43,11 @@ Config::Config()
 QString Config::versionString() const
 {
     return QString("%1-%2").arg(GIT_TAG).arg(VERSION_CHANNEL);
+}
+
+QString Config::buildInfo() const
+{
+    return "GitHub: " + GIT_REPO + "\n" +
+           "Built on " + BUILD_DATE + " for " + BUILD_PLATFORM + " platform.\n" +
+           "Version: " + versionString();
 }

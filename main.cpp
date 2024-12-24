@@ -51,8 +51,7 @@ int main(int argc, char *argv[])
     });
 
     Globals::inst.StartClient4(BuildConfig.APP_NAME.toStdString());
-    Globals::inst.SetServer(Globals::server.server.c_str(), NT_DEFAULT_PORT4);
-    Globals::inst.StartDSClient();
+    Globals::inst.StartDSClient(NT_DEFAULT_PORT4);
 
     Globals::inst.AddListener({{""}}, nt::EventFlags::kTopic, [topics] (const nt::Event &event) {
         std::string topicName(event.GetTopicInfo()->name);
@@ -95,6 +94,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("titleManager", title);
     engine.rootContext()->setContextProperty("accents", accents);
     engine.rootContext()->setContextProperty("clipboard", clipboard);
+    engine.rootContext()->setContextProperty("buildConfig", &BuildConfig);
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,
