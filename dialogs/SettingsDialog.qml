@@ -87,9 +87,9 @@ Dialog {
             left: parent.left
             right: parent.right
 
-            leftMargin: -18
-            rightMargin: -18
-            topMargin: -16
+            leftMargin: -24
+            rightMargin: -24
+            topMargin: -23
         }
 
         Repeater {

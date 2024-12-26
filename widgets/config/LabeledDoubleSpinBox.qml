@@ -50,6 +50,8 @@ DoubleSpinBox {
             verticalAlignment: Qt.AlignVCenter
 
             inputMethodHints: Qt.ImhFormattedNumbersOnly
+
+            onEditingFinished: spin.value = parseFloat(text.replace(/,/g, ""))
         }
 
         up.indicator: Rectangle {

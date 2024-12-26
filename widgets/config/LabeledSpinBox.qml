@@ -32,6 +32,8 @@ SpinBox {
         verticalAlignment: Qt.AlignVCenter
 
         inputMethodHints: Qt.ImhFormattedNumbersOnly
+
+        onEditingFinished: spin.value = parseInt(text.replace(/,/g, ""))
     }
 
     function open() {

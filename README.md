@@ -58,8 +58,8 @@ cmake --install build --prefix ${PKGDIR}
 ### Submodules
 If you don't want to install protobuf and ntcore to your system, CMake options are provided for such:
 
-- `USE_SYSTEM_NTCORE` (default ON)
-- `USE_SYSTEM_PROTOBUF` (default ON)
+- `USE_SYSTEM_NTCORE` (default OFF)
+- `USE_SYSTEM_PROTOBUF` (default OFF)
 
 Examples:
 

@@ -95,14 +95,17 @@ ColumnLayout {
         Layout.fillWidth: true
 
         Button {
+            Layout.fillWidth: true
             text: "&Edit"
             onClicked: editAccents()
         }
         Button {
+            Layout.fillWidth: true
             text: "E&xport"
             onClicked: exportAccents()
         }
         Button {
+            Layout.fillWidth: true
             text: "I&mport"
             onClicked: importAccents()
         }

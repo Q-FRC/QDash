@@ -2,31 +2,37 @@
     {
         "accent": "#c10000",
         "light": "#ff2727",
-        "name": "red"
+        "name": "red",
+        "qml": "Red"
     },
     {
         "accent": "#0024c2",
         "light": "#4520ff",
-        "name": "blue"
+        "name": "blue",
+        "qml": "Cobalt"
     },
     {
         "accent": "#a100a1",
         "light": "#b400e1",
-        "name": "purple"
+        "name": "purple",
+        "qml": "Violet"
     },
     {
         "accent": "#00aa00",
         "light": "#00dd00",
-        "name": "green"
+        "name": "green",
+        "qml": "Emerald"
     },
     {
         "accent": "#000000",
         "light": "#555555",
-        "name": "black"
+        "name": "black",
+        "qml": "Steel"
     },
     {
         "accent": "#FFFFFF",
         "light": "#BBBBBB",
-        "name": "white"
+        "name": "white",
+        "qml": "Steel"
     }
 ]

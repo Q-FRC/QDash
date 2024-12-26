@@ -8,9 +8,13 @@ set(Dashboard_GIT_REPO https://github.com/${Dashboard_ORG_NAME}/${Dashboard_EXEC
 project(QFRCDashboard VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 6.7 REQUIRED COMPONENTS Quick Multimedia)
+option(USE_SYSTEM_NTCORE OFF "Use the system NTCore (Linux only)")
+option(USE_SYSTEM_PROTOBUF OFF "Use the system protobuf (Linux only)")
+
+find_package(Qt6 6.7 REQUIRED COMPONENTS Quick Multimedia QuickControls2)
 add_subdirectory(3rd_party EXCLUDE_FROM_ALL)
 
 qt_standard_project_setup(REQUIRES 6.7)
@@ -61,6 +65,7 @@ set(QRC_FILES
 qt_add_executable(${Dashboard_EXEC_NAME}
     main.cpp
     ${QRC_FILES}
+    ${RCS_FILE}
 )
 
 set_source_files_properties(Constants.qml
@@ -131,7 +136,7 @@ set(ELEMENTS
     Constants
     SettingsManager
     TitleManager
-    Clipboard
+    PlatformHelper
 
     models/TabWidgetsModel
     models/TabListModel
@@ -181,6 +186,7 @@ set_target_properties(${Dashboard_EXEC_NAME} PROPERTIES
 target_link_libraries(${Dashboard_EXEC_NAME}
     PRIVATE Qt6::Quick
     Qt6::Multimedia
+    Qt6::QuickControls2
     BuildConfig
     ntcore
 )

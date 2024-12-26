@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 
+import QtQuick.Controls.Universal
+
 import QFRCDashboard
 
 ApplicationWindow {
@@ -9,6 +11,9 @@ ApplicationWindow {
     height: Constants.height
     visible: true
     title: titleManager.title
+
+    Universal.theme: settings.theme === "light" ? Universal.Light : Universal.Dark
+    Universal.accent: accents.qml(settings.accent) // "qml" is the Universal Theme accent. Affects checkboxes, etc.
 
     AccentEditor {
         id: accentEditor
@@ -57,9 +62,10 @@ ApplicationWindow {
                     model: settings.recentFiles
 
                     delegate: MenuItem {
-                        text: qsTr("&" + index + ". " + modelData)
+                        text: qsTr("&" + index + ". " + platformHelper.baseName(modelData))
                         onTriggered: {
-                            if (modelData === "" || modelData === null) return;
+                            if (modelData === "" || modelData === null)
+                                return
                             tlm.clear()
                             tlm.load(modelData)
                         }
@@ -109,5 +115,3 @@ ApplicationWindow {
         anchors.fill: parent
     }
 }
-
-

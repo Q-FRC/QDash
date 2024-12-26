@@ -10,6 +10,7 @@ typedef struct Accent {
     QString name;
     QString accent;
     QString light;
+    QString qml;
 } Accent;
 
 class AccentsListModel : public QAbstractListModel
@@ -21,6 +22,7 @@ public:
         NAME = Qt::UserRole + 1,
         ACCENT,
         LIGHT,
+        QML,
         IDX
     };
 
@@ -49,6 +51,9 @@ public:
 
     Q_INVOKABLE QString accent(const QString &name);
     Q_INVOKABLE QString light(const QString &name);
+    Q_INVOKABLE QString qml(const QString &name);
+
+    Q_INVOKABLE QString qmlColor(const QString &name);
 
     Q_INVOKABLE void copy(const QString &toCopy);
 
@@ -62,6 +67,8 @@ protected:
 
 private:
     QList<Accent> m_data;
+
+    QMap<QString, QString> m_universalMap;
 };
 
 #endif // ACCENTSLISTMODEL_H

@@ -12,6 +12,14 @@ Rectangle {
     }
     color: "transparent"
 
+    function getQml() {
+        return model.qml
+    }
+
+    function setQml(newQml) {
+        model.qml = newQml
+    }
+
     RowLayout {
         anchors {
             left: parent.left
@@ -21,6 +29,7 @@ Rectangle {
         }
 
         width: parent.width
+        uniformCellSizes: true
         height: 50
 
         TextField {
@@ -63,6 +72,40 @@ Rectangle {
                 regularExpression: /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
             }
         }
+
+        ComboBox {
+            Layout.fillWidth: true
+
+            Component.onCompleted: currentIndex = indexOfValue(getQml())
+
+            id: qml
+            model: [
+                "Lime",
+                "Green",
+                "Emerald",
+                "Teal",
+                "Cyan",
+                "Cobalt",
+                "Indigo",
+                "Violet",
+                "Pink",
+                "Magenta",
+                "Crimson",
+                "Red",
+                "Orange",
+                "Amber",
+                "Yellow",
+                "Brown",
+                "Olive",
+                "Steel",
+                "Mauve",
+                "Taupe",
+            ]
+
+            font.pixelSize: 15
+
+            onActivated: (index) => setQml(currentText)
+        }
     }
 
     RowLayout {
@@ -99,6 +142,14 @@ Rectangle {
             height: 40
 
             color: light.text
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+
+            height: 40
+
+            color: accents.qmlColor(qml.currentText)
         }
     }
 

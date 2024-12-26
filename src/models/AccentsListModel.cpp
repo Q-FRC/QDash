@@ -12,7 +12,28 @@
 
 AccentsListModel::AccentsListModel(QObject *parent)
     : QAbstractListModel{parent}
-{}
+{
+    m_universalMap.insert("Lime", "#A4C400");
+    m_universalMap.insert("Green", "#60A917");
+    m_universalMap.insert("Emerald", "#008A00");
+    m_universalMap.insert("Teal", "#00ABA9");
+    m_universalMap.insert("Cyan", "#1BA1E2");
+    m_universalMap.insert("Cobalt", "#3E65FF");
+    m_universalMap.insert("Indigo", "#6A00FF");
+    m_universalMap.insert("Violet", "#AA00FF");
+    m_universalMap.insert("Pink", "#F472D0");
+    m_universalMap.insert("Magenta", "#D80073");
+    m_universalMap.insert("Crimson", "#A20025");
+    m_universalMap.insert("Red", "#E51400");
+    m_universalMap.insert("Orange", "#FA6800");
+    m_universalMap.insert("Amber", "#F0A30A");
+    m_universalMap.insert("Yellow", "#E3C800");
+    m_universalMap.insert("Brown", "#825A2C");
+    m_universalMap.insert("Olive", "#6D8764");
+    m_universalMap.insert("Steel", "#647687");
+    m_universalMap.insert("Mauve", "#76608A");
+    m_universalMap.insert("Taupe", "#87794E");
+}
 
 int AccentsListModel::rowCount(const QModelIndex &parent) const
 {
@@ -33,6 +54,8 @@ QVariant AccentsListModel::data(const QModelIndex &index, int role) const
         return a.accent;
     case LIGHT:
         return a.light;
+    case QML:
+        return a.qml;
     case IDX:
         return index.row();
     default:
@@ -54,6 +77,9 @@ bool AccentsListModel::setData(const QModelIndex &index, const QVariant &value, 
         break;
     case LIGHT:
         a.light = value.toString();
+        break;
+    case QML:
+        a.qml = value.toString();
         break;
     default:
         break;
@@ -79,6 +105,7 @@ void AccentsListModel::add()
     a.name = "New Accent";
     a.accent = "#000000";
     a.light = "#555555";
+    a.qml = "Cobalt";
 
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_data << a;
@@ -123,6 +150,7 @@ QJsonDocument AccentsListModel::saveObject() const
         obj.insert("name", a.name);
         obj.insert("accent", a.accent);
         obj.insert("light", a.light);
+        obj.insert("qml", a.qml);
 
         arr.append(obj);
     }
@@ -142,6 +170,7 @@ void AccentsListModel::loadObject(const QJsonDocument &doc)
         a.name = obj.value("name").toString();
         a.accent = obj.value("accent").toString();
         a.light = obj.value("light").toString();
+        a.qml = obj.value("qml").toString();
 
         beginInsertRows(QModelIndex(), rowCount(), rowCount());
         m_data << a;
@@ -195,6 +224,22 @@ QString AccentsListModel::light(const QString &name)
     }
 
     return "";
+}
+
+QString AccentsListModel::qml(const QString &name)
+{
+    for (const Accent &a : m_data) {
+        if (name == a.name) {
+            return a.qml;
+        }
+    }
+
+    return "";
+}
+
+QString AccentsListModel::qmlColor(const QString &name)
+{
+    return m_universalMap.value(name, "#3E65FF");
 }
 
 void AccentsListModel::copy(const QString &toCopy)
@@ -266,6 +311,7 @@ QHash<int, QByteArray> AccentsListModel::roleNames() const
     rez[NAME] = "name";
     rez[ACCENT] = "accent";
     rez[LIGHT] = "light";
+    rez[QML] = "qml";
     rez[IDX] = "idx";
 
     return rez;

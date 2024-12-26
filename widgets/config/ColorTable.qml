@@ -32,7 +32,7 @@ ColumnLayout {
     ColorDialog {
         id: colorDialog
 
-        onAccepted: Clipboard.copy(selectedColor)
+        onAccepted: platformHelper.copy(selectedColor)
     }
 
     Text {

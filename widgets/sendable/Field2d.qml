@@ -205,7 +205,7 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 550
+        height: 450
         width: 450
 
         function openDialog() {
@@ -236,6 +236,8 @@ BaseWidget {
 
         ScrollView {
             clip: true
+
+            contentWidth: 420
 
             anchors {
                 top: parent.top

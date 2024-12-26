@@ -21,9 +21,15 @@ Dialog {
 
     contentItem: Rectangle {
         color: Constants.palette.dialogBg
-        radius: 20
+
+        topLeftRadius: 20
+        topRightRadius: 20
+
         anchors.fill: parent
+        width: parent.width
     }
+
+    footer.height: 45
 
     parent: Overlay.overlay
     anchors.centerIn: parent
