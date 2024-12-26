@@ -14,7 +14,7 @@ set(CMAKE_AUTORCC ON)
 option(USE_SYSTEM_NTCORE OFF "Use the system NTCore (Linux only)")
 option(USE_SYSTEM_PROTOBUF OFF "Use the system protobuf (Linux only)")
 
-find_package(Qt6 6.7 REQUIRED COMPONENTS Quick Multimedia QuickControls2)
+find_package(Qt6 6.7 REQUIRED COMPONENTS Quick Multimedia QuickControls2 Network)
 add_subdirectory(3rd_party EXCLUDE_FROM_ALL)
 
 qt_standard_project_setup(REQUIRES 6.7)
@@ -80,7 +80,7 @@ set(QML_ELEMENTS
     items/MainScreen
     items/Tab
     items/GridHandler
-    items/AccentDisplay
+    items/TopicView
 
     widgets/BaseWidget
     widgets/ResizeAnchor
@@ -116,18 +116,22 @@ set(QML_ELEMENTS
     widgets/config/ColorField
     widgets/config/SectionHeader
 
-    dialogs/TopicView
-    dialogs/TabNameDialog
-    dialogs/TabDialog
+    dialogs/tab/TabNameDialog
+    dialogs/tab/TabDialog
 
-    dialogs/ServerTab
-    dialogs/MiscTab
-    dialogs/AppearanceTab
-    dialogs/SettingsDialog
-    dialogs/SettingsTabButton
-    dialogs/AppearanceComboBox
+    dialogs/remote/RemoteLayoutsDialog
+    dialogs/remote/RemoteLayout
 
-    dialogs/AccentEditor
+    dialogs/settings/ServerTab
+    dialogs/settings/MiscTab
+    dialogs/settings/AppearanceTab
+    dialogs/settings/SettingsDialog
+    dialogs/settings/SettingsTabButton
+    dialogs/settings/AppearanceComboBox
+
+    dialogs/accent/AccentEditor
+    dialogs/accent/AccentDisplay
+
     dialogs/AboutDialog
 )
 
@@ -143,6 +147,7 @@ set(ELEMENTS
     models/TopicListModel
     models/MapModel
     models/AccentsListModel
+    models/RemoteLayoutModel
 
     stores/TopicStore
 )
@@ -187,6 +192,7 @@ target_link_libraries(${Dashboard_EXEC_NAME}
     PRIVATE Qt6::Quick
     Qt6::Multimedia
     Qt6::QuickControls2
+    Qt6::Network
     BuildConfig
     ntcore
 )

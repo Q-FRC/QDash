@@ -1,5 +1,7 @@
+import QtCore
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Dialogs
 
 import QtQuick.Controls.Universal
 
@@ -15,6 +17,8 @@ ApplicationWindow {
     Universal.theme: settings.theme === "light" ? Universal.Light : Universal.Dark
     Universal.accent: accents.qml(settings.accent) // "qml" is the Universal Theme accent. Affects checkboxes, etc.
 
+    property string filename: ""
+
     AccentEditor {
         id: accentEditor
 
@@ -25,9 +29,85 @@ ApplicationWindow {
         id: about
     }
 
+    /** SAVE */
+    FileDialog {
+        id: saveDialog
+        currentFolder: StandardPaths.writableLocation(
+                           StandardPaths.HomeLocation)
+        fileMode: FileDialog.SaveFile
+        defaultSuffix: "json"
+        selectedNameFilter.index: 0
+        nameFilters: ["JSON files (*.json)", "All files (*)"]
+
+        onAccepted: saveAs();
+    }
+
+    function save() {
+        if (filename === "")
+            return saveDialog.open()
+
+        tlm.save(filename)
+    }
+
+    function saveAs() {
+        filename = saveDialog.selectedFile
+
+        tlm.save(filename)
+    }
+
+    /** LOAD */
+    FileDialog {
+        id: loadDialog
+        currentFolder: StandardPaths.writableLocation(
+                           StandardPaths.HomeLocation)
+        fileMode: FileDialog.OpenFile
+        defaultSuffix: "json"
+        selectedNameFilter.index: 0
+        nameFilters: ["JSON files (*.json)", "All files (*)"]
+
+        onAccepted: load()
+    }
+
+    function load() {
+        filename = loadDialog.selectedFile
+        tlm.load(filename)
+    }
+
+    /** SERVER SETTINGS */
+    SettingsDialog {
+        id: settingsDialog
+    }
+
+    /** REMOTE LAYOUTS */
+    MessageDialog {
+        id: fail
+        buttons: MessageDialog.Ok
+        title: "Error"
+        text: "You must be connected to a robot to download remote layouts.";
+
+        modality: Qt.WindowModal
+    }
+
+    RemoteLayoutsDialog {
+        id: remoteLayouts
+    }
+
+    /** THE REST */
+
+    Component.onCompleted: {
+        Constants.setTheme(settings.theme)
+        Constants.setAccent(settings.accent)
+
+        if (settings.loadRecent && settings.recentFiles.length > 0) {
+            filename = settings.recentFiles[0]
+            if (filename === "" || filename === null) return;
+            tlm.load(filename)
+        }
+    }
+
     Shortcut {
         sequence: "Ctrl+,"
-        onActivated: screen.settingsDialog()
+        onActivated: settingsDialog.openDialog()
     }
 
     menuBar: MenuBar {
@@ -35,7 +115,7 @@ ApplicationWindow {
 
         MenuBarItem {
             text: qsTr("&Settings")
-            onTriggered: screen.settingsDialog()
+            onTriggered: settingsDialog.openDialog()
         }
 
         Menu {
@@ -43,17 +123,17 @@ ApplicationWindow {
             title: qsTr("&File")
             Action {
                 text: qsTr("&Save")
-                onTriggered: screen.save()
+                onTriggered: save()
                 shortcut: "Ctrl+S"
             }
             Action {
                 text: qsTr("Save &As")
-                onTriggered: screen.saveAsAction()
+                onTriggered: saveDialog.open()
                 shortcut: "Ctrl+Shift+S"
             }
             Action {
                 text: qsTr("&Open...")
-                onTriggered: screen.loadAction()
+                onTriggered: loadDialog.open()
                 shortcut: "Ctrl+O"
             }
             Menu {
@@ -71,6 +151,11 @@ ApplicationWindow {
                         }
                     }
                 }
+            }
+            Action {
+                text: qsTr("Remote &Layouts...")
+                onTriggered: remoteLayouts.openDialog();
+                shortcut: "Ctrl+L"
             }
         }
 

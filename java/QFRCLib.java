@@ -7,9 +7,11 @@ package frc.robot;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import edu.wpi.first.net.WebServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Filesystem;
 
 /** Class for interacting with QFRCDashboard. */
 public class QFRCLib {
@@ -91,5 +93,12 @@ public class QFRCLib {
      */
     public static void setTab(String tabName) {
         tabEntry.setString(tabName);
+    }
+
+    /**
+     * Start the web server for accessing remote layouts.
+     */
+    public static void startWebServer() {
+        WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
     }
 }

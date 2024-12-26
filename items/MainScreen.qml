@@ -12,7 +12,6 @@ Rectangle {
     height: Constants.height
     color: Constants.palette.bg
 
-    property string filename: ""
     property bool readyDragging
     property var clipboard: null
 
@@ -32,15 +31,6 @@ Rectangle {
 
     Component.onCompleted: {
         tlm.onSelectedTabChanged.connect(setTab)
-
-        Constants.setTheme(settings.theme)
-        Constants.setAccent(settings.accent)
-
-        if (settings.loadRecent && settings.recentFiles.length > 0) {
-            filename = settings.recentFiles[0]
-            if (filename === "" || filename === null) return;
-            tlm.load(filename)
-        }
     }
 
     function drag(pos, fromList) {
@@ -131,56 +121,6 @@ Rectangle {
         onAccepted: setTabConfig()
     }
 
-    /** SAVE */
-    FileDialog {
-        id: saveDialog
-        currentFolder: StandardPaths.writableLocation(
-                           StandardPaths.HomeLocation)
-        fileMode: FileDialog.SaveFile
-        defaultSuffix: "json"
-        selectedNameFilter.index: 0
-        nameFilters: ["JSON files (*.json)", "All files (*)"]
-    }
-
-    function save() {
-        if (filename === "")
-            return saveAsAction()
-
-        tlm.save(filename)
-    }
-
-    function saveAs() {
-        filename = saveDialog.selectedFile
-
-        tlm.save(filename)
-    }
-
-    function saveAsAction() {
-        saveDialog.accepted.connect(saveAs)
-        saveDialog.open()
-    }
-
-    /** LOAD */
-    FileDialog {
-        id: loadDialog
-        currentFolder: StandardPaths.writableLocation(
-                           StandardPaths.HomeLocation)
-        fileMode: FileDialog.OpenFile
-        defaultSuffix: "json"
-        selectedNameFilter.index: 0
-        nameFilters: ["JSON files (*.json)", "All files (*)"]
-    }
-
-    function load() {
-        filename = loadDialog.selectedFile
-        tlm.load(filename)
-    }
-
-    function loadAction() {
-        loadDialog.accepted.connect(load)
-        loadDialog.open()
-    }
-
     /** TAB SETTINGS */
     function addTab() {
         tlm.add(tabNameDialog.tabName.text)
@@ -226,15 +166,6 @@ Rectangle {
         if (clipboard != null) {
             currentTab().paste(clipboard)
         }
-    }
-
-    /** SERVER SETTINGS */
-    SettingsDialog {
-        id: settingsDialog
-    }
-
-    function settingsDialog() {
-        settingsDialog.openDialog()
     }
 
     /** CONTENT */

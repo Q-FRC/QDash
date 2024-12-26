@@ -1,7 +1,7 @@
 ![QFRCDashboard](QFRCDashboard-display.png "QFRCDashboard")
 A reliable, high-performance, low-footprint dashboard for use with FRC.
 
-A mirror of this repository is available on my [Gitea](https://git.swurl.xyz/swirl/qfrcdashboard.git) instance.
+A mirror of this repository is available on my [git](https://git.swurl.xyz/Q-FRC/Dashboard.git) instance.
 
 ## Lightweight
 Dashboards don't have to be resource hogs. In fact, dashboards should be designed to take up as few resources as possible. Dashboards that use up resources like nobody's business will cause **packet loss** and **comms issues** when run on driver stations!
@@ -26,17 +26,14 @@ QFRCDashboard excels with its lightweight performance thanks to many factors:
 ## Download
 Windows, Linux, and macOS builds are available via GitHub Actions. Currently, all use WPILib 2024.3.1. Release builds are available either through Actions or in the releases tab:
 
-[![Release](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_release.yml/badge.svg)](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_release.yml)
+[![Release](https://github.com/Q-FRC/Dashboard/actions/workflows/trigger_release.yml/badge.svg)](https://github.com/Q-FRC/Dashboard/actions/workflows/trigger_release.yml)
 
 Development/debug builds are also available on a per-commit basis. These builds are generally unstable, have far larger executable sizes, and will perform slower, but are useful for users who wish to have the latest features or for developers who want to contribute and test.
 
-[![Debug](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_builds.yml/badge.svg)](https://github.com/binex-dsk/QFRCDashboard/actions/workflows/trigger_builds.yml)
+[![Debug](https://github.com/Q-FRC/Dashboard/actions/workflows/trigger_builds.yml/badge.svg)](https://github.com/Q-FRC/Dashboard/actions/workflows/trigger_builds.yml)
 
 ## Forking
 Follow the [GPL3](LICENSE) of this project, credit the original project, and make it clear that your application is not QFRCDashboard itself.
-
-## Contributing
-Write code.
 
 ## Building
 This project uses CMake. Additionally, you must initialize git submodules first.
@@ -64,18 +61,17 @@ If you don't want to install protobuf and ntcore to your system, CMake options a
 Examples:
 
 ```bash
-cmake -S . -B build -DUSE_SYSTEM_NTCORE=OFF
-cmake -S . -B build -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF
+cmake -S . -B build -DUSE_SYSTEM_NTCORE=ON
+cmake -S . -B build -DUSE_SYSTEM_NTCORE=ON -DUSE_SYSTEM_PROTOBUF=ON
 ```
 
 Using the system ntcore with the bundled protobuf is unnecessary and will break things. If you have ntcore installed to the system, protobuf will also be installed.
 
-Because Windows sucks with system libraries you'll have to enable them anyways. I think with Qt Creator you have to explicitly set them.
-
-### Ubuntu
+### Linux
 ```bash
+# or whatever your distribution uses
 sudo apt install qt6-base-dev build-essential qt6-multimedia-dev ninja-build
-git clone https://github.com/binex-dsk/QFRCDashboard.git
+git clone https://github.com/Q-FRC/Dashboard.git
 cd QFRCDashboard
 mkdir build && cd build
 cmake ..
@@ -87,7 +83,7 @@ make -j$(nproc)
   * Note that you will need to create a Qt account.
 - Install CMake https://cmake.org/download/ (add to `PATH`)
 ```bash
-git clone https://github.com/binex-dsk/QFRCDashboard.git
+git clone https://github.com/Q-FRC/Dashboard.git
 cd QFRCDashboard
 mkdir build && cd build
 cmake -DCMAKE_PREFIX_PATH="C:\\Qt6\\6.6.1\\msvc2019_64" ..

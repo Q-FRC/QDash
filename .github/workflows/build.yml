@@ -212,35 +212,35 @@ jobs:
 
     - name: Upload portable tarball (Linux)
       if: runner.os == 'Linux'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: QFRCDashboard-${{ runner.os }}-Binary-${{ env.VERSION }}-${{ inputs.build_type }}
         path: QFRCDashboard.tar.gz
 
     - name: Upload AppImage (Linux)
       if: runner.os == 'Linux'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}-x86_64.AppImage
         path: QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}-x86_64.AppImage
 
     - name: Upload tarball (macOS)
       if: runner.os == 'macOS'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}
         path: QFRCDashboard.tar.gz
 
     - name: Upload binary zip (Windows, portable)
       if: runner.os == 'Windows'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: QFRCDashboard-Windows-Portable-${{ env.VERSION }}-${{ inputs.build_type }}
         path: ${{ env.INSTALL_DIR }}/**
 
     - name: Upload installer (Windows)
       if: runner.os == 'Windows'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: QFRCDashboard-${{ runner.os }}-Setup-${{ env.VERSION }}-${{ inputs.build_type }}
         path: Dashboard-Setup.exe
