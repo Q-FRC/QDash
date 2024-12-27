@@ -133,6 +133,7 @@ set(QML_ELEMENTS
     dialogs/accent/AccentDisplay
 
     dialogs/AboutDialog
+    dialogs/NotificationPopup
 )
 
 set(ELEMENTS
@@ -141,6 +142,7 @@ set(ELEMENTS
     SettingsManager
     TitleManager
     PlatformHelper
+    NotificationHelper
 
     models/TabWidgetsModel
     models/TabListModel

@@ -6,6 +6,7 @@
 
 #include "AccentsListModel.h"
 #include "BuildConfig.h"
+#include "NotificationHelper.h"
 #include "PlatformHelper.h"
 #include "Flags.h"
 #include "Globals.h"
@@ -39,6 +40,8 @@ int main(int argc, char *argv[])
     accents->load();
 
     PlatformHelper *platform = new PlatformHelper(&app);
+
+    NotificationHelper *notification = new NotificationHelper(&app);
 
     Globals::inst.AddConnectionListener(true, [topics, &store, title] (const nt::Event &event) {
         bool connected = event.Is(nt::EventFlags::kConnected);
@@ -80,6 +83,19 @@ int main(int argc, char *argv[])
         });
     });
 
+    nt::NetworkTableEntry notificationEntry = Globals::inst.GetEntry("/QFRCDashboard/RobotNotifications");
+    Globals::inst.AddListener(notificationEntry, nt::EventFlags::kValueAll, [tlm, &app, notification] (const nt::Event &event) {
+        std::string_view value = event.GetValueEventData()->value.GetString();
+        QString qvalue = QString::fromStdString(std::string{value});
+        QJsonDocument doc = QJsonDocument::fromJson(qvalue.toUtf8());
+
+        QMetaObject::invokeMethod(notification, [doc, notification] {
+            notification->fromJson(doc);
+        });
+
+        //"{\"level\":\"Critical\",\"title\":\"Test\",\"description\":\"This is a test!\",\"displayTime\":7000}"
+    });
+
     qmlRegisterUncreatableMetaObject(
         QFDFlags::staticMetaObject,
         "QFDFlags",
@@ -97,6 +113,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("titleManager", title);
     engine.rootContext()->setContextProperty("accents", accents);
     engine.rootContext()->setContextProperty("platformHelper", platform);
+    engine.rootContext()->setContextProperty("notificationHelper", notification);
     engine.rootContext()->setContextProperty("buildConfig", &BuildConfig);
     QObject::connect(
         &engine,
