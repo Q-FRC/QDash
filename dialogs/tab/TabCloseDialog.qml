@@ -6,8 +6,8 @@ import QFRCDashboard
 AnimatedDialog {
     title: "Close Tab?"
 
-    width: 200
-    height: 170
+    width: 250
+    height: 185
 
     anchors.centerIn: Overlay.overlay
 
@@ -16,6 +16,7 @@ AnimatedDialog {
         color: Constants.palette.text
         text: "Are you sure you want to close this tab?"
 
+        wrapMode: Text.WordWrap
         anchors.fill: parent
     }
 
