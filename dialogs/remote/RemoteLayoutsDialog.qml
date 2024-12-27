@@ -6,7 +6,7 @@ import QtQuick.Dialogs
 
 import QFRCDashboard
 
-Dialog {
+AnimatedDialog {
     property url selected
 
     id: remote
@@ -23,8 +23,6 @@ Dialog {
     }
 
     standardButtons: Dialog.Ok | Dialog.Close
-
-    anchors.centerIn: Overlay.overlay
 
     onAccepted: {
         selected = rlm.url(list.currentIndex)

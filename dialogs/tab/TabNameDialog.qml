@@ -5,17 +5,26 @@ import QtQuick.Dialogs
 
 import QFRCDashboard
 
-Dialog {
+AnimatedDialog {
     id: tabNameDialog
 
-    anchors.centerIn: parent
+    title: "New Tab"
 
-    property alias tabName: tabName
+    height: 195
+    width: 250
 
-    function openUp(txt) {
+    property string text
+
+    function openDialog() {
         open()
         tabName.focus = true
-        tabName.text = txt
+        tabName.text = ""
+    }
+
+    function finish() {
+        text = tabName.text
+
+        accept()
     }
 
     standardButtons: Dialog.Ok | Dialog.Cancel
@@ -25,24 +34,22 @@ Dialog {
         sequence: Qt.Key_Escape
     }
 
-    ColumnLayout {
+    Shortcut {
+        onActivated: finish()
+        sequence: Qt.Key_Return
+    }
+
+    LabeledTextField {
         anchors.fill: parent
-        spacing: 5
 
-        Text {
-            Layout.fillWidth: true
+        id: tabName
+        font.pixelSize: 20
 
-            text: "Input new tab name:"
-            font.pixelSize: 20
-            color: Constants.palette.text
-        }
+        onAccepted: tabNameDialog.finish()
 
-        TextField {
-            Layout.fillWidth: true
+        label: "Tab Name"
 
-            id: tabName
-            font.pixelSize: 20
-            placeholderText: "New Tab"
-        }
+        bindTarget: parent
+        bindedProperty: "text"
     }
 }

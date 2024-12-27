@@ -166,6 +166,7 @@ BaseWidget {
         id: config
 
         height: 450
+        width: 450
 
         function openDialog() {
             topicField.open()
@@ -194,7 +195,7 @@ BaseWidget {
 
         ScrollView {
             id: scroll
-            contentWidth: 340
+            contentWidth: 380
 
             anchors {
                 top: parent.top
@@ -202,10 +203,8 @@ BaseWidget {
                 left: parent.left
                 right: parent.right
 
-                topMargin: config.headerHeight + 12
-                bottomMargin: 45
+                topMargin: -20
 
-                leftMargin: 5
                 rightMargin: 5
             }
 

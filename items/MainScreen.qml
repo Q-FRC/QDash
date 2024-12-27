@@ -123,12 +123,12 @@ Rectangle {
 
     /** TAB SETTINGS */
     function addTab() {
-        tlm.add(tabNameDialog.tabName.text)
+        tlm.add(tabNameDialog.text)
         swipe.setCurrentIndex(swipe.count - 1)
     }
 
     function newTab() {
-        tabNameDialog.openUp("")
+        tabNameDialog.openDialog()
     }
 
     function setTabConfig() {
@@ -146,15 +146,10 @@ Rectangle {
     }
 
     /** CLOSE TAB */
-    MessageDialog {
+    TabCloseDialog {
         id: tabClose
-        title: "Close Tab?"
-        text: "Are you sure you want to close this tab?"
-        buttons: MessageDialog.Yes | MessageDialog.No
 
-        onAccepted: {
-            tlm.remove(swipe.currentIndex)
-        }
+        onAccepted: tlm.remove(swipe.currentIndex)
     }
 
     function closeTab() {

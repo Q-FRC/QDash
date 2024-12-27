@@ -92,8 +92,6 @@ int main(int argc, char *argv[])
         QMetaObject::invokeMethod(notification, [doc, notification] {
             notification->fromJson(doc);
         });
-
-        //"{\"level\":\"Critical\",\"title\":\"Test\",\"description\":\"This is a test!\",\"displayTime\":7000}"
     });
 
     qmlRegisterUncreatableMetaObject(

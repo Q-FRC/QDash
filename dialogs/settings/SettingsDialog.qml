@@ -1,23 +1,16 @@
 import QtQuick 6.7
 import QtQuick.Controls 6.6
 import QtQuick.Layouts 6.6
-import QtQuick.Dialogs
 
 import QFRCDashboard
 
-Dialog {
+AnimatedDialog {
     id: serverDialog
 
-    height: 350
+    height: 475
     width: 475
 
-    background: Rectangle {
-        color: Constants.palette.dialogBg
-
-        radius: 12
-    }
-
-    anchors.centerIn: parent
+    title: "Settings"
 
     onAccepted: {
         server.accept()
@@ -49,6 +42,8 @@ Dialog {
             bottom: parent.bottom
             left: parent.left
             right: parent.right
+
+            topMargin: 10
         }
 
         ServerTab {

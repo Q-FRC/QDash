@@ -12,8 +12,8 @@
         "qml": "Cobalt"
     },
     {
-        "accent": "#a100a1",
-        "light": "#b400e1",
+        "accent": "#6b00c9",
+        "light": "#8701ff",
         "name": "purple",
         "qml": "Violet"
     },

@@ -1,16 +1,29 @@
 import QtQuick
-import QtQuick.Dialogs
+import QtQuick.Controls
 
-MessageDialog {
+import QFRCDashboard
+
+AnimatedDialog {
     title: "About QFRCDashboard"
 
-    text: "QFRCDashboard is a reliable, high-performance FRC dashboard with" +
-          " a low resource cost, suited for low-end computers and for maximizing" +
-          " Driver Station resources.\n\n" +
+    width: 325
+    height: 375
 
-          buildConfig.buildInfo()
+    Text {
+        color: Constants.palette.text
+        font.pixelSize: 14
 
-    informativeText: "Copyleft 2023-2024 Q-FRC"
+        text: "<p>QFRCDashboard is a reliable, high-performance FRC dashboard with " +
+              "a low resource cost, suited for low-end computers and for maximizing " +
+              "Driver Station resources.</p>" +
+              buildConfig.buildInfo() +
+              "Copyleft 2023-2024 Q-FRC"
 
-    buttons: MessageDialog.Close
+        wrapMode: Text.WordWrap
+        textFormat: Text.RichText
+
+        anchors.fill: parent
+    }
+
+    standardButtons: "Close"
 }

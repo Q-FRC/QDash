@@ -237,18 +237,16 @@ BaseWidget {
         ScrollView {
             clip: true
 
-            contentWidth: 420
+            contentWidth: 380
 
             anchors {
                 top: parent.top
                 bottom: parent.bottom
                 left: parent.left
-                right: parent.right
+                right: parent.right                
 
-                topMargin: 50
-                bottomMargin: 45
-
-                leftMargin: 5
+                topMargin: -20
+                
                 rightMargin: 5
             }
 

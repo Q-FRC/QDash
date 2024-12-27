@@ -5,12 +5,11 @@ import QtQuick.Dialogs
 
 import QFRCDashboard
 
-Dialog {
+AnimatedDialog {
     id: tabConfigDialog
 
-    anchors.centerIn: parent
-
-    height: 200
+    title: "Configure Tab"
+    height: 270
     width: 300
 
     property int columns

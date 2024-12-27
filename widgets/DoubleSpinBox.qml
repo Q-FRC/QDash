@@ -193,7 +193,6 @@ Control {
                 valueModified();
             if (spinBoxItem)
                 spinBoxItem.value = 0;  // reset this to prevent it from disabling the buttons or other weirdness
-            //console.log("setValue:", newValue.toFixed(control.decimals));
             return true;
         }
         return false;
@@ -236,7 +235,7 @@ Control {
         text = text.replace(new RegExp(re, "gi"), "");
         if (!text.length)
             text = "0";
-        //console.log("valueFromText:", text, locale.name, Number.fromLocaleString(locale, text));
+
         return Number.fromLocaleString(locale, text);
     }
 

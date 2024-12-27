@@ -5,13 +5,12 @@ import QtQuick.Dialogs
 
 import QFRCDashboard
 
-Dialog {
-    anchors.centerIn: parent
-
+AnimatedDialog {
     width: parent.width / 1.5
     height: parent.height / 1.1
 
     standardButtons: Dialog.Ok | Dialog.Cancel
+    title: "Accent Editor"
 
     onAccepted: {
         accents.save()
@@ -23,24 +22,12 @@ Dialog {
 
     ColorDialog {
         id: colorDialog
+        onAccepted: platformHelper.copy(colorDialog.selectedColor)
     }
 
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 8
-        Text {
-            text: "Edit Accents"
-
-            font.pixelSize: 20
-            font.bold: true
-
-            color: "#FFFFFF"
-
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignTop
-
-            Layout.fillWidth: true
-        }
 
         RowLayout {
             uniformCellSizes: true
@@ -51,7 +38,7 @@ Dialog {
                 Rectangle {
                     color: "transparent"
                     border {
-                        color: "white"
+                        color: Constants.accent
                         width: 2
                     }
 
@@ -60,7 +47,7 @@ Dialog {
 
                     Text {
                         anchors.fill: parent
-                        color: "white"
+                        color: Constants.palette.text
                         font.pixelSize: 18
 
                         text: modelData
@@ -87,26 +74,22 @@ Dialog {
             }
         }
 
-        Row {
-            spacing: 25
+        RowLayout {
+            spacing: 15
+            uniformCellSizes: true
+
             Button {
+                Layout.fillWidth: true
                 text: "Add"
 
                 onClicked: accents.add()
             }
 
             Button {
+                Layout.fillWidth: true
                 text: "Pick Color"
 
-                function setColor() {
-                    accents.copy(colorDialog.selectedColor)
-                    colorDialog.accepted.disconnect(setColor)
-                }
-
-                onClicked: {
-                    colorDialog.accepted.connect(setColor)
-                    colorDialog.open()
-                }
+                onClicked: colorDialog.open()
             }
         }
     }

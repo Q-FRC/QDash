@@ -333,10 +333,10 @@ Rectangle {
                 left: parent.left
                 right: parent.right
 
-                topMargin: parent.headerHeight + 12
-                bottomMargin: 45
+                topMargin: -20
 
-                leftMargin: 5
+
+
                 rightMargin: 5
             }
 

@@ -106,7 +106,7 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 300
+        height: 325
 
         function openDialog() {
             topicField.open()
@@ -132,10 +132,8 @@ BaseWidget {
                 left: parent.left
                 right: parent.right
 
-                topMargin: config.headerHeight + 12
-                bottomMargin: 45
-
-                leftMargin: 5
+                topMargin: -20
+                
                 rightMargin: 5
             }
 

@@ -9,8 +9,8 @@ import QFRCDashboard
 ColumnLayout {
     spacing: 5
 
-    function editAccents() {
-        accentEditor.open()
+    Component.onCompleted: {
+        accentEditor.accepted.connect(() => accent.choices = accents.names())
     }
 
     FileDialog {
@@ -25,10 +25,6 @@ ColumnLayout {
         onAccepted: accents.exportJson(selectedFile)
     }
 
-    function exportAccents() {
-        saveAccentDialog.open()
-    }
-
     FileDialog {
         id: loadAccentDialog
         currentFolder: StandardPaths.writableLocation(
@@ -39,10 +35,6 @@ ColumnLayout {
         nameFilters: ["JSON files (*.json)", "All files (*)"]
 
         onAccepted: accents.importJson(loadAccentDialog.selectedFile)
-    }
-
-    function importAccents() {
-        loadAccentDialog.open()
     }
 
     function accept() {        
@@ -97,17 +89,17 @@ ColumnLayout {
         Button {
             Layout.fillWidth: true
             text: "&Edit"
-            onClicked: editAccents()
+            onClicked: accentEditor.open()
         }
         Button {
             Layout.fillWidth: true
             text: "E&xport"
-            onClicked: exportAccents()
+            onClicked: saveAccentDialog.open()
         }
         Button {
             Layout.fillWidth: true
             text: "I&mport"
-            onClicked: importAccents()
+            onClicked: loadAccentDialog.open()
         }
     }
 }

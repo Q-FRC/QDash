@@ -21,8 +21,6 @@ ApplicationWindow {
 
     AccentEditor {
         id: accentEditor
-
-        anchors.centerIn: Overlay.overlay
     }
 
     AboutDialog {

@@ -3,34 +3,12 @@ import QtQuick.Controls
 
 import QFRCDashboard
 
-Dialog {
+AnimatedDialog {
     id: config
 
-    property int headerHeight: 40
+    title: "Configure Widget"
 
-    width: 375
-    spacing: 10
+    width: 400
 
     standardButtons: Dialog.Ok | Dialog.Cancel
-
-    TitleComponent {}
-
-    background: Rectangle {
-        color: "transparent"
-    }
-
-    contentItem: Rectangle {
-        color: Constants.palette.dialogBg
-
-        topLeftRadius: 20
-        topRightRadius: 20
-
-        anchors.fill: parent
-        width: parent.width
-    }
-
-    footer.height: 45
-
-    parent: Overlay.overlay
-    anchors.centerIn: parent
 }

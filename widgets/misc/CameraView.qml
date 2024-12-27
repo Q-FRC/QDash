@@ -144,6 +144,7 @@ BaseWidget {
         id: config
 
         height: 450
+        width: 450
 
         function openDialog() {
             topicField.open()
@@ -165,9 +166,8 @@ BaseWidget {
             qualityField.accept()
         }
 
-        ColumnLayout {
-            id: layout
-            spacing: 25
+        ScrollView {
+            contentWidth: 380
 
             anchors {
                 top: parent.top
@@ -175,37 +175,36 @@ BaseWidget {
                 left: parent.left
                 right: parent.right
 
-                topMargin: config.headerHeight + 12
-                bottomMargin: 45
+                topMargin: -20
 
-                leftMargin: 5
                 rightMargin: 5
             }
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+            ColumnLayout {
+                id: layout
+                spacing: 25
 
-            LabeledSpinBox {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
+                anchors.fill: parent
 
-                id: titleFontField
+                SectionHeader {
+                    label: "Font Settings"
+                }
 
-                label: "Title Font Size"
+                LabeledSpinBox {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-                bindedProperty: "item_titleFontSize"
-                bindTarget: widget
-            }
+                    id: titleFontField
 
-            SectionHeader {
-                label: "Stream Settings"
-            }
+                    label: "Title Font Size"
 
-            RowLayout {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-                // Layout.preferredWidth: 300
+                    bindedProperty: "item_titleFontSize"
+                    bindTarget: widget
+                }
+
+                SectionHeader {
+                    label: "Stream Settings"
+                }
 
                 LabeledSpinBox {
                     Layout.fillWidth: true
@@ -218,82 +217,89 @@ BaseWidget {
                     bindTarget: widget
                 }
 
-                Text {
-                    font.pixelSize: 16
-                    text: "Resolution"
-                    color: Constants.palette.text
-                }
-
-                LabeledSpinBox {
+                RowLayout {
                     Layout.fillWidth: true
-                    id: resWField
+                    Layout.alignment: Qt.AlignTop
+                    // Layout.preferredWidth: 300
 
-                    label: "Width"
-
-                    bindedProperty: "item_resW"
-                    bindTarget: widget
-                }
-
-                Text {
-                    font.pixelSize: 18
-                    text: "x"
-                    color: Constants.palette.text
-                }
-
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-                    id: resHField
-
-                    label: "Height"
-
-                    bindedProperty: "item_resH"
-                    bindTarget: widget
-                }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-
-                Text {
-                    font.pixelSize: 16
-                    text: "Quality"
-                    color: Constants.palette.text
-                }
-
-                Slider {
-                    Layout.fillWidth: true
-                    id: qualityField
-
-                    from: 0
-                    to: 100
-                    stepSize: 10
-
-                    function open() {
-                        value = widget.item_quality
+                    Text {
+                        font.pixelSize: 16
+                        text: "Resolution"
+                        color: Constants.palette.text
                     }
 
-                    function accept() {
-                        widget.item_quality = value
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+                        id: resWField
+
+                        label: "Width"
+
+                        bindedProperty: "item_resW"
+                        bindTarget: widget
+                    }
+
+                    Text {
+                        font.pixelSize: 18
+                        text: "x"
+                        color: Constants.palette.text
+                    }
+
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+                        id: resHField
+
+                        label: "Height"
+
+                        bindedProperty: "item_resH"
+                        bindTarget: widget
                     }
                 }
-            }
 
-            SectionHeader {
-                label: "NT Settings"
-            }
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
+                    Text {
+                        font.pixelSize: 16
+                        text: "Quality"
+                        color: Constants.palette.text
+                    }
 
-                id: topicField
+                    Slider {
+                        Layout.fillWidth: true
+                        id: qualityField
 
-                label: "Topic"
+                        from: 0
+                        to: 100
+                        stepSize: 10
 
-                bindedProperty: "item_topic"
-                bindTarget: widget
+                        function open() {
+                            value = widget.item_quality
+                        }
+
+                        function accept() {
+                            widget.item_quality = value
+                        }
+                    }
+                }
+
+                SectionHeader {
+                    label: "NT Settings"
+                }
+
+                LabeledTextField {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+
+                    id: topicField
+
+                    label: "Topic"
+
+                    bindedProperty: "item_topic"
+                    bindTarget: widget
+                }
             }
         }
     }
+
 }

@@ -38,7 +38,7 @@ message(STATUS "Git tag: ${Dashboard_GIT_TAG}")
 message(STATUS "Git refspec: ${Dashboard_GIT_REFSPEC}")
 
 string(REPLACE "-beta" "." Dashboard_GIT_TAG_NUMERO ${Dashboard_GIT_TAG})
-string(REPLACE "-rc" "." Dashboard_GIT_TAG_NUMERO ${Dashboard_GIT_TAG})
+string(REPLACE "-rc" "." Dashboard_GIT_TAG_NUMERO ${Dashboard_GIT_TAG_NUMERO})
 
 string(REPLACE "." " " Dashboard_SPLIT_VERSION ${Dashboard_GIT_TAG_NUMERO})
 
@@ -119,6 +119,7 @@ set(QML_ELEMENTS
 
     dialogs/tab/TabNameDialog
     dialogs/tab/TabDialog
+    dialogs/tab/TabCloseDialog
 
     dialogs/remote/RemoteLayoutsDialog
     dialogs/remote/RemoteLayout
@@ -135,6 +136,7 @@ set(QML_ELEMENTS
 
     dialogs/AboutDialog
     dialogs/NotificationPopup
+    dialogs/AnimatedDialog
 )
 
 set(ELEMENTS

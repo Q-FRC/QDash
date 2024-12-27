@@ -52,9 +52,9 @@ QtObject {
     property QtObject dark: QtObject {
         id: dark
 
-        readonly property color bg: "#4d4d4d";
-        readonly property color widgetBg: "#5d5d5d";
-        readonly property color dialogBg: "#717171";
+        readonly property color bg: "#2d2d2d";
+        readonly property color widgetBg: "#404040";
+        readonly property color dialogBg: "#545454";
 
         readonly property color text: "#FFFFFF"
 

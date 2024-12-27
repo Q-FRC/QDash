@@ -47,7 +47,7 @@ QString Config::versionString() const
 
 QString Config::buildInfo() const
 {
-    return "GitHub: " + GIT_REPO + "\n" +
-           "Built on " + BUILD_DATE + " for " + BUILD_PLATFORM + " platform.\n" +
-           "Version: " + versionString();
+    return "<p>GitHub: <a href=" + GIT_REPO + ">Link</a></p>" +
+       "<p>Built on " + BUILD_DATE + " for " + BUILD_PLATFORM + " platform.</p>" +
+       "<p>Version: " + versionString() + "</p>";
 }
