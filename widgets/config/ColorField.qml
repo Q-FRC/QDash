@@ -42,6 +42,7 @@ RowLayout {
     Button {
         Layout.fillWidth: true
         text: "Pick"
+        font.pixelSize: 18 * Constants.scalar
 
         onClicked: {
             colorDialog.open()

@@ -9,17 +9,17 @@ TabButton {
 
     id: button
 
-    height: 100
+    height: 100 * Constants.scalar
 
     contentItem: ColumnLayout {
         Button {
-            Layout.maximumHeight: 75
-            Layout.maximumWidth: 75
+            Layout.maximumHeight: 75 * Constants.scalar
+            Layout.maximumWidth: 75 * Constants.scalar
 
             id: image
             icon.source: "qrc:/" + label
-            icon.width: 45
-            icon.height: 45
+            icon.width: 45 * Constants.scalar
+            icon.height: 45 * Constants.scalar
             icon.color: Constants.accent
 
             background: Item {}
@@ -30,7 +30,7 @@ TabButton {
         }
 
         Label {
-            font.pixelSize: 18
+            font.pixelSize: Math.round(18 * Constants.scalar)
             text: label
 
             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
@@ -41,8 +41,8 @@ TabButton {
 
     background: Rectangle {
         implicitWidth: parent.width
-        topLeftRadius: 12
-        topRightRadius: 12
+        topLeftRadius: 12 * Constants.scalar
+        topRightRadius: 12 * Constants.scalar
         color: "transparent"
 
         Rectangle {
@@ -52,9 +52,9 @@ TabButton {
             }
 
             width: parent.width / 2
-            height: 4
+            height: 4 * Constants.scalar
 
-            radius: 4
+            radius: 4 * Constants.scalar
 
             color: Constants.tab
             visible: index === tabBar.currentIndex

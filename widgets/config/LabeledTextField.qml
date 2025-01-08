@@ -16,7 +16,7 @@ TextField {
     required property var bindTarget
 
     id: textField
-    font.pixelSize: 18
+    font.pixelSize: 18 * Constants.scalar
 
     color: Constants.palette.text
 
@@ -41,14 +41,14 @@ TextField {
         text: label
         color: Constants.palette.text
 
-        font.pixelSize: 15
+        font.pixelSize: 15 * Constants.scalar
 
         anchors {
             left: textField.left
             bottom: textField.top
 
             bottomMargin: -2
-            leftMargin: 10
+            leftMargin: 10 * Constants.scalar
         }
     }
 }

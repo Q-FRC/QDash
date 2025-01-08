@@ -6,7 +6,7 @@ import QFRCDashboard
 Dialog {
     id: dia
 
-    property int radius: 12
+    property int radius: 12 * Constants.scalar
     property bool colorful: true
 
     anchors.centerIn: Overlay.overlay
@@ -37,11 +37,11 @@ Dialog {
 
         color: colorful ? Constants.accent : Constants.palette.dialogBg
 
-        height: 50
+        height: 50 * Constants.scalar
 
         Text {
             anchors.fill: parent
-            font.pixelSize: 25
+            font.pixelSize: Math.round(25 * Constants.scalar)
 
             text: title
             color: Constants.palette.text
@@ -59,17 +59,11 @@ Dialog {
         color: Constants.palette.dialogBg
     }
 
-    Component.onCompleted: {
-        footer.delegate.background.color = Constants.accent
-    }
-
     footer: DialogButtonBox {
         id: control
 
-        implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                                (control.count === 1 ? implicitContentWidth * 2 : implicitContentWidth) + leftPadding + rightPadding)
-        implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                                 implicitContentHeight + topPadding + bottomPadding)
+        implicitWidth: parent.width
+        implicitHeight: 50 * Constants.scalar
         contentWidth: (contentItem as ListView)?.contentWidth
 
         spacing: 6
@@ -79,8 +73,9 @@ Dialog {
         delegate: Button {
             width: control.count === 1 ? control.availableWidth / 2 : undefined
 
+            font.pixelSize: 16 * Constants.scalar
             background: Rectangle {
-                radius: 10
+                radius: 10 * Constants.scalar
                 color: accents.qmlColor(accents.qml(settings.accent))
             }
         }
@@ -95,7 +90,7 @@ Dialog {
         }
 
         background: Rectangle {
-            implicitHeight: 40
+            implicitHeight: 40 * Constants.scalar
             x: 1; y: 1
             width: parent.width - 2
             height: parent.height - 2

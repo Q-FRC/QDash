@@ -40,26 +40,54 @@ ColumnLayout {
         text: label
         color: Constants.palette.text
 
-        font.pixelSize: 15
+        font.pixelSize: 15 * Constants.scalar
     }
 
     HorizontalHeaderView {
-        Layout.minimumWidth: parent.width - 90
+        id: horizontalHeader
+
+        Layout.minimumWidth: parent.width - 90 * Constants.scalar
         Layout.row: 0
         Layout.column: 1
 
         Layout.fillWidth: true
 
-        Layout.minimumHeight: 30
+        delegate: Rectangle {
+            id: delegate
+
+            required property var model
+
+            // Qt6: add cellPadding (and font etc) as public API in headerview
+            readonly property real cellPadding: 8
+
+            implicitWidth: text.implicitWidth + (cellPadding * 2)
+            implicitHeight: Math.max(horizontalHeader.height, text.implicitHeight + (cellPadding * 2))
+            color: "#f6f6f6"
+            border.color: "#e4e4e4"
+
+            Label {
+                id: text
+                font.pixelSize: 18 * Constants.scalar
+
+                text: delegate.model[horizontalHeader.textRole]
+                width: delegate.width
+                height: delegate.height
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                color: "#ff26282a"
+            }
+        }
+
+        Layout.minimumHeight: 30 * Constants.scalar
         Layout.columnSpan: 2
-        id: horizontalHeader
+
         syncView: tbl
         clip: true
     }
 
     TableView {
-        Layout.minimumWidth: parent.width - 90
-        Layout.minimumHeight: 40
+        Layout.minimumWidth: parent.width - 90 * Constants.scalar
+        Layout.minimumHeight: 40 * Constants.scalar
         columnSpacing: 1
         rowSpacing: 1
         clip: true
@@ -76,7 +104,7 @@ ColumnLayout {
         interactive: false
 
         function resetHeight() {
-            Layout.minimumHeight = 42 * tblModel.rowCount()
+            Layout.minimumHeight = 42 * Constants.scalar * tblModel.rowCount()
         }
 
         model: MapModel {
@@ -98,19 +126,19 @@ ColumnLayout {
             required property bool current
 
             implicitWidth: tbl.width / 2
-            implicitHeight: 40
+            implicitHeight: 40 * Constants.scalar
 
             color: current ? "blue" : "black"
 
             Text {
-                font.pixelSize: 15
+                font.pixelSize: 15 * Constants.scalar
                 anchors.centerIn: parent
                 text: display
                 color: Constants.palette.text
             }
 
             TableView.editDelegate: TextField {
-                font.pixelSize: 15
+                font.pixelSize: 15 * Constants.scalar
                 anchors.fill: parent
                 text: display
                 horizontalAlignment: TextInput.AlignHCenter
@@ -125,9 +153,12 @@ ColumnLayout {
     }
 
     RowLayout {
+        Layout.fillWidth: true
+        uniformCellSizes: true
         Button {
             Layout.alignment: Qt.AlignLeft
             text: "Add"
+            font.pixelSize: 18 * Constants.scalar
 
             onClicked: {
                 tblModel.add("", "")
@@ -138,6 +169,7 @@ ColumnLayout {
         Button {
             Layout.alignment: Qt.AlignLeft
             text: "Delete"
+            font.pixelSize: 18 * Constants.scalar
 
             onClicked: {
                 tblModel.remove(tbl.currentRow)
@@ -148,6 +180,7 @@ ColumnLayout {
         Button {
             Layout.alignment: Qt.AlignLeft
             text: "Copy Color"
+            font.pixelSize: 18 * Constants.scalar
 
             onClicked: colorDialog.open()
         }

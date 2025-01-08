@@ -10,8 +10,8 @@ AnimatedDialog {
 
     title: "New Tab"
 
-    height: 195
-    width: 250
+    height: 195 * Constants.scalar
+    width: 250 * Constants.scalar
 
     property string text
 
@@ -43,7 +43,7 @@ AnimatedDialog {
         anchors.fill: parent
 
         id: tabName
-        font.pixelSize: 20
+        font.pixelSize: Math.round(20 * Constants.scalar)
 
         onAccepted: tabNameDialog.finish()
 

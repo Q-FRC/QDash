@@ -42,8 +42,8 @@ BaseWidget {
             centerIn: parent
         }
 
-        indicator.implicitHeight: item_checkboxSize
-        indicator.implicitWidth: item_checkboxSize
+        indicator.implicitHeight: item_checkboxSize * Constants.scalar
+        indicator.implicitWidth: item_checkboxSize * Constants.scalar
 
         Component.onCompleted: {
             topicStore.topicUpdate.connect(updateTopic)
@@ -72,7 +72,7 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 325
+        height: 325 * Constants.scalar
 
         function openDialog() {
             topicField.open()
@@ -90,7 +90,7 @@ BaseWidget {
 
         ColumnLayout {
             id: layout
-            spacing: 25
+            spacing: 25 * Constants.scalar
 
             anchors {
                 top: parent.top

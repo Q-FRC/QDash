@@ -186,12 +186,12 @@ Rectangle {
         z: 0
 
         anchors {
-            top: tabs.bottom
+            top: parent.top
             left: parent.left
             right: parent.right
             bottom: parent.bottom
 
-            topMargin: 5
+            topMargin: 40 * Constants.scalar
         }
 
         currentIndex: tabs.currentIndex
@@ -214,7 +214,8 @@ Rectangle {
 
     TabBar {
         id: tabs
-        height: 40
+        height: 40 * Constants.scalar
+        contentHeight: 40 * Constants.scalar
 
         anchors {
             top: parent.top
@@ -223,7 +224,6 @@ Rectangle {
 
             leftMargin: 0
             rightMargin: 0
-            topMargin: -5
         }
 
         position: TabBar.Footer
@@ -237,12 +237,11 @@ Rectangle {
             TabButton {
                 text: model.title
 
-                font.pixelSize: 18
                 width: Math.max(100, tabs.width / 6)
-                height: 40
+                height: 40 * Constants.scalar
 
                 contentItem: Label {
-                    font.pixelSize: 18
+                    font.pixelSize: 18 * Constants.scalar
                     text: parent.text
 
                     verticalAlignment: Qt.AlignVCenter
@@ -253,8 +252,8 @@ Rectangle {
 
                 background: Rectangle {
                     implicitWidth: parent.width
-                    topLeftRadius: 12
-                    topRightRadius: 12
+                    topLeftRadius: 12 * Constants.scalar
+                    topRightRadius: 12 * Constants.scalar
                     color: index !== tabs.currentIndex ? Constants.tab : Constants.palette.text
                 }
             }

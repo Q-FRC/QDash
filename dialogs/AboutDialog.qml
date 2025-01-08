@@ -6,12 +6,12 @@ import QFRCDashboard
 AnimatedDialog {
     title: "About QFRCDashboard"
 
-    width: 325
-    height: 375
+    width: 325 * Constants.scalar
+    height: 375 * Constants.scalar
 
     Text {
         color: Constants.palette.text
-        font.pixelSize: 14
+        font.pixelSize: (14 * Constants.scalar)
 
         text: "<p>QFRCDashboard is a reliable, high-performance FRC dashboard with " +
               "a low resource cost, suited for low-end computers and for maximizing " +

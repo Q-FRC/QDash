@@ -7,8 +7,8 @@ import QFRCDashboard
 AnimatedDialog {
     id: serverDialog
 
-    height: 475
-    width: 475
+    height: 475 * Constants.scalar
+    width: 475 * Constants.scalar
 
     title: "Settings"
 

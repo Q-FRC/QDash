@@ -29,14 +29,16 @@ BaseWidget {
             contentItem: Text {
                 text: modelData
                 color: "white"
-                font.pixelSize: item_fontSize
+                font.pixelSize: item_fontSize * Constants.scalar
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
             }
             highlighted: combo.highlightedIndex === index
         }
 
-        font.pixelSize: item_fontSize
+        font.pixelSize: item_fontSize * Constants.scalar
+
+        implicitHeight: 40 * Constants.scalar
 
         property list<string> choices
         property string active
@@ -106,7 +108,7 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 325
+        height: 325 * Constants.scalar
 
         function openDialog() {
             topicField.open()
@@ -124,7 +126,7 @@ BaseWidget {
 
         ColumnLayout {
             id: layout
-            spacing: 25
+            spacing: 25 * Constants.scalar
 
             anchors {
                 top: parent.top

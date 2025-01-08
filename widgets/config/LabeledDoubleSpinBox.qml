@@ -19,9 +19,9 @@ DoubleSpinBox {
     from: -1E9
     to: 1E9
 
-    height: 50
+    height: 50 * Constants.scalar
 
-    font.pixelSize: 18
+    font.pixelSize: 18 * Constants.scalar
 
     function open() {
         value = bindTarget[bindedProperty]
@@ -57,8 +57,8 @@ DoubleSpinBox {
         up.indicator: Rectangle {
             x: spin.mirrored ? 0 : parent.width - width
             height: parent.height
-            implicitWidth: 40
-            implicitHeight: 40
+            implicitWidth: 40 * Constants.scalar
+            implicitHeight: 40 * Constants.scalar
             color: Constants.palette.bg
             border.color: Constants.palette.text
 
@@ -76,8 +76,8 @@ DoubleSpinBox {
         down.indicator: Rectangle {
             x: spin.mirrored ? parent.width - width : 0
             height: parent.height
-            implicitWidth: 40
-            implicitHeight: 40
+            implicitWidth: 40 * Constants.scalar
+            implicitHeight: 40 * Constants.scalar
             color: Constants.palette.bg
             border.color: Constants.palette.text
 
@@ -97,7 +97,7 @@ DoubleSpinBox {
             width: parent.width
             border.color: Constants.palette.text
             border.width: 2
-            radius: 5
+            radius: 5 * Constants.scalar
         }
     }
 
@@ -106,14 +106,14 @@ DoubleSpinBox {
         text: label
         color: Constants.palette.text
 
-        font.pixelSize: 15
+        font.pixelSize: 15 * Constants.scalar
 
         anchors {
             left: spin.left
             bottom: spin.top
 
             bottomMargin: -2
-            leftMargin: 10
+            leftMargin: 10 * Constants.scalar
         }
     }
 }

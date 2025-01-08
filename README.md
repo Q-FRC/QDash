@@ -1,7 +1,10 @@
 ![QFRCDashboard](QFRCDashboard-display.png "QFRCDashboard")
+
 A reliable, high-performance, low-footprint dashboard for use with FRC.
 
 A mirror of this repository is available on my [git](https://git.swurl.xyz/Q-FRC/Dashboard.git) instance.
+
+![image](https://github.com/user-attachments/assets/b216db27-c499-437b-9e97-783138906dd6)
 
 ## Lightweight
 Dashboards don't have to be resource hogs. In fact, dashboards should be designed to take up as few resources as possible. Dashboards that use up resources like nobody's business will cause **packet loss** and **comms issues** when run on driver stations!
@@ -15,13 +18,14 @@ Because of this, QFRCDashboard has been specifically designed to use up as few r
 | CPU (Base)        | 2-10%         | 0-1%          |
 | CPU (Heavy Use)   | 10-30%        | 0-2%          |
 
-Network activity hasn't been specifically measured, but expect better network performance out of QFRCDashboard. (Note that Shuffleboard's numbers may vary. Sometimes I've seen it eat the entire CPU on computers 5x as powerful as mine.)
-
 QFRCDashboard excels with its lightweight performance thanks to many factors:
 - Qt & QML's high efficiency
 - No menu that subscribes to every topic at once
 - Shared subscriptions between duplicate topics
 - Widgets only update and repaint when they need to
+
+## Usage
+For tutorials on getting started, robot code interaction, theming, and more, see the [wiki](https://github.com/Q-FRC/Dashboard/wiki).
 
 ## Download
 Windows, Linux, and macOS builds are available via GitHub Actions. Currently, all use WPILib 2024.3.1. Release builds are available either through Actions or in the releases tab:

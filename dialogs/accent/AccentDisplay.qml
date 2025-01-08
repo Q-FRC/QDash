@@ -2,13 +2,15 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.7
 
+import QFRCDashboard
+
 Rectangle {
     clip: true
 
-    height: 100
+    height: 100 * Constants.scalar
     border {
         color: "white"
-        width: 2
+        width: 2 * Constants.scalar
     }
     color: "transparent"
 
@@ -30,7 +32,7 @@ Rectangle {
 
         width: parent.width
         uniformCellSizes: true
-        height: 50
+        height: 50 * Constants.scalar
 
         TextField {
             Layout.fillWidth: true
@@ -40,7 +42,7 @@ Rectangle {
 
             onTextEdited: model.name = text
 
-            font.pixelSize: 15
+            font.pixelSize: Math.round(15 * Constants.scalar)
         }
 
         TextField {
@@ -51,7 +53,7 @@ Rectangle {
 
             onTextEdited: model.accent = text
 
-            font.pixelSize: 15
+            font.pixelSize: Math.round(15 * Constants.scalar)
 
             validator: RegularExpressionValidator {
                 regularExpression: /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
@@ -66,7 +68,7 @@ Rectangle {
 
             onTextEdited: model.light = text
 
-            font.pixelSize: 15
+            font.pixelSize: Math.round(15 * Constants.scalar)
 
             validator: RegularExpressionValidator {
                 regularExpression: /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
@@ -102,7 +104,7 @@ Rectangle {
                 "Taupe",
             ]
 
-            font.pixelSize: 15
+            font.pixelSize: Math.round(15 * Constants.scalar)
 
             onActivated: (index) => setQml(currentText)
         }
@@ -111,16 +113,16 @@ Rectangle {
     RowLayout {
         id: preview
         uniformCellSizes: true
-        y: 50
+        y: 50 * Constants.scalar
 
         anchors {
             left: parent.left
             right: parent.right
 
-            margins: 8
+            margins: 8 * Constants.scalar
         }
 
-        height: 50
+        height: 50 * Constants.scalar
 
         Button {
             text: "Remove"
@@ -130,16 +132,14 @@ Rectangle {
 
         Rectangle {
             Layout.fillWidth: true
-            // Layout.fillHeight: true
-            height: 40
+            height: 40 * Constants.scalar
 
             color: accent.text
         }
 
         Rectangle {
             Layout.fillWidth: true
-            // Layout.fillHeight: true
-            height: 40
+            height: 40 * Constants.scalar
 
             color: light.text
         }
@@ -147,7 +147,7 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true
 
-            height: 40
+            height: 40 * Constants.scalar
 
             color: accents.qmlColor(qml.currentText)
         }

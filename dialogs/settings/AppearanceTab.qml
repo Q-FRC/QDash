@@ -54,7 +54,8 @@ ColumnLayout {
         Layout.fillWidth: true
 
         AppearanceComboBox {
-            implicitWidth: 200
+            implicitHeight: 50 * Constants.scalar
+            implicitWidth: 200 * Constants.scalar
             id: theme
 
             label: "Theme"
@@ -66,7 +67,8 @@ ColumnLayout {
         }
 
         AppearanceComboBox {
-            implicitWidth: 200
+            implicitWidth: 200 * Constants.scalar
+            implicitHeight: 50 * Constants.scalar
             id: accent
 
             label: "Accent"
@@ -88,16 +90,22 @@ ColumnLayout {
 
         Button {
             Layout.fillWidth: true
+
+            font.pixelSize: 25 * Constants.scalar
             text: "&Edit"
             onClicked: accentEditor.open()
         }
         Button {
             Layout.fillWidth: true
+
+            font.pixelSize: 25 * Constants.scalar
             text: "E&xport"
             onClicked: saveAccentDialog.open()
         }
         Button {
             Layout.fillWidth: true
+
+            font.pixelSize: 25 * Constants.scalar
             text: "I&mport"
             onClicked: loadAccentDialog.open()
         }

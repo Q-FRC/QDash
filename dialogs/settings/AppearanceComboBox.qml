@@ -18,7 +18,7 @@ ComboBox {
 
     id: combo
     model: choices
-    font.pixelSize: 15
+    font.pixelSize: Math.round(15 * Constants.scalar)
 
     function toTitleCase(str) {
         return str.replace(
@@ -42,7 +42,7 @@ ComboBox {
         contentItem: Text {
             text: modelData
             color: Constants.palette.text
-            font.pixelSize: 15
+            font.pixelSize: Math.round(15 * Constants.scalar)
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
         }
@@ -54,7 +54,7 @@ ComboBox {
         text: label
         color: Constants.palette.text
 
-        font.pixelSize: 15
+        font.pixelSize: Math.round(15 * Constants.scalar)
 
         anchors {
             left: parent.left

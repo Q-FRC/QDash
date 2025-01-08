@@ -11,7 +11,7 @@ Rectangle {
     height: 100
     z: 3
 
-    radius: 12
+    radius: 12 * Constants.scalar
 
     property int item_titleFontSize: 20
 
@@ -278,7 +278,7 @@ Rectangle {
     /* ACTUAL DATA */
     TextField {
         id: titleField
-        font.pixelSize: item_titleFontSize
+        font.pixelSize: item_titleFontSize * Constants.scalar
         font.bold: true
 
         text: model.title
@@ -293,8 +293,8 @@ Rectangle {
         }
 
         background: Rectangle {
-            topLeftRadius: 12
-            topRightRadius: 12
+            topLeftRadius: 12 * Constants.scalar
+            topRightRadius: 12 * Constants.scalar
             color: Constants.accent
         }
 
@@ -309,7 +309,7 @@ Rectangle {
     BaseConfigDialog {
         // id: config
 
-        height: 450
+        height: 450 * Constants.scalar
 
         function openDialog() {
             topicField.open()
@@ -325,7 +325,7 @@ Rectangle {
 
         ColumnLayout {
             id: layout
-            spacing: 25
+            spacing: 25 * Constants.scalar
 
             anchors {
                 top: parent.top
@@ -334,8 +334,6 @@ Rectangle {
                 right: parent.right
 
                 topMargin: -20
-
-
 
                 rightMargin: 5
             }

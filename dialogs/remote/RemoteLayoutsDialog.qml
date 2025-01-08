@@ -11,8 +11,8 @@ AnimatedDialog {
 
     id: remote
 
-    width: 350
-    height: 350
+    width: 350 * Constants.scalar
+    height: 350 * Constants.scalar
 
     title: "Remote Layouts"
 
@@ -69,8 +69,8 @@ AnimatedDialog {
 
         running: false
         anchors.centerIn: parent
-        height: 50
-        width: 50
+        height: 50 * Constants.scalar
+        width: 50 * Constants.scalar
     }
 
     ListView {
@@ -79,7 +79,7 @@ AnimatedDialog {
         model: rlm
 
         delegate: RemoteLayout {
-            height: 40
+            height: 40 * Constants.scalar
             width: parent.width
 
             onActivated: {
@@ -102,11 +102,11 @@ AnimatedDialog {
 
             Text {
                 anchors.fill: parent
-                anchors.leftMargin: 20
+                anchors.leftMargin: 20 * Constants.scalar
 
                 color: Constants.palette.text
                 text: rlm.name(list.currentIndex)
-                font.pixelSize: 18
+                font.pixelSize: Math.round(18 * Constants.scalar)
 
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter

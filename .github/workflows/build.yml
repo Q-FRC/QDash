@@ -17,7 +17,7 @@ jobs:
       matrix:
         include:
 
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             qt_host: linux
             qt_version: '6.8.1'
             qt_modules: 'qtmultimedia qtcharts qtwaylandcompositor'
@@ -52,7 +52,6 @@ jobs:
         echo "INSTALL_DIR=${{ github.workspace }}/install" >> $GITHUB_ENV
         echo "INSTALL_APPIMAGE_DIR=${{ github.workspace }}/install-appdir" >> $GITHUB_ENV
         echo "NTCORE_INSTALL_DIR=${{ github.workspace }}/install-ntcore" >> $GITHUB_ENV
-        echo "PROTOBUF_INSTALL_DIR=${{ github.workspace }}/install-protobuf" >> $GITHUB_ENV
         echo "DATE=$(/bin/date -u "+%Y%m%d")" >> $GITHUB_ENV
 
     - name: Install CMake
@@ -107,10 +106,11 @@ jobs:
     - name: Install Build Dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
-        sudo apt-get install libstdc++-10-dev gcc-10 ninja-build
+        sudo apt-get install libstdc++-12-dev gcc-12 ninja-build libfuse2
 
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 12
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 12
+
 
     - name: Install Build Dependencies (macOS)
       if: runner.os == 'macOS'
@@ -120,7 +120,7 @@ jobs:
 
     - name: Configure CMake
       run: |
-        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DUSE_SYSTEM_NTCORE=OFF -DUSE_SYSTEM_PROTOBUF=OFF -DBUILD_SHARED_LIBS=OFF
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DUSE_SYSTEM_NTCORE=OFF -DBUILD_SHARED_LIBS=OFF
 
     - name: Build
       run: |
@@ -178,7 +178,6 @@ jobs:
       shell: cmd
       run: |
         cmake --install ${{ env.BUILD_DIR }}\_deps\ntcore-build --prefix ${{ env.NTCORE_INSTALL_DIR }}
-        cmake --install ${{ env.BUILD_DIR }}\_deps\protobuf-build --prefix ${{ env.PROTOBUF_INSTALL_DIR }}
 
         mkdir ${{ env.INSTALL_DIR }}
         set PATH=%PATH%;"${{ runner.workspace }}\Qt\${{ matrix.qt_version }}\${{ matrix.qt_arch }}\bin"
@@ -192,12 +191,6 @@ jobs:
         ) else (
           cp C:\Windows\System32\ucrtbase.dll ${{ env.INSTALL_DIR }}
         )
-
-        ls ${{ env.BUILD_DIR }}
-
-        cp ${{ env.BUILD_DIR }}\QFRCDashboard.pdb ${{ env.INSTALL_DIR }}
-
-        cp ${{ env.PROTOBUF_INSTALL_DIR }}\bin\abseil_dll.dll ${{ env.INSTALL_DIR }}
 
     - name: Package (Windows, Installer)
       if: runner.os == 'Windows'

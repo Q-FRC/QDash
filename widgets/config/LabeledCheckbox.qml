@@ -16,7 +16,10 @@ CheckBox {
     required property var bindTarget
 
     id: textField
-    font.pixelSize: 18
+    font.pixelSize: 18 * Constants.scalar
+
+    indicator.implicitWidth: 28 * Constants.scalar
+    indicator.implicitHeight: 28 * Constants.scalar
 
     function open() {
         checked = bindTarget[bindedProperty]

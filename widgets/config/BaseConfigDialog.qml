@@ -8,7 +8,7 @@ AnimatedDialog {
 
     title: "Configure Widget"
 
-    width: 400
+    width: 400 * Constants.scalar
 
     standardButtons: Dialog.Ok | Dialog.Cancel
 }

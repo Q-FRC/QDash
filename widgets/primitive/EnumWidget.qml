@@ -98,8 +98,8 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 450
-        width: 450
+        height: 450 * Constants.scalar
+        width: 450 * Constants.scalar
 
         function openDialog() {
             topicField.open()
@@ -120,7 +120,7 @@ BaseWidget {
         ScrollView {
             clip: true
 
-            contentWidth: 380
+            contentWidth: 380 * Constants.scalar
 
             anchors {
                 top: parent.top
@@ -135,7 +135,7 @@ BaseWidget {
 
             ColumnLayout {
                 id: layout
-                spacing: 25
+                spacing: 25 * Constants.scalar
                 anchors.fill: parent
                 clip: true
 

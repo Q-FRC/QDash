@@ -9,8 +9,8 @@ AnimatedDialog {
     id: tabConfigDialog
 
     title: "Configure Tab"
-    height: 270
-    width: 300
+    height: 270 * Constants.scalar
+    width: 300 * Constants.scalar
 
     property int columns
     property int rows

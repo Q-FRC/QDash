@@ -87,7 +87,7 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 500
+        height: 500 * Constants.scalar
 
         function openDialog() {
             topicField.open()
@@ -109,7 +109,7 @@ BaseWidget {
 
         ColumnLayout {
             id: layout
-            spacing: 25
+            spacing: 25 * Constants.scalar
 
             anchors {
                 top: parent.top

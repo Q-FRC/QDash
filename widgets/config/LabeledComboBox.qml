@@ -19,9 +19,9 @@ ComboBox {
 
     id: combo
     model: choices
-    font.pixelSize: 15
+    font.pixelSize: 15 * Constants.scalar
 
-    height: 50
+    implicitHeight: 40 * Constants.scalar
 
     function open() {
         currentIndex = indexOfValue(bindTarget[bindedProperty])
@@ -50,14 +50,14 @@ ComboBox {
         text: label
         color: Constants.palette.text
 
-        font.pixelSize: 15
+        font.pixelSize: 15 * Constants.scalar
 
         anchors {
             left: parent.left
             bottom: parent.top
 
-            bottomMargin: -2
-            leftMargin: 10
+            bottomMargin: -2 * Constants.scalar
+            leftMargin: 10 * Constants.scalar
         }
     }
 }

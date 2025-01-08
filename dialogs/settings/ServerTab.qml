@@ -25,7 +25,7 @@ ColumnLayout {
         Layout.fillWidth: true
 
         LabeledSpinBox {
-            implicitWidth: 180
+            implicitWidth: 180 * Constants.scalar
             id: team
 
             from: 0
@@ -38,7 +38,7 @@ ColumnLayout {
         }
 
         LabeledTextField {
-            implicitWidth: 230
+            implicitWidth: 230 * Constants.scalar
             id: ip
 
             label: "IP Address"
@@ -54,7 +54,8 @@ ColumnLayout {
 
     LabeledComboBox {
         id: mode
-        implicitWidth: 250
+        implicitHeight: 50 * Constants.scalar
+        implicitWidth: 250 * Constants.scalar
 
         label: "Connection Mode"
 

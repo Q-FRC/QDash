@@ -34,11 +34,11 @@ Rectangle {
 
     Text {
         anchors.fill: parent
-        anchors.leftMargin: 20
+        anchors.leftMargin: 20 * Constants.scalar
 
         color: Constants.palette.text
         text: model.name
-        font.pixelSize: 18
+        font.pixelSize: Math.round(18 * Constants.scalar)
 
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter

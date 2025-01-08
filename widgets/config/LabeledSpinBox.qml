@@ -16,7 +16,7 @@ SpinBox {
     /** the target to bind the property to */
     required property var bindTarget
 
-    font.pixelSize: 18
+    font.pixelSize: 18 * Constants.scalar
 
     from: 0
     to: 1E9
@@ -26,8 +26,6 @@ SpinBox {
 
         font: parent.font
         color: Constants.palette.text
-        // selectionColor: "#21be2b"
-        // selectedTextColor: "#ffffff"
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
 
@@ -47,8 +45,8 @@ SpinBox {
     up.indicator: Rectangle {
         x: spin.mirrored ? 0 : parent.width - width
         height: parent.height
-        implicitWidth: 40
-        implicitHeight: 40
+        implicitWidth: 40 * Constants.scalar
+        implicitHeight: 40 * Constants.scalar
         color: Constants.palette.bg
         border.color: Constants.palette.text
 
@@ -66,8 +64,8 @@ SpinBox {
     down.indicator: Rectangle {
         x: spin.mirrored ? parent.width - width : 0
         height: parent.height
-        implicitWidth: 40
-        implicitHeight: 40
+        implicitWidth: 40 * Constants.scalar
+        implicitHeight: 40 * Constants.scalar
         color: Constants.palette.bg
         border.color: Constants.palette.text
 
@@ -87,7 +85,7 @@ SpinBox {
         width: parent.width
         border.color: Constants.palette.text
         border.width: 2
-        radius: 5
+        radius: 5 * Constants.scalar
     }
 
     Text {
@@ -95,14 +93,14 @@ SpinBox {
         text: label
         color: Constants.palette.text
 
-        font.pixelSize: 15
+        font.pixelSize: 15 * Constants.scalar
 
         anchors {
             left: spin.left
             bottom: spin.top
 
             bottomMargin: -2
-            leftMargin: 10
+            leftMargin: 10 * Constants.scalar
         }
     }
 }

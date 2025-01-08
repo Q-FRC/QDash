@@ -8,11 +8,10 @@ set(Dashboard_GIT_REPO https://github.com/${Dashboard_ORG_NAME}/${Dashboard_EXEC
 project(QFRCDashboard VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTORCC ON)
 
 option(USE_SYSTEM_NTCORE OFF "Use the system NTCore (Linux only)")
-option(USE_SYSTEM_PROTOBUF OFF "Use the system protobuf (Linux only)")
 
 find_package(Qt6 6.7 REQUIRED COMPONENTS Quick Multimedia QuickControls2 Network)
 add_subdirectory(3rd_party EXCLUDE_FROM_ALL)

@@ -43,12 +43,12 @@ AnimatedDialog {
                     }
 
                     Layout.fillWidth: true
-                    height: 30
+                    height: 30 * Constants.scalar
 
                     Text {
                         anchors.fill: parent
                         color: Constants.palette.text
-                        font.pixelSize: 18
+                        font.pixelSize: Math.round(18 * Constants.scalar)
 
                         text: modelData
 
@@ -75,7 +75,7 @@ AnimatedDialog {
         }
 
         RowLayout {
-            spacing: 15
+            spacing: 15 * Constants.scalar
             uniformCellSizes: true
 
             Button {

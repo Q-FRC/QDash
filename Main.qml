@@ -19,6 +19,18 @@ ApplicationWindow {
 
     property string filename: ""
 
+    onWidthChanged: {
+        console.log("SETTING SCALAR")
+        Constants.scalar = Math.min(width / Constants.width, height / Constants.height)
+        console.log(Constants.scalar)
+    }
+
+    onHeightChanged: {
+        console.log("SETTING SCALAR")
+        Constants.scalar = Math.min(width / Constants.width, height / Constants.height)
+        console.log(Constants.scalar)
+    }
+
     AccentEditor {
         id: accentEditor
     }
@@ -102,6 +114,8 @@ ApplicationWindow {
     Component.onCompleted: {
         Constants.setTheme(settings.theme)
         Constants.setAccent(settings.accent)
+
+        Constants.scalar = Math.min(width / Constants.width, height / Constants.height)
 
         if (settings.loadRecent && settings.recentFiles.length > 0) {
             filename = settings.recentFiles[0]

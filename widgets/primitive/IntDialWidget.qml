@@ -37,7 +37,7 @@ BaseWidget {
     SpinBox {
         id: spin
 
-        font.pixelSize: item_fontSize
+        font.pixelSize: item_fontSize * Constants.scalar
 
         function updateTopic(ntTopic, ntValue) {
             if (ntTopic === item_topic) {
@@ -92,12 +92,16 @@ BaseWidget {
         background: Rectangle {
             x: dial.width / 2 - width / 2
             y: dial.height / 2 - height / 2
+
             implicitWidth: 140
             implicitHeight: 140
+
             width: Math.max(64, Math.min(dial.width, dial.height))
             height: width
+
             color: "transparent"
             radius: width / 2
+
             border.color: Constants.accent
             opacity: dial.enabled ? 1 : 0.3
         }
@@ -106,12 +110,16 @@ BaseWidget {
             id: handleItem
             x: dial.background.x + dial.background.width / 2 - width / 2
             y: dial.background.y + dial.background.height / 2 - height / 2
+
             width: Math.min(parent.width, parent.height) / 5
             height: Math.min(parent.width, parent.height) / 5
+
             color: Constants.accent
-            radius: 8
+            radius: 8 * Constants.scalar
+
             antialiasing: true
             opacity: dial.enabled ? 1 : 0.3
+
             transform: [
                 Translate {
                     y: -Math.min(
@@ -128,7 +136,7 @@ BaseWidget {
 
         inputMode: Dial.Circular
 
-        font.pixelSize: item_fontSize
+        font.pixelSize: item_fontSize * Constants.scalar
 
         value: 0
         stepSize: item_stepSize
@@ -166,8 +174,8 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 450
-        width: 450
+        height: 450 * Constants.scalar
+        width: 450 * Constants.scalar
 
         function openDialog() {
             topicField.open()
@@ -195,7 +203,7 @@ BaseWidget {
         }
 
         ScrollView {
-            contentWidth: 380
+            contentWidth: 380 * Constants.scalar
 
             anchors {
                 top: parent.top
@@ -210,7 +218,7 @@ BaseWidget {
 
             ColumnLayout {
                 id: layout
-                spacing: 25
+                spacing: 25 * Constants.scalar
 
                 anchors.fill: parent
 

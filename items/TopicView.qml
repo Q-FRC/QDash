@@ -13,7 +13,7 @@ Row {
     property string closedText: ">>"
     property string openText: "<<"
 
-    width: (parent.width / 3) + 40
+    width: (parent.width / 3) + 40 * Constants.scalar
     height: parent.height
 
     SmoothedAnimation {
@@ -38,9 +38,9 @@ Row {
 
     Rectangle {
         id: topicView
-        radius: 10
+        radius: 10 * Constants.scalar
 
-        width: parent.width - 40
+        width: parent.width - 40 * Constants.scalar
         height: parent.height
 
         color: Constants.palette.menu
@@ -104,8 +104,8 @@ Row {
 
                 implicitWidth: topicView.width - 20
 
-                readonly property real indentation: 20
-                readonly property real padding: 5
+                readonly property real indentation: 20 * Constants.scalar
+                readonly property real padding: 5 * Constants.scalar
 
                 // Assigned to by TreeView:
                 required property TreeView treeView
@@ -157,7 +157,7 @@ Row {
                         }
                     }
 
-                    font.pixelSize: 17
+                    font.pixelSize: 17 * Constants.scalar
                 }
 
                 Label {
@@ -170,7 +170,7 @@ Row {
 
                     color: Constants.palette.text
 
-                    font.pixelSize: 17
+                    font.pixelSize: 17 * Constants.scalar
                 }
 
                 Label {
@@ -182,7 +182,7 @@ Row {
 
                     color: Constants.palette.text
 
-                    font.pixelSize: 17
+                    font.pixelSize: 17 * Constants.scalar
                 }
             }
         }
@@ -192,8 +192,10 @@ Row {
         id: button
         text: closedText
 
-        width: 40
-        height: 40
+        width: 40 * Constants.scalar
+        height: 40 * Constants.scalar
+
+        font.pixelSize: 18 * Constants.scalar
 
         onClicked: {
             if (text === closedText) {

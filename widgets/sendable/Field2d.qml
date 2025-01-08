@@ -16,12 +16,12 @@ BaseWidget {
     property double item_robotWidthMeters: 0.5
     property double item_robotLengthMeters: 0.5
 
-    property var item_field: "2024"
+    property var item_field: "2025"
 
-    property list<string> fieldChoices: ["2024", "2023"]
+    property list<string> fieldChoices: ["2025", "2024", "2023"]
 
-    property double fieldWidth: 8.2296;
-    property double fieldLength: 8.2296 * 2.;
+    property double fieldWidth: 8.051902
+    property double fieldLength: 17.54825
 
     property bool mirrorField: false
 
@@ -205,8 +205,8 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 450
-        width: 450
+        height: 450 * Constants.scalar
+        width: 450 * Constants.scalar
 
         function openDialog() {
             topicField.open()
@@ -237,7 +237,7 @@ BaseWidget {
         ScrollView {
             clip: true
 
-            contentWidth: 380
+            contentWidth: 380 * Constants.scalar
 
             anchors {
                 top: parent.top
@@ -252,7 +252,7 @@ BaseWidget {
 
             ColumnLayout {
                 id: layout
-                spacing: 25
+                spacing: 25 * Constants.scalar
                 anchors.fill: parent
                 clip: true
 

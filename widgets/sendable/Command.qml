@@ -19,7 +19,7 @@ BaseWidget {
             horizontalCenter: parent.horizontalCenter
         }
 
-        font.pixelSize: item_fontSize
+        font.pixelSize: item_fontSize * Constants.scalar
 
         property bool running: false
         property string name: "Command"
@@ -73,7 +73,7 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 325
+        height: 325 * Constants.scalar
 
         function openDialog() {
             topicField.open()
@@ -91,7 +91,7 @@ BaseWidget {
 
         ColumnLayout {
             id: layout
-            spacing: 25
+            spacing: 25 * Constants.scalar
 
             anchors {
                 top: parent.top

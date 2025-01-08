@@ -143,8 +143,8 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 450
-        width: 450
+        height: 450 * Constants.scalar
+        width: 450 * Constants.scalar
 
         function openDialog() {
             topicField.open()
@@ -167,7 +167,7 @@ BaseWidget {
         }
 
         ScrollView {
-            contentWidth: 380
+            contentWidth: 380 * Constants.scalar
 
             anchors {
                 top: parent.top
@@ -177,12 +177,12 @@ BaseWidget {
 
                 topMargin: -20
 
-                rightMargin: 5
+                rightMargin: 5 * Constants.scalar
             }
 
             ColumnLayout {
                 id: layout
-                spacing: 25
+                spacing: 25 * Constants.scalar
 
                 anchors.fill: parent
 
@@ -223,7 +223,7 @@ BaseWidget {
                     // Layout.preferredWidth: 300
 
                     Text {
-                        font.pixelSize: 16
+                        font.pixelSize: 16 * Constants.scalar
                         text: "Resolution"
                         color: Constants.palette.text
                     }
@@ -239,7 +239,7 @@ BaseWidget {
                     }
 
                     Text {
-                        font.pixelSize: 18
+                        font.pixelSize: 18 * Constants.scalar
                         text: "x"
                         color: Constants.palette.text
                     }
@@ -260,7 +260,7 @@ BaseWidget {
                     Layout.alignment: Qt.AlignTop
 
                     Text {
-                        font.pixelSize: 16
+                        font.pixelSize: 16 * Constants.scalar
                         text: "Quality"
                         color: Constants.palette.text
                     }

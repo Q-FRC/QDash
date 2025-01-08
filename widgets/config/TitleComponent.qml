@@ -5,17 +5,17 @@ import QFRCDashboard
 
 Rectangle {
     color: Constants.accent
-    topLeftRadius: 20
-    topRightRadius: 20
+    topLeftRadius: 20 * Constants.scalar
+    topRightRadius: 20 * Constants.scalar
 
-    height: 40
+    height: 40 * Constants.scalar
     width: parent.width
 
     Text {
         id: txt
 
         text: "Configure Widget"
-        font.pixelSize: 24
+        font.pixelSize: 24 * Constants.scalar
         font.bold: true
 
         color: "white"
@@ -25,7 +25,7 @@ Rectangle {
 
         anchors {
             fill: parent
-            margins: 8
+            margins: 8 * Constants.scalar
         }
     }
 }

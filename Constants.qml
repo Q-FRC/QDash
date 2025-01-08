@@ -2,8 +2,10 @@ pragma Singleton
 import QtQuick
 
 QtObject {
-    readonly property int width: 900;
-    readonly property int height: 600;
+    readonly property int width: 1000;
+    readonly property int height: 650;
+
+    property double scalar: 1.0
 
     property var palette: dark
 
