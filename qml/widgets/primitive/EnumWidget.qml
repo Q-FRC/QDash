@@ -31,8 +31,8 @@ BaseWidget {
     }
 
     function colorFromMap(value) {
-        for (let i = 0 ; i < item_colorMap.length; ++i) {
-            let obj = item_colorMap[i];
+        for (var i = 0; i < item_colorMap.length; ++i) {
+            let obj = item_colorMap[i]
 
             if (obj["Value"] === value) {
                 return obj["Color"]
@@ -98,9 +98,6 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 450 * Constants.scalar
-        width: 450 * Constants.scalar
-
         function openDialog() {
             topicField.open()
             titleFontField.open()
@@ -120,7 +117,7 @@ BaseWidget {
         ScrollView {
             clip: true
 
-            contentWidth: 380 * Constants.scalar
+            contentWidth: width - 5 * Constants.scalar - effectiveScrollBarWidth
 
             anchors {
                 top: parent.top
@@ -136,7 +133,10 @@ BaseWidget {
             ColumnLayout {
                 id: layout
                 spacing: 25 * Constants.scalar
+
                 anchors.fill: parent
+                anchors.leftMargin: 2
+
                 clip: true
 
                 SectionHeader {

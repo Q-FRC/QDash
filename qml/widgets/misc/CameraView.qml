@@ -104,8 +104,7 @@ BaseWidget {
                                                                  + item_quality + "&" : "")
                                 + (item_fps !== 0 ? "fps=" + item_fps + "&" : "")
                                 + (item_resH !== Qt.size(
-                                       0, 0) ? "resolution=" + item_resW + "x"
-                                               + item_resH : ""))
+                                       0, 0) ? "resolution=" + item_resW + "x" + item_resH : ""))
             }
 
             function reconnect() {
@@ -143,9 +142,6 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 450 * Constants.scalar
-        width: 450 * Constants.scalar
-
         function openDialog() {
             topicField.open()
             titleFontField.open()
@@ -167,7 +163,7 @@ BaseWidget {
         }
 
         ScrollView {
-            contentWidth: 380 * Constants.scalar
+            contentWidth: width - 5 * Constants.scalar - effectiveScrollBarWidth
 
             anchors {
                 top: parent.top
@@ -185,6 +181,7 @@ BaseWidget {
                 spacing: 25 * Constants.scalar
 
                 anchors.fill: parent
+                anchors.leftMargin: 2
 
                 SectionHeader {
                     label: "Font Settings"
@@ -220,8 +217,8 @@ BaseWidget {
                 RowLayout {
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignTop
-                    // Layout.preferredWidth: 300
 
+                    // Layout.preferredWidth: 300
                     Text {
                         font.pixelSize: 16 * Constants.scalar
                         text: "Resolution"
@@ -301,5 +298,4 @@ BaseWidget {
             }
         }
     }
-
 }

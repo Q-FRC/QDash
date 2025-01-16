@@ -72,8 +72,6 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 325 * Constants.scalar
-
         function openDialog() {
             topicField.open()
             titleFontField.open()
@@ -99,7 +97,7 @@ BaseWidget {
                 right: parent.right
 
                 topMargin: -20
-                
+
                 rightMargin: 5
             }
 

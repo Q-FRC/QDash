@@ -52,8 +52,8 @@ BaseWidget {
                 choices = value
             } else if (ntTopic === item_topic + "/active") {
                 if (!readyToUpdate) {
-                    readyToUpdate = true;
-                    return;
+                    readyToUpdate = true
+                    return
                 }
 
                 active = value
@@ -63,7 +63,7 @@ BaseWidget {
 
         function connected(conn) {
             if (conn) {
-                readyToUpdate = false;
+                readyToUpdate = false
 
                 topicStore.setValue(item_topic + "/selected", currentText)
             }
@@ -108,8 +108,6 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 325 * Constants.scalar
-
         function openDialog() {
             topicField.open()
             titleFontField.open()
@@ -135,7 +133,7 @@ BaseWidget {
                 right: parent.right
 
                 topMargin: -20
-                
+
                 rightMargin: 5
             }
 

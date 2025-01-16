@@ -13,11 +13,14 @@ Column {
         font.bold: true
         color: Constants.palette.text
         text: label
+
+        width: parent.width
+        horizontalAlignment: Text.AlignHCenter
     }
 
     Rectangle {
         height: 2
-        width: 350 * Constants.scalar
+        width: parent.width
         color: Constants.palette.text
     }
 }

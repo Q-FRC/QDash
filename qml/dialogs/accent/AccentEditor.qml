@@ -6,8 +6,8 @@ import QtQuick.Dialogs
 import QFRCDashboard
 
 AnimatedDialog {
-    width: parent.width / 1.5
-    height: parent.height / 1.1
+    width: Math.min(window.width, 625 * Constants.scalar)
+    height: window.height
 
     standardButtons: Dialog.Ok | Dialog.Cancel
     title: "Accent Editor"
@@ -79,6 +79,7 @@ AnimatedDialog {
             uniformCellSizes: true
 
             Button {
+                font.pixelSize: 15 * Constants.scalar
                 Layout.fillWidth: true
                 text: "Add"
 
@@ -86,6 +87,7 @@ AnimatedDialog {
             }
 
             Button {
+                font.pixelSize: 15 * Constants.scalar
                 Layout.fillWidth: true
                 text: "Pick Color"
 

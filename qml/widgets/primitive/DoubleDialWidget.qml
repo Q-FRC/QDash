@@ -173,9 +173,6 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 450 * Constants.scalar
-        width: 450 * Constants.scalar
-
         function openDialog() {
             topicField.open()
             titleFontField.open()
@@ -203,7 +200,7 @@ BaseWidget {
 
         ScrollView {
             id: scroll
-            contentWidth: 380 * Constants.scalar
+            contentWidth: width - 5 * Constants.scalar - effectiveScrollBarWidth
 
             anchors {
                 top: parent.top
@@ -221,6 +218,7 @@ BaseWidget {
                 spacing: 25 * Constants.scalar
 
                 anchors.fill: parent
+                anchors.leftMargin: 2
 
                 SectionHeader {
                     label: "Font Settings"

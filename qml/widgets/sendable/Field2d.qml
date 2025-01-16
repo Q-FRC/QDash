@@ -121,8 +121,12 @@ BaseWidget {
             let realFieldX = field.x + (field.width - field.paintedWidth) / 2
             let realFieldY = field.y + (field.height - field.paintedHeight) / 2
 
-            let startPoint = item_useVerticalField ? Qt.point(realFieldX + field.paintedWidth - width, realFieldY + field.paintedHeight)
-                                                   : Qt.point(realFieldX, realFieldY + field.paintedHeight)
+            let startPoint = item_useVerticalField ? Qt.point(
+                                                         realFieldX + field.paintedWidth - width,
+                                                         realFieldY
+                                                         + field.paintedHeight) : Qt.point(
+                                                         realFieldX,
+                                                         realFieldY + field.paintedHeight)
 
             x = startPoint.x + xPixels
             y = startPoint.y - yPixels - height
@@ -180,7 +184,7 @@ BaseWidget {
                 shape.width = w
                 shape.height = h
 
-                start.x =  w
+                start.x = w
                 start.y = h / 2
 
                 middle.x = 0
@@ -204,9 +208,6 @@ BaseWidget {
 
     BaseConfigDialog {
         id: config
-
-        height: 450 * Constants.scalar
-        width: 450 * Constants.scalar
 
         function openDialog() {
             topicField.open()
@@ -237,16 +238,16 @@ BaseWidget {
         ScrollView {
             clip: true
 
-            contentWidth: 380 * Constants.scalar
+            contentWidth: width - 5 * Constants.scalar - effectiveScrollBarWidth
 
             anchors {
                 top: parent.top
                 bottom: parent.bottom
                 left: parent.left
-                right: parent.right                
+                right: parent.right
 
                 topMargin: -20
-                
+
                 rightMargin: 5
             }
 
@@ -254,6 +255,7 @@ BaseWidget {
                 id: layout
                 spacing: 25 * Constants.scalar
                 anchors.fill: parent
+                anchors.leftMargin: 2
                 clip: true
 
                 SectionHeader {

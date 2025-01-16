@@ -7,7 +7,7 @@ import QFRCDashboard
 Rectangle {
     clip: true
 
-    height: 100 * Constants.scalar
+    height: 85 * Constants.scalar
     border {
         color: "white"
         width: 2 * Constants.scalar
@@ -23,16 +23,17 @@ Rectangle {
     }
 
     RowLayout {
+        id: fields
         anchors {
+            top: parent.top
             left: parent.left
             right: parent.right
 
-            margins: 5
+            margins: 5 * Constants.scalar
         }
 
         width: parent.width
         uniformCellSizes: true
-        height: 50 * Constants.scalar
 
         TextField {
             Layout.fillWidth: true
@@ -81,65 +82,47 @@ Rectangle {
             Component.onCompleted: currentIndex = indexOfValue(getQml())
 
             id: qml
-            model: [
-                "Lime",
-                "Green",
-                "Emerald",
-                "Teal",
-                "Cyan",
-                "Cobalt",
-                "Indigo",
-                "Violet",
-                "Pink",
-                "Magenta",
-                "Crimson",
-                "Red",
-                "Orange",
-                "Amber",
-                "Yellow",
-                "Brown",
-                "Olive",
-                "Steel",
-                "Mauve",
-                "Taupe",
-            ]
+            model: ["Lime", "Green", "Emerald", "Teal", "Cyan", "Cobalt", "Indigo", "Violet", "Pink", "Magenta", "Crimson", "Red", "Orange", "Amber", "Yellow", "Brown", "Olive", "Steel", "Mauve", "Taupe"]
 
             font.pixelSize: Math.round(15 * Constants.scalar)
 
-            onActivated: (index) => setQml(currentText)
+            onActivated: index => setQml(currentText)
         }
     }
 
     RowLayout {
         id: preview
         uniformCellSizes: true
-        y: 50 * Constants.scalar
 
         anchors {
             left: parent.left
             right: parent.right
 
+            top: fields.bottom
+
             margins: 8 * Constants.scalar
+            topMargin: 2
         }
 
-        height: 50 * Constants.scalar
-
         Button {
+            font.pixelSize: 18 * Constants.scalar
             text: "Remove"
 
             onClicked: accents.remove(model.idx)
+
+            Layout.alignment: Qt.AlignCenter
         }
 
         Rectangle {
             Layout.fillWidth: true
-            height: 40 * Constants.scalar
+            implicitHeight: 40 * Constants.scalar
 
             color: accent.text
         }
 
         Rectangle {
             Layout.fillWidth: true
-            height: 40 * Constants.scalar
+            implicitHeight: 40 * Constants.scalar
 
             color: light.text
         }
@@ -147,10 +130,9 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true
 
-            height: 40 * Constants.scalar
+            implicitHeight: 40 * Constants.scalar
 
             color: accents.qmlColor(qml.currentText)
         }
     }
-
 }

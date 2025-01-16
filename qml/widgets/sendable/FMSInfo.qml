@@ -287,8 +287,6 @@ BaseWidget {
     BaseConfigDialog {
         id: config
 
-        height: 325 * Constants.scalar
-
         function openDialog() {
             topicField.open()
             titleFontField.open()
