@@ -10,7 +10,7 @@
 #include "PlatformHelper.h"
 #include "Flags.h"
 #include "Globals.h"
-#include "TitleManager.h"
+#include "ConnManager.h"
 #include "TopicListModel.h"
 #include "TopicStore.h"
 
@@ -24,6 +24,9 @@ int main(int argc, char *argv[])
     app.setApplicationName(BuildConfig.APP_NAME);
     app.setApplicationVersion(BuildConfig.versionString());
 
+    app.setWindowIcon(QIcon(":/" + BuildConfig.APP_NAME));
+    app.setDesktopFileName("" + BuildConfig.APP_NAME);
+
     QQuickStyle::setStyle("Universal");
 
     TopicStore store(&app);
@@ -34,7 +37,7 @@ int main(int argc, char *argv[])
 
     TabListModel *tlm = new TabListModel(settings, &app);
 
-    TitleManager *title = new TitleManager(&app);
+    ConnManager *conn = new ConnManager(&app);
 
     AccentsListModel *accents = new AccentsListModel(&app);
     accents->load();
@@ -43,17 +46,17 @@ int main(int argc, char *argv[])
 
     NotificationHelper *notification = new NotificationHelper(&app);
 
-    Globals::inst.AddConnectionListener(true, [topics, &store, title] (const nt::Event &event) {
+    Globals::inst.AddConnectionListener(true, [topics, &store, conn] (const nt::Event &event) {
         bool connected = event.Is(nt::EventFlags::kConnected);
 
         store.connect(connected);
 
         if (!connected) {
             QMetaObject::invokeMethod(topics, &TopicListModel::clear);
-            title->resetTitle();
         } else {
-            title->setTitle("Connected (" + QString::fromStdString(event.GetConnectionInfo()->remote_ip) + ")");
+            conn->setAddress(QString::fromStdString(event.GetConnectionInfo()->remote_ip));
         }
+        conn->setConnected(connected);
     });
 
     Globals::inst.StartClient4(BuildConfig.APP_NAME.toStdString());
@@ -108,7 +111,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("settings", settings);
     engine.rootContext()->setContextProperty("topicStore", &store);
     engine.rootContext()->setContextProperty("tlm", tlm);
-    engine.rootContext()->setContextProperty("titleManager", title);
+    engine.rootContext()->setContextProperty("conn", conn);
     engine.rootContext()->setContextProperty("accents", accents);
     engine.rootContext()->setContextProperty("platformHelper", platform);
     engine.rootContext()->setContextProperty("notificationHelper", notification);

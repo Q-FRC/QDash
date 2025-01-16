@@ -7,7 +7,6 @@
 
 typedef struct Widget {
     Q_GADGET
-    QML_ELEMENT
 
 public:
     QString title;

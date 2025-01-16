@@ -23,6 +23,7 @@ extern const Setting RecentFiles;
 extern const Setting LoadRecent;
 extern const Setting Theme;
 extern const Setting Accent;
+extern const Setting Scale;
 }
 
 #endif // CONSTANTS_H

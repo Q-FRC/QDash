@@ -133,3 +133,14 @@ void SettingsManager::setMode(int newMode)
     emit modeChanged();
     reconnectServer();
 }
+
+double SettingsManager::scale() const
+{
+    return Settings::Scale.value().toDouble();
+}
+
+void SettingsManager::setScale(double newScale)
+{
+    Settings::Scale.setValue(newScale);
+    emit scaleChanged();
+}

@@ -68,7 +68,7 @@ qt_add_executable(${Dashboard_EXEC_NAME}
     ${RCS_FILE}
 )
 
-set_source_files_properties(Constants.qml
+set_source_files_properties(qml/Constants.qml
     PROPERTIES
     QT_QML_SINGLETON_TYPE true
 )
@@ -142,7 +142,7 @@ set(ELEMENTS
     Globals
     Constants
     SettingsManager
-    TitleManager
+    ConnManager
     PlatformHelper
     NotificationHelper
 
@@ -162,7 +162,7 @@ foreach(ELEMENT ${ELEMENTS})
 endforeach()
 
 foreach(QML ${QML_ELEMENTS})
-    set(QML_FILES ${QML_FILES} ${QML}.qml)
+    set(QML_FILES ${QML_FILES} qml/${QML}.qml)
 endforeach()
 
 set(HEADERS

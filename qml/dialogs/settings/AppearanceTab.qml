@@ -37,7 +37,7 @@ ColumnLayout {
         onAccepted: accents.importJson(loadAccentDialog.selectedFile)
     }
 
-    function accept() {        
+    function accept() {
         theme.accept()
         accent.accept()
 
@@ -91,21 +91,21 @@ ColumnLayout {
         Button {
             Layout.fillWidth: true
 
-            font.pixelSize: 25 * Constants.scalar
+            font.pixelSize: 18 * Constants.scalar
             text: "&Edit"
             onClicked: accentEditor.open()
         }
         Button {
             Layout.fillWidth: true
 
-            font.pixelSize: 25 * Constants.scalar
+            font.pixelSize: 18 * Constants.scalar
             text: "E&xport"
             onClicked: saveAccentDialog.open()
         }
         Button {
             Layout.fillWidth: true
 
-            font.pixelSize: 25 * Constants.scalar
+            font.pixelSize: 18 * Constants.scalar
             text: "I&mport"
             onClicked: loadAccentDialog.open()
         }

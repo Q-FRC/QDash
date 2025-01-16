@@ -6,5 +6,6 @@
         <file alias="Network">icons/Network.svg</file>
         <file alias="Miscellaneous">icons/Miscellaneous.svg</file>
         <file alias="Appearance">icons/Color.svg</file>
+        <file alias="QFRCDashboard">program_info/QFRCDashboard.svg</file>
     </qresource>
 </RCC>

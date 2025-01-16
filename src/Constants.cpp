@@ -17,3 +17,4 @@ const Setting Settings::RecentFiles{"recentFiles", QStringList{}};
 const Setting Settings::LoadRecent{"loadRecent", true};
 const Setting Settings::Theme{"theme", "dark"};
 const Setting Settings::Accent{"accent", "red"};
+const Setting Settings::Scale{"scale", "1.0"};

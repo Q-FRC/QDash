@@ -1,9 +1,10 @@
 pragma Singleton
+
 import QtQuick
 
 QtObject {
-    readonly property int width: 1000;
-    readonly property int height: 650;
+    readonly property int width: 1280
+    readonly property int height: 720
 
     property double scalar: 1.0
 
@@ -32,16 +33,16 @@ QtObject {
     function setAccent(newAccent) {
         settings.accent = newAccent
 
-        accent = accents.accent(newAccent);
-        tab = accents.light(newAccent);
+        accent = accents.accent(newAccent)
+        tab = accents.light(newAccent)
     }
 
     property QtObject midnight: QtObject {
         id: midnight
 
-        readonly property color bg: "#000000";
-        readonly property color widgetBg: "#1B1B1B";
-        readonly property color dialogBg: "#272727";
+        readonly property color bg: "#000000"
+        readonly property color widgetBg: "#1B1B1B"
+        readonly property color dialogBg: "#272727"
 
         readonly property color text: "#EEEEEE"
 
@@ -54,9 +55,9 @@ QtObject {
     property QtObject dark: QtObject {
         id: dark
 
-        readonly property color bg: "#2d2d2d";
-        readonly property color widgetBg: "#404040";
-        readonly property color dialogBg: "#545454";
+        readonly property color bg: "#2d2d2d"
+        readonly property color widgetBg: "#404040"
+        readonly property color dialogBg: "#545454"
 
         readonly property color text: "#FFFFFF"
 
@@ -67,9 +68,9 @@ QtObject {
     }
 
     property QtObject light: QtObject {
-        readonly property color bg: "#FFFFFF";
-        readonly property color widgetBg: "#EDEDED";
-        readonly property color dialogBg: "#DCDCDC";
+        readonly property color bg: "#FFFFFF"
+        readonly property color widgetBg: "#EDEDED"
+        readonly property color dialogBg: "#DCDCDC"
 
         readonly property color text: "#000000"
 

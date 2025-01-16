@@ -12,23 +12,26 @@ ApplicationWindow {
     width: Constants.width
     height: Constants.height
     visible: true
-    title: titleManager.title
+    title: conn.title
 
     Universal.theme: settings.theme === "light" ? Universal.Light : Universal.Dark
-    Universal.accent: accents.qml(settings.accent) // "qml" is the Universal Theme accent. Affects checkboxes, etc.
+    Universal.accent: accents.qml(
+                          settings.accent) // "qml" is the Universal Theme accent. Affects checkboxes, etc.
 
     property string filename: ""
 
+    function resetScalar() {
+        Constants.scalar = Math.sqrt(
+                    Math.min(width / Constants.width,
+                             height / Constants.height)) * settings.scale
+    }
+
     onWidthChanged: {
-        console.log("SETTING SCALAR")
-        Constants.scalar = Math.min(width / Constants.width, height / Constants.height)
-        console.log(Constants.scalar)
+        resetScalar()
     }
 
     onHeightChanged: {
-        console.log("SETTING SCALAR")
-        Constants.scalar = Math.min(width / Constants.width, height / Constants.height)
-        console.log(Constants.scalar)
+        resetScalar()
     }
 
     AccentEditor {
@@ -56,7 +59,7 @@ ApplicationWindow {
         selectedNameFilter.index: 0
         nameFilters: ["JSON files (*.json)", "All files (*)"]
 
-        onAccepted: saveAs();
+        onAccepted: saveAs()
     }
 
     function save() {
@@ -100,7 +103,7 @@ ApplicationWindow {
         id: fail
         buttons: MessageDialog.Ok
         title: "Error"
-        text: "You must be connected to a robot to download remote layouts.";
+        text: "You must be connected to a robot to download remote layouts."
 
         modality: Qt.WindowModal
     }
@@ -110,16 +113,17 @@ ApplicationWindow {
     }
 
     /** THE REST */
-
     Component.onCompleted: {
         Constants.setTheme(settings.theme)
         Constants.setAccent(settings.accent)
 
-        Constants.scalar = Math.min(width / Constants.width, height / Constants.height)
+        resetScalar()
+        settings.scaleChanged.connect(resetScalar)
 
         if (settings.loadRecent && settings.recentFiles.length > 0) {
             filename = settings.recentFiles[0]
-            if (filename === "" || filename === null) return;
+            if (filename === "" || filename === null)
+                return
             tlm.load(filename)
         }
     }
@@ -161,7 +165,8 @@ ApplicationWindow {
                     model: settings.recentFiles
 
                     delegate: MenuItem {
-                        text: qsTr("&" + index + ". " + platformHelper.baseName(modelData))
+                        text: qsTr("&" + index + ". " + platformHelper.baseName(
+                                       modelData))
                         onTriggered: {
                             if (modelData === "" || modelData === null)
                                 return
@@ -173,7 +178,7 @@ ApplicationWindow {
             }
             Action {
                 text: qsTr("Remote &Layouts...")
-                onTriggered: remoteLayouts.openDialog();
+                onTriggered: remoteLayouts.openDialog()
                 shortcut: "Ctrl+L"
             }
         }
@@ -217,5 +222,20 @@ ApplicationWindow {
     MainScreen {
         id: screen
         anchors.fill: parent
+    }
+
+    footer: ToolBar {
+        implicitHeight: 30 * Constants.scalar
+        Text {
+            anchors.fill: parent
+
+            text: "Status: " + conn.status
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+
+            leftPadding: 18 * Constants.scalar
+            color: Constants.palette.text
+            font.pixelSize: 16 * Constants.scalar
+        }
     }
 }

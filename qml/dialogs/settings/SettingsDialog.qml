@@ -47,22 +47,16 @@ AnimatedDialog {
         }
 
         ServerTab {
-            anchors.leftMargin: 5
-
             id: server
             clip: true
         }
 
         AppearanceTab {
-            anchors.leftMargin: 5
-
             id: appearance
             clip: true
         }
 
         MiscTab {
-            anchors.leftMargin: 5
-
             id: misc
             clip: true
         }

@@ -49,6 +49,9 @@ public:
     QString accent() const;
     void setAccent(const QString &newAccent);
 
+    double scale() const;
+    void setScale(double newScale);
+
 signals:
     void recentFilesChanged();
     void loadRecentChanged();
@@ -58,6 +61,9 @@ signals:
     void ipChanged();
     void teamChanged();
     void modeChanged();
+    void scaleChanged();
+private:
+    Q_PROPERTY(double scale READ scale WRITE setScale NOTIFY scaleChanged FINAL)
 };
 
 #endif // SETTINGSMANAGER_H

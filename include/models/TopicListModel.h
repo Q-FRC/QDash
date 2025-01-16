@@ -3,11 +3,9 @@
 
 #include "TopicStore.h"
 #include <QStandardItemModel>
-#include <qqmlintegration.h>
 
 class TopicListModel : public QStandardItemModel
 {
-    QML_ELEMENT
     Q_OBJECT
 
 public:
