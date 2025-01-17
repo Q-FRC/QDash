@@ -12,17 +12,11 @@ TabButton {
     height: 100 * Constants.scalar
 
     contentItem: ColumnLayout {
-        Button {
+        IconButton {
+            label: parent.label
+
             Layout.maximumHeight: 75 * Constants.scalar
             Layout.maximumWidth: 75 * Constants.scalar
-
-            id: image
-            icon.source: "qrc:/" + label
-            icon.width: 45 * Constants.scalar
-            icon.height: 45 * Constants.scalar
-            icon.color: Constants.accent
-
-            background: Item {}
 
             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 

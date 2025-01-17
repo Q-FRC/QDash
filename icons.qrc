@@ -7,5 +7,9 @@
         <file alias="Miscellaneous">icons/Miscellaneous.svg</file>
         <file alias="Appearance">icons/Color.svg</file>
         <file alias="QFRCDashboard">program_info/QFRCDashboard.svg</file>
+        <file alias="Close">icons/Close.svg</file>
+        <file alias="Minimize">icons/Minimize.svg</file>
+        <file alias="Window">icons/Window.svg</file>
+        <file alias="Unmaximize">icons/Unmaximize.svg</file>
     </qresource>
 </RCC>

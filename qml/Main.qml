@@ -14,6 +14,8 @@ ApplicationWindow {
     visible: true
     title: conn.title
 
+    flags: Qt.FramelessWindowHint
+
     Universal.theme: settings.theme === "light" ? Universal.Light : Universal.Dark
     Universal.accent: accents.qml(
                           settings.accent) // "qml" is the Universal Theme accent. Affects checkboxes, etc.
@@ -34,6 +36,7 @@ ApplicationWindow {
         resetScalar()
     }
 
+    // Dialogs
     AccentEditor {
         id: accentEditor
     }
@@ -112,29 +115,38 @@ ApplicationWindow {
         id: remoteLayouts
     }
 
-    /** THE REST */
-    Component.onCompleted: {
-        Constants.setTheme(settings.theme)
-        Constants.setAccent(settings.accent)
+    /** TITLE BAR */
+    TitleBar {
+        id: titleBar
 
-        resetScalar()
-        settings.scaleChanged.connect(resetScalar)
-
-        if (settings.loadRecent && settings.recentFiles.length > 0) {
-            filename = settings.recentFiles[0]
-            if (filename === "" || filename === null)
-                return
-            tlm.load(filename)
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
         }
+
+        onMinimize: window.visibility = Window.Minimized
+        onMaximize: {
+            if (window.visibility === Window.Maximized) {
+                window.visibility = Window.Windowed
+            } else {
+                window.visibility = Window.Maximized
+            }
+        }
+        onClose: window.close()
+        onBeginDrag: window.startSystemMove()
     }
 
-    Shortcut {
-        sequence: "Ctrl+,"
-        onActivated: settingsDialog.openDialog()
-    }
-
-    menuBar: MenuBar {
+    /** MENU BAR */
+    MenuBar {
+        id: menubar
         contentWidth: parent.width
+
+        anchors {
+            top: titleBar.bottom
+            left: parent.left
+            right: parent.right
+        }
 
         MenuBarItem {
             text: qsTr("&Settings")
@@ -219,12 +231,46 @@ ApplicationWindow {
         }
     }
 
-    MainScreen {
-        id: screen
-        anchors.fill: parent
+    /** THE REST */
+    Component.onCompleted: {
+        Constants.setTheme(settings.theme)
+        Constants.setAccent(settings.accent)
+
+        resetScalar()
+        settings.scaleChanged.connect(resetScalar)
+
+        if (settings.loadRecent && settings.recentFiles.length > 0) {
+            filename = settings.recentFiles[0]
+            if (filename === "" || filename === null)
+                return
+            tlm.load(filename)
+        }
     }
 
-    footer: ToolBar {
+    Shortcut {
+        sequence: "Ctrl+,"
+        onActivated: settingsDialog.openDialog()
+    }
+
+    MainScreen {
+        id: screen
+        anchors {
+            top: menubar.bottom
+            left: parent.left
+            right: parent.right
+            bottom: toolbar.top
+        }
+    }
+
+    ToolBar {
+        id: toolbar
+
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+
         implicitHeight: 30 * Constants.scalar
         Text {
             anchors.fill: parent
@@ -236,6 +282,23 @@ ApplicationWindow {
             leftPadding: 18 * Constants.scalar
             color: Constants.palette.text
             font.pixelSize: 16 * Constants.scalar
+        }
+    }
+
+    /* RESIZE ANCHORS */
+    Repeater {
+        model: [Qt.RightEdge, Qt.LeftEdge, Qt.TopEdge, Qt.BottomEdge, Qt.RightEdge
+            | Qt.TopEdge, Qt.RightEdge | Qt.BottomEdge, Qt.LeftEdge
+            | Qt.TopEdge, Qt.LeftEdge | Qt.BottomEdge]
+
+        ResizeAnchor {
+            required property int modelData
+            direction: modelData
+
+            mouseArea.onPressed: window.startSystemResize(direction)
+            mouseArea.drag.target: null
+
+            divisor: 80 / Constants.scalar
         }
     }
 }

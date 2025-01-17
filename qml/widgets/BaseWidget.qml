@@ -265,13 +265,16 @@ Rectangle {
 
     /* RESIZE ANCHORS */
     Repeater {
-        model: [QFDFlags.RIGHT, QFDFlags.LEFT, QFDFlags.TOP, QFDFlags.BOTTOM, QFDFlags.RIGHT
-            | QFDFlags.TOP, QFDFlags.RIGHT | QFDFlags.BOTTOM, QFDFlags.LEFT
-            | QFDFlags.TOP, QFDFlags.LEFT | QFDFlags.BOTTOM]
+        model: [Qt.RightEdge, Qt.LeftEdge, Qt.TopEdge, Qt.BottomEdge, Qt.RightEdge
+            | Qt.TopEdge, Qt.RightEdge | Qt.BottomEdge, Qt.LeftEdge
+            | Qt.TopEdge, Qt.LeftEdge | Qt.BottomEdge]
 
         ResizeAnchor {
             required property int modelData
             direction: modelData
+
+            mouseArea.onPressed: mouse => resetResize(mouse)
+            mouseArea.onReleased: releaseResize()
         }
     }
 
@@ -302,13 +305,14 @@ Rectangle {
         verticalAlignment: Text.AlignVCenter
     }
 
+
     /**
     * This is the "base" configuration dialog containing the NT and font settings.
     * Copy it for your widget.
     */
     BaseConfigDialog {
-        // id: config
 
+        // id: config
         height: 450 * Constants.scalar
 
         function openDialog() {

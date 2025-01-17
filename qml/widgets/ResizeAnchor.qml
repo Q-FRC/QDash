@@ -7,13 +7,16 @@ import QFDFlags 1.0
 Rectangle {
     id: resizeAnchor
     property int margin
+    property int divisor: 14
 
     required property int direction
 
-    property bool hasLeft: direction & QFDFlags.LEFT
-    property bool hasRight: direction & QFDFlags.RIGHT
-    property bool hasTop: direction & QFDFlags.TOP
-    property bool hasBottom: direction & QFDFlags.BOTTOM
+    property alias mouseArea: mouseArea
+
+    property bool hasLeft: direction & Qt.LeftEdge
+    property bool hasRight: direction & Qt.RightEdge
+    property bool hasTop: direction & Qt.TopEdge
+    property bool hasBottom: direction & Qt.BottomEdge
 
     property bool horiz: hasLeft || hasRight
     property bool vert: hasTop || hasBottom
@@ -33,15 +36,17 @@ Rectangle {
     }
 
     function redoMargin() {
-        margin = Math.min(parent.width, parent.height) / 14
+        margin = Math.min(parent.width, parent.height) / divisor
 
         anchors.leftMargin = horiz ? 0 : margin
         anchors.rightMargin = horiz ? 0 : margin
         anchors.topMargin = vert ? 0 : margin
         anchors.bottomMargin = vert ? 0 : margin
 
-        if (vert) height = margin
-        if (horiz) width = margin
+        if (vert)
+            height = margin
+        if (horiz)
+            width = margin
     }
 
     Component.onCompleted: {
@@ -55,6 +60,7 @@ Rectangle {
         z: 1
 
         anchors.fill: parent
+        propagateComposedEvents: true
 
         cursorShape: {
             if (horiz && vert) {
@@ -80,10 +86,6 @@ Rectangle {
                 return Drag.YAxis
             }
         }
-
-        onPressed: (mouse) => resetResize(mouse)
-
-        onReleased: releaseResize()
 
         onMouseXChanged: {
             if (drag.active) {
