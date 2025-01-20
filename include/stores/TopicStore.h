@@ -44,8 +44,6 @@ public:
     Q_INVOKABLE void subscribe(QString ntTopic);
     Q_INVOKABLE void unsubscribe(QString ntTopic);
 
-    double getDoubleFromEntry(nt::NetworkTableEntry entry);
-
     Q_INVOKABLE QVariant getValue(QString topic);
     Q_INVOKABLE void setValue(QString topic, const QVariant &value);
 

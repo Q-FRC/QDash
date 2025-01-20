@@ -96,6 +96,16 @@ Rectangle {
         }
     }
 
+    Layout.row: model.row
+    Layout.column: model.column
+    Layout.rowSpan: model.rowSpan
+    Layout.columnSpan: model.colSpan
+
+    Layout.margins: 8
+
+    Layout.preferredWidth: grid.prefWidth(this)
+    Layout.preferredHeight: grid.prefHeight(this)
+
     Menu {
         id: rcMenu
 

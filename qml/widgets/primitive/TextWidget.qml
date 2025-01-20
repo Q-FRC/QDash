@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Controls.Universal
 import QtQuick.Layouts
 
 import QFRCDashboard
@@ -98,7 +99,7 @@ BaseWidget {
                 right: parent.right
 
                 topMargin: -20
-                   
+
                 rightMargin: 5
             }
 

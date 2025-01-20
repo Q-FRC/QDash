@@ -67,6 +67,7 @@ QVariant TopicStore::toVariant(const nt::Value &value)
         for (const int i : a) {
             newList << i;
         }
+
         v = QVariant::fromValue(newList);
     }
     else if (value.IsStringArray()) {
@@ -75,6 +76,7 @@ QVariant TopicStore::toVariant(const nt::Value &value)
         for (const std::string &s : a) {
             newList << QString::fromStdString(s);
         }
+
         v = QVariant::fromValue(newList);
     }
     else if (value.IsDoubleArray()) {
@@ -83,6 +85,7 @@ QVariant TopicStore::toVariant(const nt::Value &value)
         for (const double d : a) {
             newList << d;
         }
+
         v = QVariant::fromValue(newList);
     }
     else if (value.IsIntegerArray()) {
@@ -91,6 +94,7 @@ QVariant TopicStore::toVariant(const nt::Value &value)
         for (const size_t i : a) {
             newList << i;
         }
+
         v = QVariant::fromValue(newList);
     }
 
@@ -184,20 +188,6 @@ void TopicStore::unsubscribe(QString ntTopic) {
     }
 }
 
-double TopicStore::getDoubleFromEntry(nt::NetworkTableEntry entry) {
-    nt::Value value = entry.GetValue();
-
-    if (value.IsBoolean()) {
-        return (double) entry.GetBoolean(0);
-    } else if (value.IsDouble()) {
-        return entry.GetDouble(0.);
-    } else if (value.IsInteger()) {
-        return (double) entry.GetInteger(0);
-    }
-
-    return 0.;
-}
-
 QVariant TopicStore::getValue(QString topic) {
     Listener l = entry(topic);
     if (l.isNull) return QVariant{};
@@ -228,6 +218,8 @@ QString TopicStore::typeString(QString topic)
     case nt::NetworkTableType::kFloat: return "double";
     case nt::NetworkTableType::kString: return "string";
     case nt::NetworkTableType::kInteger: return "int";
+
+    case nt::NetworkTableType::kBooleanArray: return "reef";
     case nt::NetworkTableType::kStringArray: return "errors";
     default:
         return "";

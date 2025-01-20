@@ -82,6 +82,7 @@ set(QML_ELEMENTS
     items/GridHandler
     items/TopicView
     items/TitleBar
+    items/IconButton
 
     widgets/BaseWidget
     widgets/ResizeAnchor
@@ -95,6 +96,7 @@ set(QML_ELEMENTS
     widgets/primitive/BoolWidget
     widgets/primitive/EnumWidget
     widgets/primitive/ColorWidget
+    widgets/primitive/ReefDisplay
 
     widgets/primitive/ShapeHandler
 
@@ -181,7 +183,6 @@ qt_add_qml_module(${Dashboard_EXEC_NAME}
     QML_FILES ${QML_FILES}
 
     SOURCES ${SOURCES} ${HEADERS}
-    QML_FILES qml/items/IconButton.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

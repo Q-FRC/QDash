@@ -30,8 +30,7 @@ Rectangle {
 
         property point mouseCoordinates: Qt.point(0, 0)
 
-        onPositionChanged: mouse =>
-                           {
+        onPositionChanged: mouse => {
                                mouseCoordinates = Qt.point(mouse.x, mouse.y)
                                if (isCopying) {
                                    copying(mouseCoordinates)
@@ -45,7 +44,6 @@ Rectangle {
             }
         }
     }
-
 
     TabWidgetsModel {
         id: twm
@@ -64,7 +62,7 @@ Rectangle {
     }
 
     function copy(idx) {
-        let w = twm.copy(idx);
+        let w = twm.copy(idx)
         storeWidget(w)
     }
 
@@ -143,211 +141,76 @@ Rectangle {
                 role: "type"
                 DelegateChoice {
                     roleValue: "int"
-                    IntWidget {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
-
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                    IntWidget {}
                 }
                 DelegateChoice {
                     roleValue: "string"
-                    TextWidget {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
-
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                    TextWidget {}
                 }
 
                 DelegateChoice {
                     roleValue: "double"
-                    DoubleWidget {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
-
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                    DoubleWidget {}
                 }
 
                 DelegateChoice {
                     roleValue: "bool"
-                    BoolWidget {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
-
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                    BoolWidget {}
                 }
 
                 DelegateChoice {
                     roleValue: "dial"
-                    IntDialWidget {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
-
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                    IntDialWidget {}
                 }
 
                 DelegateChoice {
                     roleValue: "doubleDial"
-                    DoubleDialWidget {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
-
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                    DoubleDialWidget {}
                 }
 
                 DelegateChoice {
                     roleValue: "color"
-                    ColorWidget {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
-
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                    ColorWidget {}
                 }
 
                 DelegateChoice {
                     roleValue: "FMSInfo"
-                    FMSInfo {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
-
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                    FMSInfo {}
                 }
 
                 DelegateChoice {
                     roleValue: "Field2d"
-                    Field2d {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
-
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                    Field2d {}
                 }
 
                 DelegateChoice {
                     roleValue: "Command"
-                    Command {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
-
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                    Command {}
                 }
 
                 DelegateChoice {
                     roleValue: "String Chooser"
-                    StringChooser {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
-
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                    StringChooser {}
                 }
 
                 DelegateChoice {
                     roleValue: "camera"
-                    CameraView {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
-
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                    CameraView {}
                 }
 
                 DelegateChoice {
                     roleValue: "enum"
-                    EnumWidget {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
-
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                    EnumWidget {}
                 }
 
                 DelegateChoice {
                     roleValue: "errors"
-                    ErrorsWidget {
-                        Layout.row: model.row
-                        Layout.column: model.column
-                        Layout.rowSpan: model.rowSpan
-                        Layout.columnSpan: model.colSpan
+                    ErrorsWidget {}
+                }
 
-                        Layout.margins: 8
-
-                        Layout.preferredWidth: grid.prefWidth(this)
-                        Layout.preferredHeight: grid.prefHeight(this)
-                    }
+                DelegateChoice {
+                    roleValue: "reef"
+                    ReefDisplay {}
                 }
             }
         }
