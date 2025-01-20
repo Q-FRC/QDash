@@ -47,17 +47,25 @@ jobs:
           echo
           echo
 
-          mv QFRCDashboard-Linux-Binary*/QFRCDashboard.tar.gz QFRCDashboard-Linux-Binary-${{ env.VERSION }}.tar.gz
-          mv QFRCDashboard-*.AppImage/QFRCDashboard-*.AppImage QFRCDashboard-Linux-${{ env.VERSION }}-x86_64.AppImage
-          mv QFRCDashboard-Windows-Setup*/Dashboard* QFRCDashboard-Windows-Setup-${{ env.VERSION }}.exe
+          for arch in amd64 aarch64
+          do
+            mv QFRCDashboard-Linux-Binary*${arch}/QFRCDashboard.tar.zst QFRCDashboard-Linux-${{ env.VERSION }}-$arch.tar.zst
+            mv QFRCDashboard*${arch}.AppImage/*.AppImage QFRCDashboard-Linux-${{ env.VERSION }}-${arch}.AppImage
+
+          done
+
+          # TODO: once windows has arm, move this up
+          for arch in amd64
+          do
+            mv QFRCDashboard-Windows-Setup*${arch}/Dashboard* QFRCDashboard-Windows-Setup-${{ env.VERSION }}-${arch}.exe
+            zip -r QFRCDashboard-Windows-Portable-${{ env.VERSION }}-${arch}.zip QFRCDashboard-Windows-Portable*${arch}/*
+          done
 
           tar xf QFRCDashboard-macOS*/QFRCDashboard.tar.gz
-
           mv *Dashboard*.app QFRCDashboard-macOS-${{ env.VERSION }}.app
 
-          zip -r QFRCDashboard-macOS-${{ env.VERSION }}.zip QFRCDashboard-macOS-${{ env.VERSION }}.app
-
-          zip -r QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip QFRCDashboard-Windows-Portable*/* QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip
+          # macOS builds contain both aarch64 and amd64 binaries, meaning the binaries are universal
+          zip -r QFRCDashboard-macOS-${{ env.VERSION }}-universal.zip QFRCDashboard-macOS-${{ env.VERSION }}.app
 
           tar -czf QFRCDashboard-${{ env.VERSION }}.tar.gz QFRCDashboard-${{ env.VERSION }}
 
@@ -70,9 +78,16 @@ jobs:
           draft: true
           prerelease: false
           files: |
-            QFRCDashboard-Linux-Binary-${{ env.VERSION }}.tar.gz
-            QFRCDashboard-Linux-${{ env.VERSION }}-x86_64.AppImage
-            QFRCDashboard-Windows-Portable-${{ env.VERSION }}.zip
             QFRCDashboard-${{ env.VERSION }}.tar.gz
-            QFRCDashboard-Windows-Setup-${{ env.VERSION }}.exe
-            QFRCDashboard-macOS-${{ env.VERSION }}.zip
+
+            QFRCDashboard-Linux-${{ env.VERSION }}-amd64.tar.gz
+            QFRCDashboard-Linux-${{ env.VERSION }}-aarch64.tar.gz
+            QFRCDashboard-Linux-${{ env.VERSION }}-amd64.AppImage
+            QFRCDashboard-Linux-${{ env.VERSION }}-aarch64.AppImage
+
+            QFRCDashboard-Windows-Portable-${{ env.VERSION }}-amd64.zip
+            QFRCDashboard-Windows-Portable-${{ env.VERSION }}-aarch64.zip
+            QFRCDashboard-Windows-Setup-${{ env.VERSION }}-amd64.exe
+            QFRCDashboard-Windows-Setup-${{ env.VERSION }}-aarch64.exe
+
+            QFRCDashboard-macOS-${{ env.VERSION }}-universal.zip
