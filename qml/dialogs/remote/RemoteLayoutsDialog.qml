@@ -90,27 +90,5 @@ AnimatedDialog {
                 list.currentIndex = index
             }
         }
-
-        highlight: Rectangle {
-            z: 1
-            color: '#00aaff'
-            radius: 5
-            border {
-                color: Constants.palette.text
-                width: 2
-            }
-
-            Text {
-                anchors.fill: parent
-                anchors.leftMargin: 20 * Constants.scalar
-
-                color: Constants.palette.text
-                text: rlm.name(list.currentIndex)
-                font.pixelSize: Math.round(18 * Constants.scalar)
-
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-            }
-        }
     }
 }

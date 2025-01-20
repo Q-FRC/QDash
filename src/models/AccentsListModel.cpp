@@ -251,7 +251,11 @@ void AccentsListModel::copy(const QString &toCopy)
 void AccentsListModel::exportJson(const QString filename)
 {
     QString name = filename;
+#ifdef Q_OS_WINDOWS
+    name.replace("file:///", "");
+#else
     name.replace("file://", "");
+#endif
 
     QFile file(name);
 
@@ -268,12 +272,16 @@ void AccentsListModel::exportJson(const QString filename)
 void AccentsListModel::importJson(const QString filename)
 {
     QString name = filename;
+#ifdef Q_OS_WINDOWS
+    name.replace("file:///", "");
+#else
     name.replace("file://", "");
+#endif
 
     QFile file(name);
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qCritical() << "Failed to open file" << name<< "for reading.";
+        qCritical() << "Failed to open file" << name << "for reading.";
         return;
     }
 

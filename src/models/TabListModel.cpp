@@ -105,11 +105,16 @@ bool TabListModel::remove(int row, const QModelIndex &parent)
 void TabListModel::save(const QString &filename)
 {
     QString name = filename;
+#ifdef Q_OS_WINDOWS
+    name.replace("file:///", "");
+#else
     name.replace("file://", "");
+#endif
+
     QFile file(name);
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qCritical() << "Failed to open file" << name << "for writing.";
+        qCritical() << "Failed to open file" << name << filename << "for writing.";
         return;
     }
 
@@ -176,7 +181,11 @@ void TabListModel::loadObject(const QJsonDocument &doc)
 void TabListModel::load(const QString &filename)
 {
     QString name = filename;
+#ifdef Q_OS_WINDOWS
+    name.replace("file:///", "");
+#else
     name.replace("file://", "");
+#endif
 
     QFile file(name);
 

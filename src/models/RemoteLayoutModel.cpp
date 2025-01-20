@@ -99,7 +99,12 @@ void RemoteLayoutModel::download(const QUrl &url, const QString &filename)
     QNetworkRequest req(url);
     QNetworkReply *reply = m_manager.get(req);
     QString name = filename;
+
+#ifdef Q_OS_WINDOWS
+    name.replace("file:///", "");
+#else
     name.replace("file://", "");
+#endif
 
     connect(reply, &QNetworkReply::finished, this, [this, reply, name] {
         QFile file(name);

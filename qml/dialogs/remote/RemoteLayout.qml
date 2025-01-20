@@ -8,26 +8,27 @@ Rectangle {
     signal clicked
     signal activated
 
-    color: Constants.palette.dialogBg
+    color: mouseArea.containsMouse ? "#82bbff" : (ListView.isCurrentItem ? "#00aaff" : Constants.palette.dialogBg)
     radius: 5
+    opacity: 1
+
+    Behavior on color {
+        ColorAnimation {
+            duration: 250
+        }
+    }
 
     border {
         color: Constants.palette.text
-        width: 2
+        width: 1
     }
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
 
         onDoubleClicked: activated()
-        onContainsMouseChanged: {
-                if (containsMouse) {
-                    parent.color = "#2abcff"
-                } else {
-                    parent.color = Constants.palette.dialogBg
-                }
-        }
 
         onClicked: rem.clicked()
     }
