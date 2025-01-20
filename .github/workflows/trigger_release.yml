@@ -80,8 +80,8 @@ jobs:
           files: |
             QFRCDashboard-${{ env.VERSION }}.tar.gz
 
-            QFRCDashboard-Linux-${{ env.VERSION }}-amd64.tar.gz
-            QFRCDashboard-Linux-${{ env.VERSION }}-aarch64.tar.gz
+            QFRCDashboard-Linux-${{ env.VERSION }}-amd64.tar.zst
+            QFRCDashboard-Linux-${{ env.VERSION }}-aarch64.tar.zst
             QFRCDashboard-Linux-${{ env.VERSION }}-amd64.AppImage
             QFRCDashboard-Linux-${{ env.VERSION }}-aarch64.AppImage
 
