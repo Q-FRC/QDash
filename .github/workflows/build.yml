@@ -17,22 +17,46 @@ jobs:
       matrix:
         include:
 
-          - os: ubuntu-22.04
+          - os: ubuntu-24.04
+            arch: "amd64"
+            appimage_arch: "x86_64"
+            gcc_arch: "gcc_64"
             qt_host: linux
             qt_version: '6.8.1'
-            qt_modules: 'qtmultimedia qtcharts qtwaylandcompositor'
+            qt_modules: 'qtmultimedia qtwaylandcompositor'
             qt_arch: 'linux_gcc_64'
 
+          - os: ubuntu-24.04-arm
+            arch: "aarch64"
+            appimage_arch: "aarch64"
+            gcc_arch: "gcc_arm64"
+            qt_host: linux_arm64
+            qt_version: '6.8.1'
+            qt_modules: 'qtmultimedia qtwaylandcompositor'
+            qt_arch: 'linux_gcc_arm64'
+
           - os: windows-2022
+            arch: "amd64"
+            msvc_arch: 'msvc2022_64'
             qt_host: windows
             qt_version: '6.8.1'
-            qt_modules: 'qtmultimedia qtcharts'
+            qt_modules: 'qtmultimedia'
             qt_arch: 'win64_msvc2022_64'
 
+            # TODO: wait for the arm images to become public
+            #- os: windows-2022
+            #arch: "aarch64"
+            #msvc_arch: 'msvc2022_arm64'
+            #qt_host: windows_arm64
+            #qt_version: '6.8.1'
+            #qt_modules: 'qtmultimedia'
+            #qt_arch: 'win64_msvc2022_arm64'
+
           - os: macos-latest
+            arch: "aarch64"
             qt_host: mac
             qt_version: '6.8.1'
-            qt_modules: 'qtmultimedia qtcharts'
+            qt_modules: 'qtmultimedia'
             qt_arch: 'clang_64'
 
     runs-on: ${{ matrix.os }}
@@ -58,6 +82,7 @@ jobs:
       uses: lukka/get-cmake@v3.28.1
 
     - name: Setup CCache
+      if: matrix.arch != 'aarch64' || runner.os == 'macOS'
       uses: hendrikmuhs/ccache-action@v1.2
       with:
         key: ${{ runner.os }}-${{ inputs.build_type }}
@@ -77,8 +102,9 @@ jobs:
         nsis-version: 3.09
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3.3.0
+      uses: jdpurcell/install-qt-action@v4
       with:
+        host: ${{ matrix.qt_host }}
         version: ${{ matrix.qt_version }}
         modules: ${{ matrix.qt_modules }}
         arch: ${{ matrix.qt_arch }}
@@ -92,6 +118,7 @@ jobs:
         python-version: 3.8
         cache: 'pip'
 
+
     - name: Install Python Dependencies
       run: |
         pip install jinja2
@@ -99,18 +126,10 @@ jobs:
     - name: Prepare AppImage (Linux)
       if: runner.os == 'Linux'
       run: |
-        wget "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
-        wget "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage"
-        wget "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
+        sudo apt-get install libfuse2 libgstreamer-plugins-bad1.0-dev
 
-    - name: Install Build Dependencies (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get install libstdc++-12-dev gcc-12 ninja-build libfuse2
-
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 12
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 12
-
+        wget "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-${{ matrix.appimage_arch }}.AppImage"
+        wget "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-${{ matrix.appimage_arch }}.AppImage"
 
     - name: Install Build Dependencies (macOS)
       if: runner.os == 'macOS'
@@ -119,8 +138,14 @@ jobs:
         brew install llvm ninja
 
     - name: Configure CMake
+      if: matrix.arch != 'aarch64' || runner.os == 'macOS'
       run: |
-        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DUSE_SYSTEM_NTCORE=OFF -DBUILD_SHARED_LIBS=OFF
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBUILD_SHARED_LIBS=OFF
+
+    - name: Configure CMake (aarch64)
+      if: matrix.arch == 'aarch64' && runner.os != 'macOS'
+      run: |
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DBUILD_SHARED_LIBS=OFF
 
     - name: Build
       run: |
@@ -132,9 +157,9 @@ jobs:
         cmake --install ${{ env.BUILD_DIR }} --prefix ${{ env.INSTALL_DIR }}/usr
 
         cd ${{ env.INSTALL_DIR }}
-        tar --owner root --group root -czf ../QFRCDashboard.tar.gz *
+        tar --owner root --group root -czf ../QFRCDashboard.tar.zst *
 
-    - name: Package AppImage (Linux)
+    - name: Package AppImage & System (Linux)
       if: runner.os == 'Linux'
       shell: bash
       run: |
@@ -143,19 +168,22 @@ jobs:
 
         cmake --install ${{ env.BUILD_DIR }} --prefix ${{ env.INSTALL_APPIMAGE_DIR }}/usr
 
-        export OUTPUT="QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}-x86_64.AppImage"
-        export QML_SOURCES_PATHS="${{ runner.workspace }}/Qt/${{ matrix.qt_version }}/gcc_64/qml:${{ github.workspace }}"
+        export OUTPUT="QFRCDashboard-Linux-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.AppImage"
+        export QML_SOURCES_PATHS="${{ runner.workspace }}/Qt/${{ matrix.qt_version }}/${{ matrix.gcc_arch }}/qml:${{ github.workspace }}"
 
         chmod +x linuxdeploy-*.AppImage
 
         mkdir -p ${{ env.INSTALL_APPIMAGE_DIR }}/usr/plugins/
 
-        cp -r ${{ runner.workspace }}/Qt/${{ matrix.qt_version }}/gcc_64/plugins/ ${{ env.INSTALL_APPIMAGE_DIR }}/usr/
+        cp -r ${{ runner.workspace }}/Qt/${{ matrix.qt_version }}/${{ matrix.gcc_arch }}/plugins/ ${{ env.INSTALL_APPIMAGE_DIR }}/usr/
 
-        cp /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1 ${{ env.INSTALL_APPIMAGE_DIR }}/usr/lib/
-        cp /usr/lib/x86_64-linux-gnu/libssl.so.1.1 ${{ env.INSTALL_APPIMAGE_DIR }}/usr/lib/
+        cp /usr/lib/${{ matrix.appimage_arch }}-linux-gnu/libcrypto.so ${{ env.INSTALL_APPIMAGE_DIR }}/usr/lib/
+        cp /usr/lib/${{ matrix.appimage_arch }}-linux-gnu/libssl.so ${{ env.INSTALL_APPIMAGE_DIR }}/usr/lib/
 
-        ./linuxdeploy-x86_64.AppImage --appdir ${{ env.INSTALL_APPIMAGE_DIR }} --output appimage --plugin qt
+        # may need to change this
+        ./linuxdeploy-${{ matrix.appimage_arch }}.AppImage --appdir ${{ env.INSTALL_APPIMAGE_DIR }} --output appimage --plugin qt
+
+        tar czf QFRCDashboard-System.tar.zst install-appdir/*
 
     - name: Package (macOS)
       if: runner.os == 'macOS'
@@ -184,7 +212,7 @@ jobs:
 
         windeployqt ${{ env.BUILD_DIR }}\Dashboard.exe --dir ${{ env.INSTALL_DIR }} --qmldir ${{ github.workspace }} --qmlimport %QML2_IMPORT_PATH%
         cp ${{ env.BUILD_DIR }}\Dashboard.exe ${{ env.INSTALL_DIR }}
-        cp -r ${{ runner.workspace }}\Qt\${{ matrix.qt_version }}\msvc2022_64\qml ${{ env.INSTALL_DIR }}
+        cp -r ${{ runner.workspace }}\Qt\${{ matrix.qt_version }}\${{ matrix.msvc_arch }}\qml ${{ env.INSTALL_DIR }}
 
         if "${{ inputs.build_type }}" == "Debug" (
           cp C:\Windows\System32\ucrtbased.dll ${{ env.INSTALL_DIR }}
@@ -207,33 +235,40 @@ jobs:
       if: runner.os == 'Linux'
       uses: actions/upload-artifact@v4
       with:
-        name: QFRCDashboard-${{ runner.os }}-Binary-${{ env.VERSION }}-${{ inputs.build_type }}
-        path: QFRCDashboard.tar.gz
+        name: QFRCDashboard-Linux-Binary-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
+        path: QFRCDashboard.tar.zst
+
+    - name: Upload system tarball (Linux)
+      if: runner.os == 'Linux' && matrix.arch == 'aarch64'
+      uses: actions/upload-artifact@v4
+      with:
+        name: QFRCDashboard-Linux-System-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
+        path: QFRCDashboard-System.tar.zst
 
     - name: Upload AppImage (Linux)
       if: runner.os == 'Linux'
       uses: actions/upload-artifact@v4
       with:
-        name: QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}-x86_64.AppImage
-        path: QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}-x86_64.AppImage
+        name: QFRCDashboard-Linux-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.AppImage
+        path: QFRCDashboard-Linux-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.AppImage
 
     - name: Upload tarball (macOS)
       if: runner.os == 'macOS'
       uses: actions/upload-artifact@v4
       with:
-        name: QFRCDashboard-${{ runner.os }}-${{ env.VERSION }}-${{ inputs.build_type }}
+        name: QFRCDashboard-macOS-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
         path: QFRCDashboard.tar.gz
 
     - name: Upload binary zip (Windows, portable)
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
       with:
-        name: QFRCDashboard-Windows-Portable-${{ env.VERSION }}-${{ inputs.build_type }}
+        name: QFRCDashboard-Windows-Portable-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
         path: ${{ env.INSTALL_DIR }}/**
 
     - name: Upload installer (Windows)
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
       with:
-        name: QFRCDashboard-${{ runner.os }}-Setup-${{ env.VERSION }}-${{ inputs.build_type }}
+        name: QFRCDashboard-Windows-Setup-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
         path: Dashboard-Setup.exe
