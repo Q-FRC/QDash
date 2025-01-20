@@ -126,6 +126,7 @@ set(QML_ELEMENTS
 
     dialogs/settings/ServerTab
     dialogs/settings/MiscTab
+    dialogs/settings/WindowTab
     dialogs/settings/AppearanceTab
     dialogs/settings/SettingsDialog
     dialogs/settings/SettingsTabButton

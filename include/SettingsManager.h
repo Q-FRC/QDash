@@ -19,6 +19,9 @@ class SettingsManager : public QObject
     Q_PROPERTY(int mode READ mode WRITE setMode NOTIFY modeChanged FINAL)
     Q_PROPERTY(QString ip READ ip WRITE setIp NOTIFY ipChanged FINAL)
 
+    Q_PROPERTY(double scale READ scale WRITE setScale NOTIFY scaleChanged FINAL)
+    Q_PROPERTY(bool resizeToDS READ resizeToDS WRITE setResizeToDS NOTIFY resizeToDSChanged FINAL)
+
 public:
     explicit SettingsManager(QObject *parent = nullptr);
 
@@ -52,6 +55,9 @@ public:
     double scale() const;
     void setScale(double newScale);
 
+    bool resizeToDS() const;
+    void setResizeToDS(bool newResizeToDS);
+
 signals:
     void recentFilesChanged();
     void loadRecentChanged();
@@ -62,8 +68,7 @@ signals:
     void teamChanged();
     void modeChanged();
     void scaleChanged();
-private:
-    Q_PROPERTY(double scale READ scale WRITE setScale NOTIFY scaleChanged FINAL)
+    void resizeToDSChanged();
 };
 
 #endif // SETTINGSMANAGER_H

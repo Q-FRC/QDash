@@ -14,6 +14,9 @@ public:
     Q_INVOKABLE void copy(const QString &text);
     Q_INVOKABLE QString baseName(const QString &file);
 
+    Q_INVOKABLE double screenWidth();
+    Q_INVOKABLE double screenHeight();
+
 signals:
 };
 

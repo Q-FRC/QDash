@@ -144,3 +144,14 @@ void SettingsManager::setScale(double newScale)
     Settings::Scale.setValue(newScale);
     emit scaleChanged();
 }
+
+bool SettingsManager::resizeToDS() const
+{
+    return Settings::ResizeToDS.value().toBool();
+}
+
+void SettingsManager::setResizeToDS(bool newResizeToDS)
+{
+    Settings::ResizeToDS.setValue(newResizeToDS);
+    emit resizeToDSChanged();
+}

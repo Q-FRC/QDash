@@ -13,14 +13,14 @@ TabButton {
 
     contentItem: ColumnLayout {
         IconButton {
-            label: parent.label
+            label: button.label
 
             Layout.maximumHeight: 75 * Constants.scalar
             Layout.maximumWidth: 75 * Constants.scalar
 
             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 
-            onClicked: button.click()
+            onClicked: button.clicked()
         }
 
         Label {

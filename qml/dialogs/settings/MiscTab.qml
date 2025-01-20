@@ -10,12 +10,10 @@ ColumnLayout {
 
     function accept() {
         load.accept()
-        scale.accept()
     }
 
     function open() {
         load.open()
-        scale.open()
     }
 
     LabeledCheckbox {
@@ -24,23 +22,5 @@ ColumnLayout {
 
         bindTarget: settings
         bindedProperty: "loadRecent"
-    }
-
-    LabeledDoubleSpinBox {
-        Layout.fillWidth: true
-
-        hoverEnabled: true
-        id: scale
-        label: "Custom Scaling Factor?"
-
-        ToolTip.visible: hovered
-        ToolTip.text: "Useful for high-DPI screens, this scalar is applied on top of the existing window-size scalar."
-
-        stepSize: 0.1
-        from: 0.1
-        to: 10.0
-
-        bindTarget: settings
-        bindedProperty: "scale"
     }
 }

@@ -24,6 +24,7 @@ extern const Setting LoadRecent;
 extern const Setting Theme;
 extern const Setting Accent;
 extern const Setting Scale;
+extern const Setting ResizeToDS;
 }
 
 #endif // CONSTANTS_H
