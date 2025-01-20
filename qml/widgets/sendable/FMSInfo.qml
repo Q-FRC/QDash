@@ -23,142 +23,73 @@ BaseWidget {
             rightMargin: 10
         }
 
-        Text {
+        Rectangle {
             Layout.fillWidth: true
-            color: Constants.palette.text
+            property bool isRedAlliance: false
 
-            property int matchNumber: 0
-            property string matchType: "Unknown"
-            property list<string> matchTypeMap: ["Unknown", "Practice", "Quals", "Elims",];
+            radius: 4 * Constants.scalar
 
-            id: match
+            color: isRedAlliance ? "red" : "blue"
 
-            font.pixelSize: item_fontSize * Constants.scalar
+            implicitHeight: item_fontSize * 2 * Constants.scalar
 
-            function updateTopic(ntTopic, value) {
-                if (ntTopic === item_topic + "/MatchNumber") {
-                    matchNumber = value
-                } else if (ntTopic === item_topic + "/MatchType") {
-                    matchType = matchTypeMap[value]
+            Text {
+                anchors.fill: parent
+
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+
+                color: Constants.palette.text
+
+                property int matchNumber: 0
+                property string matchType: "Unknown"
+                property string eventName: "Event"
+                property list<string> matchTypeMap: ["Unknown", "Practice", "Quals", "Elims"]
+
+                id: match
+
+                font.pixelSize: item_fontSize * Constants.scalar
+
+                function updateTopic(ntTopic, value) {
+                    if (ntTopic === item_topic + "/MatchNumber") {
+                        matchNumber = value
+                    } else if (ntTopic === item_topic + "/MatchType") {
+                        matchType = matchTypeMap[value]
+                    } else if (ntTopic === item_topic + "/EventName") {
+                        eventName = value
+                    } else if (ntTopic === item_topic + "/IsRedAlliance") {
+                        parent.isRedAlliance = value
+                    }
                 }
-            }
 
-            horizontalAlignment: Text.AlignHCenter
+                text: eventName + ": " + matchType + " Match " + matchNumber
 
-            text: matchType + " Match " + matchNumber
-
-            function update() {
-                topicStore.subscribe(item_topic + "/MatchNumber")
-                topicStore.subscribe(item_topic + "/MatchType")
-            }
-
-            function unsubscribe() {
-                topicStore.unsubscribe(topic + "/MatchNumber")
-                topicStore.unsubscribe(topic + "/MatchType")
-            }
-
-            Component.onCompleted: {
-                topicStore.topicUpdate.connect(updateTopic)
-                item_topic = model.topic
-
-                update()
-            }
-
-            Component.onDestruction: {
-                if (topicStore !== null) {
-                    topicStore.topicUpdate.disconnect(updateTopic)
-                    unsubscribe()
+                function update() {
+                    topicStore.subscribe(item_topic + "/MatchNumber")
+                    topicStore.subscribe(item_topic + "/MatchType")
+                    topicStore.subscribe(item_topic + "/EventName")
+                    topicStore.subscribe(item_topic + "/IsRedAlliance")
                 }
-            }
-        }
 
-        Text {
-            Layout.fillWidth: true
-            color: Constants.palette.text
-
-            property int stationNumber: 1
-            property string alliance: "Red"
-
-            id: station
-
-            font.pixelSize: item_fontSize * Constants.scalar
-
-            function updateTopic(ntTopic, value) {
-                if (ntTopic === item_topic + "/StationNumber") {
-                    stationNumber = value
-                } else if (ntTopic === item_topic + "/IsRedAlliance") {
-                    alliance = value ? "Red" : "Blue"
+                function unsubscribe() {
+                    topicStore.unsubscribe(topic + "/MatchNumber")
+                    topicStore.unsubscribe(topic + "/MatchType")
+                    topicStore.unsubscribe(topic + "/EventName")
+                    topicStore.unsubscribe(topic + "/IsRedAlliance")
                 }
-            }
 
-            horizontalAlignment: Text.AlignHCenter
+                Component.onCompleted: {
+                    topicStore.topicUpdate.connect(updateTopic)
+                    item_topic = model.topic
 
-            text: "Station: " + alliance + " " + stationNumber;
-
-            function update() {
-                topicStore.subscribe(item_topic + "/StationNumber")
-                topicStore.subscribe(item_topic + "/IsRedAlliance")
-            }
-
-            function unsubscribe() {
-                topicStore.unsubscribe(topic + "/StationNumber")
-                topicStore.unsubscribe(topic + "/IsRedAlliance")
-            }
-
-            Component.onCompleted: {
-                topicStore.topicUpdate.connect(updateTopic)
-                item_topic = model.topic
-
-                update()
-            }
-
-            Component.onDestruction: {
-                if (topicStore !== null) {
-                    topicStore.topicUpdate.disconnect(updateTopic)
-                    unsubscribe()
+                    update()
                 }
-            }
-        }
 
-        Text {
-            Layout.fillWidth: true
-            color: Constants.palette.text
-
-            property string eventName: "Unknown Event"
-
-            id: event
-
-            font.pixelSize: item_fontSize * Constants.scalar
-
-            function updateTopic(ntTopic, value) {
-                if (ntTopic === item_topic + "/EventName") {
-                    eventName = value
-                }
-            }
-
-            horizontalAlignment: Text.AlignHCenter
-
-            text: "Event: " + eventName;
-
-            function update() {
-                topicStore.subscribe(item_topic + "/EventName")
-            }
-
-            function unsubscribe() {
-                topicStore.unsubscribe(topic + "/EventName")
-            }
-
-            Component.onCompleted: {
-                topicStore.topicUpdate.connect(updateTopic)
-                item_topic = model.topic
-
-                update()
-            }
-
-            Component.onDestruction: {
-                if (topicStore !== null) {
-                    topicStore.topicUpdate.disconnect(updateTopic)
-                    unsubscribe()
+                Component.onDestruction: {
+                    if (topicStore !== null) {
+                        topicStore.topicUpdate.disconnect(updateTopic)
+                        unsubscribe()
+                    }
                 }
             }
         }
@@ -181,7 +112,7 @@ BaseWidget {
 
             horizontalAlignment: Text.AlignHCenter
 
-            text: "Game Specific Message: " + gameSpecificMessage;
+            text: gameSpecificMessage
 
             function update() {
                 topicStore.subscribe(item_topic + "/GameSpecificMessage")
@@ -222,31 +153,32 @@ BaseWidget {
                     state = ""
 
                     if (word & QFDFlags.Auto) {
-                        state += "Autonomous";
-                    }
-                    else if (word & QFDFlags.Test) {
-                        state += "Testing";
+                        state += "Autonomous"
+                    } else if (word & QFDFlags.Test) {
+                        state += "Testing"
                     } else {
-                        state += "Teleop";
+                        state += "Teleop"
                     }
 
                     if (word & QFDFlags.Enabled) {
-                        state += " Enabled";
+                        state += " Enabled"
                     } else if (word & QFDFlags.EStop) {
-                        state += " E-Stopped";
+                        state += " E-Stopped"
                     } else {
-                        state += " Disabled";
+                        state += " Disabled"
                     }
                 }
             }
 
             horizontalAlignment: Text.AlignHCenter
 
-            text: "Robot State: " + state;
+            text: "Robot State: " + state
 
             function update() {
                 topicStore.subscribe(item_topic + "/FMSControlData")
-                updateTopic(model.topic + "/FMSControlData", topicStore.getValue(model.topic + "/FMSControlData"))
+                updateTopic(model.topic + "/FMSControlData",
+                            topicStore.getValue(
+                                model.topic + "/FMSControlData"))
             }
 
             function unsubscribe() {
@@ -270,16 +202,12 @@ BaseWidget {
 
     onItem_topicChanged: {
         match.unsubscribe()
-        station.unsubscribe()
-        event.unsubscribe()
         stateText.unsubscribe()
         gsm.unsubscribe()
 
         model.topic = item_topic
 
         match.update()
-        station.update()
-        event.update()
         stateText.update()
         gsm.update()
     }
@@ -312,7 +240,7 @@ BaseWidget {
                 right: parent.right
 
                 topMargin: -20
-                
+
                 rightMargin: 5
             }
 
