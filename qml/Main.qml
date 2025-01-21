@@ -162,11 +162,6 @@ ApplicationWindow {
             right: parent.right
         }
 
-        MenuBarItem {
-            text: qsTr("&Settings")
-            onTriggered: settingsDialog.openDialog()
-        }
-
         Menu {
             contentWidth: 175
             title: qsTr("&File")
@@ -231,17 +226,26 @@ ApplicationWindow {
         }
 
         Menu {
-            title: qsTr("&Widget")
+            title: qsTr("&Edit")
             Action {
-                text: qsTr("&Paste")
+                text: qsTr("&Paste Widget")
                 onTriggered: screen.paste()
                 shortcut: "Ctrl+V"
             }
+
+            Action {
+                text: qsTr("&Settings")
+                shortcut: "Ctrl+,"
+                onTriggered: settingsDialog.openDialog()
+            }
         }
 
-        MenuBarItem {
-            text: qsTr("&About")
-            onTriggered: about.open()
+        Menu {
+            title: qsTr("&About")
+            MenuBarItem {
+                text: qsTr("&About")
+                onTriggered: about.open()
+            }
         }
     }
 
@@ -262,11 +266,6 @@ ApplicationWindow {
                 return
             tlm.load(filename)
         }
-    }
-
-    Shortcut {
-        sequence: "Ctrl+,"
-        onActivated: settingsDialog.openDialog()
     }
 
     MainScreen {

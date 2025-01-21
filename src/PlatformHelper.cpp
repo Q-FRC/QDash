@@ -29,3 +29,12 @@ double PlatformHelper::screenHeight()
 {
     return qApp->primaryScreen()->availableSize().height();
 }
+
+bool PlatformHelper::isMac()
+{
+#ifdef Q_OS_APPLE
+    return true;
+#else
+    return false;
+#endif
+}

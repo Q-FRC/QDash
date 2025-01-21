@@ -17,6 +17,7 @@ public:
     Q_INVOKABLE double screenWidth();
     Q_INVOKABLE double screenHeight();
 
+    Q_INVOKABLE bool isMac();
 signals:
 };
 
