@@ -25,6 +25,13 @@ BaseWidget {
                 model.type = "dial"
             }
         }
+
+        MenuItem {
+            text: "Radial Gauge"
+            onTriggered: {
+                model.type = "gauge"
+            }
+        }
     }
 
     Component.onCompleted: {

@@ -212,6 +212,16 @@ Rectangle {
                     roleValue: "reef"
                     ReefDisplay {}
                 }
+
+                DelegateChoice {
+                    roleValue: "doubleGauge"
+                    DoubleGaugeWidget {}
+                }
+
+                DelegateChoice {
+                    roleValue: "gauge"
+                    IntGaugeWidget {}
+                }
             }
         }
 

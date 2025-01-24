@@ -83,22 +83,26 @@ set(QML_ELEMENTS
     items/TopicView
     items/TitleBar
     items/IconButton
+    items/RadialGauge
 
     widgets/BaseWidget
     widgets/ResizeAnchor
     widgets/DoubleSpinBox
 
     widgets/primitive/TextWidget
-    widgets/primitive/IntWidget
-    widgets/primitive/IntDialWidget
-    widgets/primitive/DoubleWidget
-    widgets/primitive/DoubleDialWidget
     widgets/primitive/BoolWidget
     widgets/primitive/EnumWidget
     widgets/primitive/ColorWidget
     widgets/primitive/ReefDisplay
 
     widgets/primitive/ShapeHandler
+
+    widgets/primitive/number/IntWidget
+    widgets/primitive/number/IntGaugeWidget
+    widgets/primitive/number/IntDialWidget
+    widgets/primitive/number/DoubleWidget
+    widgets/primitive/number/DoubleGaugeWidget
+    widgets/primitive/number/DoubleDialWidget
 
     widgets/sendable/FMSInfo
     widgets/sendable/Field2d

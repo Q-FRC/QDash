@@ -1,21 +1,22 @@
 import QtQuick
 import QtQuick.Controls 6.6
-import QtQuick.Layouts
+import QtQuick.Layouts 6.6
 
 import QFRCDashboard
 
 BaseWidget {
     id: widget
+
     property string item_topic
 
     property int item_fontSize: 15
-    property double item_stepSize: 0.1
+    property int item_stepSize: 1
 
-    property double item_startAngle: -180
-    property double item_endAngle: 180
+    property double item_startAngle: 180
+    property double item_endAngle: 540
 
-    property double item_lowerBound: 0
-    property double item_upperBound: 100000.0
+    property int item_lowerBound: 0
+    property int item_upperBound: 1000
 
     Menu {
         id: switchMenu
@@ -24,7 +25,14 @@ BaseWidget {
         MenuItem {
             text: "Spin Box"
             onTriggered: {
-                model.type = "double"
+                model.type = "int"
+            }
+        }
+
+        MenuItem {
+            text: "Radial Gauge"
+            onTriggered: {
+                model.type = "gauge"
             }
         }
     }
@@ -33,7 +41,7 @@ BaseWidget {
         rcMenu.addMenu(switchMenu)
     }
 
-    BetterDoubleSpinBox {
+    BetterSpinBox {
         id: spin
 
         font.pixelSize: item_fontSize * Constants.scalar
@@ -82,13 +90,12 @@ BaseWidget {
         }
 
         function move(val) {
+            valid = val === value
             value = val
-            valid = false
             topicStore.setValue(item_topic, value)
         }
     }
 
-    // TODO: improve look
     Dial {
         id: dial
 
@@ -161,7 +168,7 @@ BaseWidget {
         }
 
         onMoved: {
-            spin.move(value)
+            spin.move(parseInt(value))
         }
     }
 
@@ -203,7 +210,6 @@ BaseWidget {
         }
 
         ScrollView {
-            id: scroll
             contentWidth: width - 5 * Constants.scalar - effectiveScrollBarWidth
 
             anchors {
@@ -261,7 +267,7 @@ BaseWidget {
                 RowLayout {
                     uniformCellSizes: true
 
-                    LabeledDoubleSpinBox {
+                    LabeledSpinBox {
                         Layout.fillWidth: true
 
                         id: lowField
@@ -272,7 +278,7 @@ BaseWidget {
                         bindTarget: widget
                     }
 
-                    LabeledDoubleSpinBox {
+                    LabeledSpinBox {
                         Layout.fillWidth: true
 
                         id: upField
@@ -284,7 +290,7 @@ BaseWidget {
                     }
                 }
 
-                LabeledDoubleSpinBox {
+                LabeledSpinBox {
                     Layout.fillWidth: true
 
                     id: stepField
@@ -295,7 +301,6 @@ BaseWidget {
                     bindTarget: widget
 
                     from: 0
-                    stepSize: 0.1
                 }
 
                 SectionHeader {
