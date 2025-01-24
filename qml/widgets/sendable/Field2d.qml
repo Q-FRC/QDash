@@ -110,13 +110,14 @@ BaseWidget {
         }
 
         function redraw() {
-            let meterRatio = field.paintedHeight / fieldWidth
+            let meterRatio = (item_useVerticalField ? field.paintedWidth : field.paintedHeight)
+                / fieldWidth
 
             height = item_robotWidthMeters * meterRatio
             width = item_robotLengthMeters * meterRatio
 
-            let xPixels = xMeters * meterRatio
-            let yPixels = yMeters * meterRatio
+            let xPixels = (item_useVerticalField ? -yMeters : xMeters) * meterRatio
+            let yPixels = (item_useVerticalField ? xMeters : yMeters) * meterRatio
 
             let realFieldX = field.x + (field.width - field.paintedWidth) / 2
             let realFieldY = field.y + (field.height - field.paintedHeight) / 2
@@ -128,8 +129,8 @@ BaseWidget {
                                                          realFieldX,
                                                          realFieldY + field.paintedHeight)
 
-            x = startPoint.x + xPixels
-            y = startPoint.y - yPixels - height
+            x = startPoint.x + xPixels - (item_useVerticalField ? -height : width) / 2
+            y = startPoint.y - yPixels - (item_useVerticalField ? width : height) / 2
 
             rotation = -angleDeg + (item_useVerticalField ? 270 : 0)
 

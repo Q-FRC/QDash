@@ -61,8 +61,8 @@ BaseWidget {
         to: item_upperBound
 
         anchors {
-            top: dial.bottom
-            topMargin: 8
+            bottom: parent.bottom
+            bottomMargin: parent.height / 10
 
             left: parent.left
             right: parent.right
@@ -162,9 +162,10 @@ BaseWidget {
 
         anchors {
             top: titleField.bottom
+            bottom: spin.top
             horizontalCenter: parent.horizontalCenter
 
-            topMargin: 10
+            margins: 10
         }
 
         onMoved: {

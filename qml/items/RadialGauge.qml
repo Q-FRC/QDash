@@ -39,7 +39,7 @@ Rectangle {
     radius: width / 2
 
     Repeater {
-        model: gauge.numTicks + 1
+        model: gauge.numTicks + (endAngle - startAngle >= 360 ? 0 : 1)
 
         Item {
             width: gauge.width
@@ -135,7 +135,7 @@ Rectangle {
 
         ShapePath {
             strokeWidth: 5 * Constants.scalar
-            strokeColor: "blue"
+            strokeColor: Constants.accent
             fillColor: "transparent"
 
             capStyle: ShapePath.FlatCap

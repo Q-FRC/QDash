@@ -60,8 +60,8 @@ BaseWidget {
         to: item_upperBound
 
         anchors {
-            top: dial.bottom
-            topMargin: 8
+            bottom: parent.bottom
+            bottomMargin: parent.height / 10
 
             left: parent.left
             right: parent.right
@@ -125,7 +125,7 @@ BaseWidget {
             height: Math.min(parent.width, parent.height) / 5
 
             color: Constants.accent
-            radius: 8 * Constants.scalar
+            radius: width / 2
 
             antialiasing: true
             opacity: dial.enabled ? 1 : 0.3
@@ -162,9 +162,10 @@ BaseWidget {
 
         anchors {
             top: titleField.bottom
+            bottom: spin.top
             horizontalCenter: parent.horizontalCenter
 
-            topMargin: 10
+            margins: 10
         }
 
         onMoved: {
