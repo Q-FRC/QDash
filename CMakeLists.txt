@@ -140,6 +140,11 @@ set(QML_ELEMENTS
     dialogs/AboutDialog
     dialogs/NotificationPopup
     dialogs/AnimatedDialog
+
+    fields/BetterDoubleSpinBox
+    fields/BetterSpinBox
+    fields/BetterTextField
+
 )
 
 set(ELEMENTS

@@ -25,7 +25,7 @@ BaseWidget {
 
     Component.onCompleted: rcMenu.addMenu(switchMenu)
 
-    TextField {
+    BetterTextField {
         id: textField
 
         font.pixelSize: item_fontSize * Constants.scalar
@@ -33,6 +33,7 @@ BaseWidget {
         function updateTopic(ntTopic, value) {
             if (ntTopic === item_topic) {
                 text = value
+                valid = true
             }
         }
 
@@ -61,7 +62,10 @@ BaseWidget {
             }
         }
 
-        onTextEdited: topicStore.setValue(item_topic, text)
+        onTextEdited: {
+            valid = false
+            topicStore.setValue(item_topic, text)
+        }
     }
 
     onItem_topicChanged: {

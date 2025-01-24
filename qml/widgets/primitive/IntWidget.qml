@@ -31,7 +31,7 @@ BaseWidget {
         rcMenu.addMenu(switchMenu)
     }
 
-    SpinBox {
+    BetterSpinBox {
         id: spin
 
         font.pixelSize: item_fontSize * Constants.scalar
@@ -39,6 +39,7 @@ BaseWidget {
         function updateTopic(ntTopic, ntValue) {
             if (ntTopic === item_topic) {
                 value = ntValue
+                valid = true
             }
         }
 
@@ -70,7 +71,10 @@ BaseWidget {
             }
         }
 
-        onValueModified: topicStore.setValue(item_topic, value)
+        onValueModified: {
+            valid = false
+            topicStore.setValue(item_topic, value)
+        }
     }
 
     onItem_topicChanged: {

@@ -11,7 +11,7 @@ Rectangle {
     signal beginDrag
 
     color: Constants.accent
-    implicitHeight: 30 * Constants.scalar
+    height: 30
 
     MouseArea {
         anchors.fill: parent

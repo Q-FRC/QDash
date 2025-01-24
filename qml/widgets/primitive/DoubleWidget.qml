@@ -31,7 +31,7 @@ BaseWidget {
         rcMenu.addMenu(switchMenu)
     }
 
-    DoubleSpinBox {
+    BetterDoubleSpinBox {
         id: spin
 
         font.pixelSize: item_fontSize * Constants.scalar
@@ -39,6 +39,7 @@ BaseWidget {
         function updateTopic(ntTopic, ntValue) {
             if (ntTopic === item_topic) {
                 value = ntValue
+                valid = true
             }
         }
 
@@ -71,6 +72,7 @@ BaseWidget {
         }
 
         onValueModified: {
+            valid = false
             topicStore.setValue(item_topic, value)
         }
     }
@@ -117,7 +119,7 @@ BaseWidget {
                 right: parent.right
 
                 topMargin: -20
-                
+
                 rightMargin: 5
             }
 

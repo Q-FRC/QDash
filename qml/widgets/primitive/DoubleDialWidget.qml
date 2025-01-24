@@ -33,7 +33,7 @@ BaseWidget {
         rcMenu.addMenu(switchMenu)
     }
 
-    DoubleSpinBox {
+    BetterDoubleSpinBox {
         id: spin
 
         font.pixelSize: item_fontSize * Constants.scalar
@@ -42,6 +42,7 @@ BaseWidget {
             if (ntTopic === item_topic) {
                 value = ntValue
                 dial.value = ntValue
+                valid = true
             }
         }
 
@@ -76,15 +77,18 @@ BaseWidget {
 
         onValueModified: {
             dial.value = value
+            valid = false
             topicStore.setValue(item_topic, value)
         }
 
-        function setValue(val) {
+        function move(val) {
             value = val
+            valid = false
             topicStore.setValue(item_topic, value)
         }
     }
 
+    // TODO: improve look
     Dial {
         id: dial
 
@@ -157,7 +161,7 @@ BaseWidget {
         }
 
         onMoved: {
-            spin.setValue(value)
+            spin.move(value)
         }
     }
 

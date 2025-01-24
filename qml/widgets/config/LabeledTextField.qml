@@ -6,7 +6,7 @@ import QtMultimedia
 
 import QFRCDashboard
 
-TextField {
+BetterTextField {
     required property string label
 
     /** what property to bind to */
@@ -18,22 +18,12 @@ TextField {
     id: textField
     font.pixelSize: 18 * Constants.scalar
 
-    color: Constants.palette.text
-
     function open() {
         text = bindTarget[bindedProperty]
     }
 
     function accept() {
         bindTarget[bindedProperty] = text
-    }
-
-    background: Rectangle {
-        color: Constants.palette.bg
-        width: parent.width
-        border.color: Constants.palette.text
-        border.width: 2
-        radius: 5
     }
 
     Text {

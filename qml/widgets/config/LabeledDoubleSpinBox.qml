@@ -6,7 +6,7 @@ import QtMultimedia
 
 import QFRCDashboard
 
-DoubleSpinBox {
+BetterDoubleSpinBox {
     id: spin
     required property string label
 
@@ -29,76 +29,6 @@ DoubleSpinBox {
 
     function accept() {
         bindTarget[bindedProperty] = value
-    }
-
-    contentItem: SpinBox {
-        width: spin.availableWidth
-        height: spin.availableHeight
-        editable: spin.editable
-        inputMethodHints: spin.inputMethodHints
-        validator: spin.validator
-        from: -0x7FFFFFFF; to: 0x7FFFFFFF;
-
-        contentItem: TextInput {
-            text: parent.textFromValue(parent.value, parent.locale)
-
-            font: parent.font
-            color: Constants.palette.text
-            // selectionColor: "#21be2b"
-            // selectedTextColor: "#ffffff"
-            horizontalAlignment: Qt.AlignHCenter
-            verticalAlignment: Qt.AlignVCenter
-
-            inputMethodHints: Qt.ImhFormattedNumbersOnly
-
-            onEditingFinished: spin.value = parseFloat(text.replace(/,/g, ""))
-        }
-
-        up.indicator: Rectangle {
-            x: spin.mirrored ? 0 : parent.width - width
-            height: parent.height
-            implicitWidth: 40 * Constants.scalar
-            implicitHeight: 40 * Constants.scalar
-            color: Constants.palette.bg
-            border.color: Constants.palette.text
-
-            Text {
-                text: "+"
-                font.pixelSize: spin.font.pixelSize * 2
-                color: Constants.palette.text
-                anchors.fill: parent
-                fontSizeMode: Text.Fit
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-            }
-        }
-
-        down.indicator: Rectangle {
-            x: spin.mirrored ? parent.width - width : 0
-            height: parent.height
-            implicitWidth: 40 * Constants.scalar
-            implicitHeight: 40 * Constants.scalar
-            color: Constants.palette.bg
-            border.color: Constants.palette.text
-
-            Text {
-                text: "-"
-                font.pixelSize: spin.font.pixelSize * 2
-                color: Constants.palette.text
-                anchors.fill: parent
-                fontSizeMode: Text.Fit
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-            }
-        }
-
-        background: Rectangle {
-            color: Constants.palette.bg
-            width: parent.width
-            border.color: Constants.palette.text
-            border.width: 2
-            radius: 5 * Constants.scalar
-        }
     }
 
     Text {
