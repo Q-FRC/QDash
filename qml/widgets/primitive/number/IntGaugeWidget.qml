@@ -36,26 +36,33 @@ BaseWidget {
                 model.type = "int"
             }
         }
+
+        MenuItem {
+            text: "Number Display"
+            onTriggered: {
+                model.type = "intDisplay"
+            }
+        }
     }
 
-    Component.onCompleted: {
-        rcMenu.addMenu(switchMenu)
-
+    function fixSize() {
         gauge.width = parent.width
         gauge.height = parent.height - titleField.height
         gauge.fixSize()
     }
 
+    Component.onCompleted: {
+        rcMenu.addMenu(switchMenu)
+
+        fixSize()
+    }
+
     onHeightChanged: {
-        gauge.height = height - titleField.height
-        gauge.width = width
-        gauge.fixSize()
+        fixSize()
     }
 
     onWidthChanged: {
-        gauge.height = height - titleField.height
-        gauge.width = width
-        gauge.fixSize()
+        fixSize()
     }
 
     RadialGauge {

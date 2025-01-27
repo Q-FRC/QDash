@@ -43,6 +43,13 @@ BaseWidget {
                 model.type = "doubleBar"
             }
         }
+
+        MenuItem {
+            text: "Number Display"
+            onTriggered: {
+                model.type = "doubleDisplay"
+            }
+        }
     }
 
     Component.onCompleted: {

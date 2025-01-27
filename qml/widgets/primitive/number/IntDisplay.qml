@@ -9,15 +9,18 @@ BaseWidget {
 
     property string item_topic
 
-    property int item_fontSize: 15
-    property int item_stepSize: 1
-
-    property int item_upperBound: 100000
-    property int item_lowerBound: 0
+    property int item_fontSize: 100
 
     Menu {
         id: switchMenu
         title: "Switch Widget..."
+
+        MenuItem {
+            text: "Spin Box"
+            onTriggered: {
+                model.type = "int"
+            }
+        }
 
         MenuItem {
             text: "Dial"
@@ -32,45 +35,40 @@ BaseWidget {
                 model.type = "gauge"
             }
         }
-
-        MenuItem {
-            text: "Number Display"
-            onTriggered: {
-                model.type = "intDisplay"
-            }
-        }
     }
 
     Component.onCompleted: {
         rcMenu.addMenu(switchMenu)
     }
 
-    BetterSpinBox {
-        id: spin
+    Text {
+        id: txt
 
         font.pixelSize: item_fontSize * Constants.scalar
+
+        property int value
 
         function updateTopic(ntTopic, ntValue) {
             if (ntTopic === item_topic) {
                 value = ntValue
-                valid = true
             }
         }
 
-        value: 0
-        stepSize: item_stepSize
-        from: item_lowerBound
-        to: item_upperBound
+        text: value
+
+        color: Constants.accent
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+
+        fontSizeMode: Text.Fit
 
         anchors {
-            verticalCenter: parent.verticalCenter
-            topMargin: titleField.height
-
-            left: parent.left
+            top: titleField.bottom
             right: parent.right
+            left: parent.left
+            bottom: parent.bottom
 
-            leftMargin: 10
-            rightMargin: 10
+            margins: 10 * Constants.scalar
         }
 
         Component.onCompleted: {
@@ -84,18 +82,14 @@ BaseWidget {
                 topicStore.unsubscribe(item_topic)
             }
         }
-
-        onValueModified: {
-            valid = false
-            topicStore.setValue(item_topic, value)
-        }
     }
 
     onItem_topicChanged: {
         topicStore.unsubscribe(topic)
         topicStore.subscribe(item_topic)
         model.topic = item_topic
-        spin.value = topicStore.getValue(item_topic)
+
+        txt.updateTopic(item_topic, topicStore.getValue(item_topic))
     }
 
     BaseConfigDialog {
@@ -106,10 +100,6 @@ BaseWidget {
             titleFontField.open()
             fontField.open()
 
-            upField.open()
-            lowField.open()
-            stepField.open()
-
             open()
         }
 
@@ -117,9 +107,6 @@ BaseWidget {
             topicField.accept()
             titleFontField.accept()
             fontField.accept()
-            upField.accept()
-            lowField.accept()
-            stepField.accept()
         }
 
         ColumnLayout {
@@ -160,54 +147,11 @@ BaseWidget {
 
                     id: fontField
 
-                    label: "Font Size"
+                    label: "Maximum Font Size"
 
                     bindedProperty: "item_fontSize"
                     bindTarget: widget
                 }
-            }
-
-            SectionHeader {
-                label: "Spin Box Settings"
-            }
-
-            RowLayout {
-                uniformCellSizes: true
-
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-
-                    id: lowField
-
-                    label: "Lower Bound"
-
-                    bindedProperty: "item_lowerBound"
-                    bindTarget: widget
-                }
-
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-
-                    id: upField
-
-                    label: "Upper Bound"
-
-                    bindedProperty: "item_upperBound"
-                    bindTarget: widget
-                }
-            }
-
-            LabeledSpinBox {
-                Layout.fillWidth: true
-
-                id: stepField
-
-                label: "Step Size"
-
-                bindedProperty: "item_stepSize"
-                bindTarget: widget
-
-                from: 0
             }
 
             SectionHeader {

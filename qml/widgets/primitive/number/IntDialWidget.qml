@@ -35,6 +35,13 @@ BaseWidget {
                 model.type = "gauge"
             }
         }
+
+        MenuItem {
+            text: "Number Display"
+            onTriggered: {
+                model.type = "intDisplay"
+            }
+        }
     }
 
     Component.onCompleted: {

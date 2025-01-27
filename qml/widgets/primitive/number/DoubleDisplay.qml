@@ -9,34 +9,38 @@ BaseWidget {
 
     property string item_topic
 
-    property int item_fontSize: 15
-    property int item_stepSize: 1
-
-    property int item_upperBound: 100000
-    property int item_lowerBound: 0
+    property int item_fontSize: 100
+    property int item_decimals: 2
 
     Menu {
         id: switchMenu
         title: "Switch Widget..."
 
         MenuItem {
+            text: "Spin Box"
+            onTriggered: {
+                model.type = "double"
+            }
+        }
+
+        MenuItem {
             text: "Dial"
             onTriggered: {
-                model.type = "dial"
+                model.type = "doubleDial"
             }
         }
 
         MenuItem {
             text: "Radial Gauge"
             onTriggered: {
-                model.type = "gauge"
+                model.type = "doubleGauge"
             }
         }
 
         MenuItem {
-            text: "Number Display"
+            text: "Progress Bar"
             onTriggered: {
-                model.type = "intDisplay"
+                model.type = "doubleBar"
             }
         }
     }
@@ -45,32 +49,34 @@ BaseWidget {
         rcMenu.addMenu(switchMenu)
     }
 
-    BetterSpinBox {
-        id: spin
+    Text {
+        id: txt
 
         font.pixelSize: item_fontSize * Constants.scalar
+
+        property double value
 
         function updateTopic(ntTopic, ntValue) {
             if (ntTopic === item_topic) {
                 value = ntValue
-                valid = true
             }
         }
 
-        value: 0
-        stepSize: item_stepSize
-        from: item_lowerBound
-        to: item_upperBound
+        text: value.toFixed(item_decimals)
+
+        color: Constants.accent
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+
+        fontSizeMode: Text.Fit
 
         anchors {
-            verticalCenter: parent.verticalCenter
-            topMargin: titleField.height
-
-            left: parent.left
+            top: titleField.bottom
             right: parent.right
+            left: parent.left
+            bottom: parent.bottom
 
-            leftMargin: 10
-            rightMargin: 10
+            margins: 10 * Constants.scalar
         }
 
         Component.onCompleted: {
@@ -84,18 +90,14 @@ BaseWidget {
                 topicStore.unsubscribe(item_topic)
             }
         }
-
-        onValueModified: {
-            valid = false
-            topicStore.setValue(item_topic, value)
-        }
     }
 
     onItem_topicChanged: {
         topicStore.unsubscribe(topic)
         topicStore.subscribe(item_topic)
         model.topic = item_topic
-        spin.value = topicStore.getValue(item_topic)
+
+        txt.updateTopic(item_topic, topicStore.getValue(item_topic))
     }
 
     BaseConfigDialog {
@@ -106,9 +108,7 @@ BaseWidget {
             titleFontField.open()
             fontField.open()
 
-            upField.open()
-            lowField.open()
-            stepField.open()
+            decField.open()
 
             open()
         }
@@ -117,9 +117,7 @@ BaseWidget {
             topicField.accept()
             titleFontField.accept()
             fontField.accept()
-            upField.accept()
-            lowField.accept()
-            stepField.accept()
+            decField.accept()
         }
 
         ColumnLayout {
@@ -160,7 +158,7 @@ BaseWidget {
 
                     id: fontField
 
-                    label: "Font Size"
+                    label: "Maximum Font Size"
 
                     bindedProperty: "item_fontSize"
                     bindTarget: widget
@@ -168,43 +166,17 @@ BaseWidget {
             }
 
             SectionHeader {
-                label: "Spin Box Settings"
-            }
-
-            RowLayout {
-                uniformCellSizes: true
-
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-
-                    id: lowField
-
-                    label: "Lower Bound"
-
-                    bindedProperty: "item_lowerBound"
-                    bindTarget: widget
-                }
-
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-
-                    id: upField
-
-                    label: "Upper Bound"
-
-                    bindedProperty: "item_upperBound"
-                    bindTarget: widget
-                }
+                label: "Display Settings"
             }
 
             LabeledSpinBox {
                 Layout.fillWidth: true
 
-                id: stepField
+                id: decField
 
-                label: "Step Size"
+                label: "Number of Decimals"
 
-                bindedProperty: "item_stepSize"
+                bindedProperty: "item_decimals"
                 bindTarget: widget
 
                 from: 0

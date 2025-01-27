@@ -46,6 +46,13 @@ BaseWidget {
                 model.type = "doubleGauge"
             }
         }
+
+        MenuItem {
+            text: "Number Display"
+            onTriggered: {
+                model.type = "doubleDisplay"
+            }
+        }
     }
 
     Component.onCompleted: {

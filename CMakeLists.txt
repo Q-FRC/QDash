@@ -98,9 +98,12 @@ set(QML_ELEMENTS
     widgets/primitive/ShapeHandler
 
     widgets/primitive/number/IntWidget
+    widgets/primitive/number/IntDisplay
     widgets/primitive/number/IntGaugeWidget
     widgets/primitive/number/IntDialWidget
+
     widgets/primitive/number/DoubleWidget
+    widgets/primitive/number/DoubleDisplay
     widgets/primitive/number/DoubleProgressBar
     widgets/primitive/number/DoubleGaugeWidget
     widgets/primitive/number/DoubleDialWidget

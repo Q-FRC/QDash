@@ -227,6 +227,16 @@ Rectangle {
                     roleValue: "doubleBar"
                     DoubleProgressBar {}
                 }
+
+                DelegateChoice {
+                    roleValue: "doubleDisplay"
+                    DoubleDisplay {}
+                }
+
+                DelegateChoice {
+                    roleValue: "intDisplay"
+                    IntDisplay {}
+                }
             }
         }
 
