@@ -6,7 +6,8 @@ SettingsManager::SettingsManager(QObject *parent)
     : QObject{parent}
 {}
 
-void SettingsManager::reconnectServer() {
+void SettingsManager::reconnectServer()
+{
     std::string server = Globals::server.ip;
     int team = Globals::server.team;
     int mode = Globals::server.mode;
@@ -31,7 +32,8 @@ void SettingsManager::reconnectServer() {
     Globals::inst.Disconnect();
 }
 
-void SettingsManager::addRecentFile(QFile &file) {
+void SettingsManager::addRecentFile(QFile &file)
+{
     QStringList recentFiles = Settings::RecentFiles.value().toStringList();
 
     QString fileName = file.fileName();
@@ -62,7 +64,6 @@ void SettingsManager::setLoadRecent(bool newLoadRecent)
     Settings::LoadRecent.setValue(newLoadRecent);
     emit loadRecentChanged();
 }
-
 
 QStringList SettingsManager::recentFiles() const
 {
@@ -108,7 +109,6 @@ void SettingsManager::setIp(const QString &newIp)
     emit ipChanged();
     reconnectServer();
 }
-
 
 int SettingsManager::team() const
 {

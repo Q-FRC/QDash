@@ -1,16 +1,16 @@
 #include <QGuiApplication>
-#include <QQuickStyle>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQuickStyle>
 #include <TabListModel.h>
 
 #include "AccentsListModel.h"
 #include "BuildConfig.h"
-#include "NotificationHelper.h"
-#include "PlatformHelper.h"
+#include "ConnManager.h"
 #include "Flags.h"
 #include "Globals.h"
-#include "ConnManager.h"
+#include "NotificationHelper.h"
+#include "PlatformHelper.h"
 #include "TopicListModel.h"
 #include "TopicStore.h"
 
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 
     NotificationHelper *notification = new NotificationHelper(&app);
 
-    Globals::inst.AddConnectionListener(true, [topics, &store, conn] (const nt::Event &event) {
+    Globals::inst.AddConnectionListener(true, [topics, &store, conn](const nt::Event &event) {
         bool connected = event.Is(nt::EventFlags::kConnected);
 
         store.connect(connected);
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     Globals::inst.StartClient4(BuildConfig.APP_NAME.toStdString());
     Globals::inst.StartDSClient(NT_DEFAULT_PORT4);
 
-    Globals::inst.AddListener({{""}}, nt::EventFlags::kTopic, [topics] (const nt::Event &event) {
+    Globals::inst.AddListener({{""}}, nt::EventFlags::kTopic, [topics](const nt::Event &event) {
         std::string topicName(event.GetTopicInfo()->name);
 
         if (event.Is(nt::EventFlags::kPublish)) {
@@ -77,33 +77,35 @@ int main(int argc, char *argv[])
     });
 
     nt::NetworkTableEntry tabEntry = Globals::inst.GetEntry("/QFRCDashboard/Tab");
-    Globals::inst.AddListener(tabEntry, nt::EventFlags::kValueAll, [tlm] (const nt::Event &event) {
+    Globals::inst.AddListener(tabEntry, nt::EventFlags::kValueAll, [tlm](const nt::Event &event) {
         std::string_view value = event.GetValueEventData()->value.GetString();
         QString qvalue = QString::fromStdString(std::string{value});
 
-        QMetaObject::invokeMethod(tlm, [tlm, qvalue] {
-            tlm->selectTab(qvalue);
-        });
+        QMetaObject::invokeMethod(tlm, [tlm, qvalue] { tlm->selectTab(qvalue); });
     });
 
-    nt::NetworkTableEntry notificationEntry = Globals::inst.GetEntry("/QFRCDashboard/RobotNotifications");
-    Globals::inst.AddListener(notificationEntry, nt::EventFlags::kValueAll, [tlm, &app, notification] (const nt::Event &event) {
-        std::string_view value = event.GetValueEventData()->value.GetString();
-        QString qvalue = QString::fromStdString(std::string{value});
-        QJsonDocument doc = QJsonDocument::fromJson(qvalue.toUtf8());
+    nt::NetworkTableEntry notificationEntry = Globals::inst.GetEntry(
+        "/QFRCDashboard/RobotNotifications");
+    Globals::inst.AddListener(notificationEntry,
+                              nt::EventFlags::kValueAll,
+                              [tlm, &app, notification](const nt::Event &event) {
+                                  std::string_view value = event.GetValueEventData()
+                                                               ->value.GetString();
+                                  QString qvalue = QString::fromStdString(std::string{value});
+                                  QJsonDocument doc = QJsonDocument::fromJson(qvalue.toUtf8());
 
-        QMetaObject::invokeMethod(notification, [doc, notification] {
-            notification->fromJson(doc);
-        });
-    });
+                                  QMetaObject::invokeMethod(notification, [doc, notification] {
+                                      notification->fromJson(doc);
+                                  });
+                              });
 
     qmlRegisterUncreatableMetaObject(
         QFDFlags::staticMetaObject,
         "QFDFlags",
-        1, 0,
+        1,
+        0,
         "QFDFlags",
-        "Attempt to create uninstantiable object \"QFDFlags\" ignored"
-        );
+        "Attempt to create uninstantiable object \"QFDFlags\" ignored");
 
     QQmlApplicationEngine engine;
 

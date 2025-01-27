@@ -32,6 +32,13 @@ BaseWidget {
                 model.type = "doubleGauge"
             }
         }
+
+        MenuItem {
+            text: "Progress Bar"
+            onTriggered: {
+                model.type = "doubleBar"
+            }
+        }
     }
 
     Component.onCompleted: {

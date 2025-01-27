@@ -1,7 +1,7 @@
 #include "PlatformHelper.h"
-#include <QGuiApplication>
 #include <QClipboard>
 #include <QFileInfo>
+#include <QGuiApplication>
 #include <QScreen>
 
 PlatformHelper::PlatformHelper(QObject *parent)

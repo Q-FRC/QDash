@@ -20,7 +20,8 @@ void ConnManager::setConnected(bool newConnected)
         return;
     m_connected = newConnected;
 
-    m_status = QString(newConnected ? "" : "Not ") + "Connected" + (newConnected ? " (" + m_address + ")" : "");
+    m_status = QString(newConnected ? "" : "Not ") + "Connected"
+               + (newConnected ? " (" + m_address + ")" : "");
     m_title = BuildConfig.APP_NAME + " - " + m_status;
 
     emit titleChanged();
@@ -45,4 +46,3 @@ QString ConnManager::status() const
 {
     return m_status;
 }
-

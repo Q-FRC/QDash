@@ -222,6 +222,11 @@ Rectangle {
                     roleValue: "gauge"
                     IntGaugeWidget {}
                 }
+
+                DelegateChoice {
+                    roleValue: "doubleBar"
+                    DoubleProgressBar {}
+                }
             }
         }
 

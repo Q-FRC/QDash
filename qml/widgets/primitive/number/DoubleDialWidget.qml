@@ -34,6 +34,13 @@ BaseWidget {
                 model.type = "doubleGauge"
             }
         }
+
+        MenuItem {
+            text: "Progress Bar"
+            onTriggered: {
+                model.type = "doubleBar"
+            }
+        }
     }
 
     Component.onCompleted: {
@@ -89,7 +96,7 @@ BaseWidget {
         }
 
         function move(val) {
-            valid = val === value
+            valid = Math.abs(val - value) < 0.01
             value = val
             topicStore.setValue(item_topic, value)
         }
