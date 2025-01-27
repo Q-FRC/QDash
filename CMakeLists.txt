@@ -104,6 +104,7 @@ set(QML_ELEMENTS
 
     widgets/primitive/number/DoubleWidget
     widgets/primitive/number/DoubleDisplay
+    widgets/primitive/number/MatchTime
     widgets/primitive/number/DoubleProgressBar
     widgets/primitive/number/DoubleGaugeWidget
     widgets/primitive/number/DoubleDialWidget

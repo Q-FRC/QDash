@@ -53,6 +53,13 @@ BaseWidget {
                 model.type = "doubleDisplay"
             }
         }
+
+        MenuItem {
+            text: "Match Time"
+            onTriggered: {
+                model.type = "matchTime"
+            }
+        }
     }
 
     Component.onCompleted: {

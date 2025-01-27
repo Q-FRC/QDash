@@ -10,7 +10,7 @@ BaseWidget {
     property string item_topic
 
     property int item_fontSize: 100
-    property int item_decimals: 2
+    property color item_warningColor: "yellow"
 
     Menu {
         id: switchMenu
@@ -45,9 +45,9 @@ BaseWidget {
         }
 
         MenuItem {
-            text: "Match Time"
+            text: "Number Display"
             onTriggered: {
-                model.type = "matchTime"
+                model.type = "doubleDisplay"
             }
         }
     }
@@ -69,9 +69,9 @@ BaseWidget {
             }
         }
 
-        text: value.toFixed(item_decimals)
+        text: Math.floor(value / 60) + ":" + String((value % 60).toFixed(0)).padStart(2, '0')
 
-        color: Constants.accent
+        color: value < 30 ? item_warningColor : Constants.accent
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
@@ -115,7 +115,7 @@ BaseWidget {
             titleFontField.open()
             fontField.open()
 
-            decField.open()
+            warnField.open()
 
             open()
         }
@@ -124,7 +124,7 @@ BaseWidget {
             topicField.accept()
             titleFontField.accept()
             fontField.accept()
-            decField.accept()
+            warnField.accept()
         }
 
         ColumnLayout {
@@ -176,17 +176,15 @@ BaseWidget {
                 label: "Display Settings"
             }
 
-            LabeledSpinBox {
+            ColorField {
                 Layout.fillWidth: true
 
-                id: decField
+                id: warnField
 
-                label: "Number of Decimals"
+                label: "Warning Color"
 
-                bindedProperty: "item_decimals"
+                bindedProperty: "item_warningColor"
                 bindTarget: widget
-
-                from: 0
             }
 
             SectionHeader {
