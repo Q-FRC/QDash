@@ -17,6 +17,10 @@ BaseWidget {
         }
     }
 
+    function valueChanged() {
+        topicStore.setValue(item_topic, values)
+    }
+
     Component.onCompleted: {
         topicStore.topicUpdate.connect(updateTopic)
 
@@ -38,62 +42,93 @@ BaseWidget {
         values = topicStore.getValue(item_topic)
     }
 
-    Repeater {
-        model: 6
-        Shape {
-            id: shape
+    Item {
+        anchors {
+            top: titleField.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
 
-            height: Math.min(parent.height, parent.width) / 3
-            width: height * 1.15
+        Repeater {
+            model: 6
+            Shape {
+                id: shape
 
-            rotation: -60 * modelData
-            transformOrigin: Item.Top
+                height: Math.min(parent.height, parent.width) / 2
+                width: height * 1.15
 
-            anchors.centerIn: parent
-            anchors.verticalCenterOffset: height / 2
+                rotation: -60 * modelData
+                transformOrigin: Item.Top
 
-            ShapePath {
-                strokeWidth: 2
-                strokeColor: "black"
-                fillColor: values[modelData * 2 + 1] ? "green" : "red"
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: height / 2
 
-                startX: shape.width
-                startY: shape.height
+                MaskedMouseArea {
+                    id: leftTri
+                    anchors.fill: parent
+                    isLeft: true
 
-                PathLine {
-                    x: shape.width / 2
-                    y: shape.height
-                }
-                PathLine {
-                    x: shape.width / 2
-                    y: 0
-                }
-
-                PathLine {
-                    x: shape.width
-                    y: shape.height
-                }
-            }
-            ShapePath {
-                strokeWidth: 2
-                strokeColor: "black"
-                fillColor: values[modelData * 2] ? "green" : "red"
-
-                startX: 0
-                startY: shape.height
-
-                PathLine {
-                    x: shape.width / 2
-                    y: shape.height
-                }
-                PathLine {
-                    x: shape.width / 2
-                    y: 0
+                    onClicked: {
+                        values[modelData * 2] = !values[modelData * 2]
+                        valueChanged()
+                    }
                 }
 
-                PathLine {
-                    x: 0
-                    y: shape.height
+                MaskedMouseArea {
+                    id: rightTri
+                    anchors.fill: parent
+                    isLeft: false
+
+                    onClicked: {
+                        values[modelData * 2 + 1] = !values[modelData * 2 + 1]
+                        valueChanged()
+                    }
+                }
+
+                ShapePath {
+                    strokeWidth: 2
+                    strokeColor: "black"
+                    fillColor: values[modelData * 2 + 1] ? "green" : "red"
+
+                    startX: shape.width
+                    startY: shape.height
+
+                    PathLine {
+                        x: shape.width / 2
+                        y: shape.height
+                    }
+                    PathLine {
+                        x: shape.width / 2
+                        y: 0
+                    }
+
+                    PathLine {
+                        x: shape.width
+                        y: shape.height
+                    }
+                }
+                ShapePath {
+                    strokeWidth: 2
+                    strokeColor: "black"
+                    fillColor: values[modelData * 2] ? "green" : "red"
+
+                    startX: 0
+                    startY: shape.height
+
+                    PathLine {
+                        x: shape.width / 2
+                        y: shape.height
+                    }
+                    PathLine {
+                        x: shape.width / 2
+                        y: 0
+                    }
+
+                    PathLine {
+                        x: 0
+                        y: shape.height
+                    }
                 }
             }
         }

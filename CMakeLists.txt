@@ -163,6 +163,7 @@ set(ELEMENTS
     ConnManager
     PlatformHelper
     NotificationHelper
+    MaskedMouseArea
 
     models/TabWidgetsModel
     models/TabListModel
