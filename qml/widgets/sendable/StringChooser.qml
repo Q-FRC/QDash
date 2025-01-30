@@ -13,11 +13,12 @@ BaseWidget {
 
     ComboBox {
         id: combo
+
         anchors {
             verticalCenter: parent.verticalCenter
 
             left: parent.left
-            right: parent.right
+            right: button.left
 
             margins: 8
         }
@@ -56,6 +57,7 @@ BaseWidget {
                     return
                 }
 
+                button.valid = true
                 active = value
                 currentIndex = indexOfValue(active)
             }
@@ -65,6 +67,7 @@ BaseWidget {
             if (conn) {
                 readyToUpdate = false
 
+                button.valid = false
                 topicStore.setValue(item_topic + "/selected", currentText)
             }
         }
@@ -95,7 +98,28 @@ BaseWidget {
         }
 
         onCurrentIndexChanged: {
+            button.valid = false
             topicStore.setValue(item_topic + "/selected", valueAt(currentIndex))
+        }
+    }
+
+    Button {
+        id: button
+
+        property bool valid: false
+
+        icon {
+            color: valid ? "green" : "red"
+            source: valid ? "qrc:/Valid" : "qrc:/Invalid"
+        }
+
+        background: Item {}
+
+        anchors {
+            verticalCenter: combo.verticalCenter
+            right: parent.right
+
+            margins: 8
         }
     }
 

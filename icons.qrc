@@ -11,5 +11,7 @@
         <file alias="Minimize">icons/Minimize.svg</file>
         <file alias="Window">icons/Window.svg</file>
         <file alias="Unmaximize">icons/Unmaximize.svg</file>
+        <file alias="Invalid">icons/invalid.svg</file>
+        <file alias="Valid">icons/valid.svg</file>
     </qresource>
 </RCC>
