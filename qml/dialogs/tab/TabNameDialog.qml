@@ -21,11 +21,7 @@ AnimatedDialog {
         tabName.text = ""
     }
 
-    function finish() {
-        text = tabName.text
-
-        accept()
-    }
+    onAccepted: text = tabName.text
 
     standardButtons: Dialog.Ok | Dialog.Cancel
 
@@ -35,7 +31,7 @@ AnimatedDialog {
     }
 
     Shortcut {
-        onActivated: finish()
+        onActivated: accept()
         sequence: Qt.Key_Return
     }
 
@@ -45,7 +41,7 @@ AnimatedDialog {
         id: tabName
         font.pixelSize: Math.round(20 * Constants.scalar)
 
-        onAccepted: tabNameDialog.finish()
+        onAccepted: tabNameDialog.accept()
 
         label: "Tab Name"
 
