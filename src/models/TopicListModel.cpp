@@ -1,5 +1,26 @@
 #include "TopicListModel.h"
 
+
+QList<QStandardItem*> recursiveSearch(QStandardItem *item, const QString &topic)
+{
+    QList<QStandardItem*> foundItems;
+
+    // Check if the current item matches the search term
+    if (item->data(TopicListModel::TOPIC) == topic) {
+        foundItems.append(item);
+    }
+
+    // Recursively search through all child items
+    for (int i = 0; i < item->rowCount(); ++i) {
+        QStandardItem *childItem = item->child(i, 0);
+        if (childItem) {
+            foundItems.append(recursiveSearch(childItem, topic));
+        }
+    }
+
+    return foundItems;
+}
+
 TopicListModel::TopicListModel(TopicStore &store, QObject *parent)
     : QStandardItemModel(parent)
     , m_store(&store)
@@ -46,19 +67,19 @@ void TopicListModel::add(const QString &toAdd)
 
     QStandardItem *parentItem = invisibleRootItem();
 
+    QString total = "";
     for (const QString &sub : split) {
+        total += "/" + sub;
         bool isLast = sub == split.last();
 
-        auto results = findItems(sub, Qt::MatchRecursive | Qt::MatchExactly | Qt::MatchWrap);
+        auto results = recursiveSearch(invisibleRootItem(), total);
 
         if (results.isEmpty()) {
             QStandardItem *item = new QStandardItem(sub);
-            bool append = false;
+            item->setData(total, TOPIC);
 
             if (isLast) {
-                if (parentItem && parentItem->data(TOPIC).toString() != "") {
-                    append = false;
-                } else if (hasType) {
+                if (hasType) {
                     if (sub == ".type") {
                         std::string value = type.GetString("invalid");
 
@@ -84,33 +105,28 @@ void TopicListModel::add(const QString &toAdd)
                             QString typeStr = QString::fromStdString(value);
                             parentItem->setData(typeStr, TYPE);
                         }
-                    }
-                    append = false;
-                } else {
-                    append = true;
 
-                    item->setData(toAdd, TLMRoleTypes::TOPIC);
-                    item->setData(m_store->typeString(toAdd), TYPE);
+                        item->setData(toAdd, TLMRoleTypes::TOPIC);
+                        item->setData(m_store->typeString(toAdd), TYPE);
+                    }
                 }
+                item->setData(toAdd, TLMRoleTypes::TOPIC);
+                item->setData(m_store->typeString(toAdd), TYPE);
             } else {
-                append = true;
                 if (parentItem && parentItem->text() == "CameraPublisher") {
                     item->setData("/CameraPublisher/" + sub, TLMRoleTypes::TOPIC);
                     item->setData("camera", TYPE);
                 } else {
-                    item->setData("", TLMRoleTypes::TOPIC);
+                    // item->setData("", TLMRoleTypes::TOPIC);
                     item->setData("", TYPE);
                 }
             }
 
-            if (append) {
-                parentItem->appendRow(item);
-                parentItem = item;
-            } else {
-                delete item;
-            }
+            parentItem->appendRow(item);
+            parentItem = item;
         } else {
             for (QStandardItem *item : results) {
+
                 if (item->parent() != nullptr && item->parent()->data(TLMRoleTypes::TYPE).toString() != "") goto end;
 
                 if (item->parent() == nullptr || item->parent()->text() == parentItem->text()) {
