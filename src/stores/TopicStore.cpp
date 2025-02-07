@@ -105,23 +105,30 @@ nt::Value TopicStore::toValue(const QVariant &value)
 {
     if (!value.isValid()) goto end;
 
-    switch (value.typeId()) {
-    case QMetaType::Type::QString:
+    if (value.typeId() == QMetaType::Type::QString) {
         return nt::Value::MakeString(std::string_view{value.toString().toStdString()});
-    case QMetaType::Type::QStringList: {
+    } else if (value.typeId() == QMetaType::Type::QStringList) {
         std::vector<std::string> v;
         for (const QString &s : value.toStringList()) {
             v.emplace_back(s.toStdString());
         }
 
         return nt::Value::MakeStringArray(v);
-    } case QMetaType::Type::Bool:
+
+    } else if (value.typeId() == qMetaTypeId<QList<bool>>()) {
+        std::vector<int> v;
+        for (const QVariant &b : value.toList()) {
+            v.emplace_back(b.toBool());
+        }
+
+        return nt::Value::MakeBooleanArray(v);
+    } else if (value.typeId() == QMetaType::Type::Bool) {
         return nt::Value::MakeBoolean(value.toBool());
-    case QMetaType::Type::Double:
+    } else if (value.typeId() == QMetaType::Type::Double) {
         return nt::Value::MakeDouble(value.toDouble());
-    case QMetaType::Type::Float:
+    } else if (value.typeId() == QMetaType::Type::Float) {
         return nt::Value::MakeFloat(value.toFloat());
-    case QMetaType::Type::Int:
+    } else if (value.typeId() == QMetaType::Type::Int) {
         return nt::Value::MakeInteger(value.toInt());
     }
 
