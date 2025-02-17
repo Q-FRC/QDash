@@ -9,8 +9,7 @@ BaseWidget {
 
     property string item_topic
 
-    property int item_fontSize: 15
-    property int item_stepSize: 1
+    property int item_fontSize: 20
 
     property int item_upperBound: 100000
     property int item_lowerBound: 0
@@ -58,7 +57,6 @@ BaseWidget {
         }
 
         value: 0
-        stepSize: item_stepSize
         from: item_lowerBound
         to: item_upperBound
 
@@ -108,7 +106,6 @@ BaseWidget {
 
             upField.open()
             lowField.open()
-            stepField.open()
 
             open()
         }
@@ -119,12 +116,11 @@ BaseWidget {
             fontField.accept()
             upField.accept()
             lowField.accept()
-            stepField.accept()
         }
 
         ColumnLayout {
             id: layout
-            spacing: 25 * Constants.scalar
+            spacing: 12 * Constants.scalar
 
             anchors {
                 top: parent.top
@@ -132,7 +128,7 @@ BaseWidget {
                 left: parent.left
                 right: parent.right
 
-                topMargin: -20
+                topMargin: 5 * Constants.scalar
 
                 rightMargin: 5
             }
@@ -195,19 +191,6 @@ BaseWidget {
                     bindedProperty: "item_upperBound"
                     bindTarget: widget
                 }
-            }
-
-            LabeledSpinBox {
-                Layout.fillWidth: true
-
-                id: stepField
-
-                label: "Step Size"
-
-                bindedProperty: "item_stepSize"
-                bindTarget: widget
-
-                from: 0
             }
 
             SectionHeader {

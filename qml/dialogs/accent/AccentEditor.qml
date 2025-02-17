@@ -37,10 +37,6 @@ AnimatedDialog {
 
                 Rectangle {
                     color: "transparent"
-                    border {
-                        color: Constants.accent
-                        width: 2
-                    }
 
                     Layout.fillWidth: true
                     height: 30 * Constants.scalar

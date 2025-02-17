@@ -9,9 +9,9 @@ BaseWidget {
 
     property string item_topic
 
-    property int item_fontSize: 18
+    property int item_fontSize: 14
 
-    ComboBox {
+    BetterComboBox {
         id: combo
 
         anchors {
@@ -20,21 +20,7 @@ BaseWidget {
             left: parent.left
             right: button.left
 
-            margins: 8
-        }
-
-        delegate: ItemDelegate {
-            id: delegate
-
-            width: combo.width
-            contentItem: Text {
-                text: modelData
-                color: "white"
-                font.pixelSize: item_fontSize * Constants.scalar
-                elide: Text.ElideRight
-                verticalAlignment: Text.AlignVCenter
-            }
-            highlighted: combo.highlightedIndex === index
+            margins: 2
         }
 
         font.pixelSize: item_fontSize * Constants.scalar
@@ -46,6 +32,7 @@ BaseWidget {
 
         property bool readyToUpdate: true
 
+        property int previousIndex: 0
         model: choices
 
         function updateTopic(ntTopic, value) {
@@ -60,6 +47,8 @@ BaseWidget {
                 button.valid = true
                 active = value
                 currentIndex = indexOfValue(active)
+
+                previousIndex = currentIndex
             }
         }
 
@@ -67,7 +56,7 @@ BaseWidget {
             if (conn) {
                 readyToUpdate = false
 
-                button.valid = false
+                // button.valid = false
                 topicStore.setValue(item_topic + "/selected", currentText)
             }
         }
@@ -97,10 +86,16 @@ BaseWidget {
             }
         }
 
-        onCurrentIndexChanged: {
-            button.valid = false
-            topicStore.setValue(item_topic + "/selected", valueAt(currentIndex))
-        }
+        onActivated: index => {
+                         if (previousIndex !== index) {
+                             button.valid = false
+                         }
+
+                         previousIndex = index
+
+                         topicStore.setValue(item_topic + "/selected",
+                                             valueAt(index))
+                     }
     }
 
     Button {
@@ -119,7 +114,7 @@ BaseWidget {
             verticalCenter: combo.verticalCenter
             right: parent.right
 
-            margins: 8
+            margins: 2
         }
     }
 
@@ -148,7 +143,7 @@ BaseWidget {
 
         ColumnLayout {
             id: layout
-            spacing: 25 * Constants.scalar
+            spacing: 12 * Constants.scalar
 
             anchors {
                 top: parent.top
@@ -156,7 +151,7 @@ BaseWidget {
                 left: parent.left
                 right: parent.right
 
-                topMargin: -20
+                topMargin: 5 * Constants.scalar
 
                 rightMargin: 5
             }

@@ -10,17 +10,11 @@ Column {
 
     Text {
         font.pixelSize: 18 * Constants.scalar
-        font.bold: true
+        font.weight: 700
         color: Constants.palette.text
         text: label
 
         width: parent.width
-        horizontalAlignment: Text.AlignHCenter
-    }
-
-    Rectangle {
-        height: 2
-        width: parent.width
-        color: Constants.palette.text
+        horizontalAlignment: Text.AlignLeft
     }
 }

@@ -13,7 +13,7 @@ Rectangle {
 
     radius: 12 * Constants.scalar
 
-    property int item_titleFontSize: 20
+    property int item_titleFontSize: 16
 
     property alias titleField: titleField
     property alias rcMenu: rcMenu
@@ -142,6 +142,7 @@ Rectangle {
         pressAndHoldInterval: 100
 
         onPressed: mouse => {
+                       focus = true
                        if (mouse.button === Qt.RightButton) {
                            drag.target = null
                            rcMenu.popup()
@@ -290,6 +291,7 @@ Rectangle {
 
     /* ACTUAL DATA */
     TextField {
+        z: 1
         id: titleField
         font.pixelSize: item_titleFontSize * Constants.scalar
         font.bold: true
@@ -301,18 +303,28 @@ Rectangle {
 
         anchors {
             top: parent.top
+            horizontalCenter: parent.horizontalCenter
+        }
+
+        // clip: true
+        background: Item {}
+
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+    }
+
+    Rectangle {
+        anchors {
+            top: parent.top
             left: parent.left
             right: parent.right
         }
 
-        background: Rectangle {
-            topLeftRadius: 12 * Constants.scalar
-            topRightRadius: 12 * Constants.scalar
-            color: Constants.accent
-        }
+        height: titleField.height
 
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
+        topLeftRadius: 12 * Constants.scalar
+        topRightRadius: 12 * Constants.scalar
+        color: Constants.accent
     }
 
 
@@ -339,7 +351,7 @@ Rectangle {
 
         ColumnLayout {
             id: layout
-            spacing: 25 * Constants.scalar
+            spacing: 12 * Constants.scalar
 
             anchors {
                 top: parent.top
@@ -347,7 +359,7 @@ Rectangle {
                 left: parent.left
                 right: parent.right
 
-                topMargin: -20
+                topMargin: 5 * Constants.scalar
 
                 rightMargin: 5
             }

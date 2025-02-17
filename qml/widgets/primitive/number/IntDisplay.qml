@@ -10,6 +10,7 @@ BaseWidget {
     property string item_topic
 
     property int item_fontSize: 100
+    property color item_color: Constants.accent
 
     Menu {
         id: switchMenu
@@ -56,7 +57,7 @@ BaseWidget {
 
         text: value
 
-        color: Constants.accent
+        color: item_color
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
@@ -99,6 +100,7 @@ BaseWidget {
             topicField.open()
             titleFontField.open()
             fontField.open()
+            colorField.open()
 
             open()
         }
@@ -107,11 +109,12 @@ BaseWidget {
             topicField.accept()
             titleFontField.accept()
             fontField.accept()
+            colorField.accept()
         }
 
         ColumnLayout {
             id: layout
-            spacing: 25 * Constants.scalar
+            spacing: 12 * Constants.scalar
 
             anchors {
                 top: parent.top
@@ -119,7 +122,7 @@ BaseWidget {
                 left: parent.left
                 right: parent.right
 
-                topMargin: -20
+                topMargin: 5 * Constants.scalar
 
                 rightMargin: 5
             }
@@ -152,6 +155,21 @@ BaseWidget {
                     bindedProperty: "item_fontSize"
                     bindTarget: widget
                 }
+            }
+
+            SectionHeader {
+                label: "Display Settings"
+            }
+
+            ColorField {
+                Layout.fillWidth: true
+
+                id: colorField
+
+                label: "Text Color"
+
+                bindedProperty: "item_color"
+                bindTarget: widget
             }
 
             SectionHeader {

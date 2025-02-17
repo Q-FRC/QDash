@@ -11,7 +11,7 @@ Repeater {
     signal resizeBegin(var drag, var valid)
     signal resizeEnd(var drag, var valid)
 
-    signal fullCancelDrag()
+    signal fullCancelDrag
     signal intersectionCheck(var drag, var source)
 
     function checkIntersects(drag, source) {
@@ -26,8 +26,9 @@ Repeater {
     function recalcValid() {
         let valid = true
 
-        for (let i = 0; i < validResize.length; ++i) {
-            if (!validResize[i]) valid = false
+        for (var i = 0; i < validResize.length; ++i) {
+            if (!validResize[i])
+                valid = false
         }
         return valid
     }
@@ -52,7 +53,7 @@ Repeater {
     property list<bool> validResize
 
     Component.onCompleted: {
-        for (let i = 0; i < model; ++i) {
+        for (var i = 0; i < model; ++i) {
             validResize[i] = true
         }
     }
@@ -60,7 +61,7 @@ Repeater {
     property list<rect> intersected
 
     function occupied() {
-        for (let i = 0; i < model; ++i) {
+        for (var i = 0; i < model; ++i) {
             if (itemAt(i).isOccupied()) {
                 return Qt.point(i / grid.columns, i % grid.columns)
             }
@@ -73,9 +74,10 @@ Repeater {
         let rows = []
         let cols = []
 
-        for (let i = 0; i < intersected.length; ++i) {
+        for (var i = 0; i < intersected.length; ++i) {
             let r = intersected[i]
-            if (r === Qt.rect(0, 0, 0, 0)) continue;
+            if (r === Qt.rect(0, 0, 0, 0))
+                continue
 
             rows.push(r.y)
             cols.push(r.x)
@@ -106,7 +108,21 @@ Repeater {
         drag.source.Layout.row = minRow
     }
 
+    // TODO: this section is pretty bad
+    // the entire resize and drag and drop logic badly needs to be reimplemented
+    // more efficiently
     delegate: Rectangle {
+        MouseArea {
+            anchors.fill: parent
+
+            onPressed: event => {
+                           event.accepted = false
+                           focus = true
+                       }
+
+            propagateComposedEvents: true
+        }
+
         id: delRect
         required property int modelData
 
@@ -138,17 +154,18 @@ Repeater {
         }
 
         function intersects(A, B) {
-            let xOverlap = valueInRange(A.x, B.x, B.x + B.width - 1) ||
-                valueInRange(B.x, A.x, A.x + A.width - 1);
+            let xOverlap = valueInRange(A.x, B.x, B.x + B.width - 1)
+                || valueInRange(B.x, A.x, A.x + A.width - 1)
 
-            let yOverlap = valueInRange(A.y, B.y, B.y + B.height - 1) ||
-                valueInRange(B.y, A.y, A.y + A.height - 1);
+            let yOverlap = valueInRange(A.y, B.y, B.y + B.height - 1)
+                || valueInRange(B.y, A.y, A.y + A.height - 1)
 
-            return xOverlap && yOverlap;
+            return xOverlap && yOverlap
         }
 
         function rectDrag(drag) {
-            let sourceRect = Qt.rect(drag.source.x, drag.source.y, drag.source.width, drag.source.height)
+            let sourceRect = Qt.rect(drag.source.x, drag.source.y,
+                                     drag.source.width, drag.source.height)
             let myRect = Qt.rect(x, y, width, height)
 
             if (intersects(sourceRect, myRect)) {
@@ -160,11 +177,13 @@ Repeater {
         }
 
         function endDrag(drag) {
-            let sourceRect = Qt.rect(drag.source.x, drag.source.y, drag.source.width, drag.source.height)
+            let sourceRect = Qt.rect(drag.source.x, drag.source.y,
+                                     drag.source.width, drag.source.height)
             let myRect = Qt.rect(x, y, width, height)
 
             if (intersects(sourceRect, myRect)) {
-                rep.intersected[modelData] = Qt.rect(Layout.column, Layout.row, 1, 1)
+                rep.intersected[modelData] = Qt.rect(Layout.column,
+                                                     Layout.row, 1, 1)
             }
 
             rep.validResize[modelData] = true
@@ -175,10 +194,13 @@ Repeater {
             let myRect = Qt.rect(Layout.column, Layout.row, 1, 1)
 
             if (intersects(source, myRect)) {
-                let realSource = Qt.rect(drag.source.mcolumn, drag.source.mrow, drag.source.mcolumnSpan, drag.source.mrowSpan)
+                let realSource = Qt.rect(drag.source.mcolumn, drag.source.mrow,
+                                         drag.source.mcolumnSpan,
+                                         drag.source.mrowSpan)
                 rep.validResize[modelData] = drop.validSpotRect(realSource)
 
-                rep.intersected[modelData] = Qt.rect(Layout.column, Layout.row, 1, 1)
+                rep.intersected[modelData] = Qt.rect(Layout.column,
+                                                     Layout.row, 1, 1)
 
                 border.color = rep.recalcValid() ? "light green" : "red"
                 border.width = 5
@@ -199,16 +221,28 @@ Repeater {
             rep.fullCancelDrag.connect(resetBorder)
         }
 
+        Component.onDestruction: {
+            rep.resizeBegin.disconnect(rectDrag)
+            rep.resizeEnd.disconnect(endDrag)
+            rep.intersectionCheck.disconnect(checkIntersect)
+            rep.fullCancelDrag.disconnect(resetBorder)
+        }
+
         DropArea {
             id: drop
             anchors.fill: parent
 
             function validSpotRect(source) {
-                return !twm.cellOccupied(parent.Layout.row, parent.Layout.column, parent.Layout.rowSpan, parent.Layout.columnSpan, source)
+                return !twm.cellOccupied(parent.Layout.row,
+                                         parent.Layout.column,
+                                         parent.Layout.rowSpan,
+                                         parent.Layout.columnSpan, source)
             }
 
             function validSpot(drag) {
-                let source = Qt.rect(drag.source.mcolumn, drag.source.mrow, drag.source.mcolumnSpan, drag.source.mrowSpan)
+                let source = Qt.rect(drag.source.mcolumn, drag.source.mrow,
+                                     drag.source.mcolumnSpan,
+                                     drag.source.mrowSpan)
                 return validSpotRect(source)
             }
 
@@ -220,11 +254,14 @@ Repeater {
                 parent.border.color = rep.recalcValid() ? "light green" : "red"
             }
 
-            onEntered: (drag) => {
+            onEntered: drag => {
                            {
                                parent.border.width = 5
 
-                               let source = Qt.rect(parent.Layout.column, parent.Layout.row, drag.source.mcolumnSpan, drag.source.mrowSpan)
+                               let source = Qt.rect(parent.Layout.column,
+                                                    parent.Layout.row,
+                                                    drag.source.mcolumnSpan,
+                                                    drag.source.mrowSpan)
                                rep.intersectionCheck(drag, source)
                            }
                        }
@@ -234,8 +271,11 @@ Repeater {
                 resetBorder()
             }
 
-            onDropped: (drag) => {
-                           let source = Qt.rect(parent.Layout.column, parent.Layout.row, drag.source.mcolumnSpan, drag.source.mrowSpan)
+            onDropped: drag => {
+                           let source = Qt.rect(parent.Layout.column,
+                                                parent.Layout.row,
+                                                drag.source.mcolumnSpan,
+                                                drag.source.mrowSpan)
                            rep.checkIntersects(drag, source)
                            drag.accept()
 

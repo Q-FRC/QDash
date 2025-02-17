@@ -10,44 +10,24 @@ BaseWidget {
     property string item_topic
 
     property int item_fontSize: 100
-    property color item_warningColor: "yellow"
+    property color item_color: Constants.accent
+    property bool item_wrap: true
 
     Menu {
         id: switchMenu
         title: "Switch Widget..."
 
         MenuItem {
-            text: "Spin Box"
+            text: "Text Field"
             onTriggered: {
-                model.type = "double"
+                model.type = "string"
             }
         }
 
         MenuItem {
-            text: "Dial"
+            text: "Enum"
             onTriggered: {
-                model.type = "doubleDial"
-            }
-        }
-
-        MenuItem {
-            text: "Radial Gauge"
-            onTriggered: {
-                model.type = "doubleGauge"
-            }
-        }
-
-        MenuItem {
-            text: "Progress Bar"
-            onTriggered: {
-                model.type = "doubleBar"
-            }
-        }
-
-        MenuItem {
-            text: "Number Display"
-            onTriggered: {
-                model.type = "doubleDisplay"
+                model.type = "enum"
             }
         }
     }
@@ -61,7 +41,7 @@ BaseWidget {
 
         font.pixelSize: item_fontSize * Constants.scalar
 
-        property double value
+        property string value
 
         function updateTopic(ntTopic, ntValue) {
             if (ntTopic === item_topic) {
@@ -69,13 +49,15 @@ BaseWidget {
             }
         }
 
-        text: Math.floor(value / 60) + ":" + String((value % 60).toFixed(0)).padStart(2, '0')
+        text: value
 
-        color: value < 30 ? item_warningColor : Constants.accent
+        color: item_color
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
         fontSizeMode: Text.Fit
+
+        wrapMode: item_wrap ? Text.WrapAtWordBoundaryOrAnywhere : Text.NoWrap
 
         anchors {
             top: titleField.bottom
@@ -114,8 +96,8 @@ BaseWidget {
             topicField.open()
             titleFontField.open()
             fontField.open()
-
-            warnField.open()
+            colorField.open()
+            wrapField.open()
 
             open()
         }
@@ -124,7 +106,8 @@ BaseWidget {
             topicField.accept()
             titleFontField.accept()
             fontField.accept()
-            warnField.accept()
+            colorField.accept()
+            wrapField.accept()
         }
 
         ColumnLayout {
@@ -175,16 +158,30 @@ BaseWidget {
             SectionHeader {
                 label: "Display Settings"
             }
+            RowLayout {
+                uniformCellSizes: true
 
-            ColorField {
-                Layout.fillWidth: true
+                ColorField {
+                    Layout.fillWidth: true
 
-                id: warnField
+                    id: colorField
 
-                label: "Warning Color"
+                    label: "Text Color"
 
-                bindedProperty: "item_warningColor"
-                bindTarget: widget
+                    bindedProperty: "item_color"
+                    bindTarget: widget
+                }
+
+                LabeledCheckbox {
+                    Layout.fillWidth: true
+
+                    id: wrapField
+
+                    label: "Wrap Text?"
+
+                    bindedProperty: "item_wrap"
+                    bindTarget: widget
+                }
             }
 
             SectionHeader {

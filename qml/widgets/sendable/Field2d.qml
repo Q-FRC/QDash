@@ -247,14 +247,14 @@ BaseWidget {
                 left: parent.left
                 right: parent.right
 
-                topMargin: -20
+                topMargin: 5 * Constants.scalar
 
                 rightMargin: 5
             }
 
             ColumnLayout {
                 id: layout
-                spacing: 25 * Constants.scalar
+                spacing: 12 * Constants.scalar
                 anchors.fill: parent
                 anchors.leftMargin: 2
                 clip: true

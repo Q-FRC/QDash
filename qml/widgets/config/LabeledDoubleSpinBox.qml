@@ -8,8 +8,6 @@ import QFRCDashboard
 
 BetterDoubleSpinBox {
     id: spin
-    required property string label
-
     /** what property to bind to */
     required property string bindedProperty
 
@@ -29,21 +27,5 @@ BetterDoubleSpinBox {
 
     function accept() {
         bindTarget[bindedProperty] = value
-    }
-
-    Text {
-        id: floatingLabel
-        text: label
-        color: Constants.palette.text
-
-        font.pixelSize: 15 * Constants.scalar
-
-        anchors {
-            left: spin.left
-            bottom: spin.top
-
-            bottomMargin: -2
-            leftMargin: 10 * Constants.scalar
-        }
     }
 }

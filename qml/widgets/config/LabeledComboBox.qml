@@ -1,13 +1,11 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Material
 import QtQuick.Layouts
 import QtQuick.Shapes 2.15
 
 import QFRCDashboard
 
-ComboBox {
-    required property string label
-
+BetterComboBox {
     /** what property to bind to */
     required property string bindedProperty
 
@@ -19,7 +17,7 @@ ComboBox {
 
     id: combo
     model: choices
-    font.pixelSize: 15 * Constants.scalar
+    font.pixelSize: 18 * Constants.scalar
 
     implicitHeight: 40 * Constants.scalar
 
@@ -29,35 +27,5 @@ ComboBox {
 
     function accept() {
         bindTarget[bindedProperty] = currentText
-    }
-
-    delegate: ItemDelegate {
-        id: delegate
-
-        width: combo.width
-        contentItem: Text {
-            text: modelData
-            color: Constants.palette.text
-            font.pixelSize: 15
-            elide: Text.ElideRight
-            verticalAlignment: Text.AlignVCenter
-        }
-        highlighted: combo.highlightedIndex === index
-    }
-
-    Text {
-        id: floatingLabel
-        text: label
-        color: Constants.palette.text
-
-        font.pixelSize: 15 * Constants.scalar
-
-        anchors {
-            left: parent.left
-            bottom: parent.top
-
-            bottomMargin: -2 * Constants.scalar
-            leftMargin: 10 * Constants.scalar
-        }
     }
 }

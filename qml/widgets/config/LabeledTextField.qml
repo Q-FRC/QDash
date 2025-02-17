@@ -26,19 +26,5 @@ BetterTextField {
         bindTarget[bindedProperty] = text
     }
 
-    Text {
-        id: floatingLabel
-        text: label
-        color: Constants.palette.text
-
-        font.pixelSize: 15 * Constants.scalar
-
-        anchors {
-            left: textField.left
-            bottom: textField.top
-
-            bottomMargin: -2
-            leftMargin: 10 * Constants.scalar
-        }
-    }
+    placeholderText: label
 }

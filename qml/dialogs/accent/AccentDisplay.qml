@@ -7,11 +7,7 @@ import QFRCDashboard
 Rectangle {
     clip: true
 
-    height: 85 * Constants.scalar
-    border {
-        color: "white"
-        width: 2 * Constants.scalar
-    }
+    height: 105 * Constants.scalar
     color: "transparent"
 
     function getQml() {
@@ -35,7 +31,7 @@ Rectangle {
         width: parent.width
         uniformCellSizes: true
 
-        TextField {
+        BetterTextField {
             Layout.fillWidth: true
 
             id: name
@@ -46,7 +42,7 @@ Rectangle {
             font.pixelSize: Math.round(15 * Constants.scalar)
         }
 
-        TextField {
+        BetterTextField {
             Layout.fillWidth: true
 
             id: accent
@@ -61,7 +57,7 @@ Rectangle {
             }
         }
 
-        TextField {
+        BetterTextField {
             Layout.fillWidth: true
 
             id: light
@@ -76,15 +72,16 @@ Rectangle {
             }
         }
 
-        ComboBox {
+        BetterComboBox {
             Layout.fillWidth: true
+            Layout.fillHeight: true
 
             Component.onCompleted: currentIndex = indexOfValue(getQml())
 
             id: qml
             model: ["Lime", "Green", "Emerald", "Teal", "Cyan", "Cobalt", "Indigo", "Violet", "Pink", "Magenta", "Crimson", "Red", "Orange", "Amber", "Yellow", "Brown", "Olive", "Steel", "Mauve", "Taupe"]
 
-            font.pixelSize: Math.round(15 * Constants.scalar)
+            font.pixelSize: Math.round(16 * Constants.scalar)
 
             onActivated: index => setQml(currentText)
         }

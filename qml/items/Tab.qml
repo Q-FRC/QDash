@@ -242,6 +242,11 @@ Rectangle {
                     roleValue: "matchTime"
                     MatchTime {}
                 }
+
+                DelegateChoice {
+                    roleValue: "textDisplay"
+                    StringDisplay {}
+                }
             }
         }
 

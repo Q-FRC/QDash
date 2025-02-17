@@ -43,6 +43,8 @@ ColumnLayout {
 
             label: "IP Address"
 
+            horizontalAlignment: "AlignHCenter"
+
             bindedProperty: "ip"
             bindTarget: settings
 

@@ -11,6 +11,7 @@ BaseWidget {
 
     property int item_fontSize: 100
     property int item_decimals: 2
+    property color item_color: Constants.accent
 
     Menu {
         id: switchMenu
@@ -71,7 +72,7 @@ BaseWidget {
 
         text: value.toFixed(item_decimals)
 
-        color: Constants.accent
+        color: item_color
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
@@ -116,6 +117,7 @@ BaseWidget {
             fontField.open()
 
             decField.open()
+            colorField.open()
 
             open()
         }
@@ -125,11 +127,13 @@ BaseWidget {
             titleFontField.accept()
             fontField.accept()
             decField.accept()
+
+            colorField.accept()
         }
 
         ColumnLayout {
             id: layout
-            spacing: 25 * Constants.scalar
+            spacing: 12 * Constants.scalar
 
             anchors {
                 top: parent.top
@@ -137,7 +141,7 @@ BaseWidget {
                 left: parent.left
                 right: parent.right
 
-                topMargin: -20
+                topMargin: 5 * Constants.scalar
 
                 rightMargin: 5
             }
@@ -176,17 +180,32 @@ BaseWidget {
                 label: "Display Settings"
             }
 
-            LabeledSpinBox {
-                Layout.fillWidth: true
+            RowLayout {
+                uniformCellSizes: true
 
-                id: decField
+                LabeledSpinBox {
+                    Layout.fillWidth: true
 
-                label: "Number of Decimals"
+                    id: decField
 
-                bindedProperty: "item_decimals"
-                bindTarget: widget
+                    label: "Number of Decimals"
 
-                from: 0
+                    bindedProperty: "item_decimals"
+                    bindTarget: widget
+
+                    from: 0
+                }
+
+                ColorField {
+                    Layout.fillWidth: true
+
+                    id: colorField
+
+                    label: "Text Color"
+
+                    bindedProperty: "item_color"
+                    bindTarget: widget
+                }
             }
 
             SectionHeader {

@@ -1,23 +1,23 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Material
 import QFRCDashboard
 
 TextField {
     property bool valid: true
 
+    placeholderTextColor: enabled && activeFocus ? Constants.accent : Qt.darker(
+                                                       Constants.palette.text,
+                                                       1.3)
+
     color: Constants.palette.text
 
     background: Rectangle {
-        color: Constants.palette.bg
-        width: parent.width
-        border.color: valid ? Constants.palette.text : "red"
-        border.width: 1
-        radius: 5
-
-        Behavior on border.color {
-            ColorAnimation {
-                duration: 250
-            }
-        }
+        color: "transparent"
     }
+
+    FieldFooter {
+        valid: parent.valid
+    }
+
+    horizontalAlignment: "AlignHCenter"
 }

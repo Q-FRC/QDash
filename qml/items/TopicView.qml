@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Material
 import QtQuick.Dialogs
 
 import QFRCDashboard
@@ -19,7 +19,7 @@ Row {
     SmoothedAnimation {
         id: menuAnim
         target: tv
-        property: "anchors." +  "left" + "Margin"
+        property: "anchors." + "left" + "Margin"
         duration: 500
     }
 
@@ -78,8 +78,7 @@ Row {
                         let global = mapToItem(topicView, centroid.position)
                         if (!topicView.contains(global)) {
                             if (!ready) {
-                                widgetAdd(model.name, model.topic,
-                                          model.type)
+                                widgetAdd(model.name, model.topic, model.type)
 
                                 ready = true
                             }
@@ -205,6 +204,24 @@ Row {
                 close()
                 text = closedText
             }
+        }
+
+        contentItem: Text {
+            font: parent.font
+
+            text: parent.text
+            color: Constants.palette.text
+
+            width: 40 * Constants.scalar
+            height: 40 * Constants.scalar
+
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+        }
+
+        background: Rectangle {
+            anchors.fill: parent
+            color: Constants.palette.dialogBg
         }
     }
 }

@@ -1,9 +1,9 @@
 import QtCore
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Material
 import QtQuick.Dialogs
 
-import QtQuick.Controls.Universal
+import QtQuick.Controls.Material
 
 import QFRCDashboard
 
@@ -16,9 +16,11 @@ ApplicationWindow {
 
     flags: Qt.FramelessWindowHint | Qt.Window
 
-    Universal.theme: settings.theme === "light" ? Universal.Light : Universal.Dark
-    Universal.accent: accents.qml(
-                          settings.accent) // "qml" is the Universal Theme accent. Affects checkboxes, etc.
+    Material.theme: settings.theme === "light" ? Material.Light : Material.Dark
+    Material.accent: accents.qml(
+                         settings.accent) // "qml" is the Material Theme accent. Affects checkboxes, etc.
+
+    Material.roundedScale: Material.NotRounded
 
     property string filename: ""
 
@@ -151,104 +153,6 @@ ApplicationWindow {
         onBeginDrag: window.startSystemMove()
     }
 
-    /** MENU BAR */
-    MenuBar {
-        id: menubar
-        contentWidth: parent.width
-
-        anchors {
-            top: titleBar.bottom
-            left: parent.left
-            right: parent.right
-        }
-
-        Menu {
-            contentWidth: 175
-            title: qsTr("&File")
-            Action {
-                text: qsTr("&Save")
-                onTriggered: save()
-                shortcut: "Ctrl+S"
-            }
-            Action {
-                text: qsTr("Save &As")
-                onTriggered: saveDialog.open()
-                shortcut: "Ctrl+Shift+S"
-            }
-            Action {
-                text: qsTr("&Open...")
-                onTriggered: loadDialog.open()
-                shortcut: "Ctrl+O"
-            }
-            Menu {
-                title: qsTr("&Recent Files...")
-                Repeater {
-                    model: settings.recentFiles
-
-                    delegate: MenuItem {
-                        text: qsTr("&" + index + ". " + platformHelper.baseName(
-                                       modelData))
-                        onTriggered: {
-                            if (modelData === "" || modelData === null)
-                                return
-                            tlm.clear()
-                            tlm.load(modelData)
-                        }
-                    }
-                }
-            }
-            Action {
-                text: qsTr("Remote &Layouts...")
-                onTriggered: remoteLayouts.openDialog()
-                shortcut: "Ctrl+L"
-            }
-        }
-
-        Menu {
-            title: qsTr("&Tab")
-            Action {
-                text: qsTr("&New Tab")
-                onTriggered: screen.newTab()
-                shortcut: "Ctrl+T"
-            }
-
-            Action {
-                text: qsTr("&Close Tab")
-                onTriggered: screen.closeTab()
-                shortcut: "Ctrl+W"
-            }
-
-            Action {
-                text: qsTr("Configu&re Tab")
-                onTriggered: screen.configTab()
-                shortcut: "Ctrl+R"
-            }
-        }
-
-        Menu {
-            title: qsTr("&Edit")
-            Action {
-                text: qsTr("&Paste Widget")
-                onTriggered: screen.paste()
-                shortcut: "Ctrl+V"
-            }
-
-            Action {
-                text: qsTr("&Settings")
-                shortcut: "Ctrl+,"
-                onTriggered: settingsDialog.openDialog()
-            }
-        }
-
-        Menu {
-            title: qsTr("&About")
-            MenuBarItem {
-                text: qsTr("&About")
-                onTriggered: about.open()
-            }
-        }
-    }
-
     /** THE REST */
     Component.onCompleted: {
         Constants.setTheme(settings.theme)
@@ -271,7 +175,7 @@ ApplicationWindow {
     MainScreen {
         id: screen
         anchors {
-            top: menubar.bottom
+            top: titleBar.bottom
             left: parent.left
             right: parent.right
             bottom: toolbar.top

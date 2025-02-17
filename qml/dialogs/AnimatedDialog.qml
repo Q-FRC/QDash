@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Material
 
 import QFRCDashboard
 
@@ -70,28 +70,10 @@ Dialog {
         padding: 6
         alignment: count === 1 ? Qt.AlignRight : undefined
 
-        delegate: Button {
-            width: control.count === 1 ? control.availableWidth / 2 : undefined
-
-            font.pixelSize: 16 * Constants.scalar
-            background: Rectangle {
-                radius: 10 * Constants.scalar
-                color: accents.qmlColor(accents.qml(settings.accent))
-            }
-        }
-
-        contentItem: ListView {
-            implicitWidth: contentWidth
-            model: control.contentModel
-            spacing: control.spacing
-            orientation: ListView.Horizontal
-            boundsBehavior: Flickable.StopAtBounds
-            snapMode: ListView.SnapToItem
-        }
-
         background: Rectangle {
             implicitHeight: 40 * Constants.scalar
-            x: 1; y: 1
+            x: 1
+            y: 1
             width: parent.width - 2
             height: parent.height - 2
 
@@ -101,4 +83,6 @@ Dialog {
             bottomRightRadius: dia.radius
         }
     }
+    Overlay.modal: Item {}
+    Overlay.modeless: Item {}
 }

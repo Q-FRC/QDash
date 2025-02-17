@@ -55,9 +55,9 @@ signals:
     void ready();
 
 private:
-    QString m_title;
-    QString m_text;
-    QString m_level;
+    QString m_title = "";
+    QString m_text = "";
+    QString m_level = "Warning";
     int m_displayTime;
     int m_width;
     int m_height;

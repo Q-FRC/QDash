@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/" + BuildConfig.APP_NAME));
     app.setDesktopFileName("" + BuildConfig.APP_NAME);
 
-    QQuickStyle::setStyle("Universal");
+    QQuickStyle::setStyle("Material");
 
     TopicStore store(&app);
 
