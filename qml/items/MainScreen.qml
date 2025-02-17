@@ -42,39 +42,38 @@ Rectangle {
             w.width = 1
             w.height = 1
 
+            w.mrowSpan = 1
+            w.mcolumnSpan = 1
+
             w.visible = false
 
             if (!readyDragging) {
-                w.dragArea.drag.target = w
                 readyDragging = true
+                w.dragForced = true
 
                 mainScreen.z = 3
+                w.startDrag()
             }
-            w.resizeBegin(w.Drag)
         }
     }
 
     function drop(pos, fromList) {
         if (currentTab() !== null) {
+            readyDragging = false
             let w = currentTab().latestWidget
-            if (!w.caught) {
+            if (!currentTab().lastOpSuccessful) {
                 w.cancelDrag()
                 if (fromList)
                     currentTab().removeLatest()
             } else {
-                let p = currentTab().gridHandler.occupied()
-                if (p.x === -1 || p.y === -1) {
-                    w.cancelDrag()
-                    if (fromList)
-                        currentTab().removeLatest()
-                } else {
-                    w.mrow = p.x
-                    w.mcolumn = p.y
+                let point = w.getPoint()
 
-                    w.z = 3
-                    w.visible = true
-                    w.cancelDrag()
-                }
+                w.mrow = point.y
+                w.mcolumn = point.x
+
+                w.z = 3
+                w.visible = true
+                w.cancelDrag()
             }
         }
     }
@@ -132,13 +131,13 @@ Rectangle {
     }
 
     function setTabConfig() {
-        currentTab().setSize(tabConfigDialog.rows,
-                             tabConfigDialog.columns)
+        currentTab().setSize(tabConfigDialog.rows, tabConfigDialog.columns)
         currentTab().setName(tabConfigDialog.name)
     }
 
     function configTab() {
-        tabConfigDialog.openUp(currentTab().rows(), currentTab().cols(), currentTab().name())
+        tabConfigDialog.openUp(currentTab().rows(), currentTab().cols(),
+                               currentTab().name())
     }
 
     function currentTab() {
@@ -170,11 +169,9 @@ Rectangle {
 
         horizontalAlignment: Text.AlignHCenter
 
-        text: "Welcome to QFRCDashboard!\n" +
-              "To get started, connect to your robot WiFi\n" +
-              "and go to Settings (Ctrl+Comma).\n" +
-              "Add a tab with Ctrl+T, and add a widget\n" +
-              "through the arrow menu on the left."
+        text: "Welcome to QFRCDashboard!\n" + "To get started, connect to your robot WiFi\n"
+              + "and go to Settings (Ctrl+Comma).\n" + "Add a tab with Ctrl+T, and add a widget\n"
+              + "through the arrow menu on the left."
 
         anchors.centerIn: parent
         z: 0

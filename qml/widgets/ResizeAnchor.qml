@@ -96,7 +96,7 @@ Rectangle {
                     parent.parent.x = parent.parent.x + mouseX
                 }
 
-                resizeBegin(rect.Drag)
+                // resizeBegin(widget.Drag)
             }
         }
 
@@ -109,7 +109,7 @@ Rectangle {
                     parent.parent.y = parent.parent.y + mouseY
                 }
 
-                resizeBegin(rect.Drag)
+                // resizeBegin(widget.Drag)
             }
         }
     }

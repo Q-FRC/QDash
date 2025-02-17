@@ -3,59 +3,83 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 2.15
 
 import QFRCDashboard 1.0
-import QFDFlags 1.0
 
 Rectangle {
-    id: rect
+    signal moved(real x, real y)
+
+    id: widget
     width: 100
     height: 100
     z: 3
+
+    border {
+        color: "transparent"
+        width: 10 * Constants.scalar
+    }
 
     radius: 12 * Constants.scalar
 
     property int item_titleFontSize: 16
 
+    property alias dragArea: dragArea
     property alias titleField: titleField
     property alias rcMenu: rcMenu
-    property alias dragArea: dragArea
 
     color: Constants.palette.widgetBg
 
     Drag.active: dragArea.drag.active
 
-    signal resizeBegin(var drag)
-    signal resizeEnd(var drag)
-    signal dragEnd(var drag)
-    signal cancelDrag
+    function checkDrag() {
+        if (Drag.active || dragForced) {
+            // only call this to get the green/red rectangle outline
+            grid.validSpot(x, y, row, column, rowSpan, colSpan, !dragForced)
+        }
+    }
 
-    onResizeBegin: drag => {
-                       drag.source = this
-                       rep.beginResize(drag)
-                   }
+    function checkResize() {
+        if (resizeActive) {
+            grid.validResize(width, height, row, column, rowSpan, colSpan)
+        }
+    }
 
-    onResizeEnd: drag => {
-                     drag.source = this
-                     rep.endResize(drag)
-                 }
+    function cancelDrag() {
+        dragForced = false
+        Drag.cancel()
+        grid.resetValid()
+    }
 
-    onDragEnd: drag => {
-                   let source = Qt.rect(drag.source.mcolumn, drag.source.mrow,
-                                        drag.source.mcolumnSpan,
-                                        drag.source.mrowSpan)
-                   rep.intersectionCheck(drag, source)
-               }
+    function startDrag() {
+        originalPoint = Qt.point(widget.x, widget.y)
+        dragArea.drag.target = widget
+        widget.z = 4
+    }
 
-    onCancelDrag: rep.fullCancelDrag()
+    function startResize() {
+        originalSize = Qt.size(widget.width, widget.height)
+        widget.resizeActive = true
+        widget.z = 4
+    }
 
-    property point beginDrag
-    property rect beginResize
+    function getPoint() {
+        return grid.getPoint(x, y, false)
+    }
 
-    property bool caught: false
+    onXChanged: checkDrag()
+    onYChanged: checkDrag()
+
+    onWidthChanged: checkResize()
+    onHeightChanged: checkResize()
 
     property int mrow
     property int mcolumn
     property int mrowSpan
     property int mcolumnSpan
+
+    property point originalPoint: Qt.point(0, 0)
+    property size originalSize: Qt.size(0, 0)
+
+    property bool resizeActive: false
+    property bool dragForced: false
 
     onMrowChanged: model.row = mrow
     onMcolumnChanged: model.column = mcolumn
@@ -129,16 +153,10 @@ Rectangle {
         id: dragArea
         z: 0
 
-        acceptedButtons: Qt.AllButtons
-
-        anchors {
-            fill: parent
-
-            margins: 6
-        }
+        anchors.fill: parent
 
         drag.target: parent
-
+        acceptedButtons: Qt.AllButtons
         pressAndHoldInterval: 100
 
         onPressed: mouse => {
@@ -147,131 +165,38 @@ Rectangle {
                            drag.target = null
                            rcMenu.popup()
                        } else if (mouse.button === Qt.LeftButton) {
-                           drag.target = parent
-
-                           rect.beginDrag = Qt.point(parent.x, parent.y)
-                           rect.Drag.hotSpot = Qt.point(mouse.x, mouse.y)
-                           parent.z = 4
-
-                           resizeBegin(rect.Drag)
+                           startDrag()
                        }
                    }
 
-        onReleased: {
-            if (drag.target === null) {
-                Layout.rowSpan = grid.rows + 1
-                Layout.columnSpan = grid.columns + 1
-                Layout.row = grid.rows + 1
-                Layout.column = grid.columns + 1
-                update()
+        onReleased: mouse => {
+                        if (mouse.button === Qt.LeftButton) {
+                            drag.target = null
 
-                Layout.rowSpan = mrowSpan
-                Layout.columnSpan = mcolumnSpan
-                Layout.column = mcolumn
-                Layout.row = mrow
-            } else if (!rect.caught) {
-                backAnimX.from = rect.x
-                backAnimX.to = beginDrag.x
-                backAnimY.from = rect.y
-                backAnimY.to = beginDrag.y
-                backAnim.start()
+                            if (grid.validSpot(widget.x, widget.y, row, column,
+                                               rowSpan, colSpan, true)) {
 
-                cancelDrag()
-            } else {
-                rect.Drag.drop()
+                                let newPoint = grid.getPoint(widget.x,
+                                                             widget.y, true)
 
-                // dragEnd(rect.Drag)
-                parent.z = 3
-                cancelDrag()
-            }
-        }
+                                // Force update it to ensure the grid properly lays it out
+                                mrow = newPoint.y + 1
+                                mcolumn = newPoint.x + 1
 
-        ParallelAnimation {
-            id: backAnim
-            SmoothedAnimation {
-                id: backAnimX
-                target: rect
-                property: "x"
-                duration: 250
-            }
-            SmoothedAnimation {
-                id: backAnimY
-                target: rect
-                property: "y"
-                duration: 250
-            }
+                                update()
 
-            onFinished: {
-                x = rect.beginDrag.x
-                y = rect.beginDrag.y
-            }
-        }
-    }
+                                mrow = newPoint.y
+                                mcolumn = newPoint.x
+                            } else {
+                                // TODO: animate again
+                                widget.x = originalPoint.x
+                                widget.y = originalPoint.y
+                            }
+                            grid.resetValid()
 
-    ParallelAnimation {
-        id: resizeBackAnim
-        SmoothedAnimation {
-            id: resizeBackAnimX
-            target: rect
-            property: "x"
-            duration: 250
-        }
-        SmoothedAnimation {
-            id: resizeBackAnimY
-            target: rect
-            property: "y"
-            duration: 250
-        }
-        SmoothedAnimation {
-            id: resizeBackAnimWidth
-            target: rect
-            property: "width"
-            duration: 250
-        }
-        SmoothedAnimation {
-            id: resizeBackAnimHeight
-            target: rect
-            property: "height"
-            duration: 250
-        }
-
-        onFinished: {
-            width = rect.beginResize.width
-            height = rect.beginResize.height
-            x = rect.beginResize.x
-            y = rect.beginResize.y
-        }
-    }
-
-    function resetResize(mouse) {
-        rect.beginDrag = Qt.point(rect.x, rect.y)
-        rect.beginResize = Qt.rect(rect.x, rect.y, rect.width, rect.height)
-        rect.Drag.hotSpot = Qt.point(mouse.x, mouse.y)
-        rect.z = 4
-
-        resizeBegin(rect.Drag)
-    }
-
-    function releaseResize() {
-        if (!rect.caught) {
-            resizeBackAnimX.from = rect.x
-            resizeBackAnimX.to = beginResize.x
-            resizeBackAnimY.from = rect.y
-            resizeBackAnimY.to = beginResize.y
-            resizeBackAnimWidth.from = rect.width
-            resizeBackAnimWidth.to = beginResize.width
-            resizeBackAnimHeight.from = rect.height
-            resizeBackAnimHeight.to = beginResize.height
-            resizeBackAnim.start()
-
-            cancelDrag()
-        } else {
-            rect.Drag.drop()
-
-            resizeEnd(rect.Drag)
-
-            rect.z = 3
-        }
+                            widget.z = 3
+                        }
+                    }
     }
 
     /* RESIZE ANCHORS */
@@ -281,11 +206,50 @@ Rectangle {
             | Qt.TopEdge, Qt.LeftEdge | Qt.BottomEdge]
 
         ResizeAnchor {
+
             required property int modelData
             direction: modelData
 
-            mouseArea.onPressed: mouse => resetResize(mouse)
-            mouseArea.onReleased: releaseResize()
+            mouseArea.onPressed: mouse => {
+                                     if (mouse.button === Qt.RightButton) {
+                                         drag.target = null
+                                         rcMenu.popup()
+                                     } else if (mouse.button === Qt.LeftButton) {
+                                         startResize()
+                                     }
+                                 }
+            mouseArea.onReleased: mouse => {
+                                      if (mouse.button === Qt.LeftButton) {
+                                          if (grid.validResize(widget.width,
+                                                               widget.height,
+                                                               row, column,
+                                                               rowSpan,
+                                                               colSpan)) {
+
+                                              let newSize = grid.getSize(
+                                                  widget.width, widget.height)
+
+                                              // Force update it to ensure the grid properly lays it out
+                                              mrowSpan = newSize.height + 1
+                                              mcolumnSpan = newSize.width + 1
+
+                                              update()
+
+                                              mrowSpan = newSize.height
+                                              mcolumnSpan = newSize.width
+                                          } else {
+                                              // TODO: animate again
+                                              widget.width = originalSize.width
+                                              widget.height = originalSize.height
+                                          }
+
+                                          resizeActive = false
+
+                                          grid.resetValid()
+
+                                          widget.z = 3
+                                      }
+                                  }
         }
     }
 
@@ -333,10 +297,6 @@ Rectangle {
     * Copy it for your widget.
     */
     BaseConfigDialog {
-
-        // id: config
-        height: 450 * Constants.scalar
-
         function openDialog() {
             topicField.open()
             titleFontField.open()
@@ -377,7 +337,7 @@ Rectangle {
                 label: "Title Font Size"
 
                 bindedProperty: "item_titleFontSize"
-                bindTarget: rect
+                bindTarget: widget
             }
 
             SectionHeader {
@@ -393,7 +353,7 @@ Rectangle {
                 label: "Topic"
 
                 bindedProperty: "item_topic"
-                bindTarget: rect
+                bindTarget: widget
             }
         }
     }

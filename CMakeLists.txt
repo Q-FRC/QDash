@@ -79,7 +79,6 @@ set(QML_ELEMENTS
 
     items/MainScreen
     items/Tab
-    items/GridHandler
     items/TopicView
     items/TitleBar
     items/IconButton
@@ -154,7 +153,9 @@ set(QML_ELEMENTS
     fields/BetterDoubleSpinBox
     fields/BetterSpinBox
     fields/BetterTextField
-
+    fields/FieldFooter
+    fields/BetterComboBox
+    fields/BetterMenuItem
 )
 
 set(ELEMENTS
@@ -199,9 +200,6 @@ qt_add_qml_module(${Dashboard_EXEC_NAME}
     QML_FILES ${QML_FILES}
 
     SOURCES ${SOURCES} ${HEADERS}
-    QML_FILES qml/fields/FieldFooter.qml
-    QML_FILES qml/fields/BetterComboBox.qml
-    QML_FILES qml/fields/BetterMenuItem.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
