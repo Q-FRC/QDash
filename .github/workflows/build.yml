@@ -201,7 +201,6 @@ jobs:
         macdeployqt Dashboard.app -qmldir=$QML_DIR_PATH -qmlimport=$QML_SOURCES_PATHS
         ls
 
-        xattr -d com.apple.quarantine Dashboard.app
         sudo codesign --sign - --deep --force --entitlements ../program_info/App.entitlements Dashboard.app
         chmod a+x Dashboard.app/Contents/MacOS/Dashboard
         cp ../program_info/QFRCDashboard.icns Dashboard.app/Contents/Resources
