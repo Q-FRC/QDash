@@ -198,13 +198,14 @@ jobs:
         export QML_SOURCES_PATHS="${{ runner.workspace }}/Qt/${{ matrix.qt_version }}/macos/qml"
 
         cd ${{ env.BUILD_DIR }}
-        macdeployqt Dashboard.app -qmldir=$QML_DIR_PATH -qmlimport=$QML_SOURCES_PATHS
-        ls
-
         sudo codesign --sign - --deep --force --entitlements ../program_info/App.entitlements Dashboard.app
         chmod a+x Dashboard.app/Contents/MacOS/Dashboard
         cp ../program_info/QFRCDashboard.icns Dashboard.app/Contents/Resources
-        tar czf ../QFRCDashboard.tar.gz Dashboard.app
+
+        macdeployqt Dashboard.app -qmldir=$QML_DIR_PATH -qmlimport=$QML_SOURCES_PATHS -dmg -verbose=1 -appstore-compliant
+        ls
+
+        mv Dashboard.dmg ..
 
     - name: Package (Windows, Portable)
       if: runner.os == 'Windows'
@@ -257,12 +258,12 @@ jobs:
         name: QFRCDashboard-Linux-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.AppImage
         path: QFRCDashboard-Linux-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.AppImage
 
-    - name: Upload tarball (macOS)
+    - name: Upload DMG (macOS)
       if: runner.os == 'macOS'
       uses: actions/upload-artifact@v4
       with:
-        name: QFRCDashboard-macOS-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
-        path: QFRCDashboard.tar.gz
+        name: QFRCDashboard-macOS-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.dmg
+        path: Dashboard.dmg
 
     - name: Upload binary zip (Windows, portable)
       if: runner.os == 'Windows'
