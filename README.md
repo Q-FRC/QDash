@@ -15,8 +15,8 @@ Because of this, QFRCDashboard has been specifically designed to use up as few r
 | ----------------- | ------------- | ------------- |
 | Memory (Base)     | 530MB         | 100MB         |
 | Memory (Heavy Use)| 600MB-1.2GB   | 150MB         |
-| CPU (Base)        | 2-10%         | 0-1%          |
-| CPU (Heavy Use)   | 10-30%        | 0-2%          |
+| CPU (Base)        | 2-10%         | 0%          |
+| CPU (Heavy Use)   | 10-30%        | 0-1%          |
 
 QFRCDashboard excels with its lightweight performance thanks to many factors:
 - Qt & QML's high efficiency
@@ -28,7 +28,7 @@ QFRCDashboard excels with its lightweight performance thanks to many factors:
 For tutorials on getting started, robot code interaction, theming, and more, see the [wiki](https://github.com/Q-FRC/Dashboard/wiki).
 
 ## Download
-Windows, Linux, and macOS builds are available via GitHub Actions. Currently, all use WPILib 2024.3.1. Release builds are available either through Actions or in the releases tab:
+Windows, Linux, and macOS builds are available via GitHub Actions. Currently, all use WPILib 2025.1.1. Release builds are available either through Actions or in the releases tab:
 
 [![Release](https://github.com/Q-FRC/Dashboard/actions/workflows/trigger_release.yml/badge.svg)](https://github.com/Q-FRC/Dashboard/actions/workflows/trigger_release.yml)
 
@@ -70,6 +70,8 @@ cmake -S . -B build -DUSE_SYSTEM_NTCORE=ON -DUSE_SYSTEM_PROTOBUF=ON
 ```
 
 Using the system ntcore with the bundled protobuf is unnecessary and will break things. If you have ntcore installed to the system, protobuf will also be installed.
+
+Note that this configuration is only possible on Linux.
 
 ### Linux
 ```bash
