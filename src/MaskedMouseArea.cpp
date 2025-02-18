@@ -40,15 +40,15 @@
 
 #include "MaskedMouseArea.h"
 
-#include <QStyleHints>
 #include <QGuiApplication>
+#include <QStyleHints>
 #include <qqmlfile.h>
 
 MaskedMouseArea::MaskedMouseArea(QQuickItem *parent)
-    : QQuickItem(parent),
-    m_pressed(false),
-    m_containsMouse(false),
-    m_isLeft(true)
+    : QQuickItem(parent)
+    , m_pressed(false)
+    , m_containsMouse(false)
+    , m_isLeft(true)
 {
     setAcceptHoverEvents(true);
     setAcceptedMouseButtons(Qt::LeftButton);
@@ -94,8 +94,8 @@ void MaskedMouseArea::mouseReleaseEvent(QMouseEvent *event)
     emit released();
 
     const int threshold = qApp->styleHints()->startDragDistance();
-    const bool isClick = (threshold >= qAbs(event->position().x() - m_pressPoint.x()) &&
-                          threshold >= qAbs(event->position().y() - m_pressPoint.y()));
+    const bool isClick = (threshold >= qAbs(event->position().x() - m_pressPoint.x())
+                          && threshold >= qAbs(event->position().y() - m_pressPoint.y()));
 
     if (isClick)
         emit clicked();
@@ -125,12 +125,10 @@ void MaskedMouseArea::resetPolygon()
     m_polygon.clear();
 
     if (m_isLeft) {
-        m_polygon << QPointF(width() / 2, height())
-                  << QPointF(width() / 2, 0)
+        m_polygon << QPointF(width() / 2, height()) << QPointF(width() / 2, 0)
                   << QPointF(0, height());
     } else {
-        m_polygon << QPointF(width() / 2, height())
-                  << QPointF(width() / 2, 0)
+        m_polygon << QPointF(width() / 2, height()) << QPointF(width() / 2, 0)
                   << QPointF(width(), height());
     }
 }
