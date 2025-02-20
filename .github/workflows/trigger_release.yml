@@ -61,11 +61,9 @@ jobs:
             zip -r QFRCDashboard-Windows-Portable-${{ env.VERSION }}-${arch}.zip QFRCDashboard-Windows-Portable*${arch}/*
           done
 
-          tar xf QFRCDashboard-macOS*/QFRCDashboard.tar.gz
-          mv *Dashboard*.app QFRCDashboard-macOS-${{ env.VERSION }}.app
+          mv QFRCDashboard-macOS*/QFRCDashboard.tar.gz QFRCDashboard-macOS-${{ env.VERSION }}-universal.tar.gz
+          zip QFRCDashboard-macOS-${{ env.VERSION }}-universal.zip QFRCDashboard-macOS-${{ env.VERSION }}-universal.tar.gz
 
-          # macOS builds contain both aarch64 and amd64 binaries, meaning the binaries are universal
-          zip -r QFRCDashboard-macOS-${{ env.VERSION }}-universal.zip QFRCDashboard-macOS-${{ env.VERSION }}.app
 
           tar -czf QFRCDashboard-${{ env.VERSION }}.tar.gz QFRCDashboard-${{ env.VERSION }}
 
