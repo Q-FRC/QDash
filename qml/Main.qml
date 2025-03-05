@@ -37,8 +37,6 @@ ApplicationWindow {
             height = platformHelper.screenHeight() - 234
             width = platformHelper.screenWidth()
 
-            // TODO: test on windows & verify geometry
-            // check if it works with scaling as well
             x = 0
             y = 0
         }

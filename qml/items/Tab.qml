@@ -131,19 +131,22 @@ Rectangle {
 
         property bool currentOpValid: false
 
-        function validResize(width, height, row, column, rowSpan, colSpan) {
-            let size = getSize(width, height)
+        function validResize(width, height, x, y, row, column, rowSpan, colSpan) {
+            let rect = getRect(x, y, width, height)
 
-            let newRowSpan = size.height
-            let newColSpan = size.width
+            let newRow = rect.y
+            let newColumn = rect.x
+
+            let newRowSpan = rect.height
+            let newColSpan = rect.width
 
             let ignore = Qt.rect(column, row, colSpan, rowSpan)
 
-            let valid = !twm.cellOccupied(row, column, newRowSpan,
+            let valid = !twm.cellOccupied(newRow, newColumn, newRowSpan,
                                           newColSpan, ignore)
 
-            validRect.x = column * colWidth()
-            validRect.y = row * rowWidth()
+            validRect.x = newColumn * colWidth()
+            validRect.y = newRow * rowWidth()
             validRect.width = newColSpan * colWidth()
             validRect.height = newRowSpan * rowWidth()
 
@@ -200,9 +203,15 @@ Rectangle {
             return Qt.point(newCol, newRow)
         }
 
-        function getSize(width, height) {
-            let newRows = Math.round(height / rowWidth())
-            let newCols = Math.round(width / colWidth())
+        function getRect(x, y, width, height) {
+            let point = getPoint(x, y, false)
+
+            // Hacky fix for weird margins issues
+            let bottomRight = getPoint(x + (width - 16),
+                                       y + (height - 16), false)
+
+            let newRows = Math.ceil(bottomRight.y - point.y + 1)
+            let newCols = Math.ceil(bottomRight.x - point.x + 1)
 
             if (newRows < 1)
                 newRows = 1
@@ -210,7 +219,7 @@ Rectangle {
             if (newCols < 1)
                 newCols = 1
 
-            return Qt.size(newCols, newRows)
+            return Qt.rect(point.x, point.y, newCols, newRows)
         }
 
         function colWidth() {

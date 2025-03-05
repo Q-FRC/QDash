@@ -8,6 +8,7 @@ Rectangle {
     signal moved(real x, real y)
 
     id: widget
+
     width: 100
     height: 100
     z: 3
@@ -18,7 +19,6 @@ Rectangle {
     }
 
     radius: 12 * Constants.scalar
-
     property int item_titleFontSize: 16
 
     property alias dragArea: dragArea
@@ -38,7 +38,7 @@ Rectangle {
 
     function checkResize() {
         if (resizeActive) {
-            grid.validResize(width, height, row, column, rowSpan, colSpan)
+            grid.validResize(width, height, x, y, row, column, rowSpan, colSpan)
         }
     }
 
@@ -49,19 +49,67 @@ Rectangle {
     }
 
     function startDrag() {
-        originalPoint = Qt.point(widget.x, widget.y)
+        originalRect = Qt.rect(widget.x, widget.y, widget.width, widget.height)
         dragArea.drag.target = widget
         widget.z = 4
     }
 
     function startResize() {
-        originalSize = Qt.size(widget.width, widget.height)
+        originalRect = Qt.rect(widget.x, widget.y, widget.width, widget.height)
         widget.resizeActive = true
         widget.z = 4
     }
 
     function getPoint() {
         return grid.getPoint(x, y, false)
+    }
+
+    // Drag/Resize animations
+    ParallelAnimation {
+        id: resizeBackAnim
+        SmoothedAnimation {
+            id: resizeBackAnimX
+            target: widget
+            property: "x"
+            duration: 250
+        }
+        SmoothedAnimation {
+            id: resizeBackAnimY
+            target: widget
+            property: "y"
+            duration: 250
+        }
+        SmoothedAnimation {
+            id: resizeBackAnimWidth
+            target: widget
+            property: "width"
+            duration: 250
+        }
+        SmoothedAnimation {
+            id: resizeBackAnimHeight
+            target: widget
+            property: "height"
+            duration: 250
+        }
+
+        onFinished: {
+            width = widget.originalRect.width
+            height = widget.originalRect.height
+            x = widget.originalRect.x
+            y = widget.originalRect.y
+        }
+    }
+
+    function animateBacksize() {
+        resizeBackAnimX.from = widget.x
+        resizeBackAnimX.to = originalRect.x
+        resizeBackAnimY.from = widget.y
+        resizeBackAnimY.to = originalRect.y
+        resizeBackAnimWidth.from = widget.width
+        resizeBackAnimWidth.to = originalRect.width
+        resizeBackAnimHeight.from = widget.height
+        resizeBackAnimHeight.to = originalRect.height
+        resizeBackAnim.start()
     }
 
     onXChanged: checkDrag()
@@ -75,8 +123,7 @@ Rectangle {
     property int mrowSpan
     property int mcolumnSpan
 
-    property point originalPoint: Qt.point(0, 0)
-    property size originalSize: Qt.size(0, 0)
+    property rect originalRect: Qt.rect(0, 0, 0, 0)
 
     property bool resizeActive: false
     property bool dragForced: false
@@ -188,9 +235,7 @@ Rectangle {
                                 mrow = newPoint.y
                                 mcolumn = newPoint.x
                             } else {
-                                // TODO: animate again
-                                widget.x = originalPoint.x
-                                widget.y = originalPoint.y
+                                animateBacksize()
                             }
                             grid.resetValid()
 
@@ -222,11 +267,13 @@ Rectangle {
                                       if (mouse.button === Qt.LeftButton) {
                                           if (grid.validResize(widget.width,
                                                                widget.height,
-                                                               row, column,
-                                                               rowSpan,
+                                                               widget.x,
+                                                               widget.y, row,
+                                                               column, rowSpan,
                                                                colSpan)) {
 
-                                              let newSize = grid.getSize(
+                                              let newSize = grid.getRect(
+                                                  widget.x, widget.y,
                                                   widget.width, widget.height)
 
                                               // Force update it to ensure the grid properly lays it out
@@ -237,10 +284,10 @@ Rectangle {
 
                                               mrowSpan = newSize.height
                                               mcolumnSpan = newSize.width
+                                              mrow = newSize.y
+                                              mcolumn = newSize.x
                                           } else {
-                                              // TODO: animate again
-                                              widget.width = originalSize.width
-                                              widget.height = originalSize.height
+                                              animateBacksize()
                                           }
 
                                           resizeActive = false
