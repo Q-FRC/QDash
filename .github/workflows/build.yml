@@ -101,6 +101,22 @@ jobs:
       with:
         nsis-version: 3.09
 
+    # - name: Install Protobuf (Linux, macOS)
+    #   if: runner.os != 'Windows'
+    #   uses: ConorMacBride/install-package@v1
+    #   with:
+    #     brew: protobuf
+    #     apt: protobuf-compiler
+
+    # - name: Install winget
+    #   if: runner.os == 'Windows'
+    #   uses: Cyberboss/install-winget@v1
+
+    # - name: Install Protobuf (Windows)
+    #   if: runner.os == 'Windows'
+    #   run: |
+    #     winget install protobuf --exact --disable-interactivity --silent --no-upgrade --accept-package-agreements --accept-source-agreements
+
     - name: Install Qt
       uses: jdpurcell/install-qt-action@v4
       with:

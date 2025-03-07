@@ -55,7 +55,6 @@ set(Dashboard_BUILD_TIMESTAMP "${TODAY}")
 
 add_subdirectory("program_info")
 find_package(ntcore)
-find_package(Protobuf)
 
 set(QRC_FILES
     fields.qrc
@@ -210,7 +209,7 @@ set_target_properties(${Dashboard_EXEC_NAME} PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
+    #    WIN32_EXECUTABLE TRUE
 )
 
 target_link_libraries(${Dashboard_EXEC_NAME}

@@ -51,6 +51,13 @@ int main(int argc, char *argv[])
 
         store.connect(connected);
 
+        auto connInfo = event.GetConnectionInfo();
+
+        qDebug() << "Connected State:" << connected;
+        // qDebug() << "Log Message:" << event.GetLogMessage()->message;
+        qDebug() << "Remote Info: IP" << connInfo->remote_ip << "ID" << connInfo->remote_id << "Protocol Version" << connInfo->protocol_version;
+        qDebug() << "Client Ready";
+
         if (!connected) {
             QMetaObject::invokeMethod(topics, &TopicListModel::clear);
         } else {

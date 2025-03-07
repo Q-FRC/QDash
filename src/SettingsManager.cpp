@@ -12,24 +12,31 @@ void SettingsManager::reconnectServer()
     int team = Globals::server.team;
     int mode = Globals::server.mode;
 
+    qDebug() << "Server Reconnect requested via settings dialog.";
+
     switch (mode) {
     // IP Address
     case 0:
         Globals::inst.SetServer(server.c_str(), NT_DEFAULT_PORT4);
+        qDebug() << "Requested connect to IP" << server.c_str();
         break;
     // Team Number
     case 1:
         Globals::inst.SetServerTeam(team, NT_DEFAULT_PORT4);
+        qDebug() << "Requested connect to team" << team;
         break;
     // DS
     case 2:
         Globals::inst.StartDSClient(NT_DEFAULT_PORT4);
+        qDebug() << "Requested connect to DS";
         break;
     default:
         break;
     }
 
     Globals::inst.Disconnect();
+
+    qDebug() << "Disconnect requested via settings. Client will automatically reconnect.";
 }
 
 void SettingsManager::addRecentFile(QFile &file)
