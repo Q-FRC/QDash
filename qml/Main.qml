@@ -180,6 +180,7 @@ ApplicationWindow {
         }
     }
 
+    /** Status Bar */
     ToolBar {
         id: toolbar
 
@@ -191,13 +192,26 @@ ApplicationWindow {
 
         implicitHeight: 30 * Constants.scalar
         Text {
-            anchors.fill: parent
+            anchors {
+                left: parent.left
+                verticalCenter: parent.verticalCenter
+
+                leftMargin: 20 * Constants.scalar
+            }
 
             text: "Status: " + conn.status
-            horizontalAlignment: Text.AlignLeft
-            verticalAlignment: Text.AlignVCenter
 
-            leftPadding: 18 * Constants.scalar
+            color: Constants.palette.text
+            font.pixelSize: 16 * Constants.scalar
+        }
+
+        Text {
+            anchors {
+                centerIn: parent
+            }
+
+            text: filename === "" ? "No File" : filename
+
             color: Constants.palette.text
             font.pixelSize: 16 * Constants.scalar
         }
