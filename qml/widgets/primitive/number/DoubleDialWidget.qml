@@ -13,7 +13,7 @@ BaseWidget {
     property double item_startAngle: -180
     property double item_endAngle: 180
 
-    property double item_lowerBound: 0
+    property double item_lowerBound: -100000.0
     property double item_upperBound: 100000.0
 
     Menu {

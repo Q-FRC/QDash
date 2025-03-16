@@ -11,7 +11,7 @@ BaseWidget {
 
     property int item_fontSize: 20
 
-    property double item_lowerBound: 0
+    property double item_lowerBound: -100000.0
     property double item_upperBound: 100000.0
 
     Menu {
