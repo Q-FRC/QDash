@@ -11,7 +11,7 @@ BaseWidget {
 
     property int item_fontSize: 14
 
-    BetterComboBox {
+    SearchableComboBox {
         id: combo
 
         anchors {
@@ -27,13 +27,11 @@ BaseWidget {
 
         implicitHeight: 40 * Constants.scalar
 
-        property list<string> choices
         property string active
 
         property bool readyToUpdate: true
 
         property int previousIndex: 0
-        model: choices
 
         function updateTopic(ntTopic, value) {
             if (ntTopic === item_topic + "/options") {
