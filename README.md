@@ -28,7 +28,7 @@ QFRCDashboard excels with its lightweight performance thanks to many factors:
 For tutorials on getting started, robot code interaction, theming, and more, see the [wiki](https://github.com/Q-FRC/Dashboard/wiki).
 
 ## Download
-Windows, Linux, and macOS builds are available via GitHub Actions. Currently, all use WPILib 2025.1.1. Release builds are available either through Actions or in the releases tab:
+Windows, Linux, and macOS builds are available via GitHub Actions. Currently, all use WPILib 2025.3.1. Release builds are available either through Actions or in the releases tab:
 
 [![Release](https://github.com/Q-FRC/Dashboard/actions/workflows/trigger_release.yml/badge.svg)](https://github.com/Q-FRC/Dashboard/actions/workflows/trigger_release.yml)
 
@@ -57,19 +57,15 @@ cmake --install build --prefix ${PKGDIR}
 ```
 
 ### Submodules
-If you don't want to install protobuf and ntcore to your system, CMake options are provided for such:
+If you don't want to install ntcore to your system, CMake options are provided for such:
 
 - `USE_SYSTEM_NTCORE` (default OFF)
-- `USE_SYSTEM_PROTOBUF` (default OFF)
 
 Examples:
 
 ```bash
 cmake -S . -B build -DUSE_SYSTEM_NTCORE=ON
-cmake -S . -B build -DUSE_SYSTEM_NTCORE=ON -DUSE_SYSTEM_PROTOBUF=ON
 ```
-
-Using the system ntcore with the bundled protobuf is unnecessary and will break things. If you have ntcore installed to the system, protobuf will also be installed.
 
 Note that this configuration is only possible on Linux.
 
