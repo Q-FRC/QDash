@@ -16,8 +16,6 @@ BaseWidget {
 
     property string itemValue
 
-    property list<var> item_colorMap: []
-
     Menu {
         id: switchMenu
         title: "Switch Widget..."
@@ -37,20 +35,8 @@ BaseWidget {
         }
     }
 
-    function colorFromMap(value) {
-        for (var i = 0; i < item_colorMap.length; ++i) {
-            let obj = item_colorMap[i]
-
-            if (obj["Value"] === value) {
-                return obj["Color"]
-            }
-        }
-
-        return "#000000"
-    }
-
     function setColor() {
-        shape.itemColor = colorFromMap(itemValue)
+        shape.itemColor = itemValue
         shape.itemShape = item_shape
         shape.setColor()
     }
@@ -76,7 +62,6 @@ BaseWidget {
         }
     }
 
-    onItem_colorMapChanged: setColor()
     onItem_shapeChanged: setColor()
 
     ShapeHandler {
@@ -108,7 +93,6 @@ BaseWidget {
         function openDialog() {
             topicField.open()
             titleFontField.open()
-            colorTable.open()
             shapeField.open()
 
             open()
@@ -117,7 +101,6 @@ BaseWidget {
         onAccepted: {
             topicField.accept()
             titleFontField.accept()
-            colorTable.accept()
             shapeField.accept()
         }
 
@@ -164,18 +147,6 @@ BaseWidget {
 
                 SectionHeader {
                     label: "Color Settings"
-                }
-
-                ColorTable {
-                    id: colorTable
-
-                    Layout.fillWidth: true
-                    clip: true
-
-                    label: "Color Map"
-
-                    bindedProperty: "item_colorMap"
-                    bindTarget: widget
                 }
 
                 LabeledComboBox {

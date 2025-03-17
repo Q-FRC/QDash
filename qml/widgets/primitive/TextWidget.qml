@@ -15,9 +15,9 @@ BaseWidget {
         title: "Switch Widget..."
 
         MenuItem {
-            text: "Enum"
+            text: "Color"
             onTriggered: {
-                model.type = "enum"
+                model.type = "colorText"
             }
         }
 

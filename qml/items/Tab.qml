@@ -304,8 +304,8 @@ Rectangle {
                 }
 
                 DelegateChoice {
-                    roleValue: "enum"
-                    EnumWidget {}
+                    roleValue: "colorText"
+                    ColorTextWidget {}
                 }
 
                 DelegateChoice {

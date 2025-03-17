@@ -89,7 +89,7 @@ set(QML_ELEMENTS
 
     widgets/primitive/TextWidget
     widgets/primitive/BoolWidget
-    widgets/primitive/EnumWidget
+    widgets/primitive/ColorTextWidget
     widgets/primitive/ColorWidget
     widgets/primitive/ReefDisplay
     widgets/primitive/StringDisplay
