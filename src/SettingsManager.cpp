@@ -8,11 +8,11 @@ SettingsManager::SettingsManager(QObject *parent)
 
 void SettingsManager::reconnectServer()
 {
-    std::string server = Globals::server.ip;
-    int team = Globals::server.team;
-    int mode = Globals::server.mode;
-
     qDebug() << "Server Reconnect requested via settings dialog.";
+
+    std::string server = QString(Settings::IP).toStdString();
+    int team = Settings::TeamNumber;
+    int mode = Settings::ConnMode;
 
     switch (mode) {
     // IP Address
@@ -41,7 +41,7 @@ void SettingsManager::reconnectServer()
 
 void SettingsManager::addRecentFile(QFile &file)
 {
-    QStringList recentFiles = Settings::RecentFiles.value().toStringList();
+    QStringList recentFiles = Settings::RecentFiles;
 
     QString fileName = file.fileName();
     int index = recentFiles.indexOf(fileName);
@@ -56,109 +56,109 @@ void SettingsManager::addRecentFile(QFile &file)
         recentFiles.removeLast();
     }
 
-    Settings::RecentFiles.setValue(recentFiles);
+    Settings::RecentFiles = recentFiles;
 
     emit recentFilesChanged();
 }
 
 bool SettingsManager::loadRecent() const
 {
-    return Settings::LoadRecent.value().toBool();
+    return Settings::LoadRecent;
 }
 
 void SettingsManager::setLoadRecent(bool newLoadRecent)
 {
-    Settings::LoadRecent.setValue(newLoadRecent);
+    Settings::LoadRecent = newLoadRecent;
     emit loadRecentChanged();
 }
 
 QStringList SettingsManager::recentFiles() const
 {
-    return Settings::RecentFiles.value().toStringList();
+    return Settings::RecentFiles;
 }
 
 void SettingsManager::setRecentFiles(const QStringList &newRecentFiles)
 {
-    Settings::RecentFiles.setValue(newRecentFiles);
+    Settings::RecentFiles = newRecentFiles;
     emit recentFilesChanged();
 }
 
 QString SettingsManager::theme() const
 {
-    return Settings::Theme.value().toString();
+    return Settings::Theme;
 }
 
 void SettingsManager::setTheme(const QString &newTheme)
 {
-    Settings::Theme.setValue(newTheme);
+    Settings::Theme = newTheme;
     emit themeChanged();
 }
 
 QString SettingsManager::accent() const
 {
-    return Settings::Accent.value().toString();
+    return Settings::Accent;
 }
 
 void SettingsManager::setAccent(const QString &newAccent)
 {
-    Settings::Accent.setValue(newAccent);
+    Settings::Accent = newAccent;
     emit accentChanged();
 }
 
 QString SettingsManager::ip() const
 {
-    return QString::fromStdString(Globals::server.ip);
+    return Settings::IP;
 }
 
 void SettingsManager::setIp(const QString &newIp)
 {
-    Globals::server.ip = newIp.toStdString();
+    Settings::IP = newIp;
     emit ipChanged();
     reconnectServer();
 }
 
 int SettingsManager::team() const
 {
-    return Globals::server.team;
+    return Settings::TeamNumber;
 }
 
 void SettingsManager::setTeam(int newTeam)
 {
-    Globals::server.team = newTeam;
+    Settings::TeamNumber = newTeam;
     emit teamChanged();
     reconnectServer();
 }
 
 int SettingsManager::mode() const
 {
-    return Globals::server.mode;
+    return Settings::ConnMode;
 }
 
 void SettingsManager::setMode(int newMode)
 {
-    Globals::server.mode = newMode;
+    Settings::ConnMode = newMode;
     emit modeChanged();
     reconnectServer();
 }
 
 double SettingsManager::scale() const
 {
-    return Settings::Scale.value().toDouble();
+    return Settings::Scale;
 }
 
 void SettingsManager::setScale(double newScale)
 {
-    Settings::Scale.setValue(newScale);
+    Settings::Scale = newScale;
     emit scaleChanged();
 }
 
 bool SettingsManager::resizeToDS() const
 {
-    return Settings::ResizeToDS.value().toBool();
+    return Settings::ResizeToDS;
 }
 
 void SettingsManager::setResizeToDS(bool newResizeToDS)
 {
-    Settings::ResizeToDS.setValue(newResizeToDS);
+    Settings::ResizeToDS = newResizeToDS;
     emit resizeToDSChanged();
 }

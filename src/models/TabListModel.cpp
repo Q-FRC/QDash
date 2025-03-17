@@ -154,10 +154,6 @@ void TabListModel::loadObject(const QJsonDocument &doc)
 {
     QJsonObject ob = doc.object();
 
-    Globals::server.ip = ob.value("ip").toString().toStdString();
-    Globals::server.team = ob.value("team").toInteger();
-    Globals::server.mode = ob.value("mode").toInteger();
-
     m_settings->reconnectServer();
 
     QJsonArray arr = ob.value("tabs").toArray();

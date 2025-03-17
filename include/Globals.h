@@ -14,5 +14,4 @@ typedef struct {
 // NAMESPACES //
 namespace Globals {
 extern nt::NetworkTableInstance inst;
-extern ServerData server;
 }

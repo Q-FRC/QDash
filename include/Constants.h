@@ -15,6 +15,14 @@ public:
 
     QVariant value() const;
     void setValue(const QVariant &value) const;
+
+    void operator=(const QVariant &value) const;
+
+    operator QString() const;
+    operator bool() const;
+    operator QStringList() const;
+    operator double() const;
+    operator int() const;
 } Setting;
 
 namespace Settings {
@@ -25,6 +33,9 @@ extern const Setting Theme;
 extern const Setting Accent;
 extern const Setting Scale;
 extern const Setting ResizeToDS;
+extern const Setting ConnMode;
+extern const Setting TeamNumber;
+extern const Setting IP;
 }
 
 #endif // CONSTANTS_H
