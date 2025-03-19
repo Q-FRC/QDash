@@ -25,7 +25,7 @@ ColumnLayout {
         Layout.fillWidth: true
 
         LabeledSpinBox {
-            implicitWidth: 180 * Constants.scalar
+            implicitWidth: 230 * Constants.scalar
             id: team
 
             from: 0

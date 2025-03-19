@@ -13,5 +13,7 @@
         <file alias="Unmaximize">icons/Unmaximize.svg</file>
         <file alias="Invalid">icons/invalid.svg</file>
         <file alias="Valid">icons/valid.svg</file>
+        <file alias="Forward">icons/forward.svg</file>
+        <file alias="Back">icons/back.svg</file>
     </qresource>
 </RCC>

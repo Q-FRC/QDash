@@ -123,7 +123,6 @@ set(QML_ELEMENTS
     widgets/config/LabeledDoubleSpinBox
     widgets/config/LabeledComboBox
     widgets/config/TitleComponent
-    widgets/config/ColorTable
     widgets/config/ColorField
     widgets/config/SectionHeader
 

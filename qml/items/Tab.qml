@@ -118,6 +118,9 @@ Rectangle {
         }
     }
 
+    // TODO: Don't allow widgets to resize below 1x1
+    // TODO: If too many rows or cols, default widgets to 2x2
+    // TODO: Default bigger widgets to 2x2 or 3x2
     GridLayout {
         id: grid
         rows: model.rows
@@ -355,6 +358,10 @@ Rectangle {
             }
         }
 
+        // TODO: Find a better solution?
+        // We could make two gridlayouts and force the other one to stretch somehow
+        // or we could have blank rectangles at every position, and then delete them if already occupied
+        // or forcefully set the width and height idk
         Repeater {
             model: grid.rows * grid.columns
 
