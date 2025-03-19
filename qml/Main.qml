@@ -181,6 +181,7 @@ ApplicationWindow {
     }
 
     /** Status Bar */
+    // TODO: Remove leading file:///
     ToolBar {
         id: toolbar
 
