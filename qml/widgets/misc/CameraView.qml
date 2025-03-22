@@ -12,6 +12,7 @@ BaseWidget {
 
     property var item_url: ""
     property list<string> urlChoices
+    property int urlIndex: 0
 
     property int item_quality: 0
     property int qualityMax: 100
@@ -22,7 +23,7 @@ BaseWidget {
     property int item_resW: 0
     property int item_resH: 0
 
-    onItem_urlChanged: player.resetSource()
+    // onItem_urlChanged: player.resetSource()
     onItem_fpsChanged: player.resetSource()
     onItem_qualityChanged: player.resetSource()
     onItem_resWChanged: player.resetSource()
@@ -46,6 +47,8 @@ BaseWidget {
                 --i
             }
         }
+
+        console.log(value)
     }
 
     function updateTopic(ntTopic, ntValue) {
@@ -53,10 +56,14 @@ BaseWidget {
             urlChoices = ntValue
             fixUrls(urlChoices)
 
-            if (urlChoices.length > 0 && item_url === "")
+            urlIndex = 0
+
+            if (urlChoices.length > 0)
                 item_url = urlChoices[0]
 
             player.resetSource()
+
+            console.log("Initial URL:", item_url)
         }
     }
 
@@ -87,7 +94,17 @@ BaseWidget {
         }
 
         Timer {
-            id: timer
+            id: connectTimer
+            interval: 100
+            repeat: false
+            onTriggered: player.restartVideo()
+        }
+
+        Timer {
+            id: sourceTimer
+            interval: 200
+            repeat: false
+            onTriggered: player.resetSource()
         }
 
         MediaPlayer {
@@ -100,8 +117,8 @@ BaseWidget {
             }
 
             function resetSource() {
-                source = Qt.url(item_url + (item_quality !== 0 ? "compression="
-                                                                 + item_quality + "&" : "")
+                source = Qt.url(item_url + (item_url.includes("?") ? "&" : "?")
+                                + (item_quality !== 0 ? "compression=" + item_quality + "&" : "")
                                 + (item_fps !== 0 ? "fps=" + item_fps + "&" : "")
                                 + (item_resH !== Qt.size(
                                        0, 0) ? "resolution=" + item_resW + "x" + item_resH : ""))
@@ -109,10 +126,8 @@ BaseWidget {
 
             function reconnect() {
                 player.stop()
-                timer.interval = 100
-                timer.repeat = false
-                timer.onTriggered.connect(restartVideo)
-                timer.start()
+
+                connectTimer.start()
             }
 
             onSourceChanged: {
@@ -120,8 +135,24 @@ BaseWidget {
             }
 
             videoOutput: video
-            onErrorOccurred: (error, errorString) => console.error(
-                                 "CameraView: error:", errorString)
+            onErrorOccurred: (error, errorString) => {
+                                 console.error("CameraView: error:",
+                                               errorString)
+
+                                 urlIndex++
+                                 if (urlIndex >= urlChoices.length) {
+                                     urlIndex = 0
+                                 }
+
+                                 item_url = urlChoices[urlIndex]
+
+                                 sourceTimer.start()
+
+                                 console.log(
+                                     "CameraView: cycling to url index",
+                                     urlIndex, "url", item_url,
+                                     player.mediaStatus)
+                             }
         }
 
         VideoOutput {
