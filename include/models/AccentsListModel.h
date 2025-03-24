@@ -53,8 +53,6 @@ public:
     Q_INVOKABLE QString light(const QString &name);
     Q_INVOKABLE QString qml(const QString &name);
 
-    Q_INVOKABLE QString qmlColor(const QString &name);
-
     Q_INVOKABLE void copy(const QString &toCopy);
 
     Q_INVOKABLE void exportJson(const QString filename);
@@ -67,8 +65,6 @@ protected:
 
 private:
     QList<Accent> m_data;
-
-    QMap<QString, QString> m_universalMap;
 };
 
 #endif // ACCENTSLISTMODEL_H

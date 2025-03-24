@@ -19,6 +19,7 @@ BaseWidget {
         clip: true
 
         model: errors.length / 2
+
         delegate: Row {
             required property int modelData
 
@@ -69,11 +70,15 @@ BaseWidget {
     }
 
     onItem_topicChanged: {
+        // TODO: this is literally the same thing for every widget
+        // Thinking of making PrimitiveWidget vs SendableWidget
+        // that pre-define this
+        // same with ondestruction etc
         topicStore.unsubscribe(topic)
         topicStore.subscribe(item_topic)
         model.topic = item_topic
-        errors = topicStore.getValue(topic)
-        listView.model = errors.length / 2
+
+        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {
@@ -156,4 +161,3 @@ BaseWidget {
         }
     }
 }
-

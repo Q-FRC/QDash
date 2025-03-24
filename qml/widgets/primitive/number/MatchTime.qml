@@ -69,7 +69,8 @@ BaseWidget {
             }
         }
 
-        text: Math.floor(value / 60) + ":" + String((value % 60).toFixed(0)).padStart(2, '0')
+        text: Math.floor(value / 60) + ":" + String((value % 60).toFixed(
+                                                        0)).padStart(2, '0')
 
         color: value < 30 ? item_warningColor : Constants.accent
         horizontalAlignment: Text.AlignHCenter
@@ -104,7 +105,7 @@ BaseWidget {
         topicStore.subscribe(item_topic)
         model.topic = item_topic
 
-        txt.updateTopic(item_topic, topicStore.getValue(item_topic))
+        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

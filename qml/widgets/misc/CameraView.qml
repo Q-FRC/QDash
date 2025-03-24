@@ -6,23 +6,24 @@ import QtMultimedia
 
 import QFRCDashboard
 
+// TODO: rotation, flip, etc
 BaseWidget {
     id: widget
     property string item_topic
 
     property var item_url: ""
     property list<string> urlChoices
+    property int urlIndex: 0
 
     property int item_quality: 0
     property int qualityMax: 100
 
     property int item_fps: 0
-    property int fpsMax: 240
 
     property int item_resW: 0
     property int item_resH: 0
 
-    onItem_urlChanged: player.resetSource()
+    // onItem_urlChanged: player.resetSource()
     onItem_fpsChanged: player.resetSource()
     onItem_qualityChanged: player.resetSource()
     onItem_resWChanged: player.resetSource()
@@ -40,23 +41,38 @@ BaseWidget {
         for (var i = 0; i < value.length; ++i) {
             if (value[i].startsWith("mjpg:"))
                 value[i] = value[i].substring(5)
-
-            if (value[i].includes("local")) {
-                value.splice(i, 1)
-                --i
-            }
         }
+
+        console.log(value)
     }
 
+    // TODO: Lots of code cleanup needed here.
+    // TODO: updatetopic does kinda suck rn
+    // needs a general overhaul + need to clean up lots of dup code
     function updateTopic(ntTopic, ntValue) {
         if (ntTopic === item_topic + "/streams") {
             urlChoices = ntValue
             fixUrls(urlChoices)
 
-            if (urlChoices.length > 0 && item_url === "")
+            urlIndex = 0
+
+            if (urlChoices.length > 0)
                 item_url = urlChoices[0]
 
             player.resetSource()
+
+            sourceTimer.start()
+        }
+    }
+
+    // TODO: rewrite other widgets to use this
+    Connections {
+        target: topicStore
+
+        function onConnected(conn) {
+            if (conn) {
+                topicStore.forceUpdate(widget.item_topic + "/streams")
+            }
         }
     }
 
@@ -64,6 +80,7 @@ BaseWidget {
         rcMenu.addItem(reconnItem)
 
         topicStore.topicUpdate.connect(updateTopic)
+        topicStore.connected.connect
 
         item_topic = model.topic
     }
@@ -76,6 +93,8 @@ BaseWidget {
     }
 
     Rectangle {
+        id: rct
+
         color: "transparent"
         anchors {
             top: titleField.bottom
@@ -87,7 +106,20 @@ BaseWidget {
         }
 
         Timer {
-            id: timer
+            id: connectTimer
+            interval: 100
+            repeat: false
+            onTriggered: player.restartVideo()
+        }
+
+        Timer {
+            id: sourceTimer
+            interval: 200
+            repeat: false
+            onTriggered: {
+                player.source = ""
+                player.resetSource()
+            }
         }
 
         MediaPlayer {
@@ -100,19 +132,18 @@ BaseWidget {
             }
 
             function resetSource() {
-                source = Qt.url(item_url + (item_quality !== 0 ? "compression="
-                                                                 + item_quality + "&" : "")
+                source = Qt.url(item_url + (item_url.includes("?") ? "&" : "?")
+                                + (item_quality !== 0 ? "compression=" + item_quality + "&" : "")
                                 + (item_fps !== 0 ? "fps=" + item_fps + "&" : "")
-                                + (item_resH !== Qt.size(
-                                       0, 0) ? "resolution=" + item_resW + "x" + item_resH : ""))
+                                + (item_resH !== 0
+                                   && item_resW !== 0 ? "resolution=" + item_resW + "x"
+                                                        + item_resH : ""))
             }
 
             function reconnect() {
                 player.stop()
-                timer.interval = 100
-                timer.repeat = false
-                timer.onTriggered.connect(restartVideo)
-                timer.start()
+
+                connectTimer.start()
             }
 
             onSourceChanged: {
@@ -120,8 +151,24 @@ BaseWidget {
             }
 
             videoOutput: video
-            onErrorOccurred: (error, errorString) => console.error(
-                                 "CameraView: error:", errorString)
+            onErrorOccurred: (error, errorString) => {
+                                 console.error("CameraView: error:",
+                                               errorString)
+
+                                 urlIndex++
+                                 if (urlIndex >= urlChoices.length) {
+                                     urlIndex = 0
+                                 }
+
+                                 item_url = urlChoices[urlIndex]
+
+                                 sourceTimer.start()
+
+                                 console.log(
+                                     "CameraView: cycling to url index",
+                                     urlIndex, "url", item_url,
+                                     player.mediaStatus)
+                             }
         }
 
         VideoOutput {
@@ -135,10 +182,33 @@ BaseWidget {
         topicStore.subscribe(item_topic + "/streams")
         model.topic = item_topic
 
-        updateTopic(item_topic + "/streams",
-                    topicStore.getValue(model.topic + "/streams"))
+        topicStore.forceUpdate(item_topic + "/streams")
     }
 
+    // TODO: There is a lot of duplicate code in here.
+    // Could definitely be generified by assuming ScrollView, just leaving
+    // the contentItem to the user.
+    // Could also do a recursive child search for fields to open/accept?
+    // not really recursive since there are never more than two levels
+
+
+    /*
+    for (var i = 0; i < layout.children.length; ++i) {
+        var child = layout.children[i]
+        if (typeof child !== "undefined" && "accept" in child) {
+            // child found
+        } else {
+            for (var j = 0; j < child.children.length; ++j) {
+                let grandchild = child.children[j]
+
+                if (typeof grandchild !== "undefined"
+                        && "accept" in grandchild) {
+                    // grandchild found
+                }
+            }
+        }
+    }
+    */
     BaseConfigDialog {
         id: config
 

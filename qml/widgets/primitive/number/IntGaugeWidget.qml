@@ -108,7 +108,8 @@ BaseWidget {
         topicStore.unsubscribe(topic)
         topicStore.subscribe(item_topic)
         model.topic = item_topic
-        gauge.value = topicStore.getValue(item_topic)
+
+        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

@@ -166,8 +166,10 @@ void TopicStore::subscribe(QString ntTopic) {
                 value = event.GetValueEventData()->value;
             }
 
-            if (value.IsValid()) {
-                emit topicUpdate(ntTopic, toVariant(value));
+            QVariant var = toVariant(value);
+
+            if (var.isValid() && !var.isNull()) {
+                emit topicUpdate(ntTopic, var);
             }
         };
 
@@ -212,6 +214,14 @@ void TopicStore::setValue(QString topic, const QVariant &value)
     nt::NetworkTableEntry entry = topicEntryMap.value(topic);
     entry.SetValue(toValue(value));
 
+}
+
+void TopicStore::forceUpdate(const QString &topic)
+{
+    Listener l = entry(topic);
+    if (l.isNull) return;
+
+    l.callback(nt::Event{});
 }
 
 QString TopicStore::typeString(QString topic)

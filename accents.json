@@ -9,30 +9,18 @@
         "accent": "#0024c2",
         "light": "#4520ff",
         "name": "blue",
-        "qml": "Cobalt"
+        "qml": "Blue"
     },
     {
         "accent": "#6b00c9",
         "light": "#8701ff",
         "name": "purple",
-        "qml": "Violet"
+        "qml": "DeepPurple"
     },
     {
         "accent": "#00aa00",
         "light": "#00dd00",
         "name": "green",
-        "qml": "Emerald"
-    },
-    {
-        "accent": "#000000",
-        "light": "#555555",
-        "name": "black",
-        "qml": "Steel"
-    },
-    {
-        "accent": "#FFFFFF",
-        "light": "#BBBBBB",
-        "name": "white",
-        "qml": "Steel"
+        "qml": "Green"
     }
 ]

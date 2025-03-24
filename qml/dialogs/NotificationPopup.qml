@@ -41,7 +41,7 @@ Popup {
         id: progClose
         target: prog
         property: "value"
-        duration: notificationHelper.displayTime
+        duration: notificationHelper.displayTime >= 0 ? notificationHelper.displayTime : 0
 
         from: 1.0
         to: 0.0
@@ -55,7 +55,7 @@ Popup {
                                                                   prog.value = 1.0
                                                                   open()
                                                                   progClose.start()
-                                                              });
+                                                              })
 
     background: Rectangle {
         id: back

@@ -79,7 +79,7 @@ Rectangle {
             Component.onCompleted: currentIndex = indexOfValue(getQml())
 
             id: qml
-            model: ["Lime", "Green", "Emerald", "Teal", "Cyan", "Cobalt", "Indigo", "Violet", "Pink", "Magenta", "Crimson", "Red", "Orange", "Amber", "Yellow", "Brown", "Olive", "Steel", "Mauve", "Taupe"]
+            model: ["Red", "Pink", "Purple", "DeepPurple", "Indigo", "Blue", "LightBlue", "Cyan", "Teal", "Green", "LightGreen", "Lime", "Yellow", "Amber", "Orange", "Brown", "Grey"]
 
             font.pixelSize: Math.round(16 * Constants.scalar)
 
@@ -129,7 +129,7 @@ Rectangle {
 
             implicitHeight: 40 * Constants.scalar
 
-            color: accents.qmlColor(qml.currentText)
+            color: Material.color(Material[qml.currentText], Material.Shade500)
         }
     }
 }
