@@ -32,6 +32,12 @@ int main(int argc, char *argv[])
     TopicStore store(&app);
 
     TopicListModel *topics = new TopicListModel(store, &app);
+    QSortFilterProxyModel *topicsSorted = new QSortFilterProxyModel(&app);
+
+    topicsSorted->setSourceModel(topics);
+    topicsSorted->setFilterRole(TopicListModel::TLMRoleTypes::TOPIC);
+    topicsSorted->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    topicsSorted->setRecursiveFilteringEnabled(true);
 
     SettingsManager *settings = new SettingsManager(&app);
 
@@ -117,6 +123,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty("topics", topics);
+    engine.rootContext()->setContextProperty("topicsSorted", topicsSorted);
     engine.rootContext()->setContextProperty("settings", settings);
     engine.rootContext()->setContextProperty("topicStore", &store);
     engine.rootContext()->setContextProperty("tlm", tlm);

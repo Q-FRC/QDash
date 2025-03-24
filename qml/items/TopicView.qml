@@ -19,7 +19,7 @@ Row {
     SmoothedAnimation {
         id: menuAnim
         target: tv
-        property: "anchors." + "left" + "Margin"
+        property: "anchors.leftMargin"
         duration: 500
     }
 
@@ -49,18 +49,46 @@ Row {
             width: 3
         }
 
+        BetterTextField {
+            id: search
+
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+
+                margins: 10 * Constants.scalar
+                topMargin: 18 * Constants.scalar
+            }
+
+            font.pixelSize: 16 * Constants.scalar
+
+            placeholderText: "Search"
+
+            onTextEdited: {
+                topicsSorted.setFilterWildcard("*" + text + "*")
+            }
+        }
+
         // modified from Qt's example TreeView
         TreeView {
             id: treeView
-            anchors.fill: parent
-            anchors.margins: 10
+            anchors {
+                top: search.bottom
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
+
+                margins: 10
+            }
+
             clip: true
 
             boundsBehavior: Flickable.StopAtBounds
 
             selectionModel: ItemSelectionModel {}
 
-            model: topics
+            model: topicsSorted
 
             delegate: Item {
                 DragHandler {
