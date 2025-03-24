@@ -184,6 +184,10 @@ ApplicationWindow {
     ToolBar {
         id: toolbar
 
+        background: Rectangle {
+            color: Constants.accent
+        }
+
         anchors {
             left: parent.left
             right: parent.right

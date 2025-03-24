@@ -66,7 +66,7 @@ BaseWidget {
         topicStore.subscribe(item_topic)
         model.topic = item_topic
 
-        control.checked = topicStore.getValue(item_topic)
+        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

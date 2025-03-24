@@ -99,7 +99,7 @@ BaseWidget {
         topicStore.subscribe(item_topic)
         model.topic = item_topic
 
-        updateTopic(model.topic, topicStore.getValue(model.topic))
+        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

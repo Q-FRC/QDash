@@ -44,6 +44,7 @@ BaseWidget {
         }
     }
 
+    // TODO: Fix jank
     function unsubscribeMirror() {
         if (topicStore !== null) {
             topicStore.topicUpdate.disconnect(updateMirror)
@@ -55,7 +56,8 @@ BaseWidget {
         if (item_mirrorForRedAlliance) {
             topicStore.topicUpdate.connect(updateMirror)
             topicStore.subscribe("/FMSInfo/IsRedAlliance")
-            mirrorField = topicStore.getValue("/FMSInfo/IsRedAlliance")
+
+            topicStore.forceUpdate("/FMSInfo/IsRedAlliance")
         } else {
             unsubscribeMirror()
             mirrorField = false

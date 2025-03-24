@@ -13,26 +13,6 @@
 AccentsListModel::AccentsListModel(QObject *parent)
     : QAbstractListModel{parent}
 {
-    m_universalMap.insert("Lime", "#A4C400");
-    m_universalMap.insert("Green", "#60A917");
-    m_universalMap.insert("Emerald", "#008A00");
-    m_universalMap.insert("Teal", "#00ABA9");
-    m_universalMap.insert("Cyan", "#1BA1E2");
-    m_universalMap.insert("Cobalt", "#3E65FF");
-    m_universalMap.insert("Indigo", "#6A00FF");
-    m_universalMap.insert("Violet", "#AA00FF");
-    m_universalMap.insert("Pink", "#F472D0");
-    m_universalMap.insert("Magenta", "#D80073");
-    m_universalMap.insert("Crimson", "#A20025");
-    m_universalMap.insert("Red", "#E51400");
-    m_universalMap.insert("Orange", "#FA6800");
-    m_universalMap.insert("Amber", "#F0A30A");
-    m_universalMap.insert("Yellow", "#E3C800");
-    m_universalMap.insert("Brown", "#825A2C");
-    m_universalMap.insert("Olive", "#6D8764");
-    m_universalMap.insert("Steel", "#647687");
-    m_universalMap.insert("Mauve", "#76608A");
-    m_universalMap.insert("Taupe", "#87794E");
 }
 
 int AccentsListModel::rowCount(const QModelIndex &parent) const
@@ -105,7 +85,7 @@ void AccentsListModel::add()
     a.name = "New Accent";
     a.accent = "#000000";
     a.light = "#555555";
-    a.qml = "Cobalt";
+    a.qml = "Blue";
 
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_data << a;
@@ -235,11 +215,6 @@ QString AccentsListModel::qml(const QString &name)
     }
 
     return "";
-}
-
-QString AccentsListModel::qmlColor(const QString &name)
-{
-    return m_universalMap.value(name, "#3E65FF");
 }
 
 void AccentsListModel::copy(const QString &toCopy)

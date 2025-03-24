@@ -174,11 +174,13 @@ BaseWidget {
 
             text: "Robot State: " + state
 
+            // TODO: This is really jank
+            // should have a single value descriptor in the root item
+            // that handles everything
             function update() {
                 topicStore.subscribe(item_topic + "/FMSControlData")
-                updateTopic(model.topic + "/FMSControlData",
-                            topicStore.getValue(
-                                model.topic + "/FMSControlData"))
+
+                topicStore.forceUpdate(item_topic + "/FMSControlData")
             }
 
             function unsubscribe() {

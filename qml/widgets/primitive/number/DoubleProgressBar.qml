@@ -69,6 +69,7 @@ BaseWidget {
         item_topic = model.topic
     }
 
+    // TODO: This probably isn't needed outside of unsubscribe
     Component.onDestruction: {
         if (topicStore !== null) {
             topicStore.topicUpdate.disconnect(updateTopic)
@@ -99,7 +100,8 @@ BaseWidget {
             verticalCenterOffset: titleField.height / 2
         }
 
-        width: item_vertical ? (parent.height - titleField.height - 50 * Constants.scalar) : (parent.width - 50 * Constants.scalar)
+        width: item_vertical ? (parent.height - titleField.height - 50
+                                * Constants.scalar) : (parent.width - 50 * Constants.scalar)
 
         Repeater {
             model: item_numTicks + 1
@@ -122,8 +124,8 @@ BaseWidget {
                 Text {
                     color: Constants.palette.text
 
-                    text: (bar.from + index * (bar.to - bar.from)
-                           / item_numTicks).toFixed(1) + item_suffix
+                    text: (bar.from + index * (bar.to - bar.from) / item_numTicks).toFixed(
+                              1) + item_suffix
 
                     font.pixelSize: 15 * Constants.scalar
 
@@ -149,7 +151,7 @@ BaseWidget {
             rotation: item_vertical ? 90 : 0
 
             anchors {
-                bottom:  bar.top
+                bottom: bar.top
                 bottomMargin: 25 * Constants.scalar
 
                 horizontalCenter: parent.horizontalCenter
@@ -162,8 +164,7 @@ BaseWidget {
         topicStore.subscribe(item_topic)
         model.topic = item_topic
 
-        bar.value = topicStore.getValue(item_topic)
-        value = bar.value
+        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

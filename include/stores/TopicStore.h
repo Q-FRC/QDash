@@ -47,6 +47,8 @@ public:
     Q_INVOKABLE QVariant getValue(QString topic);
     Q_INVOKABLE void setValue(QString topic, const QVariant &value);
 
+    Q_INVOKABLE void forceUpdate(const QString &topic);
+
     QString typeString(QString topic);
 
     Q_INVOKABLE inline QFDFlags::ControlWord toWord(int val)

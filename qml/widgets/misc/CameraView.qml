@@ -6,6 +6,7 @@ import QtMultimedia
 
 import QFRCDashboard
 
+// TODO: rotation, flip, etc
 BaseWidget {
     id: widget
     property string item_topic
@@ -18,7 +19,6 @@ BaseWidget {
     property int qualityMax: 100
 
     property int item_fps: 0
-    property int fpsMax: 240
 
     property int item_resW: 0
     property int item_resH: 0
@@ -41,16 +41,14 @@ BaseWidget {
         for (var i = 0; i < value.length; ++i) {
             if (value[i].startsWith("mjpg:"))
                 value[i] = value[i].substring(5)
-
-            if (value[i].includes("local")) {
-                value.splice(i, 1)
-                --i
-            }
         }
 
         console.log(value)
     }
 
+    // TODO: Lots of code cleanup needed here.
+    // TODO: updatetopic does kinda suck rn
+    // needs a general overhaul + need to clean up lots of dup code
     function updateTopic(ntTopic, ntValue) {
         if (ntTopic === item_topic + "/streams") {
             urlChoices = ntValue
@@ -63,7 +61,18 @@ BaseWidget {
 
             player.resetSource()
 
-            console.log("Initial URL:", item_url)
+            sourceTimer.start()
+        }
+    }
+
+    // TODO: rewrite other widgets to use this
+    Connections {
+        target: topicStore
+
+        function onConnected(conn) {
+            if (conn) {
+                topicStore.forceUpdate(widget.item_topic + "/streams")
+            }
         }
     }
 
@@ -71,6 +80,7 @@ BaseWidget {
         rcMenu.addItem(reconnItem)
 
         topicStore.topicUpdate.connect(updateTopic)
+        topicStore.connected.connect
 
         item_topic = model.topic
     }
@@ -83,6 +93,8 @@ BaseWidget {
     }
 
     Rectangle {
+        id: rct
+
         color: "transparent"
         anchors {
             top: titleField.bottom
@@ -104,7 +116,10 @@ BaseWidget {
             id: sourceTimer
             interval: 200
             repeat: false
-            onTriggered: player.resetSource()
+            onTriggered: {
+                player.source = ""
+                player.resetSource()
+            }
         }
 
         MediaPlayer {
@@ -120,8 +135,9 @@ BaseWidget {
                 source = Qt.url(item_url + (item_url.includes("?") ? "&" : "?")
                                 + (item_quality !== 0 ? "compression=" + item_quality + "&" : "")
                                 + (item_fps !== 0 ? "fps=" + item_fps + "&" : "")
-                                + (item_resH !== Qt.size(
-                                       0, 0) ? "resolution=" + item_resW + "x" + item_resH : ""))
+                                + (item_resH !== 0
+                                   && item_resW !== 0 ? "resolution=" + item_resW + "x"
+                                                        + item_resH : ""))
             }
 
             function reconnect() {
@@ -166,10 +182,33 @@ BaseWidget {
         topicStore.subscribe(item_topic + "/streams")
         model.topic = item_topic
 
-        updateTopic(item_topic + "/streams",
-                    topicStore.getValue(model.topic + "/streams"))
+        topicStore.forceUpdate(item_topic + "/streams")
     }
 
+    // TODO: There is a lot of duplicate code in here.
+    // Could definitely be generified by assuming ScrollView, just leaving
+    // the contentItem to the user.
+    // Could also do a recursive child search for fields to open/accept?
+    // not really recursive since there are never more than two levels
+
+
+    /*
+    for (var i = 0; i < layout.children.length; ++i) {
+        var child = layout.children[i]
+        if (typeof child !== "undefined" && "accept" in child) {
+            // child found
+        } else {
+            for (var j = 0; j < child.children.length; ++j) {
+                let grandchild = child.children[j]
+
+                if (typeof grandchild !== "undefined"
+                        && "accept" in grandchild) {
+                    // grandchild found
+                }
+            }
+        }
+    }
+    */
     BaseConfigDialog {
         id: config
 
