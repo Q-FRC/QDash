@@ -74,6 +74,8 @@ Rectangle {
                 w.z = 3
                 w.visible = true
                 w.cancelDrag()
+
+                w.fixSize()
             }
         }
     }

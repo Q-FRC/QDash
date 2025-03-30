@@ -63,20 +63,25 @@ bool TabWidgetsModel::setData(const QModelIndex &index, const QVariant &value, i
             break;
         case COL:
             w.col = value.toInt();
+            emit unoccupiedCellsChanged();
             break;
         case ROW:
             w.row = value.toInt();
+            emit unoccupiedCellsChanged();
             break;
         case COLSPAN:
             w.colSpan = value.toInt();
+            emit unoccupiedCellsChanged();
             break;
         case ROWSPAN:
             w.rowSpan = value.toInt();
+            emit unoccupiedCellsChanged();
             break;
         case PROPERTIES:
             w.properties = value.toMap();
             break;
         }
+
         emit dataChanged(index, index, {role});
         return true;
     }
@@ -203,7 +208,7 @@ bool TabWidgetsModel::cellOccupied(int row, int col, int rowSpan, int colSpan, Q
     if (col + colSpan > cols() || row + rowSpan > rows()) return true;
     if (m_data.empty()) return false;
 
-    for (const Widget &w : m_data) {
+    for (const Widget &w : std::as_const(m_data)) {
         QRect dataRect = QRect(w.col, w.row, w.colSpan, w.rowSpan);
 
         if (dataRect.intersects(ignore.toRect())) {
@@ -235,22 +240,45 @@ QHash<int, QByteArray> TabWidgetsModel::roleNames() const
     return rez;
 }
 
-int TabWidgetsModel::unoccupiedCells() const
+QList<QPoint> TabWidgetsModel::unoccupiedCells() const
 {
-    int c = 0;
+    // int c = 0;
+    QList<QRect> occupied;
 
     for (const Widget &w : m_data) {
-        c += w.rowSpan * w.colSpan;
+        occupied << QRect(w.col, w.row, w.colSpan, w.rowSpan);
     }
 
-    return c;
+    QList<QPoint> unoccupied;
+
+    size_t numCells = m_cols * m_rows;
+    for (size_t i = 0; i < numCells; ++i) {
+        size_t col = (int) i % m_cols;
+        size_t row = (int) i / m_cols;
+
+        QPoint point(col, row);
+
+        bool contained = false;
+        for (const QRect &r : std::as_const(occupied)) {
+            if (r.contains(point)) {
+                contained = true;
+                break;
+            }
+        }
+
+        if (!contained) {
+            unoccupied << point;
+        }
+    }
+
+    return unoccupied;
 }
 
 QJsonArray TabWidgetsModel::saveObject() const
 {
     QJsonArray arr;
 
-    for (const Widget w : m_data) {
+    for (const Widget &w : m_data) {
         QJsonObject obj;
         obj.insert("title", w.title);
         obj.insert("topic", w.topic);
@@ -304,7 +332,9 @@ TabWidgetsModel *TabWidgetsModel::loadObject(QObject *parent, const QJsonArray &
         QJsonObject properties = obj.value("properties").toObject();
 
         QVariantMap props;
-        for (const QString &key : properties.keys()) {
+
+        QStringList keys = properties.keys();
+        for (const QString &key : std::as_const(keys)) {
             props.insert(key, properties.value(key));
         }
 

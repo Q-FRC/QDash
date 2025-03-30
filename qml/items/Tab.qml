@@ -22,6 +22,8 @@ Rectangle {
     property var latestWidget
 
     property alias lastOpSuccessful: grid.currentOpValid
+    property int rows: model.rows
+    property int cols: model.cols
 
     MouseArea {
         id: mouseArea
@@ -94,17 +96,6 @@ Rectangle {
 
         twm.rows = r
         twm.cols = c
-
-        grid.rows = r
-        grid.columns = c
-    }
-
-    function cols() {
-        return model.cols
-    }
-
-    function rows() {
-        return model.rows
     }
 
     Rectangle {
@@ -121,16 +112,8 @@ Rectangle {
     // TODO: Don't allow widgets to resize below 1x1
     // TODO: If too many rows or cols, default widgets to 2x2
     // TODO: Default bigger widgets to 2x2 or 3x2
-    GridLayout {
+    Repeater {
         id: grid
-        rows: model.rows
-        columns: model.cols
-
-        anchors.fill: parent
-
-        columnSpacing: 0
-        rowSpacing: 0
-        z: 4
 
         property bool currentOpValid: false
 
@@ -148,10 +131,10 @@ Rectangle {
             let valid = !twm.cellOccupied(newRow, newColumn, newRowSpan,
                                           newColSpan, ignore)
 
-            validRect.x = newColumn * colWidth()
-            validRect.y = newRow * rowWidth()
-            validRect.width = newColSpan * colWidth()
-            validRect.height = newRowSpan * rowWidth()
+            validRect.x = newColumn * colWidth
+            validRect.y = newRow * rowHeight
+            validRect.width = newColSpan * colWidth
+            validRect.height = newRowSpan * rowHeight
 
             validRect.border.color = valid ? "lightgreen" : "red"
             currentOpValid = valid
@@ -169,10 +152,10 @@ Rectangle {
             let valid = !twm.cellOccupied(newRow, newCol, rowSpan,
                                           colSpan, ignore)
 
-            validRect.x = newCol * colWidth()
-            validRect.y = newRow * rowWidth()
-            validRect.width = colSpan * colWidth()
-            validRect.height = rowSpan * rowWidth()
+            validRect.x = newCol * colWidth
+            validRect.y = newRow * rowHeight
+            validRect.width = colSpan * colWidth
+            validRect.height = rowSpan * rowHeight
 
             validRect.border.color = valid ? "lightgreen" : "red"
             currentOpValid = valid
@@ -186,11 +169,11 @@ Rectangle {
         function getPoint(x, y, round) {
             var newRow, newCol
             if (round) {
-                newRow = Math.round(y / rowWidth())
-                newCol = Math.round(x / colWidth())
+                newRow = Math.round(y / rowHeight)
+                newCol = Math.round(x / colWidth)
             } else {
-                newRow = Math.floor(y / rowWidth())
-                newCol = Math.floor(x / colWidth())
+                newRow = Math.floor(y / rowHeight)
+                newCol = Math.floor(x / colWidth)
             }
 
             if (newRow < 0)
@@ -200,8 +183,8 @@ Rectangle {
 
             if (newCol < 0)
                 newCol = 0
-            if (newCol >= columns)
-                newCol = columns - 1
+            if (newCol >= tab.cols)
+                newCol = tab.cols - 1
 
             return Qt.point(newCol, newRow)
         }
@@ -225,160 +208,147 @@ Rectangle {
             return Qt.rect(point.x, point.y, newCols, newRows)
         }
 
-        function colWidth() {
-            return grid.width / grid.columns
-        }
+        property double colWidth: tab.width / tab.cols
+        property double rowHeight: tab.height / tab.rows
 
-        function rowWidth() {
-            return grid.height / grid.rows
-        }
+        model: twm
 
-        function prefWidth(item) {
-            return colWidth() * item.Layout.columnSpan
-        }
+        delegate: DelegateChooser {
+            id: chooser
+            role: "type"
+            DelegateChoice {
+                roleValue: "int"
+                IntWidget {}
+            }
+            DelegateChoice {
+                roleValue: "string"
+                TextWidget {}
+            }
 
-        function prefHeight(item) {
-            return rowWidth() * item.Layout.rowSpan
-        }
+            DelegateChoice {
+                roleValue: "double"
+                DoubleWidget {}
+            }
 
-        Repeater {
-            model: twm
+            DelegateChoice {
+                roleValue: "bool"
+                BoolWidget {}
+            }
 
-            delegate: DelegateChooser {
-                id: chooser
-                role: "type"
-                DelegateChoice {
-                    roleValue: "int"
-                    IntWidget {}
-                }
-                DelegateChoice {
-                    roleValue: "string"
-                    TextWidget {}
-                }
+            DelegateChoice {
+                roleValue: "dial"
+                IntDialWidget {}
+            }
 
-                DelegateChoice {
-                    roleValue: "double"
-                    DoubleWidget {}
-                }
+            DelegateChoice {
+                roleValue: "doubleDial"
+                DoubleDialWidget {}
+            }
 
-                DelegateChoice {
-                    roleValue: "bool"
-                    BoolWidget {}
-                }
+            DelegateChoice {
+                roleValue: "color"
+                ColorWidget {}
+            }
 
-                DelegateChoice {
-                    roleValue: "dial"
-                    IntDialWidget {}
-                }
+            DelegateChoice {
+                roleValue: "FMSInfo"
+                FMSInfo {}
+            }
 
-                DelegateChoice {
-                    roleValue: "doubleDial"
-                    DoubleDialWidget {}
-                }
+            DelegateChoice {
+                roleValue: "Field2d"
+                Field2d {}
+            }
 
-                DelegateChoice {
-                    roleValue: "color"
-                    ColorWidget {}
-                }
+            DelegateChoice {
+                roleValue: "Command"
+                Command {}
+            }
 
-                DelegateChoice {
-                    roleValue: "FMSInfo"
-                    FMSInfo {}
-                }
+            DelegateChoice {
+                roleValue: "String Chooser"
+                StringChooser {}
+            }
 
-                DelegateChoice {
-                    roleValue: "Field2d"
-                    Field2d {}
-                }
+            DelegateChoice {
+                roleValue: "camera"
+                CameraView {}
+            }
 
-                DelegateChoice {
-                    roleValue: "Command"
-                    Command {}
-                }
+            DelegateChoice {
+                roleValue: "colorText"
+                ColorTextWidget {}
+            }
 
-                DelegateChoice {
-                    roleValue: "String Chooser"
-                    StringChooser {}
-                }
+            DelegateChoice {
+                roleValue: "errors"
+                ErrorsWidget {}
+            }
 
-                DelegateChoice {
-                    roleValue: "camera"
-                    CameraView {}
-                }
+            DelegateChoice {
+                roleValue: "reef"
+                ReefDisplay {}
+            }
 
-                DelegateChoice {
-                    roleValue: "colorText"
-                    ColorTextWidget {}
-                }
+            DelegateChoice {
+                roleValue: "doubleGauge"
+                DoubleGaugeWidget {}
+            }
 
-                DelegateChoice {
-                    roleValue: "errors"
-                    ErrorsWidget {}
-                }
+            DelegateChoice {
+                roleValue: "gauge"
+                IntGaugeWidget {}
+            }
 
-                DelegateChoice {
-                    roleValue: "reef"
-                    ReefDisplay {}
-                }
+            DelegateChoice {
+                roleValue: "doubleBar"
+                DoubleProgressBar {}
+            }
 
-                DelegateChoice {
-                    roleValue: "doubleGauge"
-                    DoubleGaugeWidget {}
-                }
+            DelegateChoice {
+                roleValue: "doubleDisplay"
+                DoubleDisplay {}
+            }
 
-                DelegateChoice {
-                    roleValue: "gauge"
-                    IntGaugeWidget {}
-                }
+            DelegateChoice {
+                roleValue: "intDisplay"
+                IntDisplay {}
+            }
 
-                DelegateChoice {
-                    roleValue: "doubleBar"
-                    DoubleProgressBar {}
-                }
+            DelegateChoice {
+                roleValue: "matchTime"
+                MatchTime {}
+            }
 
-                DelegateChoice {
-                    roleValue: "doubleDisplay"
-                    DoubleDisplay {}
-                }
-
-                DelegateChoice {
-                    roleValue: "intDisplay"
-                    IntDisplay {}
-                }
-
-                DelegateChoice {
-                    roleValue: "matchTime"
-                    MatchTime {}
-                }
-
-                DelegateChoice {
-                    roleValue: "textDisplay"
-                    StringDisplay {}
-                }
+            DelegateChoice {
+                roleValue: "textDisplay"
+                StringDisplay {}
             }
         }
+    }
 
-        // TODO: Find a better solution?
-        // We could make two gridlayouts and force the other one to stretch somehow
-        // or we could have blank rectangles at every position, and then delete them if already occupied
-        // or forcefully set the width and height idk
-        Repeater {
-            model: grid.rows * grid.columns
+    Repeater {
+        id: gridLines
 
-            Rectangle {
-                color: "transparent"
+        model: tab.rows * tab.cols
 
-                border {
-                    color: "gray"
-                    width: 1
-                }
+        property double colWidth: tab.width / tab.cols
+        property double rowHeight: tab.height / tab.rows
 
-                Layout.row: modelData / grid.columns
-                Layout.column: modelData % grid.columns
+        Rectangle {
+            color: "transparent"
+            z: 2
 
-                Layout.preferredWidth: grid.prefWidth(this)
-                Layout.preferredHeight: grid.prefHeight(this)
+            border {
+                color: "gray"
+                width: 1
             }
+
+            width: gridLines.colWidth
+            height: gridLines.rowHeight
+
+            x: gridLines.colWidth * (modelData % tab.cols)
+            y: gridLines.rowHeight * Math.floor(modelData / tab.cols)
         }
     }
 }
