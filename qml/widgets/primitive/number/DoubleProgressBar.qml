@@ -4,10 +4,8 @@ import QtQuick.Layouts
 
 import QFRCDashboard
 
-BaseWidget {
+PrimitiveWidget {
     id: widget
-
-    property string item_topic
 
     property int item_fontSize: 20
 
@@ -19,8 +17,6 @@ BaseWidget {
     property double item_upperBound: 100.0
 
     property bool item_vertical: false
-
-    property double value: 0.0
 
     Menu {
         id: switchMenu
@@ -64,24 +60,10 @@ BaseWidget {
 
     Component.onCompleted: {
         rcMenu.addMenu(switchMenu)
-
-        topicStore.topicUpdate.connect(updateTopic)
-        item_topic = model.topic
     }
 
-    // TODO: This probably isn't needed outside of unsubscribe
-    Component.onDestruction: {
-        if (topicStore !== null) {
-            topicStore.topicUpdate.disconnect(updateTopic)
-            topicStore.unsubscribe(item_topic)
-        }
-    }
-
-    function updateTopic(ntTopic, ntValue) {
-        if (ntTopic === item_topic) {
-            value = ntValue
-            bar.value = ntValue
-        }
+    function update(value) {
+        bar.value = value
     }
 
     ProgressBar {
@@ -157,14 +139,6 @@ BaseWidget {
                 horizontalCenter: parent.horizontalCenter
             }
         }
-    }
-
-    onItem_topicChanged: {
-        topicStore.unsubscribe(topic)
-        topicStore.subscribe(item_topic)
-        model.topic = item_topic
-
-        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

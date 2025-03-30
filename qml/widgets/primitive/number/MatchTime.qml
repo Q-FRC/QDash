@@ -4,10 +4,8 @@ import QtQuick.Layouts
 
 import QFRCDashboard
 
-BaseWidget {
+PrimitiveWidget {
     id: widget
-
-    property string item_topic
 
     property int item_fontSize: 100
     property color item_warningColor: "yellow"
@@ -52,8 +50,10 @@ BaseWidget {
         }
     }
 
-    Component.onCompleted: {
-        rcMenu.addMenu(switchMenu)
+    Component.onCompleted: rcMenu.addMenu(switchMenu)
+
+    function update(value) {
+        txt.value = value
     }
 
     Text {
@@ -62,12 +62,6 @@ BaseWidget {
         font.pixelSize: item_fontSize * Constants.scalar
 
         property double value
-
-        function updateTopic(ntTopic, ntValue) {
-            if (ntTopic === item_topic) {
-                value = ntValue
-            }
-        }
 
         text: Math.floor(value / 60) + ":" + String((value % 60).toFixed(
                                                         0)).padStart(2, '0')
@@ -86,26 +80,6 @@ BaseWidget {
 
             margins: 10 * Constants.scalar
         }
-
-        Component.onCompleted: {
-            topicStore.topicUpdate.connect(updateTopic)
-            item_topic = model.topic
-        }
-
-        Component.onDestruction: {
-            if (topicStore !== null) {
-                topicStore.topicUpdate.disconnect(updateTopic)
-                topicStore.unsubscribe(item_topic)
-            }
-        }
-    }
-
-    onItem_topicChanged: {
-        topicStore.unsubscribe(topic)
-        topicStore.subscribe(item_topic)
-        model.topic = item_topic
-
-        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

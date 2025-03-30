@@ -5,9 +5,8 @@ import QtQuick.Shapes 2.15
 
 import QFRCDashboard
 
-BaseWidget {
+PrimitiveWidget {
     id: widget
-    property string item_topic
 
     // @disable-check M311
     property var item_shape: "Rectangle"
@@ -41,25 +40,13 @@ BaseWidget {
         shape.setColor()
     }
 
-    function updateTopic(ntTopic, ntValue) {
-        if (ntTopic === item_topic) {
-            itemValue = ntValue
-            setColor()
-        }
+    function update(value) {
+        itemValue = value
+        setColor()
     }
 
     Component.onCompleted: {
-        topicStore.topicUpdate.connect(updateTopic)
-        item_topic = model.topic
-
         rcMenu.addMenu(switchMenu)
-    }
-
-    Component.onDestruction: {
-        if (topicStore !== null) {
-            topicStore.topicUpdate.disconnect(updateTopic)
-            topicStore.unsubscribe(item_topic)
-        }
     }
 
     onItem_shapeChanged: setColor()
@@ -77,14 +64,6 @@ BaseWidget {
 
             margins: 10
         }
-    }
-
-    onItem_topicChanged: {
-        topicStore.unsubscribe(topic)
-        topicStore.subscribe(item_topic)
-        model.topic = item_topic
-
-        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

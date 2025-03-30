@@ -1,0 +1,158 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 007adc3..5805dcc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -198,6 +198,7 @@ qt_add_qml_module(${Dashboard_EXEC_NAME}
+     QML_FILES ${QML_FILES}
+ 
+     SOURCES ${SOURCES} ${HEADERS}
++    QML_FILES qml/widgets/PrimitiveWidget.qml
+ )
+ 
+ # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
+diff --git a/qml/widgets/BaseWidget.qml b/qml/widgets/BaseWidget.qml
+index 54a7c18..6c3ba32 100644
+--- a/qml/widgets/BaseWidget.qml
++++ b/qml/widgets/BaseWidget.qml
+@@ -7,6 +7,8 @@ import QFRCDashboard 1.0
+ Rectangle {
+     signal moved(real x, real y)
+ 
++    property string item_topic
++
+     id: widget
+ 
+     width: 100
+diff --git a/qml/widgets/PrimitiveWidget.qml b/qml/widgets/PrimitiveWidget.qml
+new file mode 100644
+index 0000000..c4c6e51
+--- /dev/null
++++ b/qml/widgets/PrimitiveWidget.qml
+@@ -0,0 +1,127 @@
++import QtQuick 2.15
++import QtQuick.Controls 2.15
++import QtQuick.Layouts
++
++import QFRCDashboard
++
++BaseWidget {
++    id: widget
++
++    property string suffix: ""
++
++    // Define these in your widget
++    function update(value) {}
++    function setValue(value) {
++        topicStore.setValue(item_topic, value)
++    }
++
++    function updateTopic(ntTopic, ntValue) {
++        if (typeof ntValue === "undefined")
++            return
++
++        if (ntTopic === item_topic) {
++            update(ntValue)
++        }
++    }
++
++    Component.onCompleted: {
++        topicStore.topicUpdate.connect(updateTopic)
++
++        item_topic = model.topic
++    }
++
++    Component.onDestruction: {
++        if (topicStore !== null) {
++            topicStore.topicUpdate.disconnect(updateTopic)
++            topicStore.unsubscribe(item_topic)
++        }
++    }
++
++    onItem_topicChanged: {
++        topicStore.unsubscribe(topic)
++        topicStore.subscribe(item_topic)
++        model.topic = item_topic
++
++        control.checked = topicStore.getValue(item_topic)
++    }
++
++    BaseConfigDialog {
++        id: config
++
++        function openDialog() {
++            topicField.open()
++            titleFontField.open()
++            checkboxField.open()
++
++            open()
++        }
++
++        onAccepted: {
++            topicField.accept()
++            titleFontField.accept()
++            checkboxField.accept()
++        }
++
++        ColumnLayout {
++            id: layout
++            spacing: 12 * Constants.scalar
++
++            anchors {
++                top: parent.top
++                bottom: parent.bottom
++                left: parent.left
++                right: parent.right
++
++                topMargin: 5 * Constants.scalar
++
++                rightMargin: 5
++            }
++
++            SectionHeader {
++                label: "Font Settings"
++            }
++
++            RowLayout {
++                uniformCellSizes: true
++
++                LabeledSpinBox {
++                    Layout.fillWidth: true
++
++                    id: titleFontField
++
++                    label: "Title Font Size"
++
++                    bindedProperty: "item_titleFontSize"
++                    bindTarget: widget
++                }
++
++                LabeledSpinBox {
++                    Layout.fillWidth: true
++
++                    id: checkboxField
++
++                    label: "Checkbox Size"
++
++                    bindedProperty: "item_checkboxSize"
++                    bindTarget: widget
++                }
++            }
++
++            SectionHeader {
++                label: "NT Settings"
++            }
++
++            LabeledTextField {
++                Layout.fillWidth: true
++                Layout.alignment: Qt.AlignTop
++
++                id: topicField
++
++                label: "Topic"
++
++                bindedProperty: "item_topic"
++                bindTarget: widget
++            }
++        }
++    }
++}

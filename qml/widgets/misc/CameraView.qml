@@ -7,9 +7,10 @@ import QtMultimedia
 import QFRCDashboard
 
 // TODO: rotation, flip, etc
-BaseWidget {
+PrimitiveWidget {
     id: widget
-    property string item_topic
+
+    suffix: "/streams"
 
     property var item_url: ""
     property list<string> urlChoices
@@ -42,54 +43,24 @@ BaseWidget {
             if (value[i].startsWith("mjpg:"))
                 value[i] = value[i].substring(5)
         }
-
-        console.log(value)
     }
 
-    // TODO: Lots of code cleanup needed here.
-    // TODO: updatetopic does kinda suck rn
-    // needs a general overhaul + need to clean up lots of dup code
-    function updateTopic(ntTopic, ntValue) {
-        if (ntTopic === item_topic + "/streams") {
-            urlChoices = ntValue
-            fixUrls(urlChoices)
+    function update(value) {
+        urlChoices = value
+        fixUrls(urlChoices)
 
-            urlIndex = 0
+        urlIndex = 0
 
-            if (urlChoices.length > 0)
-                item_url = urlChoices[0]
+        if (urlChoices.length > 0)
+            item_url = urlChoices[0]
 
-            player.resetSource()
+        player.resetSource()
 
-            sourceTimer.start()
-        }
-    }
-
-    // TODO: rewrite other widgets to use this
-    Connections {
-        target: topicStore
-
-        function onConnected(conn) {
-            if (conn) {
-                topicStore.forceUpdate(widget.item_topic + "/streams")
-            }
-        }
+        sourceTimer.start()
     }
 
     Component.onCompleted: {
         rcMenu.addItem(reconnItem)
-
-        topicStore.topicUpdate.connect(updateTopic)
-        topicStore.connected.connect
-
-        item_topic = model.topic
-    }
-
-    Component.onDestruction: {
-        if (topicStore !== null) {
-            topicStore.topicUpdate.disconnect(updateTopic)
-            topicStore.unsubscribe(item_topic)
-        }
     }
 
     Rectangle {

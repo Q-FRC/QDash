@@ -4,13 +4,16 @@ import QtQuick.Layouts
 
 import QFRCDashboard
 
-BaseWidget {
+PrimitiveWidget {
     id: widget
-    property string item_topic
 
     property int item_fontSize: 20
 
     property list<string> errors
+
+    function update(value) {
+        errors = value
+    }
 
     ListView {
         id: listView
@@ -49,36 +52,6 @@ BaseWidget {
 
             margins: 10 * Constants.scalar
         }
-    }
-
-    function updateTopic(ntTopic, value) {
-        if (ntTopic === item_topic) {
-            errors = value
-        }
-    }
-
-    Component.onCompleted: {
-        topicStore.topicUpdate.connect(updateTopic)
-        item_topic = model.topic
-    }
-
-    Component.onDestruction: {
-        if (topicStore !== null) {
-            topicStore.topicUpdate.disconnect(updateTopic)
-            topicStore.unsubscribe(item_topic)
-        }
-    }
-
-    onItem_topicChanged: {
-        // TODO: this is literally the same thing for every widget
-        // Thinking of making PrimitiveWidget vs SendableWidget
-        // that pre-define this
-        // same with ondestruction etc
-        topicStore.unsubscribe(topic)
-        topicStore.subscribe(item_topic)
-        model.topic = item_topic
-
-        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

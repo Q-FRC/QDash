@@ -4,10 +4,8 @@ import QtQuick.Layouts
 
 import QFRCDashboard
 
-BaseWidget {
+PrimitiveWidget {
     id: widget
-
-    property string item_topic
 
     property int item_fontSize: 20
 
@@ -79,6 +77,10 @@ BaseWidget {
         gauge.fixSize()
     }
 
+    function update(value) {
+        gauge.value = value
+    }
+
     RadialGauge {
         id: gauge
 
@@ -87,12 +89,6 @@ BaseWidget {
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: parent.bottom
-        }
-
-        function updateTopic(ntTopic, ntValue) {
-            if (ntTopic === item_topic) {
-                value = ntValue
-            }
         }
 
         value: 0
@@ -104,26 +100,6 @@ BaseWidget {
 
         startAngle: item_startAngle
         endAngle: item_endAngle
-
-        Component.onCompleted: {
-            topicStore.topicUpdate.connect(updateTopic)
-            item_topic = model.topic
-        }
-
-        Component.onDestruction: {
-            if (topicStore !== null) {
-                topicStore.topicUpdate.disconnect(updateTopic)
-                topicStore.unsubscribe(item_topic)
-            }
-        }
-    }
-
-    onItem_topicChanged: {
-        topicStore.unsubscribe(topic)
-        topicStore.subscribe(item_topic)
-        model.topic = item_topic
-
-        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

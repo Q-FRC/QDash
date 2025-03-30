@@ -5,9 +5,8 @@ import QtQuick.Shapes 2.15
 
 import QFRCDashboard
 
-BaseWidget {
+PrimitiveWidget {
     id: widget
-    property string item_topic
 
     property color item_falseColor: "#FF0000"
     property color item_trueColor: "#00FF00"
@@ -37,26 +36,12 @@ BaseWidget {
         shape.setColor()
     }
 
-    function updateTopic(ntTopic, ntValue) {
-        if (ntTopic === item_topic) {
-            itemValue = ntValue
-            setColor()
-        }
+    function update(value) {
+        itemValue = value
+        setColor()
     }
 
-    Component.onCompleted: {
-        topicStore.topicUpdate.connect(updateTopic)
-        item_topic = model.topic
-
-        rcMenu.addMenu(switchMenu)
-    }
-
-    Component.onDestruction: {
-        if (topicStore !== null) {
-            topicStore.topicUpdate.disconnect(updateTopic)
-            topicStore.unsubscribe(item_topic)
-        }
-    }
+    Component.onCompleted: rcMenu.addMenu(switchMenu)
 
     onItem_falseColorChanged: setColor()
     onItem_trueColorChanged: setColor()
@@ -75,14 +60,6 @@ BaseWidget {
 
             margins: 10
         }
-    }
-
-    onItem_topicChanged: {
-        topicStore.unsubscribe(topic)
-        topicStore.subscribe(item_topic)
-        model.topic = item_topic
-
-        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

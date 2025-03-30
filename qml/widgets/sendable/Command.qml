@@ -4,12 +4,27 @@ import QtQuick.Layouts
 
 import QFRCDashboard
 
-BaseWidget {
+SendableWidget {
     id: widget
 
-    property string item_topic
+    topics: [".name", "running"]
 
     property int item_fontSize: 18
+
+    function update(topic, value) {
+        switch (topic) {
+        case ".name":
+        {
+            cmdButton.name = value
+            break
+        }
+        case "running":
+        {
+            cmdButton.running = value
+            break
+        }
+        }
+    }
 
     Button {
         id: cmdButton
@@ -26,50 +41,12 @@ BaseWidget {
         property bool running: false
         property string name: "Command"
 
-        function updateTopic(ntTopic, value) {
-            if (ntTopic === item_topic + "/.name") {
-                name = value
-            } else if (ntTopic === item_topic + "/running") {
-                running = value
-            }
-        }
-
         onClicked: {
             running = !running
-            topicStore.setValue(item_topic + "/running", running)
+            widget.setValue("running", running)
         }
 
         text: name
-
-        function update() {
-            topicStore.subscribe(item_topic + "/.name")
-            topicStore.subscribe(item_topic + "/running")
-        }
-
-        function unsubscribe() {
-            topicStore.unsubscribe(item_topic + "/.name")
-            topicStore.unsubscribe(item_topic + "/running")
-        }
-
-        Component.onCompleted: {
-            topicStore.topicUpdate.connect(updateTopic)
-            item_topic = model.topic
-            update()
-        }
-
-        Component.onDestruction: {
-            if (topicStore !== null) {
-                topicStore.topicUpdate.disconnect(updateTopic)
-                unsubscribe()
-            }
-        }
-    }
-
-    onItem_topicChanged: {
-        cmdButton.unsubscribe()
-        model.topic = item_topic
-
-        cmdButton.update()
     }
 
     BaseConfigDialog {

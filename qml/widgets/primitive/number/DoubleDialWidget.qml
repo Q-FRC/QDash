@@ -6,7 +6,6 @@ import QFRCDashboard
 
 BaseWidget {
     id: widget
-    property string item_topic
 
     property double item_stepSize: 0.1
 
@@ -58,8 +57,11 @@ BaseWidget {
         }
     }
 
-    Component.onCompleted: {
-        rcMenu.addMenu(switchMenu)
+    Component.onCompleted: rcMenu.addMenu(switchMenu)
+
+    function update(value) {
+        spin.value = value
+        dial.value = value
     }
 
     BetterDoubleSpinBox {
@@ -67,13 +69,7 @@ BaseWidget {
 
         font.pixelSize: item_fontSize * Constants.scalar
 
-        function updateTopic(ntTopic, ntValue) {
-            if (ntTopic === item_topic) {
-                value = ntValue
-                dial.value = ntValue
-                valid = true
-            }
-        }
+        valid: widget.valid
 
         value: 0
 
@@ -92,28 +88,16 @@ BaseWidget {
             rightMargin: 10
         }
 
-        Component.onCompleted: {
-            topicStore.topicUpdate.connect(updateTopic)
-            item_topic = model.topic
-        }
-
-        Component.onDestruction: {
-            if (topicStore !== null) {
-                topicStore.topicUpdate.disconnect(updateTopic)
-                topicStore.unsubscribe(item_topic)
-            }
-        }
-
         onValueModified: {
             dial.value = value
-            valid = false
-            topicStore.setValue(item_topic, value)
+            widget.valid = false
+            widget.setValue(value)
         }
 
         function move(val) {
-            valid = Math.abs(val - value) < 0.01
+            widget.valid = Math.abs(val - value) < 0.01
             value = val
-            topicStore.setValue(item_topic, value)
+            widget.setValue(value)
         }
     }
 

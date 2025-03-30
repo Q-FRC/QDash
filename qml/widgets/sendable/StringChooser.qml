@@ -4,12 +4,37 @@ import QtQuick.Layouts
 
 import QFRCDashboard
 
-BaseWidget {
+SendableWidget {
     id: widget
 
-    property string item_topic
+    topics: ["options", "active", "selected"]
 
     property int item_fontSize: 14
+
+    property bool readyToUpdate: true
+
+    function update(topic, value) {
+        switch (topic) {
+        case "options":
+        {
+            combo.choices = value
+            break
+        }
+        case "active":
+        {
+            if (!readyToUpdate) {
+                readyToUpdate = true
+                return
+            }
+
+            button.valid = true
+            combo.currentIndex = combo.indexOfValue(value)
+            combo.previousIndex = combo.currentIndex
+
+            break
+        }
+        }
+    }
 
     SearchableComboBox {
         id: combo
@@ -27,28 +52,7 @@ BaseWidget {
 
         implicitHeight: 40 * Constants.scalar
 
-        property string active
-
-        property bool readyToUpdate: true
-
         property int previousIndex: 0
-
-        function updateTopic(ntTopic, value) {
-            if (ntTopic === item_topic + "/options") {
-                choices = value
-            } else if (ntTopic === item_topic + "/active") {
-                if (!readyToUpdate) {
-                    readyToUpdate = true
-                    return
-                }
-
-                button.valid = true
-                active = value
-                currentIndex = indexOfValue(active)
-
-                previousIndex = currentIndex
-            }
-        }
 
         // TODO: rewrite other widgets to use this
         Connections {
@@ -56,42 +60,16 @@ BaseWidget {
 
             function onConnected(conn) {
                 if (conn) {
-                    combo.readyToUpdate = false
+                    widget.readyToUpdate = false
 
                     button.valid = true
-                    topicStore.setValue(item_topic + "/selected",
-                                        combo.currentText)
+                    widget.setValue("selected", combo.currentText)
 
                     combo.enabled = true
                 } else {
                     button.valid = false
                     combo.enabled = false
                 }
-            }
-        }
-
-        function update() {
-            topicStore.subscribe(item_topic + "/options")
-            topicStore.subscribe(item_topic + "/active")
-            topicStore.subscribe(item_topic + "/selected")
-        }
-
-        function unsubscribe() {
-            topicStore.unsubscribe(topic + "/options")
-            topicStore.unsubscribe(topic + "/active")
-            topicStore.unsubscribe(topic + "/selected")
-        }
-
-        Component.onCompleted: {
-            topicStore.topicUpdate.connect(updateTopic)
-            item_topic = topic
-
-            update()
-        }
-
-        Component.onDestruction: {
-            if (topicStore !== null) {
-                topicStore.topicUpdate.disconnect(updateTopic)
             }
         }
 
@@ -102,8 +80,7 @@ BaseWidget {
 
                          previousIndex = index
 
-                         topicStore.setValue(item_topic + "/selected",
-                                             valueAt(index))
+                         widget.setValue("selected", valueAt(index))
                      }
     }
 
@@ -125,12 +102,6 @@ BaseWidget {
 
             margins: 2
         }
-    }
-
-    onItem_topicChanged: {
-        combo.unsubscribe()
-        topic = item_topic
-        combo.update()
     }
 
     BaseConfigDialog {
