@@ -36,71 +36,81 @@ SendableWidget {
         }
     }
 
-    SearchableComboBox {
-        id: combo
-
+    Item {
         anchors {
-            verticalCenter: parent.verticalCenter
-
+            top: titleField.bottom
+            bottom: parent.bottom
             left: parent.left
-            right: button.left
-
-            margins: 2
-        }
-
-        font.pixelSize: item_fontSize * Constants.scalar
-
-        implicitHeight: 40 * Constants.scalar
-
-        property int previousIndex: 0
-
-        // TODO: rewrite other widgets to use this
-        Connections {
-            target: topicStore
-
-            function onConnected(conn) {
-                if (conn) {
-                    widget.readyToUpdate = false
-
-                    button.valid = true
-                    widget.setValue("selected", combo.currentText)
-
-                    combo.enabled = true
-                } else {
-                    button.valid = false
-                    combo.enabled = false
-                }
-            }
-        }
-
-        onActivated: index => {
-                         if (previousIndex !== index) {
-                             button.valid = false
-                         }
-
-                         previousIndex = index
-
-                         widget.setValue("selected", valueAt(index))
-                     }
-    }
-
-    Button {
-        id: button
-
-        property bool valid: false
-
-        icon {
-            color: valid ? "green" : "red"
-            source: valid ? "qrc:/Valid" : "qrc:/Invalid"
-        }
-
-        background: Item {}
-
-        anchors {
-            verticalCenter: combo.verticalCenter
             right: parent.right
 
-            margins: 2
+            leftMargin: 10
+            rightMargin: 10
+        }
+
+        SearchableComboBox {
+            id: combo
+
+            anchors {
+                verticalCenter: parent.verticalCenter
+
+                left: parent.left
+                right: button.left
+            }
+
+            font.pixelSize: item_fontSize * Constants.scalar
+
+            implicitHeight: 40 * Constants.scalar
+
+            property int previousIndex: 0
+
+            // TODO: rewrite other widgets to use this
+            Connections {
+                target: topicStore
+
+                function onConnected(conn) {
+                    if (conn) {
+                        widget.readyToUpdate = false
+
+                        button.valid = true
+                        widget.setValue("selected", combo.currentText)
+
+                        combo.enabled = true
+                    } else {
+                        button.valid = false
+                        combo.enabled = false
+                    }
+                }
+            }
+
+            onActivated: index => {
+                             if (previousIndex !== index) {
+                                 button.valid = false
+                             }
+
+                             previousIndex = index
+
+                             widget.setValue("selected", valueAt(index))
+                         }
+        }
+
+        Button {
+            id: button
+
+            property bool valid: false
+
+            icon {
+                color: valid ? "green" : "red"
+                source: valid ? "qrc:/Valid" : "qrc:/Invalid"
+            }
+
+            background: Item {}
+
+            anchors {
+                verticalCenter: combo.verticalCenter
+                right: parent.right
+
+                margins: 2
+            }
         }
     }
 

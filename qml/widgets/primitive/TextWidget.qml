@@ -34,18 +34,10 @@ PrimitiveWidget {
         textField.text = value
     }
 
-    BetterTextField {
-        id: textField
-
-        font.pixelSize: item_fontSize * Constants.scalar
-
-        text: ""
-        valid: widget.valid
-
+    Item {
         anchors {
-            verticalCenter: parent.verticalCenter
-            topMargin: titleField.height
-
+            top: titleField.bottom
+            bottom: parent.bottom
             left: parent.left
             right: parent.right
 
@@ -53,8 +45,23 @@ PrimitiveWidget {
             rightMargin: 10
         }
 
-        onTextEdited: {
-            widget.setValue(text)
+        BetterTextField {
+            id: textField
+
+            font.pixelSize: item_fontSize * Constants.scalar
+
+            valid: widget.valid
+
+            anchors {
+                verticalCenter: parent.verticalCenter
+
+                left: parent.left
+                right: parent.right
+            }
+
+            onTextEdited: {
+                widget.setValue(text)
+            }
         }
     }
 
