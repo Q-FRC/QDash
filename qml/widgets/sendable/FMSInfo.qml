@@ -21,12 +21,12 @@ SendableWidget {
         }
         case "MatchType":
         {
-            match.matchType = value
+            match.matchType = match.matchTypeMap[value]
             break
         }
         case "EventName":
         {
-            match.eventName = value
+            match.eventName = value === "" ? "Event" : value
             break
         }
         case "IsRedAlliance":
