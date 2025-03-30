@@ -26,27 +26,39 @@ SendableWidget {
         }
     }
 
-    Button {
-        id: cmdButton
-
+    Item {
         anchors {
-            verticalCenter: parent.verticalCenter
-
+            top: titleField.bottom
+            bottom: parent.bottom
             left: parent.left
             right: parent.right
+
+            leftMargin: 10
+            rightMargin: 10
         }
 
-        font.pixelSize: item_fontSize * Constants.scalar
+        Button {
+            id: cmdButton
 
-        property bool running: false
-        property string name: "Command"
+            anchors {
+                verticalCenter: parent.verticalCenter
 
-        onClicked: {
-            running = !running
-            widget.setValue("running", running)
+                left: parent.left
+                right: parent.right
+            }
+
+            font.pixelSize: item_fontSize * Constants.scalar
+
+            property bool running: false
+            property string name: "Command"
+
+            onClicked: {
+                running = !running
+                widget.setValue("running", running)
+            }
+
+            text: name
         }
-
-        text: name
     }
 
     BaseConfigDialog {

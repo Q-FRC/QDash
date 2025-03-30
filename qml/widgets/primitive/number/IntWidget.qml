@@ -46,22 +46,10 @@ PrimitiveWidget {
         spin.value = value
     }
 
-    BetterSpinBox {
-        id: spin
-
-        font.pixelSize: item_fontSize * Constants.scalar
-
-        value: 0
-        from: item_lowerBound
-        to: item_upperBound
-        stepSize: item_stepSize
-
-        valid: widget.valid
-
+    Item {
         anchors {
-            verticalCenter: parent.verticalCenter
-            topMargin: titleField.height
-
+            top: titleField.bottom
+            bottom: parent.bottom
             left: parent.left
             right: parent.right
 
@@ -69,8 +57,28 @@ PrimitiveWidget {
             rightMargin: 10
         }
 
-        onValueModified: {
-            widget.setValue(value)
+        BetterSpinBox {
+            id: spin
+
+            font.pixelSize: item_fontSize * Constants.scalar
+
+            value: 0
+            from: item_lowerBound
+            to: item_upperBound
+            stepSize: item_stepSize
+
+            valid: widget.valid
+
+            anchors {
+                verticalCenter: parent.verticalCenter
+
+                left: parent.left
+                right: parent.right
+            }
+
+            onValueModified: {
+                widget.setValue(value)
+            }
         }
     }
 

@@ -138,7 +138,7 @@ Rectangle {
     }
 
     function configTab() {
-        tabConfigDialog.openUp(currentTab().rows(), currentTab().cols(),
+        tabConfigDialog.openUp(currentTab().rows, currentTab().cols,
                                currentTab().name())
     }
 

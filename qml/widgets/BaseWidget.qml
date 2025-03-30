@@ -10,6 +10,7 @@ Rectangle {
     property string item_topic
 
     id: widget
+    clip: true
 
     z: 3
 
@@ -25,6 +26,9 @@ Rectangle {
     property alias titleField: titleField
     property alias rcMenu: rcMenu
 
+    property int minWidth: grid.colWidth - 16
+    property int minHeight: grid.rowHeight - 16
+
     color: Constants.palette.widgetBg
 
     Drag.active: dragArea.drag.active
@@ -37,6 +41,14 @@ Rectangle {
     }
 
     function checkResize() {
+        if (width < grid.colWidth - 16) {
+            width = grid.colWidth - 16
+        }
+
+        if (height < grid.rowHeight - 16) {
+            height = grid.rowHeight - 16
+        }
+
         if (resizeActive) {
             grid.validResize(width, height, x, y, row, column, rowSpan, colSpan)
         }
@@ -144,6 +156,8 @@ Rectangle {
         mcolumn = model.column
         mrowSpan = model.rowSpan
         mcolumnSpan = model.colSpan
+
+        fixSize()
 
         for (var p in this) {
             if (p.startsWith("item_") && typeof this[p] !== "function") {
@@ -314,6 +328,8 @@ Rectangle {
         font.pixelSize: item_titleFontSize * Constants.scalar
         font.bold: true
 
+        clip: true
+
         text: model.title
         color: "#DDDDDD"
 
@@ -324,7 +340,6 @@ Rectangle {
             horizontalCenter: parent.horizontalCenter
         }
 
-        // clip: true
         background: Item {}
 
         horizontalAlignment: Text.AlignHCenter
@@ -333,12 +348,11 @@ Rectangle {
 
     Rectangle {
         anchors {
-            top: parent.top
+            top: titleField.top
             left: parent.left
             right: parent.right
+            bottom: titleField.bottom
         }
-
-        height: titleField.height
 
         topLeftRadius: 12 * Constants.scalar
         topRightRadius: 12 * Constants.scalar

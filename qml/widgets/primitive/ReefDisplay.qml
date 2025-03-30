@@ -32,7 +32,7 @@ PrimitiveWidget {
             Shape {
                 id: shape
 
-                height: Math.min(parent.height, parent.width) / 2
+                height: Math.min(parent.height, parent.width) / 2.3
                 width: height * 1.15
 
                 rotation: -60 * modelData
