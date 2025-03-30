@@ -4,9 +4,8 @@ import QtQuick.Layouts
 
 import QFRCDashboard
 
-BaseWidget {
+PrimitiveWidget {
     id: widget
-    property string item_topic
 
     property int item_fontSize: 20
 
@@ -31,19 +30,17 @@ BaseWidget {
 
     Component.onCompleted: rcMenu.addMenu(switchMenu)
 
+    function update(value) {
+        textField.text = value
+    }
+
     BetterTextField {
         id: textField
 
         font.pixelSize: item_fontSize * Constants.scalar
 
-        function updateTopic(ntTopic, value) {
-            if (ntTopic === item_topic) {
-                text = value
-                valid = true
-            }
-        }
-
         text: ""
+        valid: widget.valid
 
         anchors {
             verticalCenter: parent.verticalCenter
@@ -56,30 +53,9 @@ BaseWidget {
             rightMargin: 10
         }
 
-        Component.onCompleted: {
-            topicStore.topicUpdate.connect(updateTopic)
-            item_topic = model.topic
-        }
-
-        Component.onDestruction: {
-            if (topicStore !== null) {
-                topicStore.topicUpdate.disconnect(updateTopic)
-                topicStore.unsubscribe(item_topic)
-            }
-        }
-
         onTextEdited: {
-            valid = false
-            topicStore.setValue(item_topic, text)
+            widget.setValue(text)
         }
-    }
-
-    onItem_topicChanged: {
-        topicStore.unsubscribe(topic)
-        topicStore.subscribe(item_topic)
-        model.topic = item_topic
-
-        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

@@ -84,6 +84,8 @@ set(QML_ELEMENTS
     items/RadialGauge
 
     widgets/BaseWidget
+    widgets/PrimitiveWidget
+    widgets/SendableWidget
     widgets/ResizeAnchor
     widgets/DoubleSpinBox
 
@@ -154,6 +156,7 @@ set(QML_ELEMENTS
     fields/FieldFooter
     fields/BetterComboBox
     fields/BetterMenuItem
+    fields/SearchableComboBox
 )
 
 set(ELEMENTS
@@ -168,7 +171,6 @@ set(ELEMENTS
     models/TabWidgetsModel
     models/TabListModel
     models/TopicListModel
-    models/MapModel
     models/AccentsListModel
     models/RemoteLayoutModel
 
@@ -202,7 +204,6 @@ qt_add_qml_module(${Dashboard_EXEC_NAME}
     QML_FILES ${QML_FILES}
 
     SOURCES ${SOURCES} ${HEADERS}
-    QML_FILES qml/fields/SearchableComboBox.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

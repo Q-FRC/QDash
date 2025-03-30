@@ -7,6 +7,8 @@ import QFRCDashboard 1.0
 Rectangle {
     signal moved(real x, real y)
 
+    property string item_topic
+
     id: widget
 
     width: 100

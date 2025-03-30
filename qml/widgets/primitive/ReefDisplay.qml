@@ -4,42 +4,19 @@ import QtQuick.Layouts
 
 import QFRCDashboard
 
-BaseWidget {
+PrimitiveWidget {
     id: widget
 
     property string item_topic
 
     property list<bool> values
 
-    function updateTopic(ntTopic, ntValue) {
-        if (ntTopic === item_topic) {
-            values = ntValue
-        }
-    }
-
     function valueChanged() {
-        topicStore.setValue(item_topic, values)
+        setValue(values)
     }
 
-    Component.onCompleted: {
-        topicStore.topicUpdate.connect(updateTopic)
-
-        item_topic = model.topic
-    }
-
-    Component.onDestruction: {
-        if (topicStore !== null) {
-            topicStore.topicUpdate.disconnect(updateTopic)
-            topicStore.unsubscribe(item_topic)
-        }
-    }
-
-    onItem_topicChanged: {
-        topicStore.unsubscribe(topic)
-        topicStore.subscribe(item_topic)
-        model.topic = item_topic
-
-        topicStore.forceUpdate(item_topic)
+    function update(value) {
+        values = value
     }
 
     Item {
