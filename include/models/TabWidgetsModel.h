@@ -74,20 +74,19 @@ public:
 
     Q_INVOKABLE bool cellOccupied(int row, int col, int rowSpan = 1, int colSpan = 1, QRectF ignore = QRectF(-1, -1, -1, -1));
 
-    int unoccupiedCells() const;
-    void setUnoccupiedCells(int newUnoccupiedCells);
-
     QJsonArray saveObject() const;
     static TabWidgetsModel *loadObject(QObject *parent, const QJsonArray &arr);
 
+    QList<QPoint> unoccupiedCells() const;
+
 protected:
     QHash<int, QByteArray> roleNames() const override;
-
 
 signals:
     void rowsChanged();
 
     void colsChanged();
+
 
     void unoccupiedCellsChanged();
 
@@ -99,7 +98,7 @@ private:
 
     Q_PROPERTY(int rows READ rows WRITE setRows NOTIFY rowsChanged FINAL)
     Q_PROPERTY(int cols READ cols WRITE setCols NOTIFY colsChanged FINAL)
-    Q_PROPERTY(int unoccupiedCells READ unoccupiedCells NOTIFY unoccupiedCellsChanged FINAL)
+    Q_PROPERTY(QList<QPoint> unoccupiedCells READ unoccupiedCells NOTIFY unoccupiedCellsChanged FINAL)
 };
 
 Q_DECLARE_METATYPE(TabWidgetsModel)

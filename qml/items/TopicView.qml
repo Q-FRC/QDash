@@ -240,8 +240,8 @@ Row {
             text: parent.text
             color: Constants.palette.text
 
-            width: 40 * Constants.scalar
-            height: 40 * Constants.scalar
+            width: parent.width
+            height: parent.height
 
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
