@@ -258,7 +258,6 @@ PrimitiveWidget {
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignTop
 
-                    // Layout.preferredWidth: 300
                     Text {
                         font.pixelSize: 16 * Constants.scalar
                         text: "Resolution"

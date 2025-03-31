@@ -1,6 +1,7 @@
 #ifndef TopicStore_H
 #define TopicStore_H
 
+#include "LogManager.h"
 #include "networktables/NetworkTableEntry.h"
 #include "Globals.h"
 #include "Flags.h"
@@ -23,7 +24,6 @@ struct Listener {
 class TopicStore : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT
 private:
     bool hasEntry(QString topic);
 
@@ -33,11 +33,13 @@ private:
     QList<Listener> Listeners;
     QHash<QString, nt::NetworkTableEntry> topicEntryMap;
 
+    LogManager *m_logs;
+
 public:
     static QVariant toVariant(const nt::Value &value);
     static nt::Value toValue(const QVariant &value);
 
-    TopicStore(QObject *parent = nullptr);
+    TopicStore(LogManager *logs, QObject *parent = nullptr);
 
     void connect(bool connected);
 

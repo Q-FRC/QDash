@@ -22,7 +22,7 @@ signals:
 private:
     QString m_logFile;
 
-    const QString m_format = "dd.MM.yyyy-hh:mm:ss";
+    static constexpr char m_format[] = "dd.MM.yyyy-hh:mm:ss";
 };
 
 #endif // LOGMANAGER_H

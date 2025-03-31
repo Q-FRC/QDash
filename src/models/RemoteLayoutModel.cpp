@@ -69,7 +69,7 @@ bool RemoteLayoutModel::load()
         QJsonObject obj = doc.object();
         QJsonArray files = obj.value("files").toArray();
 
-        for (const QJsonValueRef ref : files) {
+        for (QJsonValueConstRef ref : std::as_const(files)) {
             QJsonObject obj = ref.toObject();
 
             QString name = obj.value("name").toString();

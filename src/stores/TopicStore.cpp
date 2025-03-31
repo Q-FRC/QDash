@@ -4,8 +4,9 @@
 
 #include <QVariant>
 
-TopicStore::TopicStore(QObject *parent)
+TopicStore::TopicStore(LogManager *logs, QObject *parent)
     : QObject(parent)
+    , m_logs(logs)
 {
 }
 
@@ -143,8 +144,9 @@ bool Listener::operator==(const Listener &other) const {
 
 void TopicStore::subscribe(QString ntTopic) {
     if (ntTopic == "") return;
-    // qDebug() << "Subscribing to topic" << ntTopic;
     Listener listener;
+
+    m_logs->info("TopicStore", "Subscribed to topic " + ntTopic);
 
     listener = changeNumSubscribed(ntTopic);
     if (listener.isNull) {
@@ -170,8 +172,6 @@ void TopicStore::subscribe(QString ntTopic) {
 
             QVariant var = toVariant(value);
 
-            // qDebug() << "C++: TopicUpdate with params" << ntTopic << var;
-
             if (var.isValid() && !var.isNull()) {
                 emit topicUpdate(ntTopic, var);
             }
@@ -193,6 +193,8 @@ void TopicStore::subscribe(QString ntTopic) {
 
 void TopicStore::unsubscribe(QString ntTopic) {
     if (!hasEntry(ntTopic)) return;
+
+    m_logs->debug("TopicStore", "Unsubscribed from topic " + ntTopic);
 
     Listener listener = changeNumSubscribed(ntTopic, -1);
 
@@ -225,6 +227,8 @@ void TopicStore::setValue(QString topic, const QVariant &value)
 
 void TopicStore::forceUpdate(const QString &topic)
 {
+    m_logs->debug("TopicStore", "Force-updating topic " + topic);
+
     Listener l = entry(topic);
     if (l.isNull) return;
 
