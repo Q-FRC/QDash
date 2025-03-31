@@ -9,6 +9,7 @@
 #include "ConnManager.h"
 #include "Flags.h"
 #include "Globals.h"
+#include "LogManager.h"
 #include "NotificationHelper.h"
 #include "PlatformHelper.h"
 #include "TopicListModel.h"
@@ -29,57 +30,64 @@ int main(int argc, char *argv[])
 
     QQuickStyle::setStyle("Material");
 
-    TopicStore store(&app);
+    // TODO: Holy nuts please organize this
+    QObject *parent = new QObject(&app);
 
-    TopicListModel *topics = new TopicListModel(store, &app);
-    QSortFilterProxyModel *topicsSorted = new QSortFilterProxyModel(&app);
+    LogManager *logs = new LogManager(parent);
+
+    TopicStore store(logs, parent);
+
+    TopicListModel *topics = new TopicListModel(store, parent);
+    QSortFilterProxyModel *topicsSorted = new QSortFilterProxyModel(parent);
 
     topicsSorted->setSourceModel(topics);
     topicsSorted->setFilterRole(TopicListModel::TLMRoleTypes::TOPIC);
     topicsSorted->setFilterCaseSensitivity(Qt::CaseInsensitive);
     topicsSorted->setRecursiveFilteringEnabled(true);
 
-    SettingsManager *settings = new SettingsManager(&app);
+    SettingsManager *settings = new SettingsManager(logs, parent);
 
-    TabListModel *tlm = new TabListModel(settings, &app);
+    TabListModel *tlm = new TabListModel(logs, settings, parent);
 
-    ConnManager *conn = new ConnManager(&app);
+    ConnManager *conn = new ConnManager(parent);
 
-    AccentsListModel *accents = new AccentsListModel(&app);
+    AccentsListModel *accents = new AccentsListModel(parent);
     accents->load();
 
-    PlatformHelper *platform = new PlatformHelper(&app);
+    PlatformHelper *platform = new PlatformHelper(parent);
 
-    NotificationHelper *notification = new NotificationHelper(&app);
+    NotificationHelper *notification = new NotificationHelper(parent);
 
-    Globals::inst.AddConnectionListener(true, [topics, &store, conn](const nt::Event &event) {
+    Globals::inst.AddConnectionListener(true, [topics, &store, conn, logs](const nt::Event &event) {
         bool connected = event.Is(nt::EventFlags::kConnected);
 
         store.connect(connected);
 
         auto connInfo = event.GetConnectionInfo();
+        QString remoteIP = QString::fromStdString(connInfo->remote_ip);
 
-        qDebug() << "Connected State:" << connected;
-        // qDebug() << "Log Message:" << event.GetLogMessage()->message;
-        qDebug() << "Remote Info: IP" << connInfo->remote_ip << "ID" << connInfo->remote_id << "Protocol Version" << connInfo->protocol_version;
-        qDebug() << "Client Ready";
+        QMetaObject::invokeMethod(topics, [remoteIP, connected, logs, topics, conn] {
+            logs->info("NT", QString("Connected State: ") + (connected ? "true" : "false"));
 
-        if (!connected) {
-            QMetaObject::invokeMethod(topics, &TopicListModel::clear);
-        } else {
-            conn->setAddress(QString::fromStdString(event.GetConnectionInfo()->remote_ip));
-        }
-        conn->setConnected(connected);
+            if (!connected) {
+                topics->clear();
+            } else {
+                conn->setAddress(remoteIP);
+                logs->info("NT", "Client connected to " + remoteIP);
+            }
+            conn->setConnected(connected);
+        });
     });
 
     Globals::inst.StartClient4(BuildConfig.APP_NAME.toStdString());
     Globals::inst.StartDSClient(NT_DEFAULT_PORT4);
 
-    Globals::inst.AddListener({{""}}, nt::EventFlags::kTopic, [topics](const nt::Event &event) {
+    Globals::inst.AddListener({{""}}, nt::EventFlags::kTopic, [topics, logs](const nt::Event &event) {
         std::string topicName(event.GetTopicInfo()->name);
 
         if (event.Is(nt::EventFlags::kPublish)) {
-            QMetaObject::invokeMethod(topics, [topics, topicName] {
+            QMetaObject::invokeMethod(topics, [topics, topicName, logs] {
+                logs->debug("NT", "Received topic announcement for " + QString::fromStdString(topicName));
                 topics->add(QString::fromStdString(topicName));
             });
 
@@ -90,25 +98,31 @@ int main(int argc, char *argv[])
     });
 
     nt::NetworkTableEntry tabEntry = Globals::inst.GetEntry("/QFRCDashboard/Tab");
-    Globals::inst.AddListener(tabEntry, nt::EventFlags::kValueAll, [tlm](const nt::Event &event) {
+    Globals::inst.AddListener(tabEntry, nt::EventFlags::kValueAll, [tlm, logs](const nt::Event &event) {
         std::string_view value = event.GetValueEventData()->value.GetString();
         QString qvalue = QString::fromStdString(std::string{value});
 
-        QMetaObject::invokeMethod(tlm, [tlm, qvalue] { tlm->selectTab(qvalue); });
+
+        QMetaObject::invokeMethod(tlm, [tlm, qvalue, logs] {
+            tlm->selectTab(qvalue);
+            logs->debug("NT", "Requested tab switch to tab " + qvalue);
+        });
     });
 
     nt::NetworkTableEntry notificationEntry = Globals::inst.GetEntry(
         "/QFRCDashboard/RobotNotifications");
+
     Globals::inst.AddListener(notificationEntry,
                               nt::EventFlags::kValueAll,
-                              [tlm, &app, notification](const nt::Event &event) {
+                              [tlm, parent, notification, logs](const nt::Event &event) {
                                   std::string_view value = event.GetValueEventData()
                                                                ->value.GetString();
                                   QString qvalue = QString::fromStdString(std::string{value});
                                   QJsonDocument doc = QJsonDocument::fromJson(qvalue.toUtf8());
 
-                                  QMetaObject::invokeMethod(notification, [doc, notification] {
+                                  QMetaObject::invokeMethod(notification, [doc, notification, logs, qvalue] {
                                       notification->fromJson(doc);
+                                      logs->debug("Notifications", "Received notification data " + qvalue);
                                   });
                               });
 
@@ -132,13 +146,17 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("platformHelper", platform);
     engine.rootContext()->setContextProperty("notificationHelper", notification);
     engine.rootContext()->setContextProperty("buildConfig", &BuildConfig);
+    engine.rootContext()->setContextProperty("logs", logs);
+
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,
-        &app,
+        parent,
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
     engine.loadFromModule("QFRCDashboard", "Main");
+
+    logs->info("QFRCDashboard", "Application started");
 
     return app.exec();
 }

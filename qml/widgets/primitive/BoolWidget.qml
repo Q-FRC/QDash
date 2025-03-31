@@ -27,19 +27,31 @@ PrimitiveWidget {
         control.checked = value
     }
 
-    CheckBox {
-        id: control
-
-        checked: false
-
+    Item {
         anchors {
-            centerIn: parent
+            top: titleField.bottom
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+
+            leftMargin: 10
+            rightMargin: 10
         }
 
-        indicator.implicitHeight: item_checkboxSize * Constants.scalar
-        indicator.implicitWidth: item_checkboxSize * Constants.scalar
+        CheckBox {
+            id: control
 
-        onToggled: widget.setValue(checked)
+            checked: false
+
+            anchors {
+                centerIn: parent
+            }
+
+            indicator.implicitHeight: item_checkboxSize * Constants.scalar
+            indicator.implicitWidth: item_checkboxSize * Constants.scalar
+
+            onToggled: widget.setValue(checked)
+        }
     }
 
     BaseConfigDialog {

@@ -123,6 +123,7 @@ set(QML_ELEMENTS
     widgets/config/LabeledCheckbox
     widgets/config/LabeledSpinBox
     widgets/config/LabeledDoubleSpinBox
+    widgets/config/LabeledIndexComboBox
     widgets/config/LabeledComboBox
     widgets/config/TitleComponent
     widgets/config/ColorField
@@ -162,10 +163,6 @@ set(QML_ELEMENTS
 set(ELEMENTS
     Globals
     Constants
-    SettingsManager
-    ConnManager
-    PlatformHelper
-    NotificationHelper
     MaskedMouseArea
 
     models/TabWidgetsModel
@@ -175,6 +172,13 @@ set(ELEMENTS
     models/RemoteLayoutModel
 
     stores/TopicStore
+
+    managers/SettingsManager
+    managers/ConnManager
+    managers/LogManager
+
+    helpers/PlatformHelper
+    helpers/NotificationHelper
 )
 
 foreach(ELEMENT ${ELEMENTS})
@@ -193,7 +197,7 @@ set(SOURCES
 set(HEADERS
     ${HEADERS}
     include/Flags.h
-    include/MetaObjectHelper.h
+    include/helpers/MetaObjectHelper.h
 )
 
 add_subdirectory(buildconfig)
@@ -229,6 +233,8 @@ target_link_libraries(${Dashboard_EXEC_NAME}
 target_include_directories(${Dashboard_EXEC_NAME} PRIVATE include/)
 target_include_directories(${Dashboard_EXEC_NAME} PRIVATE include/models)
 target_include_directories(${Dashboard_EXEC_NAME} PRIVATE include/stores)
+target_include_directories(${Dashboard_EXEC_NAME} PRIVATE include/managers)
+target_include_directories(${Dashboard_EXEC_NAME} PRIVATE include/helpers)
 target_include_directories(${Dashboard_EXEC_NAME} PRIVATE "$<TARGET_PROPERTY:ntcore,INTERFACE_INCLUDE_DIRECTORIES>")
 
 include(GNUInstallDirs)
