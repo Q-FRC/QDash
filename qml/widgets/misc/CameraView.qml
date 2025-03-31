@@ -123,8 +123,8 @@ PrimitiveWidget {
 
             videoOutput: video
             onErrorOccurred: (error, errorString) => {
-                                 console.error("CameraView: error:",
-                                               errorString)
+                                 logs.warn("CameraView",
+                                           "Qt reported error " + errorString)
 
                                  urlIndex++
                                  if (urlIndex >= urlChoices.length) {
@@ -135,10 +135,9 @@ PrimitiveWidget {
 
                                  sourceTimer.start()
 
-                                 console.log(
-                                     "CameraView: cycling to url index",
-                                     urlIndex, "url", item_url,
-                                     player.mediaStatus)
+                                 logs.debug(
+                                     "CameraView",
+                                     "Cycling to index " + urlIndex + " URL " + item_url)
                              }
         }
 
@@ -259,7 +258,6 @@ PrimitiveWidget {
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignTop
 
-                    // Layout.preferredWidth: 300
                     Text {
                         font.pixelSize: 16 * Constants.scalar
                         text: "Resolution"

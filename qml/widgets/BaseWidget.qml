@@ -172,6 +172,12 @@ Rectangle {
                                                    })
                 } else {
                     this[p + "Changed"].connect(() => {
+                                                    logs.debug(
+                                                        "Widget",
+                                                        "Updating property " + propName
+                                                        + " for widget " + model.title
+                                                        + " to " + this[propName])
+
                                                     let x = model.properties
                                                     x[substr] = this[propName]
                                                     model.properties = x

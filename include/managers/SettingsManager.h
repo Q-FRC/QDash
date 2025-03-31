@@ -1,6 +1,8 @@
 #ifndef SETTINGSMANAGER_H
 #define SETTINGSMANAGER_H
 
+#include "LogManager.h"
+
 #include <QFile>
 #include <QObject>
 #include <QQmlEngine>
@@ -8,7 +10,8 @@
 class SettingsManager : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT
+
+    LogManager *m_logs;
 
     Q_PROPERTY(bool loadRecent READ loadRecent WRITE setLoadRecent NOTIFY loadRecentChanged FINAL)
     Q_PROPERTY(QStringList recentFiles READ recentFiles WRITE setRecentFiles NOTIFY recentFilesChanged FINAL)
@@ -21,9 +24,10 @@ class SettingsManager : public QObject
 
     Q_PROPERTY(double scale READ scale WRITE setScale NOTIFY scaleChanged FINAL)
     Q_PROPERTY(bool resizeToDS READ resizeToDS WRITE setResizeToDS NOTIFY resizeToDSChanged FINAL)
+    Q_PROPERTY(int logLevel READ logLevel WRITE setLogLevel NOTIFY logLevelChanged FINAL)
 
 public:
-    explicit SettingsManager(QObject *parent = nullptr);
+    explicit SettingsManager(LogManager *logs, QObject *parent = nullptr);
 
     // NT
     QString ip() const;
@@ -58,6 +62,9 @@ public:
     bool resizeToDS() const;
     void setResizeToDS(bool newResizeToDS);
 
+    int logLevel() const;
+    void setLogLevel(int newLogLevel);
+
 signals:
     void recentFilesChanged();
     void loadRecentChanged();
@@ -69,6 +76,7 @@ signals:
     void modeChanged();
     void scaleChanged();
     void resizeToDSChanged();
+    void logLevelChanged();
 };
 
 #endif // SETTINGSMANAGER_H

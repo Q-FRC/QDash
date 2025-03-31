@@ -22,7 +22,6 @@ typedef struct {
 class TabListModel : public QAbstractListModel
 {
     Q_OBJECT
-    QML_ELEMENT
 
     Q_PROPERTY(int selectedTab READ selectedTab NOTIFY selectedTabChanged FINAL)
 public:
@@ -33,7 +32,7 @@ public:
         WIDGETS
     };
 
-    explicit TabListModel(SettingsManager *settings = nullptr, QObject *parent = nullptr);
+    explicit TabListModel(LogManager *logs, SettingsManager *settings = nullptr, QObject *parent = nullptr);
 
     // Basic functionality:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -72,6 +71,7 @@ private:
     QList<Tab> m_data;
 
     SettingsManager *m_settings;
+    LogManager *m_logs;
     int m_selectedTab = 0;
 };
 #endif // TABLISTMODEL_H

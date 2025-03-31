@@ -1,12 +1,12 @@
 #include "TabListModel.h"
-#include "Globals.h"
 
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonObject>
 
-TabListModel::TabListModel(SettingsManager *settings, QObject *parent)
+TabListModel::TabListModel(LogManager *logs, SettingsManager *settings, QObject *parent)
     : QAbstractListModel(parent)
+    , m_logs(logs)
     , m_settings(settings)
 {}
 
@@ -114,6 +114,7 @@ void TabListModel::save(const QString &filename)
     QFile file(name);
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        m_logs->critical("Layout", "Failed to open file " + name + " for writing.");
         qCritical() << "Failed to open file" << name << filename << "for writing.";
         return;
     }
@@ -225,7 +226,7 @@ void TabListModel::selectTab(const QString &tab)
         }
     }
 
-    qWarning() << "Selected tab" << tab << "does not exist.";
+    m_logs->warn("Layout", "Failed to select nonexistent " + tab + ".");
 }
 
 QHash<int, QByteArray> TabListModel::roleNames() const

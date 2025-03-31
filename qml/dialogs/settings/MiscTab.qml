@@ -10,10 +10,12 @@ ColumnLayout {
 
     function accept() {
         load.accept()
+        level.accept()
     }
 
     function open() {
         load.open()
+        level.open()
     }
 
     LabeledCheckbox {
@@ -22,5 +24,22 @@ ColumnLayout {
 
         bindTarget: settings
         bindedProperty: "loadRecent"
+    }
+
+    LabeledIndexComboBox {
+        Layout.fillWidth: true
+
+        id: level
+        label: "Log Level"
+
+        choices: ["Critical", "Warning", "Info", "Debug"]
+
+        hoverEnabled: true
+
+        ToolTip.visible: hovered
+        ToolTip.text: "The log file is located in the local data location."
+
+        bindTarget: settings
+        bindedProperty: "logLevel"
     }
 }

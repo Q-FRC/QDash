@@ -61,18 +61,24 @@ SendableWidget {
 
             implicitHeight: 40 * Constants.scalar
 
-            property int previousIndex: 0
+            property int previousIndex: -1
 
-            // TODO: rewrite other widgets to use this
+            // TODO: rewrite other widgets to do this with a setting
             Connections {
                 target: topicStore
 
                 function onConnected(conn) {
                     if (conn) {
-                        widget.readyToUpdate = false
-
                         button.valid = true
-                        widget.setValue("selected", combo.currentText)
+
+                        if (combo.previousIndex !== -1) {
+                            logs.info("StringChooser",
+                                      "Force-updating chooser \"" + item_topic
+                                      + "\" to value " + combo.currentText)
+
+                            widget.readyToUpdate = false
+                            widget.setValue("selected", combo.currentText)
+                        }
 
                         combo.enabled = true
                     } else {

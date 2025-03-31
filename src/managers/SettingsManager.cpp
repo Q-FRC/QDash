@@ -2,14 +2,15 @@
 #include "Constants.h"
 #include "Globals.h"
 
-SettingsManager::SettingsManager(QObject *parent)
+SettingsManager::SettingsManager(LogManager *logs, QObject *parent)
     : QObject{parent}
+    , m_logs(logs)
 {}
 
+// TODO: Seems like this reconnect happens thrice (once for each param)
+// pls fix
 void SettingsManager::reconnectServer()
 {
-    qDebug() << "Server Reconnect requested via settings dialog.";
-
     std::string server = QString(Settings::IP).toStdString();
     int team = Settings::TeamNumber;
     int mode = Settings::ConnMode;
@@ -18,25 +19,23 @@ void SettingsManager::reconnectServer()
     // IP Address
     case 0:
         Globals::inst.SetServer(server.c_str(), NT_DEFAULT_PORT4);
-        qDebug() << "Requested connect to IP" << server.c_str();
+        m_logs->info("NT", "Requested connect to IP " + QString::fromStdString(server));
         break;
     // Team Number
     case 1:
         Globals::inst.SetServerTeam(team, NT_DEFAULT_PORT4);
-        qDebug() << "Requested connect to team" << team;
+        m_logs->info("NT", "Requested connect to team number " + QString::number(team));
         break;
-    // DS
+    // DS&
     case 2:
         Globals::inst.StartDSClient(NT_DEFAULT_PORT4);
-        qDebug() << "Requested connect to DS";
+        m_logs->info("NT", "Requested connect to DS");
         break;
     default:
         break;
     }
 
     Globals::inst.Disconnect();
-
-    qDebug() << "Disconnect requested via settings. Client will automatically reconnect.";
 }
 
 void SettingsManager::addRecentFile(QFile &file)
@@ -161,4 +160,15 @@ void SettingsManager::setResizeToDS(bool newResizeToDS)
 {
     Settings::ResizeToDS = newResizeToDS;
     emit resizeToDSChanged();
+}
+
+int SettingsManager::logLevel() const
+{
+    return Settings::LogLevel.value().toInt();
+}
+
+void SettingsManager::setLogLevel(int newLogLevel)
+{
+    Settings::LogLevel.setValue(newLogLevel);
+    emit logLevelChanged();
 }

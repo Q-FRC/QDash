@@ -30,13 +30,15 @@ ApplicationWindow {
         Constants.scalar = Math.sqrt(
                     Math.min(width / Constants.width,
                              height / Constants.height)) * settings.scale
+
+        logs.debug("UI", "Scalar reset to " + Constants.scalar)
     }
 
     function dsResize() {
         if (settings.resizeToDS) {
-            console.debug("DS Resize")
+            logs.debug("UI", "DS Resize")
 
-            height = platformHelper.screenHeight() - 234
+            height = platformHelper.screenHeight() - 236
             width = platformHelper.screenWidth()
 
             x = 0
@@ -109,6 +111,7 @@ ApplicationWindow {
 
     function load() {
         filename = loadDialog.selectedFile
+        logs.info("IO", "Loading file " + filename)
         tlm.load(filename)
     }
 
@@ -217,6 +220,7 @@ ApplicationWindow {
                 centerIn: parent
             }
 
+            // TODO: Remove file://
             text: filename === "" ? "No File" : filename
 
             color: Constants.palette.text

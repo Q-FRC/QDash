@@ -60,8 +60,8 @@ PrimitiveWidget {
     Component.onCompleted: {
         rcMenu.addMenu(switchMenu)
 
-        gauge.width = parent.width
-        gauge.height = parent.height - titleField.height
+        gauge.width = width
+        gauge.height = height - titleField.height
         gauge.fixSize()
     }
 
