@@ -89,27 +89,55 @@ Rectangle {
 
         onMouseXChanged: {
             if (drag.active) {
+                let newWidth = parent.parent.width
+                let newX = parent.parent.x
+
                 if (hasRight) {
-                    parent.parent.width = parent.parent.width + mouseX
+                    newWidth += mouseX
                 } else if (hasLeft) {
-                    parent.parent.width = parent.parent.width - mouseX
-                    parent.parent.x = parent.parent.x + mouseX
+                    newWidth -= mouseX
+                    newX += mouseX
                 }
 
-                // resizeBegin(widget.Drag)
+                if (newWidth >= parent.parent.minWidth) {
+                    parent.parent.width = newWidth
+                    parent.parent.x = newX
+                } else {
+                    if (hasLeft) {
+                        let diff = parent.parent.minWidth - parent.parent.width
+                        if (Math.abs(diff) < 0.5)
+                            diff = 0
+                        parent.parent.x -= diff
+                    }
+                    parent.parent.width = parent.parent.minWidth
+                }
             }
         }
 
         onMouseYChanged: {
             if (drag.active) {
+                let newHeight = parent.parent.height
+                let newY = parent.parent.y
+
                 if (hasBottom) {
-                    parent.parent.height = parent.parent.height + mouseY
+                    newHeight += mouseY
                 } else if (hasTop) {
-                    parent.parent.height = parent.parent.height - mouseY
-                    parent.parent.y = parent.parent.y + mouseY
+                    newHeight -= mouseY
+                    newY += mouseY
                 }
 
-                // resizeBegin(widget.Drag)
+                if (newHeight >= parent.parent.minHeight) {
+                    parent.parent.height = newHeight
+                    parent.parent.y = newY
+                } else {
+                    if (hasLeft) {
+                        let diff = parent.parent.minHeight - parent.parent.height
+                        if (Math.abs(diff) < 0.5)
+                            diff = 0
+                        parent.parent.y -= diff
+                    }
+                    parent.parent.height = parent.parent.minHeight
+                }
             }
         }
     }

@@ -4,72 +4,61 @@ import QtQuick.Layouts
 
 import QFRCDashboard
 
-BaseWidget {
+SendableWidget {
     id: widget
 
-    property string item_topic
+    topics: [".name", "running"]
 
     property int item_fontSize: 18
 
-    Button {
-        id: cmdButton
-
-        anchors {
-            verticalCenter: parent.verticalCenter
-
-            left: parent.left
-            right: parent.right
+    function update(topic, value) {
+        switch (topic) {
+        case ".name":
+        {
+            cmdButton.name = value
+            break
         }
-
-        font.pixelSize: item_fontSize * Constants.scalar
-
-        property bool running: false
-        property string name: "Command"
-
-        function updateTopic(ntTopic, value) {
-            if (ntTopic === item_topic + "/.name") {
-                name = value
-            } else if (ntTopic === item_topic + "/running") {
-                running = value
-            }
+        case "running":
+        {
+            cmdButton.running = value
+            break
         }
-
-        onClicked: {
-            running = !running
-            topicStore.setValue(item_topic + "/running", running)
-        }
-
-        text: name
-
-        function update() {
-            topicStore.subscribe(item_topic + "/.name")
-            topicStore.subscribe(item_topic + "/running")
-        }
-
-        function unsubscribe() {
-            topicStore.unsubscribe(item_topic + "/.name")
-            topicStore.unsubscribe(item_topic + "/running")
-        }
-
-        Component.onCompleted: {
-            topicStore.topicUpdate.connect(updateTopic)
-            item_topic = model.topic
-            update()
-        }
-
-        Component.onDestruction: {
-            if (topicStore !== null) {
-                topicStore.topicUpdate.disconnect(updateTopic)
-                unsubscribe()
-            }
         }
     }
 
-    onItem_topicChanged: {
-        cmdButton.unsubscribe()
-        model.topic = item_topic
+    Item {
+        anchors {
+            top: titleField.bottom
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
 
-        cmdButton.update()
+            leftMargin: 10
+            rightMargin: 10
+        }
+
+        Button {
+            id: cmdButton
+
+            anchors {
+                verticalCenter: parent.verticalCenter
+
+                left: parent.left
+                right: parent.right
+            }
+
+            font.pixelSize: item_fontSize * Constants.scalar
+
+            property bool running: false
+            property string name: "Command"
+
+            onClicked: {
+                running = !running
+                widget.setValue("running", running)
+            }
+
+            text: name
+        }
     }
 
     BaseConfigDialog {

@@ -7,10 +7,11 @@ import QFRCDashboard 1.0
 Rectangle {
     signal moved(real x, real y)
 
-    id: widget
+    property string item_topic
 
-    width: 100
-    height: 100
+    id: widget
+    clip: true
+
     z: 3
 
     border {
@@ -25,6 +26,9 @@ Rectangle {
     property alias titleField: titleField
     property alias rcMenu: rcMenu
 
+    property int minWidth: grid.colWidth - 16
+    property int minHeight: grid.rowHeight - 16
+
     color: Constants.palette.widgetBg
 
     Drag.active: dragArea.drag.active
@@ -37,6 +41,14 @@ Rectangle {
     }
 
     function checkResize() {
+        if (width < grid.colWidth - 16) {
+            width = grid.colWidth - 16
+        }
+
+        if (height < grid.rowHeight - 16) {
+            height = grid.rowHeight - 16
+        }
+
         if (resizeActive) {
             grid.validResize(width, height, x, y, row, column, rowSpan, colSpan)
         }
@@ -145,6 +157,8 @@ Rectangle {
         mrowSpan = model.rowSpan
         mcolumnSpan = model.colSpan
 
+        fixSize()
+
         for (var p in this) {
             if (p.startsWith("item_") && typeof this[p] !== "function") {
                 let propName = p
@@ -173,15 +187,30 @@ Rectangle {
         }
     }
 
-    Layout.row: model.row
-    Layout.column: model.column
-    Layout.rowSpan: model.rowSpan
-    Layout.columnSpan: model.colSpan
+    width: grid.colWidth * model.colSpan - 16
+    height: grid.rowHeight * model.rowSpan - 16
 
-    Layout.margins: 8
+    x: grid.colWidth * model.column + 8
+    y: grid.rowHeight * model.row + 8
 
-    Layout.preferredWidth: grid.prefWidth(this)
-    Layout.preferredHeight: grid.prefHeight(this)
+    Connections {
+        target: grid
+
+        function onColWidthChanged() {
+            widget.fixSize()
+        }
+
+        function onRowHeightChanged() {
+            widget.fixSize()
+        }
+    }
+
+    function fixSize() {
+        width = grid.colWidth * model.colSpan - 16
+        height = grid.rowHeight * model.rowSpan - 16
+        x = grid.colWidth * model.column + 8
+        y = grid.rowHeight * model.row + 8
+    }
 
     Menu {
         id: rcMenu
@@ -232,14 +261,10 @@ Rectangle {
                                 let newPoint = grid.getPoint(widget.x,
                                                              widget.y, true)
 
-                                // Force update it to ensure the grid properly lays it out
-                                mrow = newPoint.y + 1
-                                mcolumn = newPoint.x + 1
+                                model.row = newPoint.y
+                                model.column = newPoint.x
 
-                                update()
-
-                                mrow = newPoint.y
-                                mcolumn = newPoint.x
+                                fixSize()
                             } else {
                                 animateBacksize()
                             }
@@ -282,16 +307,12 @@ Rectangle {
                                                   widget.x, widget.y,
                                                   widget.width, widget.height)
 
-                                              // Force update it to ensure the grid properly lays it out
-                                              mrowSpan = newSize.height + 1
-                                              mcolumnSpan = newSize.width + 1
+                                              model.rowSpan = newSize.height
+                                              model.colSpan = newSize.width
+                                              model.row = newSize.y
+                                              model.column = newSize.x
 
-                                              update()
-
-                                              mrowSpan = newSize.height
-                                              mcolumnSpan = newSize.width
-                                              mrow = newSize.y
-                                              mcolumn = newSize.x
+                                              fixSize()
                                           } else {
                                               animateBacksize()
                                           }
@@ -313,6 +334,8 @@ Rectangle {
         font.pixelSize: item_titleFontSize * Constants.scalar
         font.bold: true
 
+        clip: true
+
         text: model.title
         color: "#DDDDDD"
 
@@ -323,7 +346,6 @@ Rectangle {
             horizontalCenter: parent.horizontalCenter
         }
 
-        // clip: true
         background: Item {}
 
         horizontalAlignment: Text.AlignHCenter
@@ -332,12 +354,11 @@ Rectangle {
 
     Rectangle {
         anchors {
-            top: parent.top
+            top: titleField.top
             left: parent.left
             right: parent.right
+            bottom: titleField.bottom
         }
-
-        height: titleField.height
 
         topLeftRadius: 12 * Constants.scalar
         topRightRadius: 12 * Constants.scalar

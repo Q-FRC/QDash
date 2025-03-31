@@ -5,11 +5,67 @@ import QtQuick.Layouts
 import QFDFlags
 import QFRCDashboard
 
-BaseWidget {
+SendableWidget {
     id: widget
-    property string item_topic
+
+    topics: ["MatchNumber", "MatchType", "EventName", "IsRedAlliance", "GameSpecificMessage", "FMSControlData"]
 
     property int item_fontSize: 18
+
+    function update(topic, value) {
+        switch (topic) {
+        case "MatchNumber":
+        {
+            match.matchNumber = value
+            break
+        }
+        case "MatchType":
+        {
+            match.matchType = match.matchTypeMap[value]
+            break
+        }
+        case "EventName":
+        {
+            match.eventName = value === "" ? "Event" : value
+            break
+        }
+        case "IsRedAlliance":
+        {
+            rect.isRedAlliance = value
+            break
+        }
+        case "GameSpecificMessage":
+        {
+            gsm.gameSpecificMessage = value
+            break
+        }
+        case "FMSControlData":
+        {
+            let word = topicStore.toWord(value)
+
+            let state = ""
+
+            if (word & QFDFlags.Auto) {
+                state += "Autonomous"
+            } else if (word & QFDFlags.Test) {
+                state += "Testing"
+            } else {
+                state += "Teleop"
+            }
+
+            if (word & QFDFlags.Enabled) {
+                state += " Enabled"
+            } else if (word & QFDFlags.EStop) {
+                state += " E-Stopped"
+            } else {
+                state += " Disabled"
+            }
+
+            stateText.state = state
+            break
+        }
+        }
+    }
 
     ColumnLayout {
         anchors {
@@ -23,8 +79,9 @@ BaseWidget {
             rightMargin: 10
         }
 
-        // TODO: Don't show GSM if there is none
         Rectangle {
+            id: rect
+
             Layout.fillWidth: true
             property bool isRedAlliance: false
 
@@ -51,47 +108,7 @@ BaseWidget {
 
                 font.pixelSize: item_fontSize * Constants.scalar
 
-                function updateTopic(ntTopic, value) {
-                    if (ntTopic === item_topic + "/MatchNumber") {
-                        matchNumber = value
-                    } else if (ntTopic === item_topic + "/MatchType") {
-                        matchType = matchTypeMap[value]
-                    } else if (ntTopic === item_topic + "/EventName") {
-                        eventName = value
-                    } else if (ntTopic === item_topic + "/IsRedAlliance") {
-                        parent.isRedAlliance = value
-                    }
-                }
-
                 text: eventName + ": " + matchType + " Match " + matchNumber
-
-                function update() {
-                    topicStore.subscribe(item_topic + "/MatchNumber")
-                    topicStore.subscribe(item_topic + "/MatchType")
-                    topicStore.subscribe(item_topic + "/EventName")
-                    topicStore.subscribe(item_topic + "/IsRedAlliance")
-                }
-
-                function unsubscribe() {
-                    topicStore.unsubscribe(topic + "/MatchNumber")
-                    topicStore.unsubscribe(topic + "/MatchType")
-                    topicStore.unsubscribe(topic + "/EventName")
-                    topicStore.unsubscribe(topic + "/IsRedAlliance")
-                }
-
-                Component.onCompleted: {
-                    topicStore.topicUpdate.connect(updateTopic)
-                    item_topic = model.topic
-
-                    update()
-                }
-
-                Component.onDestruction: {
-                    if (topicStore !== null) {
-                        topicStore.topicUpdate.disconnect(updateTopic)
-                        unsubscribe()
-                    }
-                }
             }
         }
 
@@ -105,36 +122,9 @@ BaseWidget {
 
             font.pixelSize: item_fontSize * Constants.scalar
 
-            function updateTopic(ntTopic, value) {
-                if (ntTopic === item_topic + "/GameSpecificMessage") {
-                    gameSpecificMessage = value
-                }
-            }
-
             horizontalAlignment: Text.AlignHCenter
 
             text: gameSpecificMessage
-
-            function update() {
-                topicStore.subscribe(item_topic + "/GameSpecificMessage")
-            }
-
-            function unsubscribe() {
-                topicStore.unsubscribe(topic + "/GameSpecificMessage")
-            }
-
-            Component.onCompleted: {
-                topicStore.topicUpdate.connect(updateTopic)
-                item_topic = model.topic
-
-                update()
-            }
-            Component.onDestruction: {
-                if (topicStore !== null) {
-                    topicStore.topicUpdate.disconnect(updateTopic)
-                    unsubscribe()
-                }
-            }
 
             visible: gameSpecificMessage !== ""
         }
@@ -149,72 +139,10 @@ BaseWidget {
 
             font.pixelSize: item_fontSize * Constants.scalar
 
-            function updateTopic(ntTopic, value) {
-                if (ntTopic === item_topic + "/FMSControlData") {
-                    let word = topicStore.toWord(value)
-
-                    state = ""
-
-                    if (word & QFDFlags.Auto) {
-                        state += "Autonomous"
-                    } else if (word & QFDFlags.Test) {
-                        state += "Testing"
-                    } else {
-                        state += "Teleop"
-                    }
-
-                    if (word & QFDFlags.Enabled) {
-                        state += " Enabled"
-                    } else if (word & QFDFlags.EStop) {
-                        state += " E-Stopped"
-                    } else {
-                        state += " Disabled"
-                    }
-                }
-            }
-
             horizontalAlignment: Text.AlignHCenter
 
             text: state
-
-            // TODO: This is really jank
-            // should have a single value descriptor in the root item
-            // that handles everything
-            function update() {
-                topicStore.subscribe(item_topic + "/FMSControlData")
-
-                topicStore.forceUpdate(item_topic + "/FMSControlData")
-            }
-
-            function unsubscribe() {
-                topicStore.unsubscribe(topic + "/FMSControlData")
-            }
-
-            Component.onCompleted: {
-                topicStore.topicUpdate.connect(updateTopic)
-                item_topic = model.topic
-
-                update()
-            }
-            Component.onDestruction: {
-                if (topicStore !== null) {
-                    topicStore.topicUpdate.disconnect(updateTopic)
-                    unsubscribe()
-                }
-            }
         }
-    }
-
-    onItem_topicChanged: {
-        match.unsubscribe()
-        stateText.unsubscribe()
-        gsm.unsubscribe()
-
-        model.topic = item_topic
-
-        match.update()
-        stateText.update()
-        gsm.update()
     }
 
     BaseConfigDialog {

@@ -4,9 +4,8 @@ import QtQuick.Layouts
 
 import QFRCDashboard
 
-BaseWidget {
+PrimitiveWidget {
     id: widget
-    property string item_topic
 
     property int item_fontSize: 20
 
@@ -31,24 +30,14 @@ BaseWidget {
 
     Component.onCompleted: rcMenu.addMenu(switchMenu)
 
-    BetterTextField {
-        id: textField
+    function update(value) {
+        textField.text = value
+    }
 
-        font.pixelSize: item_fontSize * Constants.scalar
-
-        function updateTopic(ntTopic, value) {
-            if (ntTopic === item_topic) {
-                text = value
-                valid = true
-            }
-        }
-
-        text: ""
-
+    Item {
         anchors {
-            verticalCenter: parent.verticalCenter
-            topMargin: titleField.height
-
+            top: titleField.bottom
+            bottom: parent.bottom
             left: parent.left
             right: parent.right
 
@@ -56,30 +45,24 @@ BaseWidget {
             rightMargin: 10
         }
 
-        Component.onCompleted: {
-            topicStore.topicUpdate.connect(updateTopic)
-            item_topic = model.topic
-        }
+        BetterTextField {
+            id: textField
 
-        Component.onDestruction: {
-            if (topicStore !== null) {
-                topicStore.topicUpdate.disconnect(updateTopic)
-                topicStore.unsubscribe(item_topic)
+            font.pixelSize: item_fontSize * Constants.scalar
+
+            valid: widget.valid
+
+            anchors {
+                verticalCenter: parent.verticalCenter
+
+                left: parent.left
+                right: parent.right
+            }
+
+            onTextEdited: {
+                widget.setValue(text)
             }
         }
-
-        onTextEdited: {
-            valid = false
-            topicStore.setValue(item_topic, text)
-        }
-    }
-
-    onItem_topicChanged: {
-        topicStore.unsubscribe(topic)
-        topicStore.subscribe(item_topic)
-        model.topic = item_topic
-
-        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

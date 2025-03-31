@@ -74,6 +74,8 @@ Rectangle {
                 w.z = 3
                 w.visible = true
                 w.cancelDrag()
+
+                w.fixSize()
             }
         }
     }
@@ -136,7 +138,7 @@ Rectangle {
     }
 
     function configTab() {
-        tabConfigDialog.openUp(currentTab().rows(), currentTab().cols(),
+        tabConfigDialog.openUp(currentTab().rows, currentTab().cols,
                                currentTab().name())
     }
 

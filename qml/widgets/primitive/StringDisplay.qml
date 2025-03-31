@@ -4,10 +4,8 @@ import QtQuick.Layouts
 
 import QFRCDashboard
 
-BaseWidget {
+PrimitiveWidget {
     id: widget
-
-    property string item_topic
 
     property int item_fontSize: 100
     property color item_color: Constants.accent
@@ -36,20 +34,16 @@ BaseWidget {
         rcMenu.addMenu(switchMenu)
     }
 
+    function update(value) {
+        txt.text = value
+    }
+
     Text {
         id: txt
 
         font.pixelSize: item_fontSize * Constants.scalar
 
         property string value
-
-        function updateTopic(ntTopic, ntValue) {
-            if (ntTopic === item_topic) {
-                value = ntValue
-            }
-        }
-
-        text: value
 
         color: item_color
         horizontalAlignment: Text.AlignHCenter
@@ -67,26 +61,6 @@ BaseWidget {
 
             margins: 10 * Constants.scalar
         }
-
-        Component.onCompleted: {
-            topicStore.topicUpdate.connect(updateTopic)
-            item_topic = model.topic
-        }
-
-        Component.onDestruction: {
-            if (topicStore !== null) {
-                topicStore.topicUpdate.disconnect(updateTopic)
-                topicStore.unsubscribe(item_topic)
-            }
-        }
-    }
-
-    onItem_topicChanged: {
-        topicStore.unsubscribe(topic)
-        topicStore.subscribe(item_topic)
-        model.topic = item_topic
-
-        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {

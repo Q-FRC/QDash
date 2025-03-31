@@ -5,10 +5,10 @@ import QtQuick.Shapes 2.15
 
 import QFRCDashboard
 
-BaseWidget {
+PrimitiveWidget {
     id: widget
 
-    property string item_topic
+    suffix: "/Robot"
 
     property bool item_useVerticalField: false
     property bool item_mirrorForRedAlliance: false
@@ -16,7 +16,7 @@ BaseWidget {
     property double item_robotWidthMeters: 0.5
     property double item_robotLengthMeters: 0.5
 
-    property var item_field: "2025"
+    property string item_field: "2025"
 
     property list<string> fieldChoices: ["2025", "2024", "2023"]
 
@@ -25,7 +25,7 @@ BaseWidget {
 
     property bool mirrorField: false
 
-    property var item_robotShape: "Robot"
+    property string item_robotShape: "Robot"
 
     property list<string> robotShapeChoices: ["Robot", "Circle", "Rectangle"]
 
@@ -38,13 +38,22 @@ BaseWidget {
     onItem_robotLengthMetersChanged: redraw()
     onItem_robotWidthMetersChanged: redraw()
 
+    function update(value) {
+        robot.xMeters = value[0]
+        robot.yMeters = value[1]
+        robot.angleDeg = value[2]
+
+        redraw()
+    }
+
+    // TODO: This is kinda weird
+    // might want to make this global or something? idk
     function updateMirror(topic, value) {
         if (topic === "/FMSInfo/IsRedAlliance") {
             mirrorField = value
         }
     }
 
-    // TODO: Fix jank
     function unsubscribeMirror() {
         if (topicStore !== null) {
             topicStore.topicUpdate.disconnect(updateMirror)
@@ -64,9 +73,7 @@ BaseWidget {
         }
     }
 
-    Component.onDestruction: {
-        unsubscribeMirror()
-    }
+    Component.onDestruction: unsubscribeMirror()
 
     Image {
         id: field
@@ -102,15 +109,6 @@ BaseWidget {
 
         id: robot
 
-        function updateTopic(ntTopic, value) {
-            if (ntTopic === item_topic + "/Robot") {
-                xMeters = value[0]
-                yMeters = value[1]
-                angleDeg = value[2]
-                redraw()
-            }
-        }
-
         function redraw() {
             let meterRatio = (item_useVerticalField ? field.paintedWidth : field.paintedHeight)
                 / fieldWidth
@@ -137,28 +135,6 @@ BaseWidget {
             rotation = -angleDeg + (item_useVerticalField ? 270 : 0)
 
             path.redraw(x, y, height, width, angleDeg)
-        }
-
-        function update() {
-            topicStore.subscribe(item_topic + "/Robot")
-        }
-
-        function unsubscribe() {
-            topicStore.unsubscribe(topic + "/Robot")
-        }
-
-        Component.onCompleted: {
-            topicStore.topicUpdate.connect(updateTopic)
-            item_topic = model.topic
-
-            update()
-        }
-
-        Component.onDestruction: {
-            if (topicStore !== null) {
-                topicStore.topicUpdate.disconnect(updateTopic)
-                unsubscribe()
-            }
         }
     }
 
@@ -199,14 +175,6 @@ BaseWidget {
                 shape.rotation = -rot + (item_useVerticalField ? 270 : 0)
             }
         }
-    }
-
-    onItem_topicChanged: {
-        robot.unsubscribe()
-
-        model.topic = item_topic
-
-        robot.update()
     }
 
     BaseConfigDialog {

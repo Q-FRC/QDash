@@ -23,6 +23,8 @@ ApplicationWindow {
     Material.roundedScale: Material.NotRounded
 
     property string filename: ""
+    property int minWidth: 250
+    property int minHeight: 250
 
     function resetScalar() {
         Constants.scalar = Math.sqrt(

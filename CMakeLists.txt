@@ -84,6 +84,8 @@ set(QML_ELEMENTS
     items/RadialGauge
 
     widgets/BaseWidget
+    widgets/PrimitiveWidget
+    widgets/SendableWidget
     widgets/ResizeAnchor
     widgets/DoubleSpinBox
 
@@ -166,7 +168,6 @@ set(ELEMENTS
     models/TabWidgetsModel
     models/TabListModel
     models/TopicListModel
-    models/MapModel
     models/AccentsListModel
     models/RemoteLayoutModel
 

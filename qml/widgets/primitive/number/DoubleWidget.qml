@@ -4,10 +4,8 @@ import QtQuick.Layouts
 
 import QFRCDashboard
 
-BaseWidget {
+PrimitiveWidget {
     id: widget
-
-    property string item_topic
 
     property double item_stepSize: 0.1
     property int item_fontSize: 20
@@ -55,32 +53,16 @@ BaseWidget {
         }
     }
 
-    Component.onCompleted: {
-        rcMenu.addMenu(switchMenu)
+    Component.onCompleted: rcMenu.addMenu(switchMenu)
+
+    function update(value) {
+        spin.value = value
     }
 
-    // TODO: Everything should clip, and everything should be centered between the title field and the bottom.
-    BetterDoubleSpinBox {
-        id: spin
-
-        font.pixelSize: item_fontSize * Constants.scalar
-
-        function updateTopic(ntTopic, ntValue) {
-            if (ntTopic === item_topic) {
-                value = ntValue
-                valid = true
-            }
-        }
-
-        value: 0
-        from: item_lowerBound
-        to: item_upperBound
-        stepSize: item_stepSize
-
+    Item {
         anchors {
-            verticalCenter: parent.verticalCenter
-            topMargin: titleField.height
-
+            top: titleField.bottom
+            bottom: parent.bottom
             left: parent.left
             right: parent.right
 
@@ -88,30 +70,29 @@ BaseWidget {
             rightMargin: 10
         }
 
-        Component.onCompleted: {
-            topicStore.topicUpdate.connect(updateTopic)
-            item_topic = model.topic
-        }
+        BetterDoubleSpinBox {
+            id: spin
 
-        Component.onDestruction: {
-            if (topicStore !== null) {
-                topicStore.topicUpdate.disconnect(updateTopic)
-                topicStore.unsubscribe(item_topic)
+            font.pixelSize: item_fontSize * Constants.scalar
+
+            valid: widget.valid
+
+            value: 0
+            from: item_lowerBound
+            to: item_upperBound
+            stepSize: item_stepSize
+
+            anchors {
+                verticalCenter: parent.verticalCenter
+
+                left: parent.left
+                right: parent.right
+            }
+
+            onValueModified: {
+                widget.setValue(value)
             }
         }
-
-        onValueModified: {
-            valid = false
-            topicStore.setValue(item_topic, value)
-        }
-    }
-
-    onItem_topicChanged: {
-        topicStore.unsubscribe(topic)
-        topicStore.subscribe(item_topic)
-        model.topic = item_topic
-
-        topicStore.forceUpdate(item_topic)
     }
 
     BaseConfigDialog {
