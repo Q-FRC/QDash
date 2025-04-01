@@ -148,34 +148,12 @@ SendableWidget {
     BaseConfigDialog {
         id: config
 
-        function openDialog() {
-            topicField.open()
-            titleFontField.open()
-            fontField.open()
-
-            open()
-        }
-
-        onAccepted: {
-            topicField.accept()
-            titleFontField.accept()
-            fontField.accept()
-        }
-
-        ColumnLayout {
+        content: ColumnLayout {
             id: layout
             spacing: 12 * Constants.scalar
-
-            anchors {
-                top: parent.top
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-
-                topMargin: 5 * Constants.scalar
-
-                rightMargin: 5
-            }
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
 
             SectionHeader {
                 label: "Font Settings"
