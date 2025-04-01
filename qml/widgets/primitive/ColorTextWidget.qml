@@ -69,92 +69,59 @@ PrimitiveWidget {
     BaseConfigDialog {
         id: config
 
-        function openDialog() {
-            topicField.open()
-            titleFontField.open()
-            shapeField.open()
-
-            open()
-        }
-
-        onAccepted: {
-            topicField.accept()
-            titleFontField.accept()
-            shapeField.accept()
-        }
-
-        ScrollView {
+        content: ColumnLayout {
+            id: layout
+            spacing: 12 * Constants.scalar
+            anchors.fill: parent
+            anchors.leftMargin: 2
             clip: true
 
-            contentWidth: width - 5 * Constants.scalar - effectiveScrollBarWidth
-
-            anchors {
-                top: parent.top
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-
-                topMargin: 5 * Constants.scalar
-
-                rightMargin: 5
+            SectionHeader {
+                label: "Font Settings"
             }
 
-            ColumnLayout {
-                id: layout
-                spacing: 12 * Constants.scalar
+            LabeledSpinBox {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
 
-                anchors.fill: parent
-                anchors.leftMargin: 2
+                id: titleFontField
 
-                clip: true
+                label: "Title Font Size"
 
-                SectionHeader {
-                    label: "Font Settings"
-                }
+                bindedProperty: "item_titleFontSize"
+                bindTarget: widget
+            }
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
+            SectionHeader {
+                label: "Color Settings"
+            }
 
-                    id: titleFontField
+            LabeledComboBox {
+                id: shapeField
 
-                    label: "Title Font Size"
+                Layout.fillWidth: true
+                choices: shapeChoices
 
-                    bindedProperty: "item_titleFontSize"
-                    bindTarget: widget
-                }
+                label: "Shape"
 
-                SectionHeader {
-                    label: "Color Settings"
-                }
+                bindedProperty: "item_shape"
+                bindTarget: widget
+            }
 
-                LabeledComboBox {
-                    id: shapeField
+            SectionHeader {
+                label: "NT Settings"
+            }
 
-                    Layout.fillWidth: true
-                    choices: shapeChoices
+            LabeledTextField {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
 
-                    label: "Shape"
+                id: topicField
 
-                    bindedProperty: "item_shape"
-                    bindTarget: widget
-                }
+                label: "Topic"
 
-                SectionHeader {
-                    label: "NT Settings"
-                }
-
-                LabeledTextField {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
-
-                    id: topicField
-
-                    label: "Topic"
-
-                    bindedProperty: "item_topic"
-                    bindTarget: widget
-                }
+                bindedProperty: "item_topic"
+                bindTarget: widget
             }
         }
     }

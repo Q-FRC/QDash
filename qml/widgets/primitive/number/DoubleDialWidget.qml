@@ -179,186 +179,134 @@ BaseWidget {
         }
     }
 
-    onItem_topicChanged: {
-        topicStore.unsubscribe(topic)
-        topicStore.subscribe(item_topic)
-        model.topic = item_topic
-
-        topicStore.forceUpdate(item_topic)
-    }
-
     BaseConfigDialog {
         id: config
 
-        function openDialog() {
-            topicField.open()
-            titleFontField.open()
-            fontField.open()
+        content: ColumnLayout {
+            id: layout
+            spacing: 12 * Constants.scalar
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
 
-            upField.open()
-            lowField.open()
-            startField.open()
-            endField.open()
-
-            stepField.open()
-
-            open()
-        }
-
-        onAccepted: {
-            topicField.accept()
-            titleFontField.accept()
-            fontField.accept()
-
-            upField.accept()
-            lowField.accept()
-            startField.accept()
-            endField.accept()
-
-            stepField.accept()
-        }
-
-        ScrollView {
-            id: scroll
-            contentWidth: width - 5 * Constants.scalar - effectiveScrollBarWidth
-
-            anchors {
-                top: parent.top
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-
-                topMargin: 5 * Constants.scalar
-
-                rightMargin: 5
+            SectionHeader {
+                label: "Font Settings"
             }
 
-            ColumnLayout {
-                id: layout
-                spacing: 12 * Constants.scalar
+            RowLayout {
+                uniformCellSizes: true
 
-                anchors.fill: parent
-                anchors.leftMargin: 2
+                LabeledSpinBox {
+                    Layout.fillWidth: true
 
-                SectionHeader {
-                    label: "Font Settings"
+                    id: titleFontField
+
+                    label: "Title Font Size"
+
+                    bindedProperty: "item_titleFontSize"
+                    bindTarget: widget
                 }
 
-                RowLayout {
-                    uniformCellSizes: true
+                LabeledSpinBox {
+                    Layout.fillWidth: true
 
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
+                    id: fontField
 
-                        id: titleFontField
+                    label: "Font Size"
 
-                        label: "Title Font Size"
-
-                        bindedProperty: "item_titleFontSize"
-                        bindTarget: widget
-                    }
-
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
-
-                        id: fontField
-
-                        label: "Font Size"
-
-                        bindedProperty: "item_fontSize"
-                        bindTarget: widget
-                    }
+                    bindedProperty: "item_fontSize"
+                    bindTarget: widget
                 }
+            }
 
-                SectionHeader {
-                    label: "Spin Box Settings"
-                }
+            SectionHeader {
+                label: "Spin Box Settings"
+            }
 
-                RowLayout {
-                    uniformCellSizes: true
+            RowLayout {
+                uniformCellSizes: true
 
-                    LabeledDoubleSpinBox {
-                        Layout.fillWidth: true
+                LabeledDoubleSpinBox {
+                    Layout.fillWidth: true
 
-                        id: lowField
+                    id: lowField
 
-                        label: "Lower Bound"
+                    label: "Lower Bound"
 
-                        bindedProperty: "item_lowerBound"
-                        bindTarget: widget
-                    }
-
-                    LabeledDoubleSpinBox {
-                        Layout.fillWidth: true
-
-                        id: upField
-
-                        label: "Upper Bound"
-
-                        bindedProperty: "item_upperBound"
-                        bindTarget: widget
-                    }
+                    bindedProperty: "item_lowerBound"
+                    bindTarget: widget
                 }
 
                 LabeledDoubleSpinBox {
                     Layout.fillWidth: true
 
-                    id: stepField
+                    id: upField
 
-                    label: "Step Size"
+                    label: "Upper Bound"
 
-                    bindedProperty: "item_stepSize"
+                    bindedProperty: "item_upperBound"
                     bindTarget: widget
-
-                    from: 0
-                    stepSize: 0.1
                 }
+            }
 
-                SectionHeader {
-                    label: "Dial Settings"
-                }
+            LabeledDoubleSpinBox {
+                Layout.fillWidth: true
 
-                RowLayout {
-                    uniformCellSizes: true
+                id: stepField
 
-                    LabeledDoubleSpinBox {
-                        Layout.fillWidth: true
+                label: "Step Size"
 
-                        id: startField
+                bindedProperty: "item_stepSize"
+                bindTarget: widget
 
-                        label: "Start Angle"
+                from: 0
+                stepSize: 0.1
+            }
 
-                        bindedProperty: "item_startAngle"
-                        bindTarget: widget
-                    }
+            SectionHeader {
+                label: "Dial Settings"
+            }
 
-                    LabeledDoubleSpinBox {
-                        Layout.fillWidth: true
+            RowLayout {
+                uniformCellSizes: true
 
-                        id: endField
-
-                        label: "End Angle"
-
-                        bindedProperty: "item_endAngle"
-                        bindTarget: widget
-                    }
-                }
-
-                SectionHeader {
-                    label: "NT Settings"
-                }
-
-                LabeledTextField {
+                LabeledDoubleSpinBox {
                     Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
 
-                    id: topicField
+                    id: startField
 
-                    label: "Topic"
+                    label: "Start Angle"
 
-                    bindedProperty: "item_topic"
+                    bindedProperty: "item_startAngle"
                     bindTarget: widget
                 }
+
+                LabeledDoubleSpinBox {
+                    Layout.fillWidth: true
+
+                    id: endField
+
+                    label: "End Angle"
+
+                    bindedProperty: "item_endAngle"
+                    bindTarget: widget
+                }
+            }
+
+            SectionHeader {
+                label: "NT Settings"
+            }
+
+            LabeledTextField {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+
+                id: topicField
+
+                label: "Topic"
+
+                bindedProperty: "item_topic"
+                bindTarget: widget
             }
         }
     }
