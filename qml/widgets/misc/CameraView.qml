@@ -12,7 +12,7 @@ PrimitiveWidget {
 
     suffix: "/streams"
 
-    property var item_url: ""
+    property string item_url: ""
     property list<string> urlChoices
     property int urlIndex: 0
 
@@ -147,193 +147,126 @@ PrimitiveWidget {
         }
     }
 
-    onItem_topicChanged: {
-        topicStore.unsubscribe(topic + "/streams")
-        topicStore.subscribe(item_topic + "/streams")
-        model.topic = item_topic
-
-        topicStore.forceUpdate(item_topic + "/streams")
-    }
-
-    // TODO: There is a lot of duplicate code in here.
-    // Could definitely be generified by assuming ScrollView, just leaving
-    // the contentItem to the user.
-    // Could also do a recursive child search for fields to open/accept?
-    // not really recursive since there are never more than two levels
-
-
-    /*
-    for (var i = 0; i < layout.children.length; ++i) {
-        var child = layout.children[i]
-        if (typeof child !== "undefined" && "accept" in child) {
-            // child found
-        } else {
-            for (var j = 0; j < child.children.length; ++j) {
-                let grandchild = child.children[j]
-
-                if (typeof grandchild !== "undefined"
-                        && "accept" in grandchild) {
-                    // grandchild found
-                }
-            }
-        }
-    }
-    */
     BaseConfigDialog {
         id: config
 
-        function openDialog() {
-            topicField.open()
-            titleFontField.open()
-            fpsField.open()
-            resHField.open()
-            resWField.open()
-            qualityField.open()
+        content: ColumnLayout {
+            id: layout
+            spacing: 12 * Constants.scalar
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
 
-            open()
-        }
-
-        onAccepted: {
-            topicField.accept()
-            titleFontField.accept()
-            fpsField.accept()
-            resHField.accept()
-            resWField.accept()
-            qualityField.accept()
-        }
-
-        ScrollView {
-            contentWidth: width - 5 * Constants.scalar - effectiveScrollBarWidth
-
-            anchors {
-                top: parent.top
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-
-                topMargin: 5 * Constants.scalar
-
-                rightMargin: 5 * Constants.scalar
+            SectionHeader {
+                label: "Font Settings"
             }
 
-            ColumnLayout {
-                id: layout
-                spacing: 12 * Constants.scalar
+            LabeledSpinBox {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
 
-                anchors.fill: parent
-                anchors.leftMargin: 2
+                id: titleFontField
 
-                SectionHeader {
-                    label: "Font Settings"
+                label: "Title Font Size"
+
+                bindedProperty: "item_titleFontSize"
+                bindTarget: widget
+            }
+
+            SectionHeader {
+                label: "Stream Settings"
+            }
+
+            LabeledSpinBox {
+                Layout.fillWidth: true
+
+                id: fpsField
+
+                label: "FPS"
+
+                bindedProperty: "item_fps"
+                bindTarget: widget
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+
+                Text {
+                    font.pixelSize: 16 * Constants.scalar
+                    text: "Resolution"
+                    color: Constants.palette.text
                 }
 
                 LabeledSpinBox {
                     Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
+                    id: resWField
 
-                    id: titleFontField
+                    label: "Width"
 
-                    label: "Title Font Size"
-
-                    bindedProperty: "item_titleFontSize"
+                    bindedProperty: "item_resW"
                     bindTarget: widget
                 }
 
-                SectionHeader {
-                    label: "Stream Settings"
+                Text {
+                    font.pixelSize: 18 * Constants.scalar
+                    text: "x"
+                    color: Constants.palette.text
                 }
 
                 LabeledSpinBox {
                     Layout.fillWidth: true
+                    id: resHField
 
-                    id: fpsField
+                    label: "Height"
 
-                    label: "FPS"
-
-                    bindedProperty: "item_fps"
+                    bindedProperty: "item_resH"
                     bindTarget: widget
                 }
+            }
 
-                RowLayout {
+            RowLayout {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+
+                Text {
+                    font.pixelSize: 16 * Constants.scalar
+                    text: "Quality"
+                    color: Constants.palette.text
+                }
+
+                Slider {
                     Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
+                    id: qualityField
 
-                    Text {
-                        font.pixelSize: 16 * Constants.scalar
-                        text: "Resolution"
-                        color: Constants.palette.text
+                    from: 0
+                    to: 100
+                    stepSize: 10
+
+                    function open() {
+                        value = widget.item_quality
                     }
 
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
-                        id: resWField
-
-                        label: "Width"
-
-                        bindedProperty: "item_resW"
-                        bindTarget: widget
-                    }
-
-                    Text {
-                        font.pixelSize: 18 * Constants.scalar
-                        text: "x"
-                        color: Constants.palette.text
-                    }
-
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
-                        id: resHField
-
-                        label: "Height"
-
-                        bindedProperty: "item_resH"
-                        bindTarget: widget
+                    function accept() {
+                        widget.item_quality = value
                     }
                 }
+            }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
+            SectionHeader {
+                label: "NT Settings"
+            }
 
-                    Text {
-                        font.pixelSize: 16 * Constants.scalar
-                        text: "Quality"
-                        color: Constants.palette.text
-                    }
+            LabeledTextField {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
 
-                    Slider {
-                        Layout.fillWidth: true
-                        id: qualityField
+                id: topicField
 
-                        from: 0
-                        to: 100
-                        stepSize: 10
+                label: "Topic"
 
-                        function open() {
-                            value = widget.item_quality
-                        }
-
-                        function accept() {
-                            widget.item_quality = value
-                        }
-                    }
-                }
-
-                SectionHeader {
-                    label: "NT Settings"
-                }
-
-                LabeledTextField {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
-
-                    id: topicField
-
-                    label: "Topic"
-
-                    bindedProperty: "item_topic"
-                    bindTarget: widget
-                }
+                bindedProperty: "item_topic"
+                bindTarget: widget
             }
         }
     }
