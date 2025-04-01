@@ -8,7 +8,6 @@ BaseWidget {
     id: widget
 
     property list<string> topics
-    property bool valid: true
 
     // Define this in your widget
     // this takes in the suffix only
@@ -29,6 +28,9 @@ BaseWidget {
 
             update(topic, ntValue)
             valid = true
+
+            if (settings.disableWidgets)
+                connected = true
         }
     }
 
@@ -42,6 +44,10 @@ BaseWidget {
 
                     topicStore.forceUpdate(item_topic + suffix)
                 }
+            } else {
+                widget.valid = false
+                if (settings.disableWidgets)
+                    widget.connected = false
             }
         }
     }

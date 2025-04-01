@@ -54,3 +54,4 @@ const Setting Settings::LogLevel{"logLevel", 2};
 const Setting Settings::ConnMode{"connMode", 0};
 const Setting Settings::TeamNumber{"teamNumber", "0"};
 const Setting Settings::IP{"ip", "0.0.0.0"};
+const Setting Settings::DisableWidgets{"disableWidgets", true};

@@ -37,6 +37,7 @@ extern const Setting LogLevel;
 extern const Setting ConnMode;
 extern const Setting TeamNumber;
 extern const Setting IP;
+extern const Setting DisableWidgets;
 }
 
 #endif // CONSTANTS_H

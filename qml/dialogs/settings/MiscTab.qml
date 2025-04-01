@@ -11,11 +11,13 @@ ColumnLayout {
     function accept() {
         load.accept()
         level.accept()
+        disable.accept()
     }
 
     function open() {
         load.open()
         level.open()
+        disable.open()
     }
 
     LabeledCheckbox {
@@ -24,6 +26,14 @@ ColumnLayout {
 
         bindTarget: settings
         bindedProperty: "loadRecent"
+    }
+
+    LabeledCheckbox {
+        id: disable
+        label: "Disable Widgets on Disconnect?"
+
+        bindTarget: settings
+        bindedProperty: "disableWidgets"
     }
 
     LabeledIndexComboBox {

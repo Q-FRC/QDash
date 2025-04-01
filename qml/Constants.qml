@@ -45,6 +45,7 @@ QtObject {
         readonly property color dialogBg: "#272727"
 
         readonly property color text: "#EEEEEE"
+        readonly property color disabledText: Qt.darker(text, 2)
 
         readonly property color menu: "#111111"
         readonly property color menuBorder: "#AAAAAA"
@@ -60,6 +61,7 @@ QtObject {
         readonly property color dialogBg: "#545454"
 
         readonly property color text: "#FFFFFF"
+        readonly property color disabledText: Qt.darker(text, 2)
 
         readonly property color menu: "#595959"
         readonly property color menuBorder: "#AAAAAA"
@@ -73,6 +75,7 @@ QtObject {
         readonly property color dialogBg: "#DCDCDC"
 
         readonly property color text: "#000000"
+        readonly property color disabledText: "#666666"
 
         readonly property color menu: "#DDDDDD"
         readonly property color menuBorder: "#222222"
