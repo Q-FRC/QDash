@@ -10,8 +10,6 @@ BaseWidget {
     property string trueTopic: item_topic + suffix
     property string suffix: ""
 
-    property bool valid: true
-
     // Define this in your widget
     function update(value) {}
 
@@ -28,6 +26,8 @@ BaseWidget {
             update(ntValue)
 
             valid = true
+            if (settings.disableWidgets)
+                connected = true
         }
     }
 
@@ -37,6 +37,10 @@ BaseWidget {
         function onConnected(conn) {
             if (conn) {
                 topicStore.forceUpdate(widget.trueTopic)
+            } else {
+                if (settings.disableWidgets)
+                    widget.connected = false
+                widget.valid = false
             }
         }
     }

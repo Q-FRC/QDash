@@ -68,6 +68,7 @@ PrimitiveWidget {
             stepSize: item_stepSize
 
             valid: widget.valid
+            connected: widget.connected
 
             anchors {
                 verticalCenter: parent.verticalCenter

@@ -12,6 +12,10 @@ Rectangle {
     id: widget
     clip: true
 
+    // default to disconnected and invalid
+    property bool connected: false
+    property bool valid: false
+
     z: 3
 
     border {
@@ -337,7 +341,13 @@ Rectangle {
         clip: true
 
         text: model.title
-        color: "#DDDDDD"
+
+        color: connected ? Constants.palette.text : Constants.palette.disabledText
+        Behavior on color {
+            ColorAnimation {
+                duration: 250
+            }
+        }
 
         onTextEdited: model.title = text
 

@@ -9,6 +9,8 @@ Rectangle {
     property int margin
     property int divisor: 14
 
+    enabled: true
+
     required property int direction
 
     property alias mouseArea: mouseArea
@@ -20,6 +22,7 @@ Rectangle {
 
     property bool horiz: hasLeft || hasRight
     property bool vert: hasTop || hasBottom
+    z: 20
 
     color: "transparent"
 

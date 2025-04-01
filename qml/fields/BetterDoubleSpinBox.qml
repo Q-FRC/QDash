@@ -6,16 +6,14 @@ import QFRCDashboard
 DoubleSpinBox {
     id: dsb
 
+    property bool connected: true
     property bool valid: true
     property string label: ""
+    enabled: connected
 
     contentItem: BetterSpinBox {
         valid: parent.valid
         label: parent.label
-
-        // onValueModified: {
-        //     // dsb.value = value
-        //     dsb.valueModified()
-        // }
+        connected: parent.connected
     }
 }

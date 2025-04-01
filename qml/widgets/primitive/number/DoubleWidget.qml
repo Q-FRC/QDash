@@ -76,6 +76,7 @@ PrimitiveWidget {
             font.pixelSize: item_fontSize * Constants.scalar
 
             valid: widget.valid
+            connected: widget.connected
 
             value: 0
             from: item_lowerBound
@@ -89,9 +90,7 @@ PrimitiveWidget {
                 right: parent.right
             }
 
-            onValueModified: {
-                widget.setValue(value)
-            }
+            onValueModified: widget.setValue(value)
         }
     }
 

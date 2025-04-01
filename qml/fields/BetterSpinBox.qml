@@ -6,8 +6,11 @@ import QFRCDashboard
 
 SpinBox {
     id: control
+    property bool connected: true
     property bool valid: true
     property string label: ""
+
+    enabled: connected
 
     from: -0x7FFFFFFF
     to: 0x7FFFFFFF
@@ -21,8 +24,9 @@ SpinBox {
 
         valid: parent.valid
 
+        connected: parent.connected
+
         font: parent.font
-        color: Constants.palette.text
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
 
@@ -37,6 +41,7 @@ SpinBox {
     up.indicator: IconLabel {
         icon {
             source: "qrc:/Forward"
+            color: contentItem.color
         }
 
         x: control.mirrored ? 0 : control.width - width
@@ -51,6 +56,7 @@ SpinBox {
     down.indicator: IconLabel {
         icon {
             source: "qrc:/Back"
+            color: contentItem.color
         }
 
         x: control.mirrored ? control.width - width : 0
