@@ -50,6 +50,9 @@ SendableWidget {
         SearchableComboBox {
             id: combo
 
+            valid: widget.valid
+            connected: widget.connected
+
             anchors {
                 verticalCenter: parent.verticalCenter
 
@@ -69,8 +72,6 @@ SendableWidget {
 
                 function onConnected(conn) {
                     if (conn) {
-                        button.valid = true
-
                         if (combo.previousIndex !== -1) {
                             logs.info("StringChooser",
                                       "Force-updating chooser \"" + item_topic
@@ -79,11 +80,6 @@ SendableWidget {
                             widget.readyToUpdate = false
                             widget.setValue("selected", combo.currentText)
                         }
-
-                        combo.enabled = true
-                    } else {
-                        button.valid = false
-                        combo.enabled = false
                     }
                 }
             }
@@ -102,7 +98,7 @@ SendableWidget {
         Button {
             id: button
 
-            property bool valid: false
+            property bool valid: widget.valid
 
             icon {
                 color: valid ? "green" : "red"

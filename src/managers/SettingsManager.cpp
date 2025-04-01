@@ -164,11 +164,22 @@ void SettingsManager::setResizeToDS(bool newResizeToDS)
 
 int SettingsManager::logLevel() const
 {
-    return Settings::LogLevel.value().toInt();
+    return Settings::LogLevel;
 }
 
 void SettingsManager::setLogLevel(int newLogLevel)
 {
-    Settings::LogLevel.setValue(newLogLevel);
+    Settings::LogLevel = newLogLevel;
     emit logLevelChanged();
+}
+
+bool SettingsManager::disableWidgets() const
+{
+    return Settings::DisableWidgets;
+}
+
+void SettingsManager::setDisableWidgets(bool newDisableWidgets)
+{
+    Settings::DisableWidgets = newDisableWidgets;
+    emit disableWidgetsChanged();
 }

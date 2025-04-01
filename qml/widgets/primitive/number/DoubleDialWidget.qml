@@ -4,7 +4,7 @@ import QtQuick.Layouts
 
 import QFRCDashboard
 
-BaseWidget {
+PrimitiveWidget {
     id: widget
 
     property double item_stepSize: 0.1
@@ -70,6 +70,7 @@ BaseWidget {
         font.pixelSize: item_fontSize * Constants.scalar
 
         valid: widget.valid
+        connected: widget.connected
 
         value: 0
 
@@ -119,7 +120,7 @@ BaseWidget {
             radius: width / 2
 
             border.color: Constants.accent
-            opacity: dial.enabled ? 1 : 0.3
+            opacity: widget.connected ? 1 : 0.3
         }
 
         handle: Rectangle {
@@ -134,7 +135,7 @@ BaseWidget {
             radius: width / 2
 
             antialiasing: true
-            opacity: dial.enabled ? 1 : 0.3
+            opacity: widget.connected ? 1 : 0.3
 
             transform: [
                 Translate {
@@ -165,6 +166,8 @@ BaseWidget {
 
         startAngle: item_startAngle
         endAngle: item_endAngle
+
+        enabled: widget.connected
 
         anchors {
             top: titleField.bottom

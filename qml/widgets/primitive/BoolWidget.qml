@@ -43,6 +43,8 @@ PrimitiveWidget {
 
             checked: false
 
+            enabled: widget.connected
+
             anchors {
                 centerIn: parent
             }

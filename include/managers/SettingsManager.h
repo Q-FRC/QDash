@@ -25,6 +25,7 @@ class SettingsManager : public QObject
     Q_PROPERTY(double scale READ scale WRITE setScale NOTIFY scaleChanged FINAL)
     Q_PROPERTY(bool resizeToDS READ resizeToDS WRITE setResizeToDS NOTIFY resizeToDSChanged FINAL)
     Q_PROPERTY(int logLevel READ logLevel WRITE setLogLevel NOTIFY logLevelChanged FINAL)
+    Q_PROPERTY(bool disableWidgets READ disableWidgets WRITE setDisableWidgets NOTIFY disableWidgetsChanged FINAL)
 
 public:
     explicit SettingsManager(LogManager *logs, QObject *parent = nullptr);
@@ -65,7 +66,11 @@ public:
     int logLevel() const;
     void setLogLevel(int newLogLevel);
 
+    bool disableWidgets() const;
+    void setDisableWidgets(bool newDisableWidgets);
+
 signals:
+
     void recentFilesChanged();
     void loadRecentChanged();
     void themeChanged();
@@ -77,6 +82,7 @@ signals:
     void scaleChanged();
     void resizeToDSChanged();
     void logLevelChanged();
+    void disableWidgetsChanged();
 };
 
 #endif // SETTINGSMANAGER_H

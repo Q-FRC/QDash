@@ -3,6 +3,7 @@ import QtQuick.Controls.Material
 import QFRCDashboard
 
 ComboBox {
+    property bool connected: true
     property bool valid: true
     property string label: ""
 
@@ -30,7 +31,7 @@ ComboBox {
         validator: control.validator
         selectByMouse: control.selectTextByMouse
 
-        color: control.enabled ? control.Material.foreground : control.Material.hintTextColor
+        color: control.connected ? control.Material.foreground : control.Material.hintTextColor
         selectionColor: control.Material.accentColor
         selectedTextColor: control.Material.primaryHighlightedTextColor
         verticalAlignment: Text.AlignVCenter

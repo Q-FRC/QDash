@@ -51,6 +51,7 @@ PrimitiveWidget {
             font.pixelSize: item_fontSize * Constants.scalar
 
             valid: widget.valid
+            connected: widget.connected
 
             anchors {
                 verticalCenter: parent.verticalCenter

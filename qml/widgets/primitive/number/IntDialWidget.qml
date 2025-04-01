@@ -61,6 +61,9 @@ PrimitiveWidget {
         to: item_upperBound
         stepSize: item_stepSize
 
+        valid: widget.valid
+        connected: widget.connected
+
         anchors {
             bottom: parent.bottom
             bottomMargin: parent.height / 10
@@ -74,10 +77,12 @@ PrimitiveWidget {
 
         onValueModified: {
             dial.value = value
+            widget.valid = false
             widget.setValue(value)
         }
 
         function move(val) {
+            widget.valid = Math.abs(val - value) < 0.01
             value = val
             widget.setValue(value)
         }
@@ -100,7 +105,7 @@ PrimitiveWidget {
             radius: width / 2
 
             border.color: Constants.accent
-            opacity: dial.enabled ? 1 : 0.3
+            opacity: widget.connected ? 1 : 0.3
         }
 
         handle: Rectangle {
@@ -115,7 +120,7 @@ PrimitiveWidget {
             radius: width / 2
 
             antialiasing: true
-            opacity: dial.enabled ? 1 : 0.3
+            opacity: widget.connected ? 1 : 0.3
 
             transform: [
                 Translate {
@@ -146,6 +151,8 @@ PrimitiveWidget {
 
         startAngle: item_startAngle
         endAngle: item_endAngle
+
+        enabled: widget.connected
 
         anchors {
             top: titleField.bottom
