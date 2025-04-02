@@ -7,8 +7,6 @@ SettingsManager::SettingsManager(LogManager *logs, QObject *parent)
     , m_logs(logs)
 {}
 
-// TODO: Seems like this reconnect happens thrice (once for each param)
-// pls fix
 void SettingsManager::reconnectServer()
 {
     std::string server = QString(Settings::IP).toStdString();
@@ -113,7 +111,6 @@ void SettingsManager::setIp(const QString &newIp)
 {
     Settings::IP = newIp;
     emit ipChanged();
-    reconnectServer();
 }
 
 int SettingsManager::team() const
@@ -125,7 +122,6 @@ void SettingsManager::setTeam(int newTeam)
 {
     Settings::TeamNumber = newTeam;
     emit teamChanged();
-    reconnectServer();
 }
 
 int SettingsManager::mode() const
@@ -137,7 +133,6 @@ void SettingsManager::setMode(int newMode)
 {
     Settings::ConnMode = newMode;
     emit modeChanged();
-    reconnectServer();
 }
 
 double SettingsManager::scale() const

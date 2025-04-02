@@ -49,7 +49,7 @@ public:
 
     void addRecentFile(QFile &file);
 
-    void reconnectServer();
+    Q_INVOKABLE void reconnectServer();
 
     QString theme() const;
     void setTheme(const QString &newTheme);

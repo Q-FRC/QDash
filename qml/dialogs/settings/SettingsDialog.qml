@@ -17,6 +17,8 @@ AnimatedDialog {
         appearance.accept()
         misc.accept()
         windowTab.accept()
+
+        settings.reconnectServer()
     }
 
     standardButtons: Dialog.Ok | Dialog.Cancel
