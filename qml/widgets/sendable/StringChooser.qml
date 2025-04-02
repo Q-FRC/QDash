@@ -66,7 +66,6 @@ SendableWidget {
 
             property int previousIndex: -1
 
-            // TODO: rewrite other widgets to do this with a setting
             Connections {
                 target: topicStore
 

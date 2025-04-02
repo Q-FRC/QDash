@@ -109,7 +109,6 @@ Rectangle {
         }
     }
 
-    // TODO: Don't allow widgets to resize below 1x1
     // TODO: If too many rows or cols, default widgets to 2x2
     // TODO: Default bigger widgets to 2x2 or 3x2
     Repeater {

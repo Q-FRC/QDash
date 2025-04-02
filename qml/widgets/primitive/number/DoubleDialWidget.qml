@@ -91,14 +91,16 @@ PrimitiveWidget {
 
         onValueModified: {
             dial.value = value
-            widget.valid = false
             widget.setValue(value)
         }
 
         function move(val) {
-            widget.valid = Math.abs(val - value) < 0.01
+            let previousValue = value
+
             value = val
             widget.setValue(value)
+
+            widget.valid = Math.abs(previousValue - value) < 0.01
         }
     }
 

@@ -77,14 +77,16 @@ PrimitiveWidget {
 
         onValueModified: {
             dial.value = value
-            widget.valid = false
             widget.setValue(value)
         }
 
         function move(val) {
-            widget.valid = Math.abs(val - value) < 0.01
+            let previousValue = value
+
             value = val
             widget.setValue(value)
+
+            widget.valid = Math.abs(previousValue - value) < 0.01
         }
     }
 
@@ -165,6 +167,7 @@ PrimitiveWidget {
         onMoved: spin.move(parseInt(value))
     }
 
+    // TODO: Remove these IDs. We don't need them anymore (besides config)
     BaseConfigDialog {
         id: config
 
