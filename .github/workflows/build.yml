@@ -78,7 +78,7 @@ jobs:
         echo "DATE=$(/bin/date -u "+%Y%m%d")" >> $GITHUB_ENV
 
     - name: Install CMake
-      uses: lukka/get-cmake@v3.28.1
+      uses: lukka/get-cmake@v4.0.1
 
     - name: Setup CCache
       if: matrix.arch != 'aarch64' || runner.os == 'macOS'
