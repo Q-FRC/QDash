@@ -18,48 +18,53 @@ jobs:
         include:
 
           - os: ubuntu-24.04
+            name: "Linux amd64"
             arch: "amd64"
             appimage_arch: "x86_64"
             gcc_arch: "gcc_64"
             qt_host: linux
-            qt_version: '6.8.1'
+            qt_version: '6.8.3'
             qt_modules: 'qtmultimedia qtwaylandcompositor'
             qt_arch: 'linux_gcc_64'
 
           - os: ubuntu-24.04-arm
+            name: "Linux aarch64"
             arch: "aarch64"
             appimage_arch: "aarch64"
             gcc_arch: "gcc_arm64"
             qt_host: linux_arm64
-            qt_version: '6.8.1'
+            qt_version: '6.8.3'
             qt_modules: 'qtmultimedia qtwaylandcompositor'
             qt_arch: 'linux_gcc_arm64'
 
           - os: windows-2022
+            name: "Windows amd64"
             arch: "amd64"
             msvc_arch: 'msvc2022_64'
             qt_host: windows
-            qt_version: '6.8.1'
+            qt_version: '6.8.3'
             qt_modules: 'qtmultimedia'
             qt_arch: 'win64_msvc2022_64'
 
-            # TODO: wait for the arm images to become public
-            #- os: windows-2022
-            #arch: "aarch64"
-            #msvc_arch: 'msvc2022_arm64'
-            #qt_host: windows_arm64
-            #qt_version: '6.8.1'
-            #qt_modules: 'qtmultimedia'
-            #qt_arch: 'win64_msvc2022_arm64'
+          - os: windows-11-arm
+            name: "Windows aarch64"
+            arch: "aarch64"
+            msvc_arch: 'msvc2022_arm64'
+            qt_host: windows_arm64
+            qt_version: '6.8.3'
+            qt_modules: 'qtmultimedia'
+            qt_arch: 'win64_msvc2022_arm64'
 
           - os: macos-latest
+            name: "macOS Universal"
             arch: "universal"
             qt_host: mac
-            qt_version: '6.8.1'
+            qt_version: '6.8.3'
             qt_modules: 'qtmultimedia'
             qt_arch: 'clang_64'
 
     runs-on: ${{ matrix.os }}
+    name: ${{ matrix.name }}
 
     steps:
     - uses: actions/checkout@v4
@@ -79,7 +84,7 @@ jobs:
         echo "DATE=$(/bin/date -u "+%Y%m%d")" >> $GITHUB_ENV
 
     - name: Install CMake
-      uses: lukka/get-cmake@v3.28.1
+      uses: lukka/get-cmake@v4.0.1
 
     - name: Setup CCache
       if: matrix.arch != 'aarch64' || runner.os == 'macOS'
@@ -93,32 +98,23 @@ jobs:
         path: ${{ env.BUILD_DIR }}/_deps/*-src
         key: QFRCDashboard
 
-    - uses: ilammy/msvc-dev-cmd@v1
-      if: runner.os == 'Windows'
+    - name: Setup MSVC (aarch64)
+      uses: ilammy/msvc-dev-cmd@v1
+      if: runner.os == 'Windows' && matrix.arch == 'amd64'
+
+    - name: Setup MSVC (aarch64)
+      uses: ilammy/msvc-dev-cmd@v1
+      if: runner.os == 'Windows' && matrix.arch == 'aarch64'
+      with:
+        arch: amd64_arm64
 
     - uses: repolevedavaj/install-nsis@v1.0.2
       if: runner.os == 'Windows'
       with:
         nsis-version: 3.09
 
-    # - name: Install Protobuf (Linux, macOS)
-    #   if: runner.os != 'Windows'
-    #   uses: ConorMacBride/install-package@v1
-    #   with:
-    #     brew: protobuf
-    #     apt: protobuf-compiler
-
-    # - name: Install winget
-    #   if: runner.os == 'Windows'
-    #   uses: Cyberboss/install-winget@v1
-
-    # - name: Install Protobuf (Windows)
-    #   if: runner.os == 'Windows'
-    #   run: |
-    #     winget install protobuf --exact --disable-interactivity --silent --no-upgrade --accept-package-agreements --accept-source-agreements
-
     - name: Install Qt
-      uses: jdpurcell/install-qt-action@v4
+      uses: jdpurcell/install-qt-action@v5
       with:
         host: ${{ matrix.qt_host }}
         version: ${{ matrix.qt_version }}
@@ -133,7 +129,6 @@ jobs:
       with:
         python-version: 3.8
         cache: 'pip'
-
 
     - name: Install Python Dependencies
       run: |
