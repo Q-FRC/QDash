@@ -98,8 +98,15 @@ jobs:
         path: ${{ env.BUILD_DIR }}/_deps/*-src
         key: QFRCDashboard
 
-    - uses: ilammy/msvc-dev-cmd@v1
-      if: runner.os == 'Windows'
+    - name: Setup MSVC (aarch64)
+      uses: ilammy/msvc-dev-cmd@v1
+      if: runner.os == 'Windows' && matrix.arch == 'amd64'
+
+    - name: Setup MSVC (aarch64)
+      uses: ilammy/msvc-dev-cmd@v1
+      if: runner.os == 'Windows' && matrix.arch == 'aarch64'
+      with:
+        arch: amd64_arm64
 
     - uses: repolevedavaj/install-nsis@v1.0.2
       if: runner.os == 'Windows'
