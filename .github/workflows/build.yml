@@ -18,6 +18,7 @@ jobs:
         include:
 
           - os: ubuntu-24.04
+            name: "Linux amd64"
             arch: "amd64"
             appimage_arch: "x86_64"
             gcc_arch: "gcc_64"
@@ -27,6 +28,7 @@ jobs:
             qt_arch: 'linux_gcc_64'
 
           - os: ubuntu-24.04-arm
+            name: "Linux aarch64"
             arch: "aarch64"
             appimage_arch: "aarch64"
             gcc_arch: "gcc_arm64"
@@ -36,6 +38,7 @@ jobs:
             qt_arch: 'linux_gcc_arm64'
 
           - os: windows-2022
+            name: "Windows amd64"
             arch: "amd64"
             msvc_arch: 'msvc2022_64'
             qt_host: windows
@@ -44,6 +47,7 @@ jobs:
             qt_arch: 'win64_msvc2022_64'
 
           - os: windows-11-arm
+            name: "Windows aarch64"
             arch: "aarch64"
             msvc_arch: 'msvc2022_arm64'
             qt_host: windows_arm64
@@ -52,6 +56,7 @@ jobs:
             qt_arch: 'win64_msvc2022_arm64'
 
           - os: macos-latest
+            name: "macOS Universal"
             arch: "universal"
             qt_host: mac
             qt_version: '6.8.3'
@@ -59,7 +64,7 @@ jobs:
             qt_arch: 'clang_64'
 
     runs-on: ${{ matrix.os }}
-    name: "${{ runner.os }} ${{ matrix.arch }}"
+    name: ${{ matrix.name }}
 
     steps:
     - uses: actions/checkout@v4
