@@ -40,30 +40,18 @@ jobs:
         shell: bash
         run: |
           mv ${{ github.workspace }}/QFRCDashboard-source QFRCDashboard-${{ env.VERSION }}
-          ls
-          echo
-          echo
-          ls *
-          echo
-          echo
 
           for arch in amd64 aarch64
           do
             mv QFRCDashboard-Linux-Binary*${arch}/QFRCDashboard.tar.zst QFRCDashboard-Linux-${{ env.VERSION }}-$arch.tar.zst
             mv QFRCDashboard*${arch}.AppImage/*.AppImage QFRCDashboard-Linux-${{ env.VERSION }}-${arch}.AppImage
 
-          done
-
-          # TODO: once windows has arm, move this up
-          for arch in amd64
-          do
             mv QFRCDashboard-Windows-Setup*${arch}/Dashboard* QFRCDashboard-Windows-Setup-${{ env.VERSION }}-${arch}.exe
             zip -r QFRCDashboard-Windows-Portable-${{ env.VERSION }}-${arch}.zip QFRCDashboard-Windows-Portable*${arch}/*
           done
 
           mv QFRCDashboard-macOS*/QFRCDashboard.tar.gz QFRCDashboard-macOS-${{ env.VERSION }}-universal.tar.gz
           zip QFRCDashboard-macOS-${{ env.VERSION }}-universal.zip QFRCDashboard-macOS-${{ env.VERSION }}-universal.tar.gz
-
 
           tar -czf QFRCDashboard-${{ env.VERSION }}.tar.gz QFRCDashboard-${{ env.VERSION }}
 
