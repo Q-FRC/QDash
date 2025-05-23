@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Material
 
-import QFRCDashboard
+import QDash
 
 AnimatedDialog {
     required property Item content

@@ -173,7 +173,7 @@ jobs:
         cmake --install ${{ env.BUILD_DIR }} --prefix ${{ env.INSTALL_DIR }}/usr
 
         cd ${{ env.INSTALL_DIR }}
-        tar --owner root --group root -czf ../QFRCDashboard.tar.zst *
+        tar --owner root --group root -czf ../QDash.tar.zst *
 
     - name: Package AppImage & System (Linux)
       if: runner.os == 'Linux'
@@ -184,7 +184,7 @@ jobs:
 
         cmake --install ${{ env.BUILD_DIR }} --prefix ${{ env.INSTALL_APPIMAGE_DIR }}/usr
 
-        export OUTPUT="QFRCDashboard-Linux-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.AppImage"
+        export OUTPUT="QDash-Linux-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.AppImage"
         export QML_SOURCES_PATHS="${{ runner.workspace }}/Qt/${{ matrix.qt_version }}/${{ matrix.gcc_arch }}/qml:${{ github.workspace }}"
 
         chmod +x linuxdeploy-*.AppImage
@@ -199,7 +199,7 @@ jobs:
         # may need to change this
         ./linuxdeploy-${{ matrix.appimage_arch }}.AppImage --appdir ${{ env.INSTALL_APPIMAGE_DIR }} --output appimage --plugin qt
 
-        tar czf QFRCDashboard-System.tar.zst install-appdir/*
+        tar czf QDash-System.tar.zst install-appdir/*
 
     - name: Package (macOS)
       if: runner.os == 'macOS'
@@ -209,42 +209,42 @@ jobs:
         export QML_SOURCES_PATHS="${{ runner.workspace }}/Qt/${{ matrix.qt_version }}/macos/qml"
 
         cd ${{ env.BUILD_DIR }}
-        chmod a+x Dashboard.app/Contents/MacOS/Dashboard
-        mkdir Dashboard.app/Contents/Resources -p
-        cp ../program_info/QFRCDashboard.icns Dashboard.app/Contents/Resources
+        chmod a+x QDash.app/Contents/MacOS/QDash
+        mkdir QDash.app/Contents/Resources -p
+        cp ../program_info/QDash.icns QDash.app/Contents/Resources
 
-        macdeployqt Dashboard.app -qmldir=$QML_DIR_PATH -qmlimport=$QML_SOURCES_PATHS -verbose=1 -appstore-compliant
+        macdeployqt QDash.app -qmldir=$QML_DIR_PATH -qmlimport=$QML_SOURCES_PATHS -verbose=1 -appstore-compliant
         ls
 
-        mv Dashboard.app ../QFRCDashboard.app
+        mv QDash.app ../QDash.app
         cd ..
-        tar czf QFRCDashboard.tar.gz QFRCDashboard.app
+        tar czf QDash.tar.gz QFRCQDash.app
 
         # TODO: make this work
         #mkdir dmg-src
-        #mv Dashboard.app dmg-src
+        #mv QDash.app dmg-src
 
-        #cp ../program_info/QFRCDashboard.icns .
+        #cp ../program_info/QDash.icns .
 
         # sudo npm install --global create-dmg
 
-        # create-dmg --dmg-title=QFRCDashboard Dashboard.app ..
+        # create-dmg --dmg-title=QDash QDash.app ..
 
         #create-dmg \
-        #  --volname "QFRCDashboard" \
-        #  --volicon "QFRCDashboard.icns" \
+        #  --volname "QDash" \
+        #  --volicon "QDash.icns" \
         #  --window-pos 200 120 \
         #  --window-size 800 400 \
         #  --icon-size 100 \
-        #  --icon "Dashboard.app" 200 190 \
-        #  --hide-extension "Dashboard.app" \
+        #  --icon "QDash.app" 200 190 \
+        #  --hide-extension "QDash.app" \
         #  --app-drop-link 600 185 \
-        #  "QFRCDashboard.dmg" \
+        #  "QDash.dmg" \
         #  "dmg-src/"
         #
         #cd ..
 
-        #mv QFRCDashboard*.dmg QFRCDashboard-macOS-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.dmg
+        #mv QDash*.dmg QFRCQDash-macOS-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.dmg
 
     - name: Package (Windows, Portable)
       if: runner.os == 'Windows'
@@ -255,8 +255,8 @@ jobs:
         mkdir ${{ env.INSTALL_DIR }}
         set PATH=%PATH%;"${{ runner.workspace }}\Qt\${{ matrix.qt_version }}\${{ matrix.qt_arch }}\bin"
 
-        windeployqt ${{ env.BUILD_DIR }}\Dashboard.exe --dir ${{ env.INSTALL_DIR }} --qmldir ${{ github.workspace }} --qmlimport %QML2_IMPORT_PATH%
-        cp ${{ env.BUILD_DIR }}\Dashboard.exe ${{ env.INSTALL_DIR }}
+        windeployqt ${{ env.BUILD_DIR }}\QDash.exe --dir ${{ env.INSTALL_DIR }} --qmldir ${{ github.workspace }} --qmlimport %QML2_IMPORT_PATH%
+        cp ${{ env.BUILD_DIR }}\QDash.exe ${{ env.INSTALL_DIR }}
         cp -r ${{ runner.workspace }}\Qt\${{ matrix.qt_version }}\${{ matrix.msvc_arch }}\qml ${{ env.INSTALL_DIR }}
 
         if "${{ inputs.build_type }}" == "Debug" (
@@ -280,47 +280,47 @@ jobs:
       if: runner.os == 'Linux'
       uses: actions/upload-artifact@v4
       with:
-        name: QFRCDashboard-Linux-Binary-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
-        path: QFRCDashboard.tar.zst
+        name: QDash-Linux-Binary-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
+        path: QDash.tar.zst
 
     - name: Upload system tarball (Linux)
       if: runner.os == 'Linux' && matrix.arch == 'aarch64'
       uses: actions/upload-artifact@v4
       with:
-        name: QFRCDashboard-Linux-System-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
-        path: QFRCDashboard-System.tar.zst
+        name: QDash-Linux-System-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
+        path: QDash-System.tar.zst
 
     - name: Upload AppImage (Linux)
       if: runner.os == 'Linux'
       uses: actions/upload-artifact@v4
       with:
-        name: QFRCDashboard-Linux-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.AppImage
-        path: QFRCDashboard-Linux-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.AppImage
+        name: QDash-Linux-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.AppImage
+        path: QDash-Linux-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.AppImage
 
     - name: Upload app (macOS)
       if: runner.os == 'macOS'
       uses: actions/upload-artifact@v4
       with:
-        name: QFRCDashboard-macOS-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.app
-        path: QFRCDashboard.tar.gz
+        name: QDash-macOS-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.app
+        path: QDash.tar.gz
 
         #- name: Upload DMG (macOS)
         #  if: runner.os == 'macOS'
         #  uses: actions/upload-artifact@v4
         #  with:
-        #    name: QFRCDashboard-macOS-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.dmg
-        #    path: QFRCDashboard*.dmg
+        #    name: QDash-macOS-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}.dmg
+        #    path: QDash*.dmg
 
     - name: Upload binary zip (Windows, portable)
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
       with:
-        name: QFRCDashboard-Windows-Portable-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
+        name: QDash-Windows-Portable-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
         path: ${{ env.INSTALL_DIR }}/**
 
     - name: Upload installer (Windows)
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
       with:
-        name: QFRCDashboard-Windows-Setup-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
-        path: Dashboard-Setup.exe
+        name: QDash-Windows-Setup-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
+        path: QDash-Setup.exe

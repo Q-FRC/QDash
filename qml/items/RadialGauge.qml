@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls.Material
 import QtQuick.Shapes
 
-import QFRCDashboard
+import QDash
 
 Rectangle {
     id: gauge

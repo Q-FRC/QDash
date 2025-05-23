@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Material
 
-import QFRCDashboard
+import QDash
 
 Rectangle {
     color: Constants.accent

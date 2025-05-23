@@ -21,12 +21,12 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    app.setOrganizationName(BuildConfig.ORG_NAME);
-    app.setApplicationName(BuildConfig.APP_NAME);
-    app.setApplicationVersion(BuildConfig.versionString());
+    app.setOrganizationName(BuildConfig.ORGANIZATION_NAME);
+    app.setApplicationName(BuildConfig.APPLICATION_NAME);
+    app.setApplicationVersion(BuildConfig.GIT_TAG);
 
-    app.setWindowIcon(QIcon(":/" + BuildConfig.APP_NAME));
-    app.setDesktopFileName("" + BuildConfig.APP_NAME);
+    app.setWindowIcon(QIcon(":/" + BuildConfig.APPLICATION_NAME));
+    app.setDesktopFileName("" + BuildConfig.APPLICATION_NAME);
 
     QQuickStyle::setStyle("Material");
 
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
         });
     });
 
-    Globals::inst.StartClient4(BuildConfig.APP_NAME.toStdString());
+    Globals::inst.StartClient4(BuildConfig.APPLICATION_NAME.toStdString());
     Globals::inst.StartDSClient(NT_DEFAULT_PORT4);
 
     Globals::inst.AddListener({{""}}, nt::EventFlags::kTopic, [topics, logs](const nt::Event &event) {
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
         }
     });
 
-    nt::NetworkTableEntry tabEntry = Globals::inst.GetEntry("/QFRCDashboard/Tab");
+    nt::NetworkTableEntry tabEntry = Globals::inst.GetEntry("/QDash/Tab");
     Globals::inst.AddListener(tabEntry, nt::EventFlags::kValueAll, [tlm, logs](const nt::Event &event) {
         std::string_view value = event.GetValueEventData()->value.GetString();
         QString qvalue = QString::fromStdString(std::string{value});
@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
     });
 
     nt::NetworkTableEntry notificationEntry = Globals::inst.GetEntry(
-        "/QFRCDashboard/RobotNotifications");
+        "/QDash/RobotNotifications");
 
     Globals::inst.AddListener(notificationEntry,
                               nt::EventFlags::kValueAll,
@@ -154,9 +154,9 @@ int main(int argc, char *argv[])
         parent,
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
-    engine.loadFromModule("QFRCDashboard", "Main");
+    engine.loadFromModule("QDash", "Main");
 
-    logs->info("QFRCDashboard", "Application started");
+    logs->info("QDash", "Application started");
 
     return app.exec();
 }

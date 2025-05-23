@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls.Material
 import QtQuick.Layouts
 
-import QFRCDashboard
+import QDash
 
 ColumnLayout {
     spacing: 15 * Constants.scalar

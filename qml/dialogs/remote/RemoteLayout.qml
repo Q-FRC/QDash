@@ -1,6 +1,6 @@
 import QtQuick
 
-import QFRCDashboard
+import QDash
 
 Rectangle {
     id: rem
