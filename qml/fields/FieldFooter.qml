@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Material
-import QFRCDashboard
+import QDash
 
 Rectangle {
     property bool valid

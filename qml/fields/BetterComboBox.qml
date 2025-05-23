@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Material
-import QFRCDashboard
+import QDash
 
 ComboBox {
     property bool connected: true

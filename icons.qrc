@@ -6,7 +6,6 @@
         <file alias="Network">icons/Network.svg</file>
         <file alias="Miscellaneous">icons/Miscellaneous.svg</file>
         <file alias="Appearance">icons/Color.svg</file>
-        <file alias="QFRCDashboard">program_info/QFRCDashboard.svg</file>
         <file alias="Close">icons/Close.svg</file>
         <file alias="Minimize">icons/Minimize.svg</file>
         <file alias="Window">icons/Window.svg</file>
@@ -15,5 +14,6 @@
         <file alias="Valid">icons/valid.svg</file>
         <file alias="Forward">icons/forward.svg</file>
         <file alias="Back">icons/back.svg</file>
+        <file alias="QDash">program_info/QDash.svg</file>
     </qresource>
 </RCC>

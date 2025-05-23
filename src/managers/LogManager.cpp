@@ -9,17 +9,17 @@ LogManager::LogManager(QObject *parent)
 {
     QDir dir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     dir.mkpath(".");
-    QString filename = QString("QFRCDashboard-%1.log").arg(QDateTime::currentDateTime().toString(m_format));
-    m_logFile = dir.absoluteFilePath(filename);
+    QString filename = QString("QDash-%1.log").arg(QDateTime::currentDateTime().toString(m_format));
+    m_logFile.setFileName(dir.absoluteFilePath(filename));
 }
 
 void LogManager::log(const QString &level, const QString &subsystem, const QString &message)
 {
-    QFile f(m_logFile);
-
-    if (!f.open(QIODevice::Append | QIODevice::WriteOnly)) {
-        qCritical() << "Failed to open log file for reading.";
-        return;
+    if (!m_logFile.isOpen()) {
+        if (!m_logFile.open(QIODevice::Append | QIODevice::WriteOnly)) {
+            qCritical() << "Failed to open log file for reading.";
+            return;
+        }
     }
 
     QList<QByteArray> data;
@@ -30,8 +30,8 @@ void LogManager::log(const QString &level, const QString &subsystem, const QStri
 
     QByteArray toWrite = data.join(" ") + "\n";
 
-    f.write(toWrite);
-    f.close();
+    m_logFile.write(toWrite);
+    m_logFile.flush();
 }
 
 // Log Levels:

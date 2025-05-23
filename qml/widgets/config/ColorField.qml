@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Shapes 2.15
 import QtQuick.Dialogs
 
-import QFRCDashboard
+import QDash
 
 RowLayout {
     required property string label

@@ -23,7 +23,7 @@ public:
 
 private:
     QString m_status = "Not Connected";
-    QString m_title = BuildConfig.APP_NAME + " - " + m_status;
+    QString m_title = BuildConfig.APPLICATION_NAME + " - " + m_status;
     QString m_address = "0.0.0.0";
     bool m_connected;
 

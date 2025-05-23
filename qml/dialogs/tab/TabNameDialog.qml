@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.6
 import QtQuick.Dialogs
 
-import QFRCDashboard
+import QDash
 
 AnimatedDialog {
     id: tabNameDialog

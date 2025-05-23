@@ -2,7 +2,7 @@ import QtQuick 6.7
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 2.15
 
-import QFRCDashboard 1.0
+import QDash 1.0
 
 Rectangle {
     signal moved(real x, real y)

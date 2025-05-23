@@ -3,7 +3,7 @@ import QtQuick.Controls.Material
 import QtQuick.Layouts
 import QtQuick.Shapes 2.15
 
-import QFRCDashboard
+import QDash
 
 BetterComboBox {
     /** what property to bind to */

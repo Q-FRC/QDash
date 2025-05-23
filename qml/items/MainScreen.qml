@@ -4,7 +4,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.6
 import QtQuick.Dialogs
 
-import QFRCDashboard
+import QDash
 
 Rectangle {
     id: mainScreen
@@ -171,7 +171,7 @@ Rectangle {
 
         horizontalAlignment: Text.AlignHCenter
 
-        text: "Welcome to QFRCDashboard!\n" + "To get started, connect to your robot WiFi\n"
+        text: "Welcome to QDash!\n" + "To get started, connect to your robot WiFi\n"
               + "and go to Settings (Ctrl+Comma).\n" + "Add a tab with Ctrl+T, and add a widget\n"
               + "through the arrow menu on the left."
 

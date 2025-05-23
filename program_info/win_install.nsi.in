@@ -4,13 +4,13 @@
 
 Unicode true
 
-Name "@Dashboard_APP_NAME@"
-InstallDir "$LOCALAPPDATA\Programs\@Dashboard_APP_NAME@"
-InstallDirRegKey HKCU "Software\@Dashboard_APP_NAME@" "InstallDir"
+Name "@QDASH_NAME@"
+InstallDir "$LOCALAPPDATA\Programs\@QDASH_NAME@"
+InstallDirRegKey HKCU "Software\@QDASH_NAME@" "InstallDir"
 RequestExecutionLevel user
-OutFile "../@Dashboard_EXEC_NAME@-Setup.exe"
+OutFile "../@QDASH_NAME@-Setup.exe"
 
-!define MUI_ICON "../program_info/@Dashboard_APP_NAME@.ico"
+!define MUI_ICON "../program_info/@QDASH_NAME@.ico"
 
 ;--------------------------------
 
@@ -21,7 +21,7 @@ OutFile "../@Dashboard_EXEC_NAME@-Setup.exe"
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
-!define MUI_FINISHPAGE_RUN "$InstDir\@Dashboard_EXEC_NAME@.exe"
+!define MUI_FINISHPAGE_RUN "$InstDir\@QDASH_NAME@.exe"
 !insertmacro MUI_PAGE_FINISH
 
 !insertmacro MUI_UNPAGE_CONFIRM
@@ -36,13 +36,13 @@ OutFile "../@Dashboard_EXEC_NAME@-Setup.exe"
 ;--------------------------------
 
 ; Version info
-VIProductVersion "@Dashboard_VERSION_WIN@"
-VIFileVersion "@Dashboard_VERSION_WIN@"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "@Dashboard_APP_NAME@"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "@Dashboard_APP_NAME@ Installer"
+VIProductVersion "@QDASH_VERSION_WIN@"
+VIFileVersion "@QDASH_VERSION_WIN@"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "@QDASH_NAME@"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "@QDASH_NAME@ Installer"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Carson Rueter"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "@Dashboard_GIT_TAG@"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "@Dashboard_GIT_TAG@"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "@QDASH_TAG@"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "@QDASH_TAG@"
 
 
 Section "Visual Studio Runtime"
@@ -55,15 +55,15 @@ SectionEnd
 ;--------------------------------
 
 ; The stuff to install
-Section "@Dashboard_APP_NAME@"
+Section "@QDASH_NAME@"
 
   SectionIn RO
 
-  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @Dashboard_EXEC_NAME@.exe /F'
+  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @QDASH_NAME@.exe /F'
 
   SetOutPath $INSTDIR
 
-  File "@Dashboard_EXEC_NAME@.exe"
+  File "@QDASH_NAME@.exe"
   File *.dll
   File /r "iconengines"
   File /r "imageformats"
@@ -73,23 +73,23 @@ Section "@Dashboard_APP_NAME@"
   File /r "qml"
 
   ; Write the installation path into the registry
-  WriteRegStr HKCU Software\@Dashboard_APP_NAME@ "InstallDir" "$INSTDIR"
+  WriteRegStr HKCU Software\@QDASH_NAME@ "InstallDir" "$INSTDIR"
 
   ; Write the uninstall keys for Windows
   ${GetParameters} $R0
   ${GetOptions} $R0 "/NoUninstaller" $R1
   ${If} ${Errors}
-    !define UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\@Dashboard_APP_NAME@"
-    WriteRegStr HKCU "${UNINST_KEY}" "DisplayName" "@Dashboard_APP_NAME@"
-    WriteRegStr HKCU "${UNINST_KEY}" "DisplayIcon" "$INSTDIR\@Dashboard_EXEC_NAME@.exe"
+    !define UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\@QDASH_NAME@"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayName" "@QDASH_NAME@"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayIcon" "$INSTDIR\@QDASH_NAME@.exe"
     WriteRegStr HKCU "${UNINST_KEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
     WriteRegStr HKCU "${UNINST_KEY}" "QuietUninstallString" '"$INSTDIR\uninstall.exe" /S'
     WriteRegStr HKCU "${UNINST_KEY}" "InstallLocation" "$INSTDIR"
-    WriteRegStr HKCU "${UNINST_KEY}" "Publisher" "@Dashboard_APP_NAME@ Contributors"
-    WriteRegStr HKCU "${UNINST_KEY}" "Version" "@Dashboard_GIT_TAG@"
-    WriteRegStr HKCU "${UNINST_KEY}" "DisplayVersion" "@Dashboard_GIT_TAG@"
-    WriteRegStr HKCU "${UNINST_KEY}" "VersionMajor" "@Dashboard_VERSION_MAJOR@"
-    WriteRegStr HKCU "${UNINST_KEY}" "VersionMinor" "@Dashboard_VERSION_MINOR@"
+    WriteRegStr HKCU "${UNINST_KEY}" "Publisher" "@QDASH_NAME@ Contributors"
+    WriteRegStr HKCU "${UNINST_KEY}" "Version" "@QDASH_TAG@"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayVersion" "@QDASH_TAG@"
+    WriteRegStr HKCU "${UNINST_KEY}" "VersionMajor" "@QDASH_VERSION_MAJOR@"
+    WriteRegStr HKCU "${UNINST_KEY}" "VersionMinor" "@QDASH_VERSION_MINOR@"
     ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
     IntFmt $0 "0x%08X" $0
     WriteRegDWORD HKCU "${UNINST_KEY}" "EstimatedSize" "$0"
@@ -102,13 +102,13 @@ SectionEnd
 
 Section "Start Menu Shortcut" SM_SHORTCUTS
 
-  CreateShortcut "$SMPROGRAMS\@Dashboard_EXEC_NAME@.lnk" "$INSTDIR\@Dashboard_EXEC_NAME@.exe" "" "$INSTDIR\@Dashboard_EXEC_NAME@.exe" 0
+  CreateShortcut "$SMPROGRAMS\@QDASH_NAME@.lnk" "$INSTDIR\@QDASH_NAME@.exe" "" "$INSTDIR\@QDASH_NAME@.exe" 0
 
 SectionEnd
 
 Section /o "Desktop Shortcut" DESKTOP_SHORTCUTS
 
-  CreateShortcut "$DESKTOP\@Dashboard_EXEC_NAME@.lnk" "$INSTDIR\@Dashboard_EXEC_NAME@.exe" "" "$INSTDIR\@Dashboard_EXEC_NAME@.exe" 0
+  CreateShortcut "$DESKTOP\@QDASH_NAME@.lnk" "$INSTDIR\@QDASH_NAME@.exe" "" "$INSTDIR\@QDASH_NAME@.exe" 0
 
 SectionEnd
 
@@ -118,12 +118,12 @@ SectionEnd
 
 Section "Uninstall"
 
-  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @Dashboard_EXEC_NAME@.exe /F'
+  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @QDASH_NAME@.exe /F'
 
-  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\@Dashboard_APP_NAME@"
-  DeleteRegKey HKCU SOFTWARE\@Dashboard_APP_NAME@
+  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\@QDASH_NAME@"
+  DeleteRegKey HKCU SOFTWARE\@QDASH_NAME@
 
-  Delete $INSTDIR\@Dashboard_EXEC_NAME@.exe
+  Delete $INSTDIR\@QDASH_NAME@.exe
   Delete $INSTDIR\qt.conf
   Delete $INSTDIR\*.dll
 
@@ -134,8 +134,8 @@ Section "Uninstall"
   RMDir /r $INSTDIR\platforms
   RMDir /r $INSTDIR\styles
 
-  Delete "$SMPROGRAMS\@Dashboard_EXEC_NAME@.lnk"
-  Delete "$DESKTOP\@Dashboard_EXEC_NAME@.lnk"
+  Delete "$SMPROGRAMS\@QDASH_NAME@.lnk"
+  Delete "$DESKTOP\@QDASH_NAME@.lnk"
 
   RMDir "$INSTDIR"
 
@@ -149,7 +149,7 @@ Function .onInit
 ${GetParameters} $R0
 ${GetOptions} $R0 "/NoShortcuts" $R1
 ${IfNot} ${Errors}
-${OrIf} ${FileExists} "$InstDir\@Dashboard_EXEC_NAME@.exe"
+${OrIf} ${FileExists} "$InstDir\@QDASH_NAME@.exe"
   !insertmacro UnselectSection ${SM_SHORTCUTS}
   !insertmacro UnselectSection ${DESKTOP_SHORTCUTS}
 ${EndIf}

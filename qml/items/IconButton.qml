@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Material
 
-import QFRCDashboard
+import QDash
 
 Button {
     required property string label

@@ -4,7 +4,7 @@ import QtQuick.Layouts 2.15
 
 import QtMultimedia
 
-import QFRCDashboard
+import QDash
 
 BetterSpinBox {
     id: spin

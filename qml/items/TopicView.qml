@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls.Material
 import QtQuick.Dialogs
 
-import QFRCDashboard
+import QDash
 
 Row {
     id: tv

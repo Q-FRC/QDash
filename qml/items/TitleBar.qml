@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls.Material
 
-import QFRCDashboard
+import QDash
 
 Rectangle {
     signal minimize
@@ -28,7 +28,7 @@ Rectangle {
 
         Image {
             height: 30
-            source: "qrc:/QFRCDashboard"
+            source: "qrc:/QDash"
             sourceSize.height: 24
             sourceSize.width: 24
 
@@ -185,7 +185,7 @@ Rectangle {
         height: 30
         width: parent.width
         color: Constants.palette.text
-        text: "QFRCDashboard"
+        text: "QDash"
         font.pixelSize: 18
 
         horizontalAlignment: Text.AlignHCenter

@@ -4,7 +4,7 @@ import QtQuick.Layouts 6.6
 
 import QtMultimedia
 
-import QFRCDashboard
+import QDash
 
 // TODO: rotation, flip, etc
 PrimitiveWidget {

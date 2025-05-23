@@ -4,7 +4,7 @@ import QtQuick.Layouts 6.6
 
 import Qt.labs.qmlmodels
 
-import QFRCDashboard
+import QDash
 
 Rectangle {
     id: tab

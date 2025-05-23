@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls.Material
 import QtQuick.Layouts
 
-import QFRCDashboard
+import QDash
 
 TabButton {
     required property string label

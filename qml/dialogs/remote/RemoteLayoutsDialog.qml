@@ -4,7 +4,7 @@ import QtQuick.Controls.Material
 import QtQuick.Layouts
 import QtQuick.Dialogs
 
-import QFRCDashboard
+import QDash
 
 AnimatedDialog {
     property url selected

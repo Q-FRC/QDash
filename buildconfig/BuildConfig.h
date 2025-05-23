@@ -8,9 +8,9 @@ class Config : public QObject {
     QML_ELEMENT
 public:
     Config();
-    QString APP_NAME;
-    QString ORG_NAME;
-    QString GIT_REPO;
+    QString APPLICATION_NAME;
+    QString ORGANIZATION_NAME;
+    QString REPOSITORY;
 
     /// A short string identifying this build's platform. For example, "lin64" or "win32".
     QString BUILD_PLATFORM;
@@ -29,9 +29,6 @@ public:
 
     /// Version Channel
     QString VERSION_CHANNEL;
-
-    /// tag-commit
-    QString versionString() const;
 
     Q_INVOKABLE QString buildInfo() const;
 };

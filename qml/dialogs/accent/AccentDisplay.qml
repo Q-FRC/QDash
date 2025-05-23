@@ -2,7 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.7
 
-import QFRCDashboard
+import QDash
 
 Rectangle {
     clip: true

@@ -105,8 +105,8 @@ void AccentsListModel::save()
 {
     static QString name = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
     QDir dir(name);
-    dir.mkpath(BuildConfig.ORG_NAME);
-    dir.cd(BuildConfig.ORG_NAME);
+    dir.mkpath(BuildConfig.ORGANIZATION_NAME);
+    dir.cd(BuildConfig.ORGANIZATION_NAME);
 
     QFile file(dir.absoluteFilePath("accents.json"));
 
@@ -162,8 +162,8 @@ void AccentsListModel::load()
 {
     static QString name = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
     QDir dir(name);
-    dir.mkpath(BuildConfig.ORG_NAME);
-    dir.cd(BuildConfig.ORG_NAME);
+    dir.mkpath(BuildConfig.ORGANIZATION_NAME);
+    dir.cd(BuildConfig.ORGANIZATION_NAME);
 
     QFile file(dir.absoluteFilePath("accents.json"));
 

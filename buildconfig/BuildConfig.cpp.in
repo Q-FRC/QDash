@@ -6,23 +6,23 @@ Config BuildConfig;
 Config::Config()
 {
     // Name and copyright
-    APP_NAME = "@Dashboard_APP_NAME@";
-    ORG_NAME = "@Dashboard_ORG_NAME@";
-    GIT_REPO = "@Dashboard_GIT_REPO@";
+    APPLICATION_NAME = "@QDASH_NAME@";
+    ORGANIZATION_NAME = "@QDASH_ORG@";
+    REPOSITORY = "@QDASH_REPO@";
 
-    BUILD_PLATFORM = "@Dashboard_BUILD_PLATFORM@";
-    BUILD_DATE = "@Dashboard_BUILD_TIMESTAMP@";
+    BUILD_PLATFORM = "@BUILD_PLATFORM@";
+    BUILD_DATE = "@BUILD_TIMESTAMP@";
 
-    GIT_COMMIT = "@Dashboard_GIT_COMMIT@";
-    GIT_TAG = "@Dashboard_GIT_TAG@";
-    GIT_REFSPEC = "@Dashboard_GIT_REFSPEC@";
+    GIT_COMMIT = "@QDASH_COMMIT@";
+    GIT_TAG = "@QDASH_TAG@";
+    GIT_REFSPEC = "@QDASH_REFSPEC@";
 
     // Assume that builds outside of Git repos are "stable"
     if (GIT_REFSPEC == QStringLiteral("GITDIR-NOTFOUND")
         || GIT_TAG == QStringLiteral("GITDIR-NOTFOUND"))
     {
         GIT_REFSPEC = "refs/heads/stable";
-        GIT_TAG = versionString();
+        GIT_TAG = "stable";
     }
 
     if (GIT_REFSPEC.startsWith("refs/heads/"))
@@ -40,14 +40,9 @@ Config::Config()
     }
 }
 
-QString Config::versionString() const
-{
-    return QString("%1-%2").arg(GIT_TAG).arg(VERSION_CHANNEL);
-}
-
 QString Config::buildInfo() const
 {
-    return "<p>GitHub: <a href=" + GIT_REPO + ">" + GIT_REPO + "</a></p>" +
+    return "<p>GitHub: <a href=" + REPOSITORY + ">" + REPOSITORY + "</a></p>" +
        "<p>Built on " + BUILD_DATE + " for " + BUILD_PLATFORM + " platform.</p>" +
-       "<p>Version: " + versionString() + "</p>";
+       "<p>Version: " + GIT_TAG + "</p>";
 }

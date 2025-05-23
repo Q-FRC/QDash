@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls.Material
 import QtQuick.Controls.impl
 
-import QFRCDashboard
+import QDash
 
 SpinBox {
     id: control
