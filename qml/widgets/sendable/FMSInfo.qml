@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts
 
 import QFDFlags
-import QFRCDashboard
+import QDash
 
 SendableWidget {
     id: widget

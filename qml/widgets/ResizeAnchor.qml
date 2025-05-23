@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
-import QFRCDashboard 1.0
+import QDash 1.0
 import QFDFlags 1.0
 
 Rectangle {

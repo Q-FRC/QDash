@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts
 import QtQuick.Shapes 2.15
 
-import QFRCDashboard
+import QDash
 
 PrimitiveWidget {
     id: widget

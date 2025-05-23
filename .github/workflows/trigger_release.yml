@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: 'true'
-          path: 'QFRCDashboard-source'
+          path: 'QDash-source'
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -39,41 +39,47 @@ jobs:
       - name: Package artifacts properly
         shell: bash
         run: |
-          mv ${{ github.workspace }}/QFRCDashboard-source QFRCDashboard-${{ env.VERSION }}
+          mv ${{ github.workspace }}/QDash-source QDash-${{ env.VERSION }}
+          ls
+          echo
+          echo
+          ls *
+          echo
+          echo
 
           for arch in amd64 aarch64
           do
-            mv QFRCDashboard-Linux-Binary*${arch}/QFRCDashboard.tar.zst QFRCDashboard-Linux-${{ env.VERSION }}-$arch.tar.zst
-            mv QFRCDashboard*${arch}.AppImage/*.AppImage QFRCDashboard-Linux-${{ env.VERSION }}-${arch}.AppImage
+            mv QDash-Linux-Binary*${arch}/QDash.tar.zst QDash-Linux-${{ env.VERSION }}-$arch.tar.zst
+            mv QDash*${arch}.AppImage/*.AppImage QDash-Linux-${{ env.VERSION }}-${arch}.AppImage
 
-            mv QFRCDashboard-Windows-Setup*${arch}/Dashboard* QFRCDashboard-Windows-Setup-${{ env.VERSION }}-${arch}.exe
-            zip -r QFRCDashboard-Windows-Portable-${{ env.VERSION }}-${arch}.zip QFRCDashboard-Windows-Portable*${arch}/*
+            mv QDash-Windows-Setup*${arch}/QDash* QDash-Windows-Setup-${{ env.VERSION }}-${arch}.exe
+            zip -r QDash-Windows-Portable-${{ env.VERSION }}-${arch}.zip QDash-Windows-Portable*${arch}/*
           done
 
-          mv QFRCDashboard-macOS*/QFRCDashboard.tar.gz QFRCDashboard-macOS-${{ env.VERSION }}-universal.tar.gz
-          zip QFRCDashboard-macOS-${{ env.VERSION }}-universal.zip QFRCDashboard-macOS-${{ env.VERSION }}-universal.tar.gz
+          mv QDash-macOS*/QDash.tar.gz QDash-macOS-${{ env.VERSION }}-universal.tar.gz
+          zip QDash-macOS-${{ env.VERSION }}-universal.zip QDash-macOS-${{ env.VERSION }}-universal.tar.gz
 
-          tar -czf QFRCDashboard-${{ env.VERSION }}.tar.gz QFRCDashboard-${{ env.VERSION }}
+          tar -czf QDash-${{ env.VERSION }}.tar.gz QDash-${{ env.VERSION }}
 
       - name: Create release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
-          name: QFRCDashboard ${{ env.VERSION }}
+          name: QDash ${{ env.VERSION }}
           draft: true
           prerelease: false
           files: |
-            QFRCDashboard-${{ env.VERSION }}.tar.gz
+            QDash-${{ env.VERSION }}.tar.gz
 
-            QFRCDashboard-Linux-${{ env.VERSION }}-amd64.tar.zst
-            QFRCDashboard-Linux-${{ env.VERSION }}-aarch64.tar.zst
-            QFRCDashboard-Linux-${{ env.VERSION }}-amd64.AppImage
-            QFRCDashboard-Linux-${{ env.VERSION }}-aarch64.AppImage
+            QDash-Linux-${{ env.VERSION }}-amd64.tar.zst
+            QDash-Linux-${{ env.VERSION }}-aarch64.tar.zst
+            QDash-Linux-${{ env.VERSION }}-amd64.AppImage
+            QDash-Linux-${{ env.VERSION }}-aarch64.AppImage
 
-            QFRCDashboard-Windows-Portable-${{ env.VERSION }}-amd64.zip
-            QFRCDashboard-Windows-Portable-${{ env.VERSION }}-aarch64.zip
-            QFRCDashboard-Windows-Setup-${{ env.VERSION }}-amd64.exe
-            QFRCDashboard-Windows-Setup-${{ env.VERSION }}-aarch64.exe
+            QDash-Windows-Portable-${{ env.VERSION }}-amd64.zip
+            QDash-Windows-Portable-${{ env.VERSION }}-aarch64.zip
+            QDash-Windows-Setup-${{ env.VERSION }}-amd64.exe
+            QDash-Windows-Setup-${{ env.VERSION }}-aarch64.exe
 
-            QFRCDashboard-macOS-${{ env.VERSION }}-universal.zip
+            QDash-macOS-${{ env.VERSION }}-universal.zip

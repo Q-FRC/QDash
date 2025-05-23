@@ -8,6 +8,8 @@
 class LogManager : public QObject
 {
     Q_OBJECT
+    QML_SINGLETON
+    QML_ELEMENT
 public:
     explicit LogManager(QObject *parent = nullptr);
 
@@ -17,10 +19,8 @@ public:
     Q_INVOKABLE void critical(const QString &subsystem, const QString &message);
     Q_INVOKABLE void debug(const QString &subsystem, const QString &message);
 
-signals:
-
 private:
-    QString m_logFile;
+    QFile m_logFile;
 
     static constexpr char m_format[] = "dd.MM.yyyy-hh:mm:ss";
 };

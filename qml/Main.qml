@@ -5,7 +5,7 @@ import QtQuick.Dialogs
 
 import QtQuick.Controls.Material
 
-import QFRCDashboard
+import QDash
 
 ApplicationWindow {
     id: window

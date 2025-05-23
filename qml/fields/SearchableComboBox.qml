@@ -1,7 +1,7 @@
 import QtQuick
 import QtCore
 import QtQuick.Controls.Material
-import QFRCDashboard
+import QDash
 
 BetterComboBox {
     property list<string> choices
