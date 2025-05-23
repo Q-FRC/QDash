@@ -218,7 +218,7 @@ jobs:
 
         mv QDash.app ../QDash.app
         cd ..
-        tar czf QDash.tar.gz QFRCQDash.app
+        tar czf QDash.tar.gz QDash.app
 
         # TODO: make this work
         #mkdir dmg-src
