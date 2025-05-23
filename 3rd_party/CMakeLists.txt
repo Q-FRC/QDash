@@ -27,7 +27,7 @@ if (NOT USE_SYSTEM_NTCORE)
 
     FetchContent_Declare(
             ntcore
-            QDASH_REPOSITORY https://github.com/wpilibsuite/allwpilib.git
+            GIT_REPOSITORY https://github.com/wpilibsuite/allwpilib.git
             GIT_TAG        13626063dc590389366891635f2abbfedf7552cb # 2025.3.1
             OVERRIDE_FIND_PACKAGE
     )
