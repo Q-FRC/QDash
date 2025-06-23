@@ -45,12 +45,15 @@ QtObject {
         readonly property color dialogBg: "#272727"
 
         readonly property color text: "#EEEEEE"
-        readonly property color disabledText: Qt.darker(text, 2)
+        readonly property color disabledText: Qt.darker(text, 1.75)
 
         readonly property color menu: "#111111"
         readonly property color menuBorder: "#AAAAAA"
         readonly property real menuBaseOpacity: 0.3
         readonly property color menuItem: bg
+
+        readonly property color button: widgetBg
+        readonly property color buttonHighlighted: "#4A4A4A"
     }
 
     property QtObject dark: QtObject {
@@ -67,6 +70,9 @@ QtObject {
         readonly property color menuBorder: "#AAAAAA"
         readonly property real menuBaseOpacity: 0.5
         readonly property color menuItem: bg
+
+        readonly property color button: widgetBg
+        readonly property color buttonHighlighted: "#6A6A6A"
     }
 
     property QtObject light: QtObject {
@@ -81,5 +87,8 @@ QtObject {
         readonly property color menuBorder: "#222222"
         readonly property real menuBaseOpacity: 0.8
         readonly property color menuItem: bg
+
+        readonly property color button: widgetBg
+        readonly property color buttonHighlighted: "#CCCCCC"
     }
 }

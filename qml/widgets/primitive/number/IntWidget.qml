@@ -14,7 +14,7 @@ PrimitiveWidget {
     property int item_upperBound: 100000
     property int item_lowerBound: -100000
 
-    Menu {
+    BetterMenu {
         id: switchMenu
         title: "Switch Widget..."
 

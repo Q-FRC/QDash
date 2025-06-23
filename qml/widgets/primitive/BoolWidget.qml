@@ -9,7 +9,7 @@ PrimitiveWidget {
 
     property int item_checkboxSize: 20
 
-    Menu {
+    BetterMenu {
         id: switchMenu
         title: "Switch Widget..."
 

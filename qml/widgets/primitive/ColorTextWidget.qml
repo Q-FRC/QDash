@@ -15,7 +15,7 @@ PrimitiveWidget {
 
     property string itemValue
 
-    Menu {
+    BetterMenu {
         id: switchMenu
         title: "Switch Widget..."
 

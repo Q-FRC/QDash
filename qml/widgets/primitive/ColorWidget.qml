@@ -18,7 +18,7 @@ PrimitiveWidget {
 
     property bool itemValue
 
-    Menu {
+    BetterMenu {
         id: switchMenu
         title: "Switch Widget..."
 

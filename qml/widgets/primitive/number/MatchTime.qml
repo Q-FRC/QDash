@@ -10,7 +10,7 @@ PrimitiveWidget {
     property int item_fontSize: 100
     property color item_warningColor: "yellow"
 
-    Menu {
+    BetterMenu {
         id: switchMenu
         title: "Switch Widget..."
 

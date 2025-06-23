@@ -77,8 +77,6 @@ public:
     QJsonArray saveObject() const;
     static TabWidgetsModel *loadObject(QObject *parent, const QJsonArray &arr);
 
-    QList<QPoint> unoccupiedCells() const;
-
 protected:
     QHash<int, QByteArray> roleNames() const override;
 
@@ -86,9 +84,6 @@ signals:
     void rowsChanged();
 
     void colsChanged();
-
-
-    void unoccupiedCellsChanged();
 
 private:
     QList<Widget> m_data;
@@ -98,7 +93,6 @@ private:
 
     Q_PROPERTY(int rows READ rows WRITE setRows NOTIFY rowsChanged FINAL)
     Q_PROPERTY(int cols READ cols WRITE setCols NOTIFY colsChanged FINAL)
-    Q_PROPERTY(QList<QPoint> unoccupiedCells READ unoccupiedCells NOTIFY unoccupiedCellsChanged FINAL)
 };
 
 Q_DECLARE_METATYPE(TabWidgetsModel)

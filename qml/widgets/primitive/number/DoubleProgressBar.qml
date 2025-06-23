@@ -18,7 +18,7 @@ PrimitiveWidget {
 
     property bool item_vertical: false
 
-    Menu {
+    BetterMenu {
         id: switchMenu
         title: "Switch Widget..."
 

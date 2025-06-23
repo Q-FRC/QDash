@@ -63,19 +63,15 @@ bool TabWidgetsModel::setData(const QModelIndex &index, const QVariant &value, i
             break;
         case COL:
             w.col = value.toInt();
-            emit unoccupiedCellsChanged();
             break;
         case ROW:
             w.row = value.toInt();
-            emit unoccupiedCellsChanged();
             break;
         case COLSPAN:
             w.colSpan = value.toInt();
-            emit unoccupiedCellsChanged();
             break;
         case ROWSPAN:
             w.rowSpan = value.toInt();
-            emit unoccupiedCellsChanged();
             break;
         case PROPERTIES:
             w.properties = value.toMap();
@@ -113,8 +109,6 @@ void TabWidgetsModel::add(Widget w)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_data << w;
     endInsertRows();
-
-    emit unoccupiedCellsChanged();
 }
 
 void TabWidgetsModel::add(QString title, QString topic, QString type)
@@ -132,19 +126,13 @@ void TabWidgetsModel::add(QString title, QString topic, QString type)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_data << w;
     endInsertRows();
-
-    emit unoccupiedCellsChanged();
 }
 
 void TabWidgetsModel::setEqualTo(TabWidgetsModel *w)
 {
     beginResetModel();
-    m_data.clear();
+    m_data = w->data();
     endResetModel();
-
-    beginInsertRows(QModelIndex(), 0, w->data().count() - 1);
-    m_data << w->data();
-    endInsertRows();
 
     m_rows = w->rows();
     m_cols = w->cols();
@@ -238,40 +226,6 @@ QHash<int, QByteArray> TabWidgetsModel::roleNames() const
     rez[IDX] = "idx";
 
     return rez;
-}
-
-QList<QPoint> TabWidgetsModel::unoccupiedCells() const
-{
-    // int c = 0;
-    QList<QRect> occupied;
-
-    for (const Widget &w : m_data) {
-        occupied << QRect(w.col, w.row, w.colSpan, w.rowSpan);
-    }
-
-    QList<QPoint> unoccupied;
-
-    size_t numCells = m_cols * m_rows;
-    for (size_t i = 0; i < numCells; ++i) {
-        size_t col = (int) i % m_cols;
-        size_t row = (int) i / m_cols;
-
-        QPoint point(col, row);
-
-        bool contained = false;
-        for (const QRect &r : std::as_const(occupied)) {
-            if (r.contains(point)) {
-                contained = true;
-                break;
-            }
-        }
-
-        if (!contained) {
-            unoccupied << point;
-        }
-    }
-
-    return unoccupied;
 }
 
 QJsonArray TabWidgetsModel::saveObject() const

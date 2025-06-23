@@ -160,8 +160,12 @@ Rectangle {
     /** PASTE */
     function paste() {
         if (clipboard != null) {
-            currentTab().paste(clipboard)
+            currentTab().paste(widget)
         }
+    }
+
+    function addWidget(title, topic, type) {
+        currentTab().fakeAdd(title, topic, type)
     }
 
     /** CONTENT */
