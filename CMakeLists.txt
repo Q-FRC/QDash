@@ -12,7 +12,34 @@ set(CMAKE_AUTORCC ON)
 
 option(USE_SYSTEM_NTCORE OFF "Use the system NTCore (Linux only)")
 
-find_package(Qt6 6.7 REQUIRED COMPONENTS Core Quick Multimedia QuickControls2 Network)
+option(QDASH_WEBVIEW OFF "Enable web view widget (Requires QtWebEngine)")
+option(QDASH_CAMVIEW ON "Enable camera view widget (Requires QtMultimedia)")
+option(QDASH_NETWORK ON "Enable remote layout feature (Requires QtNetwork)")
+
+set(QDASH_QT_COMPONENTS Core Quick QuickControls2)
+set(QDASH_QT_LIBRARIES Qt6::Quick Qt6::QuickControls2)
+
+if (QDASH_WEBVIEW)
+    set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} WebEngineQuick)
+    set(QDASH_QT_LIBRARIES ${QDASH_QT_LIBRARIES} Qt6::WebEngineQuick)
+    set(QDASH_DEFINES ${QDASH_DEFINES} QDASH_WEBVIEW)
+
+    set(QDASH_NETWORK ON)
+endif()
+
+if (QDASH_CAMVIEW)
+    set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} Multimedia)
+    set(QDASH_QT_LIBRARIES ${QDASH_QT_LIBRARIES} Qt6::Multimedia)
+    set(QDASH_DEFINES ${QDASH_DEFINES} QDASH_CAMVIEW)
+endif()
+
+if (QDASH_NETWORK)
+    set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} Network)
+    set(QDASH_QT_LIBRARIES ${QDASH_QT_LIBRARIES} Qt6::Network)
+    set(QDASH_DEFINES ${QDASH_DEFINES} QDASH_NETWORK)
+endif()
+
+find_package(Qt6 6.7 REQUIRED COMPONENTS ${QDASH_QT_COMPONENTS})
 add_subdirectory(3rd_party EXCLUDE_FROM_ALL)
 
 qt_standard_project_setup(REQUIRES 6.7)
@@ -82,6 +109,8 @@ set(QML_ELEMENTS
     items/TitleBar
     items/IconButton
     items/RadialGauge
+    items/BetterMenu
+    items/BetterMenuBar
 
     widgets/BaseWidget
     widgets/PrimitiveWidget
@@ -115,7 +144,6 @@ set(QML_ELEMENTS
     widgets/sendable/Command
     widgets/sendable/StringChooser
 
-    widgets/misc/CameraView
     widgets/misc/ErrorsWidget
 
     widgets/config/BaseConfigDialog
@@ -133,9 +161,6 @@ set(QML_ELEMENTS
     dialogs/tab/TabDialog
     dialogs/tab/TabCloseDialog
 
-    dialogs/remote/RemoteLayoutsDialog
-    dialogs/remote/RemoteLayout
-
     dialogs/settings/ServerTab
     dialogs/settings/MiscTab
     dialogs/settings/WindowTab
@@ -148,6 +173,7 @@ set(QML_ELEMENTS
     dialogs/accent/AccentDisplay
 
     dialogs/AboutDialog
+    dialogs/TextDialog
     dialogs/NotificationPopup
     dialogs/AnimatedDialog
 
@@ -169,7 +195,6 @@ set(ELEMENTS
     models/TabListModel
     models/TopicListModel
     models/AccentsListModel
-    models/RemoteLayoutModel
 
     stores/TopicStore
 
@@ -180,6 +205,22 @@ set(ELEMENTS
     helpers/PlatformHelper
     helpers/NotificationHelper
 )
+
+if (QDASH_WEBVIEW)
+    set(QML_ELEMENTS ${QML_ELEMENTS}
+        dialogs/remote/RemoteLayoutsDialog
+        dialogs/remote/RemoteLayout)
+
+    set(ELEMENTS ${ELEMENTS} models/RemoteLayoutModel)
+endif()
+
+if (QDASH_CAMVIEW)
+    set(QML_ELEMENTS ${QML_ELEMENTS} widgets/misc/CameraView)
+endif()
+
+if (QDASH_NETWORK)
+    set(QML_ELEMENTS ${QML_ELEMENTS} widgets/misc/WebView)
+endif()
 
 foreach(ELEMENT ${ELEMENTS})
     set(HEADERS ${HEADERS} include/${ELEMENT}.h)
@@ -210,24 +251,18 @@ qt_add_qml_module(${QDASH_NAME}
     QML_FILES ${QML_FILES}
 
     SOURCES ${SOURCES} ${HEADERS}
+    SOURCES include/helpers/CompileDefinitions.h
 )
 
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
 set_target_properties(${QDASH_NAME} PROPERTIES
-    #    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.${QDASH_NAME}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
-    #    WIN32_EXECUTABLE TRUE
 )
 
 target_link_libraries(${QDASH_NAME}
-    PRIVATE Qt6::Quick
-    Qt6::Multimedia
-    Qt6::QuickControls2
-    Qt6::Network
+    PRIVATE
+    ${QDASH_QT_LIBRARIES}
     BuildConfig
     ntcore
 )
@@ -238,6 +273,8 @@ target_include_directories(${QDASH_NAME} PRIVATE include/stores)
 target_include_directories(${QDASH_NAME} PRIVATE include/managers)
 target_include_directories(${QDASH_NAME} PRIVATE include/helpers)
 target_include_directories(${QDASH_NAME} PRIVATE "$<TARGET_PROPERTY:ntcore,INTERFACE_INCLUDE_DIRECTORIES>")
+
+target_compile_definitions(${QDASH_NAME} PRIVATE "${QDASH_DEFINES}")
 
 include(GNUInstallDirs)
 install(TARGETS ${QDASH_NAME}

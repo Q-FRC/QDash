@@ -9,6 +9,7 @@ Rectangle {
     signal maximize
     signal close
     signal beginDrag
+    signal addWidget(string title, string topic, string type)
 
     color: Constants.accent
     height: 30
@@ -16,6 +17,18 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onPressed: beginDrag()
+    }
+
+    Loader {
+        id: remoteLayouts
+
+        active: CompileDefinitions.useNetwork
+        sourceComponent: active ? Qt.createComponent(
+                                      "../dialogs/remote/RemoteLayoutsDialog.qml") : null
+    }
+
+    AboutDialog {
+        id: about
     }
 
     RowLayout {
@@ -39,7 +52,7 @@ Rectangle {
             text: qsTr("&File")
             onClicked: menu.open()
 
-            menu: Menu {
+            menu: BetterMenu {
                 // contentWidth: 175
                 title: qsTr("&File")
                 Action {
@@ -57,7 +70,7 @@ Rectangle {
                     onTriggered: loadDialog.open()
                     shortcut: "Ctrl+O"
                 }
-                Menu {
+                BetterMenu {
                     title: qsTr("&Recent Files...")
                     Repeater {
                         model: settings.recentFiles
@@ -75,8 +88,10 @@ Rectangle {
                     }
                 }
                 Action {
+                    enabled: CompileDefinitions.useNetwork
                     text: qsTr("Remote &Layouts...")
-                    onTriggered: remoteLayouts.openDialog()
+                    onTriggered: remoteLayouts.item.open()
+
                     shortcut: "Ctrl+L"
                 }
             }
@@ -86,7 +101,7 @@ Rectangle {
             text: qsTr("&Edit")
             onClicked: menu.open()
 
-            menu: Menu {
+            menu: BetterMenu {
                 title: parent.text
 
                 Action {
@@ -100,6 +115,21 @@ Rectangle {
                     shortcut: "Ctrl+,"
                     onTriggered: settingsDialog.openDialog()
                 }
+
+                BetterMenu {
+                    title: qsTr("&Extra Widgets")
+                    Repeater {
+                        model: 1 //CompileDefinitions.extraWidgets.count
+
+                        delegate: MenuItem {
+                            text: qsTr("&" + "Web View")
+                            onTriggered: {
+                                // TODO: make extensible
+                                addWidget("Web View", "", "web")
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -107,7 +137,7 @@ Rectangle {
             text: qsTr("&Tab")
             onClicked: menu.open()
 
-            menu: Menu {
+            menu: BetterMenu {
                 title: qsTr("&Tab")
                 Action {
                     text: qsTr("&New Tab")

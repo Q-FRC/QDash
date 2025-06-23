@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.6
 
 import Qt.labs.qmlmodels
+import QtQml.Models
 
 import QDash
 
@@ -70,6 +71,12 @@ Rectangle {
 
     function paste(w) {
         twm.add(w)
+        isCopying = true
+        copying(mouseArea.mouseCoordinates)
+    }
+
+    function fakeAdd(title, topic, type) {
+        twm.add(title, topic, type)
         isCopying = true
         copying(mouseArea.mouseCoordinates)
     }
@@ -269,9 +276,27 @@ Rectangle {
                 StringChooser {}
             }
 
+            // TODO: Physically remove it from the model if not present.
             DelegateChoice {
                 roleValue: "camera"
-                CameraView {}
+
+                // TODO: generify
+                delegate: Loader {
+                    z: 3
+
+                    sourceComponent: CompileDefinitions.useCameraView ? Qt.createComponent(
+                                                                            "../widgets/misc/CameraView.qml") : nullComponent
+                }
+            }
+
+            DelegateChoice {
+                roleValue: "web"
+                delegate: Loader {
+                    z: 3
+
+                    sourceComponent: CompileDefinitions.useWebView ? Qt.createComponent(
+                                                                         "../widgets/misc/WebView.qml") : nullComponent
+                }
             }
 
             DelegateChoice {
@@ -323,6 +348,11 @@ Rectangle {
                 roleValue: "textDisplay"
                 StringDisplay {}
             }
+        }
+
+        Component {
+            id: nullComponent
+            Item {}
         }
     }
 

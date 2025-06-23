@@ -11,7 +11,7 @@ PrimitiveWidget {
     property color item_color: Constants.accent
     property bool item_wrap: true
 
-    Menu {
+    BetterMenu {
         id: switchMenu
         title: "Switch Widget..."
 

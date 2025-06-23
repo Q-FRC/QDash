@@ -59,10 +59,6 @@ ApplicationWindow {
         id: accentEditor
     }
 
-    AboutDialog {
-        id: about
-    }
-
     NotificationPopup {
         id: notif
 
@@ -120,20 +116,6 @@ ApplicationWindow {
         id: settingsDialog
     }
 
-    /** REMOTE LAYOUTS */
-    MessageDialog {
-        id: fail
-        buttons: MessageDialog.Ok
-        title: "Error"
-        text: "You must be connected to a robot to download remote layouts."
-
-        modality: Qt.WindowModal
-    }
-
-    RemoteLayoutsDialog {
-        id: remoteLayouts
-    }
-
     /** TITLE BAR */
     TitleBar {
         id: titleBar
@@ -154,6 +136,9 @@ ApplicationWindow {
         }
         onClose: window.close()
         onBeginDrag: window.startSystemMove()
+
+        onAddWidget: (title, topic, type) => screen.addWidget(title,
+                                                              topic, type)
     }
 
     /** THE REST */

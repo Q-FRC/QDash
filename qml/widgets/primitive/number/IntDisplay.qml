@@ -10,7 +10,7 @@ PrimitiveWidget {
     property int item_fontSize: 100
     property color item_color: Constants.accent
 
-    Menu {
+    BetterMenu {
         id: switchMenu
         title: "Switch Widget..."
 
