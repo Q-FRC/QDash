@@ -8,7 +8,8 @@ LogManager::LogManager(QObject *parent)
     : QObject{parent}
 {
     QDir dir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    dir.mkpath(".");
+    dir.mkpath("log");
+    dir.cd("log");
     QString filename = QString("QDash-%1.log").arg(QDateTime::currentDateTime().toString(m_format));
     m_logFile.setFileName(dir.absoluteFilePath(filename));
 }

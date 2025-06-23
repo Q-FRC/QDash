@@ -1,8 +1,7 @@
 import QtCore
 import QtQuick
 import QtQuick.Controls.Material
-import QtQuick.Layouts
-import QtQuick.Dialogs
+import QtQuick.Dialogs as D
 
 import QDash
 
@@ -29,10 +28,35 @@ AnimatedDialog {
         saveDialog.open()
     }
 
+    onOpened: {
+        busy.running = true
+
+        if (rlm.load()) {
+            busy.running = true
+        } else {
+            console.log("FAIL")
+            fail.open()
+        }
+    }
+
+    TextDialog {
+        width: 350 * Constants.scalar
+        height: 350 * Constants.scalar
+
+        modal: Qt.WindowModal
+
+        id: fail
+        standardButtons: "Ok"
+        title: "Error"
+        text: "You must be connected to a robot to download remote layouts."
+
+        onClosed: remote.close()
+    }
+
     RemoteLayoutModel {
         id: rlm
 
-        onFileOpened: (filename) => {
+        onFileOpened: filename => {
                           tlm.load(filename)
                           remote.close()
                       }
@@ -41,27 +65,16 @@ AnimatedDialog {
         }
     }
 
-    FileDialog {
+    D.FileDialog {
         id: saveDialog
         currentFolder: StandardPaths.writableLocation(
                            StandardPaths.HomeLocation)
-        fileMode: FileDialog.SaveFile
+        fileMode: D.FileDialog.SaveFile
         defaultSuffix: "json"
         selectedNameFilter.index: 0
         nameFilters: ["JSON files (*.json)", "All files (*)"]
 
-        onAccepted: rlm.download(selected, selectedFile);
-    }
-
-    function openDialog() {
-        if (rlm.load()) {
-            busy.running = true
-        } else {
-            fail.open()
-            return
-        }
-
-        open()
+        onAccepted: rlm.download(selected, selectedFile)
     }
 
     BusyIndicator {

@@ -67,6 +67,7 @@ void TopicListModel::add(const QString &toAdd)
 
     QStandardItem *parentItem = invisibleRootItem();
 
+    // TODO: refactor
     QString total = "";
     for (const QString &sub : split) {
         total += "/" + sub;
@@ -113,19 +114,22 @@ void TopicListModel::add(const QString &toAdd)
                 item->setData(toAdd, TLMRoleTypes::TOPIC);
                 item->setData(m_store->typeString(toAdd), TYPE);
             } else {
+#ifdef QDASH_CAMVIEW
                 if (parentItem && parentItem->text() == "CameraPublisher") {
                     item->setData("/CameraPublisher/" + sub, TLMRoleTypes::TOPIC);
                     item->setData("camera", TYPE);
                 } else {
-                    // item->setData("", TLMRoleTypes::TOPIC);
                     item->setData("", TYPE);
                 }
+#else
+                item->setData("", TYPE);
+#endif
             }
 
             parentItem->appendRow(item);
             parentItem = item;
         } else {
-            for (QStandardItem *item : results) {
+            for (QStandardItem *item : std::as_const(results)) {
 
                 if (item->parent() != nullptr && item->parent()->data(TLMRoleTypes::TYPE).toString() != "") goto end;
 

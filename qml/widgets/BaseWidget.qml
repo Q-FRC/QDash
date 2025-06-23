@@ -216,7 +216,7 @@ Rectangle {
         y = grid.rowHeight * model.row + 8
     }
 
-    Menu {
+    BetterMenu {
         id: rcMenu
 
         MenuItem {
@@ -333,7 +333,7 @@ Rectangle {
 
     /* ACTUAL DATA */
     TextField {
-        z: 1
+        z: 25
         id: titleField
         font.pixelSize: item_titleFontSize * Constants.scalar
         font.bold: true
