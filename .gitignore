@@ -76,3 +76,5 @@ CMakeLists.txt.user
 appdir
 *.AppImage
 build
+
+**/.qmlls.ini
