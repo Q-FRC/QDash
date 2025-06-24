@@ -16,55 +16,41 @@ jobs:
       fail-fast: false
       matrix:
         include:
-
           - os: ubuntu-24.04
-            name: "Linux amd64"
             arch: "amd64"
             appimage_arch: "x86_64"
             gcc_arch: "gcc_64"
-            qt_host: linux
-            qt_version: '6.8.3'
+            qt_version: '6.9.1'
             qt_modules: 'qtmultimedia qtwaylandcompositor qtwebengine'
-            qt_arch: 'linux_gcc_64'
 
           - os: ubuntu-24.04-arm
-            name: "Linux aarch64"
             arch: "aarch64"
             appimage_arch: "aarch64"
             gcc_arch: "gcc_arm64"
-            qt_host: linux_arm64
-            qt_version: '6.8.3'
+            qt_version: '6.9.1'
             qt_modules: 'qtmultimedia qtwaylandcompositor qtwebengine'
-            qt_arch: 'linux_gcc_arm64'
 
           - os: windows-2022
-            name: "Windows amd64"
             arch: "amd64"
             msvc_arch: 'msvc2022_64'
-            qt_host: windows
-            qt_version: '6.8.3'
+            qt_version: '6.9.1'
             qt_modules: 'qtmultimedia qtwebengine'
             qt_arch: 'win64_msvc2022_64'
 
           - os: windows-11-arm
-            name: "Windows aarch64"
             arch: "aarch64"
             msvc_arch: 'msvc2022_arm64'
-            qt_host: windows_arm64
-            qt_version: '6.8.3'
+            qt_version: '6.9.1'
             qt_modules: 'qtmultimedia qtwebengine'
             qt_arch: 'win64_msvc2022_arm64'
 
           - os: macos-latest
-            name: "macOS Universal"
             arch: "universal"
-            qt_host: mac
-            qt_version: '6.8.3'
+            qt_version: '6.9.1'
             qt_modules: 'qtmultimedia qtwebengine'
-            qt_arch: 'clang_64'
 
     runs-on: ${{ matrix.os }}
-    name: ${{ matrix.name }}
+    name: ${{ runner.os }} (${{ matrix.arch }})
 
     steps:
     - uses: actions/checkout@v4
@@ -106,7 +92,7 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       if: runner.os == 'Windows' && matrix.arch == 'aarch64'
       with:
-        arch: amd64_arm64
+        arch: arm64
 
     - uses: repolevedavaj/install-nsis@v1.0.2
       if: runner.os == 'Windows'
@@ -116,11 +102,9 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4.3.0
       with:
-        host: ${{ matrix.qt_host }}
         version: ${{ matrix.qt_version }}
         modules: ${{ matrix.qt_modules }}
-        arch: ${{ matrix.qt_arch }}
-        aqtversion: ==3.1.*
+        aqtversion: ==3.3.*
         cache: true
 
     - name: Set up Python 3.8 (macOS)
@@ -151,17 +135,17 @@ jobs:
     - name: Configure CMake
       if: matrix.arch != 'aarch64'
       run: |
-        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBUILD_SHARED_LIBS=OFF
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBUILD_SHARED_LIBS=OFF -DQDASH_WEBVIEW=ON
 
     - name: Configure CMake (aarch64)
       if: matrix.arch == 'aarch64' && runner.os != 'macOS'
       run: |
-        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DBUILD_SHARED_LIBS=OFF
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DBUILD_SHARED_LIBS=OFF -DQDASH_WEBVIEW=ON
 
     - name: Configure CMake (macOS)
       if: runner.os == 'macOS'
       run: |
-        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBUILD_SHARED_LIBS=OFF -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBUILD_SHARED_LIBS=OFF -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DQDASH_WEBVIEW=ON
 
     - name: Build
       run: |
@@ -196,10 +180,7 @@ jobs:
         cp /usr/lib/${{ matrix.appimage_arch }}-linux-gnu/libcrypto.so ${{ env.INSTALL_APPIMAGE_DIR }}/usr/lib/
         cp /usr/lib/${{ matrix.appimage_arch }}-linux-gnu/libssl.so ${{ env.INSTALL_APPIMAGE_DIR }}/usr/lib/
 
-        # may need to change this
         ./linuxdeploy-${{ matrix.appimage_arch }}.AppImage --appdir ${{ env.INSTALL_APPIMAGE_DIR }} --output appimage --plugin qt
-
-        tar czf QDash-System.tar.zst install-appdir/*
 
     - name: Package (macOS)
       if: runner.os == 'macOS'
@@ -282,13 +263,6 @@ jobs:
       with:
         name: QDash-Linux-Binary-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
         path: QDash.tar.zst
-
-    - name: Upload system tarball (Linux)
-      if: runner.os == 'Linux' && matrix.arch == 'aarch64'
-      uses: actions/upload-artifact@v4
-      with:
-        name: QDash-Linux-System-${{ env.VERSION }}-${{ inputs.build_type }}-${{ matrix.arch }}
-        path: QDash-System.tar.zst
 
     - name: Upload AppImage (Linux)
       if: runner.os == 'Linux'

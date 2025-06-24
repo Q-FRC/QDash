@@ -57,7 +57,6 @@ Section "@QDASH_NAME@"
 
   File "@QDASH_NAME@.exe"
   File *.dll
-  File /r "iconengines"
   File /r "imageformats"
   File /r "platforms"
   File /r "tls"
