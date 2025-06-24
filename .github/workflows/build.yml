@@ -22,7 +22,7 @@ jobs:
             appimage_arch: "x86_64"
             gcc_arch: "gcc_64"
             qt_version: '6.9.1'
-            qt_modules: 'qtmultimedia qtwaylandcompositor qtwebengine'
+            qt_modules: 'qtmultimedia qtwaylandcompositor qtwebengine qtwebchannel qtpositioning '
 
           - os: ubuntu-24.04-arm
             name: "Linux"
@@ -30,14 +30,14 @@ jobs:
             appimage_arch: "aarch64"
             gcc_arch: "gcc_arm64"
             qt_version: '6.9.1'
-            qt_modules: 'qtmultimedia qtwaylandcompositor qtwebengine'
+            qt_modules: 'qtmultimedia qtwaylandcompositor qtwebengine qtwebchannel qtpositioning '
 
           - os: windows-2022
             name: "Windows"
             arch: "amd64"
             msvc_arch: 'msvc2022_64'
             qt_version: '6.9.1'
-            qt_modules: 'qtmultimedia qtwebengine'
+            qt_modules: 'qtmultimedia qtwebengine qtwebchannel qtpositioning '
             qt_arch: 'win64_msvc2022_64'
 
           - os: windows-11-arm
@@ -45,14 +45,14 @@ jobs:
             arch: "aarch64"
             msvc_arch: 'msvc2022_arm64'
             qt_version: '6.9.1'
-            qt_modules: 'qtmultimedia qtwebengine'
+            qt_modules: 'qtmultimedia qtwebengine qtwebchannel qtpositioning '
             qt_arch: 'win64_msvc2022_arm64'
 
           - os: macos-latest
             name: "macOS"
             arch: "universal"
             qt_version: '6.9.1'
-            qt_modules: 'qtmultimedia qtwebengine'
+            qt_modules: 'qtmultimedia qtwebengine qtwebchannel qtpositioning '
 
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.name }} (${{ matrix.arch }})
