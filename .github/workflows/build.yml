@@ -22,7 +22,7 @@ jobs:
             appimage_arch: "x86_64"
             gcc_arch: "gcc_64"
             qt_version: '6.9.1'
-            qt_modules: 'qtmultimedia qtwaylandcompositor qtwebengine qtwebchannel qtpositioning '
+            qt_modules: 'qtmultimedia qtwaylandcompositor '
 
           - os: ubuntu-24.04-arm
             name: "Linux"
@@ -30,14 +30,14 @@ jobs:
             appimage_arch: "aarch64"
             gcc_arch: "gcc_arm64"
             qt_version: '6.9.1'
-            qt_modules: 'qtmultimedia qtwaylandcompositor qtwebengine qtwebchannel qtpositioning '
+            qt_modules: 'qtmultimedia qtwaylandcompositor '
 
           - os: windows-2022
             name: "Windows"
             arch: "amd64"
             msvc_arch: 'msvc2022_64'
             qt_version: '6.9.1'
-            qt_modules: 'qtmultimedia qtwebengine qtwebchannel qtpositioning '
+            qt_modules: 'qtmultimedia '
             qt_arch: 'win64_msvc2022_64'
 
           - os: windows-11-arm
@@ -45,14 +45,14 @@ jobs:
             arch: "aarch64"
             msvc_arch: 'msvc2022_arm64'
             qt_version: '6.9.1'
-            qt_modules: 'qtmultimedia qtwebengine qtwebchannel qtpositioning '
+            qt_modules: 'qtmultimedia'
             qt_arch: 'win64_msvc2022_arm64'
 
           - os: macos-latest
             name: "macOS"
             arch: "universal"
             qt_version: '6.9.1'
-            qt_modules: 'qtmultimedia qtwebengine qtwebchannel qtpositioning '
+            qt_modules: 'qtmultimedia '
 
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.name }} (${{ matrix.arch }})
@@ -140,17 +140,17 @@ jobs:
     - name: Configure CMake
       if: matrix.arch != 'aarch64'
       run: |
-        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBUILD_SHARED_LIBS=OFF -DQDASH_WEBVIEW=ON
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBUILD_SHARED_LIBS=OFF
 
-    - name: Configure CMake (aarch64)
+    - name: Configure CMake (Linux aarch64)
       if: matrix.arch == 'aarch64' && runner.os != 'macOS'
       run: |
-        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DBUILD_SHARED_LIBS=OFF -DQDASH_WEBVIEW=ON
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DBUILD_SHARED_LIBS=OFF
 
     - name: Configure CMake (macOS)
       if: runner.os == 'macOS'
       run: |
-        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBUILD_SHARED_LIBS=OFF -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DQDASH_WEBVIEW=ON
+        cmake -S . -B ${{ env.BUILD_DIR }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBUILD_SHARED_LIBS=OFF -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
 
     - name: Build
       run: |
@@ -164,7 +164,7 @@ jobs:
         cd ${{ env.INSTALL_DIR }}
         tar --owner root --group root -czf ../QDash.tar.zst *
 
-    - name: Package AppImage & System (Linux)
+    - name: Package AppImage (Linux)
       if: runner.os == 'Linux'
       shell: bash
       run: |
@@ -195,6 +195,7 @@ jobs:
         export QML_SOURCES_PATHS="${{ runner.workspace }}/Qt/${{ matrix.qt_version }}/macos/qml"
 
         cd ${{ env.BUILD_DIR }}
+        mv src/native/QDash.app .
         chmod a+x QDash.app/Contents/MacOS/QDash
         mkdir QDash.app/Contents/Resources -p
         cp ../dist/QDash.icns QDash.app/Contents/Resources
