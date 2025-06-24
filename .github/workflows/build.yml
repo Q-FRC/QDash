@@ -24,7 +24,7 @@ jobs:
             gcc_arch: "gcc_64"
             qt_host: linux
             qt_version: '6.8.3'
-            qt_modules: 'qtmultimedia qtwaylandcompositor'
+            qt_modules: 'qtmultimedia qtwaylandcompositor qtwebengine'
             qt_arch: 'linux_gcc_64'
 
           - os: ubuntu-24.04-arm
@@ -34,7 +34,7 @@ jobs:
             gcc_arch: "gcc_arm64"
             qt_host: linux_arm64
             qt_version: '6.8.3'
-            qt_modules: 'qtmultimedia qtwaylandcompositor'
+            qt_modules: 'qtmultimedia qtwaylandcompositor qtwebengine'
             qt_arch: 'linux_gcc_arm64'
 
           - os: windows-2022
@@ -43,7 +43,7 @@ jobs:
             msvc_arch: 'msvc2022_64'
             qt_host: windows
             qt_version: '6.8.3'
-            qt_modules: 'qtmultimedia'
+            qt_modules: 'qtmultimedia qtwebengine'
             qt_arch: 'win64_msvc2022_64'
 
           - os: windows-11-arm
@@ -52,7 +52,7 @@ jobs:
             msvc_arch: 'msvc2022_arm64'
             qt_host: windows_arm64
             qt_version: '6.8.3'
-            qt_modules: 'qtmultimedia'
+            qt_modules: 'qtmultimedia qtwebengine'
             qt_arch: 'win64_msvc2022_arm64'
 
           - os: macos-latest
@@ -60,7 +60,7 @@ jobs:
             arch: "universal"
             qt_host: mac
             qt_version: '6.8.3'
-            qt_modules: 'qtmultimedia'
+            qt_modules: 'qtmultimedia qtwebengine'
             qt_arch: 'clang_64'
 
     runs-on: ${{ matrix.os }}
@@ -114,7 +114,7 @@ jobs:
         nsis-version: 3.09
 
     - name: Install Qt
-      uses: jdpurcell/install-qt-action@v5
+      uses: jurplel@install-qt-action@v4.3.0
       with:
         host: ${{ matrix.qt_host }}
         version: ${{ matrix.qt_version }}
@@ -211,7 +211,7 @@ jobs:
         cd ${{ env.BUILD_DIR }}
         chmod a+x QDash.app/Contents/MacOS/QDash
         mkdir QDash.app/Contents/Resources -p
-        cp ../program_info/QDash.icns QDash.app/Contents/Resources
+        cp ../dist/QDash.icns QDash.app/Contents/Resources
 
         macdeployqt QDash.app -qmldir=$QML_DIR_PATH -qmlimport=$QML_SOURCES_PATHS -verbose=1 -appstore-compliant
         ls
@@ -224,7 +224,7 @@ jobs:
         #mkdir dmg-src
         #mv QDash.app dmg-src
 
-        #cp ../program_info/QDash.icns .
+        #cp ../dist/QDash.icns .
 
         # sudo npm install --global create-dmg
 
@@ -270,7 +270,7 @@ jobs:
       shell: cmd
       run: |
         cd ${{ env.INSTALL_DIR }}
-        makensis -NOCD "${{ env.BUILD_DIR }}/program_info/win_install.nsi"
+        makensis -NOCD "${{ env.BUILD_DIR }}/dist/win_install.nsi"
 
     ##
     # UPLOAD

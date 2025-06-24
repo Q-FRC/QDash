@@ -20,7 +20,7 @@ import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StringTopic;
 import edu.wpi.first.wpilibj.Filesystem;
 
-/** Class for interacting with QFRCDashboard. */
+/** Class for interacting with QDash. */
 public class QFRCLib {
     public enum ErrorLevel {
         Information,
@@ -47,7 +47,7 @@ public class QFRCLib {
     }
 
     private static final NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    private static final NetworkTable table = inst.getTable("QFRCDashboard");
+    private static final NetworkTable table = inst.getTable("QDash");
 
     private static final NetworkTableEntry tabEntry = table.getEntry("Tab");
     private static final NetworkTableEntry errorsEntry = table.getEntry("Errors");
@@ -117,7 +117,7 @@ public class QFRCLib {
     // Thanks to Gold872 and others.
 
     private static final StringTopic topic = NetworkTableInstance.getDefault()
-            .getStringTopic("/QFRCDashboard/RobotNotifications");
+            .getStringTopic("/QDash/RobotNotifications");
     private static final StringPublisher publisher = topic.publish(PubSubOption.sendAll(true),
             PubSubOption.keepDuplicates(true));
     private static final ObjectMapper objectMapper = new ObjectMapper();
