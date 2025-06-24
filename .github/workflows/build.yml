@@ -114,7 +114,7 @@ jobs:
         nsis-version: 3.09
 
     - name: Install Qt
-      uses: jurplel@install-qt-action@v4.3.0
+      uses: jurplel/install-qt-action@v4.3.0
       with:
         host: ${{ matrix.qt_host }}
         version: ${{ matrix.qt_version }}
