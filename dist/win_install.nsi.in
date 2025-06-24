@@ -1,0 +1,147 @@
+!include "FileFunc.nsh"
+!include "LogicLib.nsh"
+!include "MUI2.nsh"
+
+Unicode true
+
+Name "@QDASH_NAME@"
+InstallDir "$LOCALAPPDATA\Programs\@QDASH_NAME@"
+InstallDirRegKey HKCU "Software\@QDASH_NAME@" "InstallDir"
+RequestExecutionLevel user
+OutFile "../@QDASH_NAME@-Setup.exe"
+
+!define MUI_ICON "../dist/@QDASH_NAME@.ico"
+
+;--------------------------------
+
+; Pages
+
+!insertmacro MUI_PAGE_WELCOME
+!define MUI_COMPONENTSPAGE_NODESC
+!insertmacro MUI_PAGE_COMPONENTS
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+!define MUI_FINISHPAGE_RUN "$InstDir\@QDASH_NAME@.exe"
+!insertmacro MUI_PAGE_FINISH
+
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+
+;--------------------------------
+
+; Languages
+
+!insertmacro MUI_LANGUAGE "English"
+
+;--------------------------------
+
+; Version info
+VIProductVersion "@QDASH_VERSION_WIN@"
+VIFileVersion "@QDASH_VERSION_WIN@"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "@QDASH_NAME@"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "@QDASH_NAME@ Installer"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Carson Rueter"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "@QDASH_TAG@"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "@QDASH_TAG@"
+
+;--------------------------------
+
+; The stuff to install
+Section "@QDASH_NAME@"
+
+  SectionIn RO
+
+  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @QDASH_NAME@.exe /F'
+
+  SetOutPath $INSTDIR
+
+  File "@QDASH_NAME@.exe"
+  File *.dll
+  File /r "imageformats"
+  File /r "platforms"
+  File /r "tls"
+  File /r "multimedia"
+  File /r "qml"
+
+  ; Write the installation path into the registry
+  WriteRegStr HKCU Software\@QDASH_NAME@ "InstallDir" "$INSTDIR"
+
+  ; Write the uninstall keys for Windows
+  ${GetParameters} $R0
+  ${GetOptions} $R0 "/NoUninstaller" $R1
+  ${If} ${Errors}
+    !define UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\@QDASH_NAME@"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayName" "@QDASH_NAME@"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayIcon" "$INSTDIR\@QDASH_NAME@.exe"
+    WriteRegStr HKCU "${UNINST_KEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
+    WriteRegStr HKCU "${UNINST_KEY}" "QuietUninstallString" '"$INSTDIR\uninstall.exe" /S'
+    WriteRegStr HKCU "${UNINST_KEY}" "InstallLocation" "$INSTDIR"
+    WriteRegStr HKCU "${UNINST_KEY}" "Publisher" "@QDASH_NAME@ Contributors"
+    WriteRegStr HKCU "${UNINST_KEY}" "Version" "@QDASH_TAG@"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayVersion" "@QDASH_TAG@"
+    WriteRegStr HKCU "${UNINST_KEY}" "VersionMajor" "@QDASH_VERSION_MAJOR@"
+    WriteRegStr HKCU "${UNINST_KEY}" "VersionMinor" "@QDASH_VERSION_MINOR@"
+    ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
+    IntFmt $0 "0x%08X" $0
+    WriteRegDWORD HKCU "${UNINST_KEY}" "EstimatedSize" "$0"
+    WriteRegDWORD HKCU "${UNINST_KEY}" "NoModify" 1
+    WriteRegDWORD HKCU "${UNINST_KEY}" "NoRepair" 1
+    WriteUninstaller "$INSTDIR\uninstall.exe"
+  ${EndIf}
+
+SectionEnd
+
+Section "Start Menu Shortcut" SM_SHORTCUTS
+
+  CreateShortcut "$SMPROGRAMS\@QDASH_NAME@.lnk" "$INSTDIR\@QDASH_NAME@.exe" "" "$INSTDIR\@QDASH_NAME@.exe" 0
+
+SectionEnd
+
+Section /o "Desktop Shortcut" DESKTOP_SHORTCUTS
+
+  CreateShortcut "$DESKTOP\@QDASH_NAME@.lnk" "$INSTDIR\@QDASH_NAME@.exe" "" "$INSTDIR\@QDASH_NAME@.exe" 0
+
+SectionEnd
+
+;--------------------------------
+
+; Uninstaller
+
+Section "Uninstall"
+
+  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @QDASH_NAME@.exe /F'
+
+  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\@QDASH_NAME@"
+  DeleteRegKey HKCU SOFTWARE\@QDASH_NAME@
+
+  Delete $INSTDIR\@QDASH_NAME@.exe
+  Delete $INSTDIR\qt.conf
+  Delete $INSTDIR\*.dll
+
+  Delete $INSTDIR\uninstall.exe
+
+  RMDir /r $INSTDIR\iconengines
+  RMDir /r $INSTDIR\imageformats
+  RMDir /r $INSTDIR\platforms
+  RMDir /r $INSTDIR\styles
+
+  Delete "$SMPROGRAMS\@QDASH_NAME@.lnk"
+  Delete "$DESKTOP\@QDASH_NAME@.lnk"
+
+  RMDir "$INSTDIR"
+
+SectionEnd
+
+;--------------------------------
+
+; Extra command line parameters
+
+Function .onInit
+${GetParameters} $R0
+${GetOptions} $R0 "/NoShortcuts" $R1
+${IfNot} ${Errors}
+${OrIf} ${FileExists} "$InstDir\@QDASH_NAME@.exe"
+  !insertmacro UnselectSection ${SM_SHORTCUTS}
+  !insertmacro UnselectSection ${DESKTOP_SHORTCUTS}
+${EndIf}
+FunctionEnd
