@@ -44,8 +44,6 @@ jobs:
       - name: Install dependencies
         run: |
           git config --global --add safe.directory $PWD
-          git tag
-          git branch
 
           chmod +x ./.ci/linux/get-dependencies.sh
           ./.ci/linux/get-dependencies.sh

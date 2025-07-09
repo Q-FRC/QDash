@@ -95,7 +95,9 @@ rm -f ./sharun-aio
 
 # Copy QML Files
 mkdir -p shared/lib/qt6/qml
-cp -r $LIBDIR/qt6/qml/Qt{,5Compat,Core,Charts,Multimedia,Network,Quick} shared/lib/qt6/qml/
+set +e
+cp -r $LIBDIR/qt6/qml/Qt{,Core,Multimedia,Network,Quick} shared/lib/qt6/qml/
+set -e
 
 # Prepare sharun
 if [ "$ARCH" = 'aarch64' ]; then
