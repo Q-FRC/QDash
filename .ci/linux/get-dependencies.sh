@@ -21,7 +21,6 @@ pacman -Syu --noconfirm \
 		ccache \
 		cmake \
 		curl \
-		git \
 		jq \
 		ninja \
 		patchelf \

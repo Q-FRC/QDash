@@ -33,6 +33,9 @@ jobs:
     container: ghcr.io/pkgforge-dev/archlinux:latest
 
     steps:
+      - name: Install git
+        run: sudo pacman -S --noconfirm git
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -59,8 +62,6 @@ jobs:
         run: |
           export TARGET=appimage
           export BUILD_TYPE=${{ inputs.build_type }}
-
-          ls -a
 
           chmod a+x .ci/linux/build.sh
           .ci/linux/build.sh ${{ matrix.pkg_arch }}
@@ -226,7 +227,6 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          ls -a
           brew update
           brew install llvm ninja qt@6
           pip install jinja2
