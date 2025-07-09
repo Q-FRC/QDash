@@ -82,4 +82,6 @@ ninja -j${NPROC}
 
 strip -s src/native/QDash
 
-ccache -s
+if [ "$USE_CCACHE" = "true" ]; then
+    ccache -s
+fi

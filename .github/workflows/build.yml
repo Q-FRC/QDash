@@ -43,6 +43,9 @@ jobs:
 
       - name: Install dependencies
         run: |
+          git tag
+          git branch
+          
           chmod +x ./.ci/linux/get-dependencies.sh
           ./.ci/linux/get-dependencies.sh
 
