@@ -14,13 +14,11 @@ jobs:
     name: Build Release
     uses: ./.github/workflows/build.yml
     with:
-      build_type: Release
+      build_type: MinSizeRel
 
   create_release:
     needs: build_release
     runs-on: ubuntu-latest
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,26 +38,24 @@ jobs:
         shell: bash
         run: |
           mv ${{ github.workspace }}/QDash-source QDash-${{ env.VERSION }}
-          ls
-          echo
-          echo
-          ls *
-          echo
-          echo
+
+          mkdir -p artifacts
 
           for arch in amd64 aarch64
           do
-            mv QDash-Linux-Binary*${arch}/QDash.tar.zst QDash-Linux-${{ env.VERSION }}-$arch.tar.zst
-            mv QDash*${arch}.AppImage/*.AppImage QDash-Linux-${{ env.VERSION }}-${arch}.AppImage
-
-            mv QDash-Windows-Setup*${arch}/QDash* QDash-Windows-Setup-${{ env.VERSION }}-${arch}.exe
-            zip -r QDash-Windows-Portable-${{ env.VERSION }}-${arch}.zip QDash-Windows-Portable*${arch}/*
+            mv linux-appimage-$arch/* artifacts
+            mv linux-binary-$arch/QDash.tar.zst artifacts/QDash-Linux-${{ env.VERSION }}-$arch.tar.zst
           done
 
-          mv QDash-macOS*/QDash.tar.gz QDash-macOS-${{ env.VERSION }}-universal.tar.gz
-          zip QDash-macOS-${{ env.VERSION }}-universal.zip QDash-macOS-${{ env.VERSION }}-universal.tar.gz
+          for arch in amd64 arm64
+            mv windows-$arch/* artifacts
+            mv windows-setup-$arch/QDash-Setup.exe artifacts/QDash-Windows-${{ env.VERSION }}-$arch.exe
+          done
 
-          tar -czf QDash-${{ env.VERSION }}.tar.gz QDash-${{ env.VERSION }}
+          mv macos-universal/QDash.tar.gz .
+          zip artifacts/QDash-macOS-${{ env.VERSION }}-universal.zip QDash.tar.gz
+
+          tar -czf QDash-Source-${{ env.VERSION }}.tar.gz QDash-${{ env.VERSION }}
 
       - name: Create release
         id: create_release
@@ -69,17 +65,4 @@ jobs:
           name: QDash ${{ env.VERSION }}
           draft: true
           prerelease: false
-          files: |
-            QDash-${{ env.VERSION }}.tar.gz
-
-            QDash-Linux-${{ env.VERSION }}-amd64.tar.zst
-            QDash-Linux-${{ env.VERSION }}-aarch64.tar.zst
-            QDash-Linux-${{ env.VERSION }}-amd64.AppImage
-            QDash-Linux-${{ env.VERSION }}-aarch64.AppImage
-
-            QDash-Windows-Portable-${{ env.VERSION }}-amd64.zip
-            QDash-Windows-Portable-${{ env.VERSION }}-aarch64.zip
-            QDash-Windows-Setup-${{ env.VERSION }}-amd64.exe
-            QDash-Windows-Setup-${{ env.VERSION }}-aarch64.exe
-
-            QDash-macOS-${{ env.VERSION }}-universal.zip
+          files: artifacts/*

@@ -155,8 +155,6 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("buildConfig", &BuildConfig);
     engine.rootContext()->setContextProperty("logs", logs);
 
-    engine.addImportPath("qrc:/skfjndsjkfn");
-
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,

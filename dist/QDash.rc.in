@@ -3,8 +3,8 @@
 #endif
 #include <windows.h>
 
-IDI_ICON1               ICON    DISCARDABLE     "@QDASH_NAME@.ico"
-10255 RT_MANIFEST "@QDASH_NAME@.manifest"
+IDI_ICON1               ICON    DISCARDABLE     "QDash.ico"
+10255 RT_MANIFEST "QDash.manifest"
 
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION     @QDASH_NUMERIC_TAG@
@@ -16,9 +16,9 @@ BEGIN
                 BLOCK "000004b0"
                 BEGIN
                         VALUE "CompanyName", "@QDASH_ORG@"
-                        VALUE "FileDescription", "@QDASH_NAME@"
+                        VALUE "FileDescription", "QDash"
                         VALUE "FileVersion", "@QDASH_TAG@"
-                        VALUE "ProductName", "@QDASH_NAME@"
+                        VALUE "ProductName", "QDash"
                         VALUE "ProductVersion", "@GIT_TAG@"
                 END
         END
