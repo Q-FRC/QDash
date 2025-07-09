@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - name: Install git
-        run: pacman -S --noconfirm git
+        run: pacman -Syu --noconfirm git
 
       - name: Checkout
         uses: actions/checkout@v4
