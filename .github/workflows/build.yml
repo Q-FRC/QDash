@@ -43,7 +43,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          git config --global --add safe.directory
+          git config --global --add safe.directory $PWD
           git tag
           git branch
 
