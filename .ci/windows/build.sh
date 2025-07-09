@@ -26,7 +26,9 @@ cmake .. -G Ninja \
 
 ninja
 
-ccache -s
+if [ "$USE_CCACHE" = "true" ]; then
+    ccache -s
+fi
 
 set +e
 rm -f build/*.pdb
