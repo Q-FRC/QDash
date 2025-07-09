@@ -81,3 +81,5 @@ cd build
 ninja -j${NPROC}
 
 strip -s src/native/QDash
+
+ccache -s

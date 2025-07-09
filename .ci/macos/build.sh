@@ -21,3 +21,5 @@ cmake .. -G Ninja \
 	"${EXTRA_CMAKE_FLAGS[@]}"
 
 ninja
+
+ccache -s

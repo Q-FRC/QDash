@@ -173,7 +173,7 @@ jobs:
         shell: cmd
         run: |
           cd build/pkg
-          makensis -NOCD "build/dist/win_install.nsi"
+          makensis -NOCD "../dist/win_install.nsi"
 
       - name: Upload (Binary)
         uses: actions/upload-artifact@v4.6.2
@@ -226,6 +226,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          ls -a
           brew update
           brew install llvm ninja qt@6
           pip install jinja2

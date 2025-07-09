@@ -26,6 +26,8 @@ cmake .. -G Ninja \
 
 ninja
 
+ccache -s
+
 set +e
 rm -f build/*.pdb
 set -e
