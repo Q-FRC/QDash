@@ -69,12 +69,14 @@ fi
 
 export EXTRA_CMAKE_FLAGS=("${EXTRA_CMAKE_FLAGS[@]}" $@)
 
-mkdir -p build && cd build
-cmake .. -G Ninja \
+mkdir -p build
+cmake -S . -B build -G Ninja \
     -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
     -DCMAKE_CXX_FLAGS="$ARCH_FLAGS" \
     -DCMAKE_C_FLAGS="$ARCH_FLAGS" \
 	"${EXTRA_CMAKE_FLAGS[@]}"
+
+cd build
 
 ninja -j${NPROC}
 

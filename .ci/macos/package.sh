@@ -5,7 +5,7 @@ mkdir QDash.app/Contents/Resources -p
 cp ../dist/QDash.icns QDash.app/Contents/Resources
 
 macdeployqt QDash.app \
-            -qmldir ../src/qml \
+            -qmldir=../src/qml \
             -qmlimport=$QML_SOURCES_PATHS \
             -verbose=1 \
             -appstore-compliant

@@ -8,9 +8,9 @@ Name "QDash"
 InstallDir "$LOCALAPPDATA\Programs\QDash"
 InstallDirRegKey HKCU "Software\QDash" "InstallDir"
 RequestExecutionLevel user
-OutFile "../QDash-Setup.exe"
+OutFile "../../QDash-Setup.exe"
 
-!define MUI_ICON "../dist/QDash.ico"
+!define MUI_ICON "../../dist/QDash.ico"
 
 ;--------------------------------
 
@@ -40,7 +40,7 @@ VIProductVersion "@QDASH_VERSION_WIN@"
 VIFileVersion "@QDASH_VERSION_WIN@"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "QDash"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "QDash Installer"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Carson Rueter"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "crueter"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "@QDASH_TAG@"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "@QDASH_TAG@"
 

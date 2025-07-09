@@ -60,6 +60,8 @@ jobs:
           export TARGET=appimage
           export BUILD_TYPE=${{ inputs.build_type }}
 
+          ls -a
+
           chmod a+x .ci/linux/build.sh
           .ci/linux/build.sh ${{ matrix.pkg_arch }}
       
@@ -170,7 +172,7 @@ jobs:
       - name: Package (Installer)
         shell: cmd
         run: |
-          cd ${{ env.INSTALL_DIR }}
+          cd build/pkg
           makensis -NOCD "build/dist/win_install.nsi"
 
       - name: Upload (Binary)
