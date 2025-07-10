@@ -85,4 +85,4 @@ find_package(ntcore)
 
 set(QT_QML_GENERATE_QMLLS_INI ON)
 
-add_subdirectory(src)
+add_subdirectory(QDash)
