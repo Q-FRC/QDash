@@ -77,7 +77,7 @@ fi
 wget --retry-connrefused --tries=30 "$SHARUN" -O ./sharun-aio
 chmod +x ./sharun-aio
 xvfb-run -a ./sharun-aio l -p -v -e -s -k \
-	../$BUILDDIR/src/native/QDash \
+	../$BUILDDIR/QDash/Native/QDash \
 	$LIBDIR/libXss.so* \
 	$LIBDIR/libdecor-0.so* \
 	$LIBDIR/qt6/plugins/audio/* \

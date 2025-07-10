@@ -80,7 +80,7 @@ cd build
 
 ninja -j${NPROC}
 
-strip -s src/native/QDash
+strip -s QDash/Native/QDash
 
 if [ "$USE_CCACHE" = "true" ]; then
     ccache -s

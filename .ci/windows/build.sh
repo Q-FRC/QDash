@@ -40,7 +40,7 @@ $WINDEPLOYQT --release \
              --no-system-dxc-compiler \
              --no-system-d3d-compiler \
              --dir pkg \
-             --qmldir ../src/qml \
+             --qmldir ../QDash/qml \
              --qmlimport $QML2_IMPORT_PATH \
              QDash.exe
 
