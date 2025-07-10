@@ -36,7 +36,6 @@ AnimatedDialog {
         if (rlm.load()) {
             busy.running = true
         } else {
-            console.log("FAIL")
             fail.open()
         }
     }

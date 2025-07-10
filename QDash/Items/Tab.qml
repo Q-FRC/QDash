@@ -70,9 +70,6 @@ Rectangle {
             twm.setEqualTo(model.widgets)
             model.widgets = twm
         }
-
-        console.log(CompileDefinitions.useWebView,
-                    CompileDefinitions.useCameraView)
     }
 
     function copy(idx) {

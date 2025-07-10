@@ -131,9 +131,6 @@ ApplicationWindow {
         Constants.setTheme(settings.theme)
         Constants.setAccent(settings.accent)
 
-        resetScalar()
-        settings.scaleChanged.connect(resetScalar)
-
         dsResize()
         settings.resizeToDSChanged.connect(dsResize)
 
@@ -211,7 +208,7 @@ ApplicationWindow {
             mouseArea.onPressed: window.startSystemResize(direction)
             mouseArea.drag.target: null
 
-            divisor: 80 / Constants.scalar
+            divisor: 80
         }
     }
 }

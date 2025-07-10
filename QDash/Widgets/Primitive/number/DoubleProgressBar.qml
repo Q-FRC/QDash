@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls.Material
 import QtQuick.Layouts
- 
+
 import QDash.Fields
 import QDash.Items
 import QDash.Config
@@ -86,8 +86,7 @@ PrimitiveWidget {
             verticalCenterOffset: titleField.height / 2
         }
 
-        width: item_vertical ? (parent.height - titleField.height - 50
-                               ) : (parent.width - 50)
+        width: item_vertical ? (parent.height - titleField.height - 50) : (parent.width - 50)
 
         Repeater {
             model: item_numTicks + 1
@@ -97,7 +96,7 @@ PrimitiveWidget {
                     top: bar.bottom
                 }
 
-                x: (bar.width * index) / item_numTicks - Constants.scalar
+                x: (bar.width * index) / item_numTicks
 
                 Rectangle {
                     id: tick
