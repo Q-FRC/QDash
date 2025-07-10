@@ -43,4 +43,4 @@ done
 
 # TODO: sign w/ real identity?
 codesign --force --deep --entitlements ../dist/App.entitlements -s - QDash.app
-#tar czf ../QDash.tar.gz QDash.app
+tar czf ../QDash.tar.gz QDash.app
