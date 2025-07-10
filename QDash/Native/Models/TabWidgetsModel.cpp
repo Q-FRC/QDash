@@ -1,12 +1,10 @@
-#include "Models/TabWidgetsModel.h"
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QRect>
 #include <qcolor.h>
+#include "Models/TabWidgetsModel.h"
 
-TabWidgetsModel::TabWidgetsModel(QObject *parent)
-    : QAbstractListModel(parent)
-{}
+TabWidgetsModel::TabWidgetsModel(QObject *parent) : QAbstractListModel(parent) {}
 
 int TabWidgetsModel::rowCount(const QModelIndex &parent) const
 {
@@ -145,7 +143,8 @@ QList<Widget> TabWidgetsModel::data()
 
 bool TabWidgetsModel::remove(int idx)
 {
-    if (idx < 0 || idx >= m_data.count()) return false;
+    if (idx < 0 || idx >= m_data.count())
+        return false;
 
     beginRemoveRows(QModelIndex(), idx, idx);
     m_data.remove(idx);
@@ -193,8 +192,10 @@ bool TabWidgetsModel::cellOccupied(int row, int col, int rowSpan, int colSpan, Q
 {
     QRect itemRect = QRect(col, row, colSpan, rowSpan);
 
-    if (col + colSpan > cols() || row + rowSpan > rows()) return true;
-    if (m_data.empty()) return false;
+    if (col + colSpan > cols() || row + rowSpan > rows())
+        return true;
+    if (m_data.empty())
+        return false;
 
     for (const Widget &w : std::as_const(m_data)) {
         QRect dataRect = QRect(w.col, w.row, w.colSpan, w.rowSpan);
@@ -211,10 +212,9 @@ bool TabWidgetsModel::cellOccupied(int row, int col, int rowSpan, int colSpan, Q
     return false;
 }
 
-
 QHash<int, QByteArray> TabWidgetsModel::roleNames() const
 {
-    QHash<int,QByteArray> rez;
+    QHash<int, QByteArray> rez;
     rez[TITLE] = "title";
     rez[TOPIC] = "topic";
     rez[TYPE] = "type";
@@ -253,7 +253,8 @@ QJsonArray TabWidgetsModel::saveObject() const
                 prop.insert(iter.key(), iter.value().value<QColor>().name());
             } else if (iter.value().metaType() == QMetaType::fromType<QSizeF>()) {
                 QSize size = iter.value().value<QSizeF>().toSize();
-                prop.insert(iter.key(), QString::number(size.width()) + "x" + QString::number(size.height()));
+                prop.insert(iter.key(),
+                            QString::number(size.width()) + "x" + QString::number(size.height()));
             } else {
                 prop.insert(iter.key(), iter.value().toJsonValue());
             }

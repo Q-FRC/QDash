@@ -43,8 +43,7 @@
 
 #include <QQuickItem>
 
-class MaskedMouseArea : public QQuickItem
-{
+class MaskedMouseArea : public QQuickItem {
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(bool pressed READ isPressed NOTIFY pressedChanged)
@@ -55,8 +54,14 @@ public:
 
     bool contains(const QPointF &point) const;
 
-    bool isPressed() const { return m_pressed; }
-    bool containsMouse() const { return m_containsMouse; }
+    bool isPressed() const
+    {
+        return m_pressed;
+    }
+    bool containsMouse() const
+    {
+        return m_containsMouse;
+    }
 
     bool isLeft() const;
     void setIsLeft(bool newIsLeft);

@@ -23,8 +23,7 @@ public:
     QVariantMap properties;
 } Widget;
 
-class TabWidgetsModel : public QAbstractListModel
-{
+class TabWidgetsModel : public QAbstractListModel {
     Q_OBJECT
     QML_ELEMENT
 
@@ -72,7 +71,8 @@ public:
     int cols() const;
     void setCols(int newCols);
 
-    Q_INVOKABLE bool cellOccupied(int row, int col, int rowSpan = 1, int colSpan = 1, QRectF ignore = QRectF(-1, -1, -1, -1));
+    Q_INVOKABLE bool cellOccupied(int row, int col, int rowSpan = 1, int colSpan = 1,
+                                  QRectF ignore = QRectF(-1, -1, -1, -1));
 
     QJsonArray saveObject() const;
     static TabWidgetsModel *loadObject(QObject *parent, const QJsonArray &arr);

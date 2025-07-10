@@ -4,14 +4,12 @@
 #include <QAbstractListModel>
 #include <QQmlEngine>
 
-typedef struct
-{
+typedef struct {
     QString key;
     QString value;
 } Data;
 
-class GenericMapModel : public QAbstractListModel
-{
+class GenericMapModel : public QAbstractListModel {
     Q_OBJECT
     QML_ELEMENT
 public:

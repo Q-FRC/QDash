@@ -10,17 +10,12 @@ typedef struct RemoteLayout {
     QString name;
 } RemoteLayout;
 
-class RemoteLayoutModel : public QAbstractListModel
-{
+class RemoteLayoutModel : public QAbstractListModel {
     Q_OBJECT
     QML_ELEMENT
 public:
     explicit RemoteLayoutModel(QObject *parent = nullptr);
-    enum RLMRoleTypes {
-        URL = Qt::UserRole + 1,
-        NAME,
-        IDX
-    };
+    enum RLMRoleTypes { URL = Qt::UserRole + 1, NAME, IDX };
 
     // Basic functionality:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

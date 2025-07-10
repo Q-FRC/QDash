@@ -5,10 +5,9 @@
 #include <QJsonObject>
 
 TabListModel::TabListModel(Logger *logs, SettingsManager *settings, QObject *parent)
-    : QAbstractListModel(parent)
-    , m_logs(logs)
-    , m_settings(settings)
-{}
+    : QAbstractListModel(parent), m_logs(logs), m_settings(settings)
+{
+}
 
 int TabListModel::rowCount(const QModelIndex &parent) const
 {
@@ -231,7 +230,7 @@ void TabListModel::selectTab(const QString &tab)
 
 QHash<int, QByteArray> TabListModel::roleNames() const
 {
-    QHash<int,QByteArray> rez;
+    QHash<int, QByteArray> rez;
     rez[TITLE] = "title";
     rez[ROWS] = "rows";
     rez[COLS] = "cols";

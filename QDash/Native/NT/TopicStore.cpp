@@ -4,18 +4,15 @@
 
 #include <QVariant>
 
-TopicStore::TopicStore(Logger *logs, QObject *parent)
-    : QObject(parent)
-    , m_logs(logs)
-{
-}
+TopicStore::TopicStore(Logger *logs, QObject *parent) : QObject(parent), m_logs(logs) {}
 
 void TopicStore::connect(bool connected)
 {
     emit this->connected(connected);
 }
 
-bool TopicStore::hasEntry(QString topic) {
+bool TopicStore::hasEntry(QString topic)
+{
     for (const Listener &listener : Listeners) {
         if (topic == listener.topic) {
             return true;
@@ -24,7 +21,8 @@ bool TopicStore::hasEntry(QString topic) {
     return false;
 }
 
-Listener TopicStore::entry(QString topic) {
+Listener TopicStore::entry(QString topic)
+{
     for (Listener listener : Listeners) {
         if (listener.topic == topic) {
             return listener;
@@ -54,13 +52,19 @@ QVariant TopicStore::toVariant(const nt::Value &value)
 {
     QVariant v;
 
-    if (!value.IsValid()) return v;
+    if (!value.IsValid())
+        return v;
 
-    if (value.IsBoolean()) v = value.GetBoolean();
-    else if (value.IsString()) v = QString::fromStdString(std::string(value.GetString()));
-    else if (value.IsDouble()) v = value.GetDouble();
-    else if (value.IsFloat()) v = value.GetFloat();
-    else if (value.IsInteger()) v = QVariant::fromValue(value.GetInteger());
+    if (value.IsBoolean())
+        v = value.GetBoolean();
+    else if (value.IsString())
+        v = QString::fromStdString(std::string(value.GetString()));
+    else if (value.IsDouble())
+        v = value.GetDouble();
+    else if (value.IsFloat())
+        v = value.GetFloat();
+    else if (value.IsInteger())
+        v = QVariant::fromValue(value.GetInteger());
 
     else if (value.IsBooleanArray()) {
         const std::span<const int> a = value.GetBooleanArray();
@@ -70,8 +74,7 @@ QVariant TopicStore::toVariant(const nt::Value &value)
         }
 
         v = QVariant::fromValue(newList);
-    }
-    else if (value.IsStringArray()) {
+    } else if (value.IsStringArray()) {
         const std::span<const std::string> a = value.GetStringArray();
         QStringList newList;
         for (const std::string &s : a) {
@@ -79,8 +82,7 @@ QVariant TopicStore::toVariant(const nt::Value &value)
         }
 
         v = QVariant::fromValue(newList);
-    }
-    else if (value.IsDoubleArray()) {
+    } else if (value.IsDoubleArray()) {
         const std::span<const double> a = value.GetDoubleArray();
         QList<double> newList;
         for (const double d : a) {
@@ -88,8 +90,7 @@ QVariant TopicStore::toVariant(const nt::Value &value)
         }
 
         v = QVariant::fromValue(newList);
-    }
-    else if (value.IsIntegerArray()) {
+    } else if (value.IsIntegerArray()) {
         const std::span<const int64_t> a = value.GetIntegerArray();
         QList<int64_t> newList;
         for (const size_t i : a) {
@@ -104,7 +105,8 @@ QVariant TopicStore::toVariant(const nt::Value &value)
 
 nt::Value TopicStore::toValue(const QVariant &value)
 {
-    if (!value.isValid()) goto end;
+    if (!value.isValid())
+        goto end;
 
     if (value.typeId() == QMetaType::Type::QString) {
         return nt::Value::MakeString(std::string_view{value.toString().toStdString()});
@@ -137,32 +139,29 @@ end:
     return nt::Value();
 }
 
-bool Listener::operator==(const Listener &other) const {
-    return (other.topic == this->topic) &&
-           (other.isNull == this->isNull);
+bool Listener::operator==(const Listener &other) const
+{
+    return (other.topic == this->topic) && (other.isNull == this->isNull);
 }
 
-void TopicStore::subscribe(QString ntTopic) {
-    if (ntTopic == "") return;
+void TopicStore::subscribe(QString ntTopic)
+{
+    if (ntTopic == "")
+        return;
     Listener listener;
 
     m_logs->info("TopicStore", "Subscribed to topic " + ntTopic);
 
     listener = changeNumSubscribed(ntTopic);
     if (listener.isNull) {
-        listener = {
-            ntTopic,
-            0,
-            nt::ListenerCallback(),
-            1,
-            false
-        };
+        listener = {ntTopic, 0, nt::ListenerCallback(), 1, false};
 
         nt::NetworkTableEntry entry = Globals::inst.GetEntry(ntTopic.toStdString());
 
         topicEntryMap.insert(ntTopic, entry);
 
-        nt::ListenerCallback updateWidget = [entry, ntTopic, this](const nt::Event &event = nt::Event()) {
+        nt::ListenerCallback updateWidget = [entry, ntTopic,
+                                             this](const nt::Event &event = nt::Event()) {
             nt::Value value;
             if (!event.Is(nt::EventFlags::kValueAll)) {
                 value = entry.GetValue();
@@ -177,7 +176,8 @@ void TopicStore::subscribe(QString ntTopic) {
             }
         };
 
-        NT_Listener handle = Globals::inst.AddListener(entry, nt::EventFlags::kValueAll, updateWidget);
+        NT_Listener handle =
+            Globals::inst.AddListener(entry, nt::EventFlags::kValueAll, updateWidget);
 
         listener.listenerHandle = handle;
         listener.callback = updateWidget;
@@ -191,8 +191,10 @@ void TopicStore::subscribe(QString ntTopic) {
     }
 }
 
-void TopicStore::unsubscribe(QString ntTopic) {
-    if (!hasEntry(ntTopic)) return;
+void TopicStore::unsubscribe(QString ntTopic)
+{
+    if (!hasEntry(ntTopic))
+        return;
 
     m_logs->debug("TopicStore", "Unsubscribed from topic " + ntTopic);
 
@@ -206,9 +208,11 @@ void TopicStore::unsubscribe(QString ntTopic) {
     }
 }
 
-QVariant TopicStore::getValue(QString topic) {
+QVariant TopicStore::getValue(QString topic)
+{
     Listener l = entry(topic);
-    if (l.isNull) return QVariant{};
+    if (l.isNull)
+        return QVariant{};
 
     nt::NetworkTableEntry entry = topicEntryMap.value(topic);
     QVariant v = toVariant(entry.GetValue());
@@ -218,11 +222,11 @@ QVariant TopicStore::getValue(QString topic) {
 void TopicStore::setValue(QString topic, const QVariant &value)
 {
     Listener l = entry(topic);
-    if (l.isNull) return;
+    if (l.isNull)
+        return;
 
     nt::NetworkTableEntry entry = topicEntryMap.value(topic);
     entry.SetValue(toValue(value));
-
 }
 
 void TopicStore::forceUpdate(const QString &topic)
@@ -230,7 +234,8 @@ void TopicStore::forceUpdate(const QString &topic)
     m_logs->debug("TopicStore", "Force-updating topic " + topic);
 
     Listener l = entry(topic);
-    if (l.isNull) return;
+    if (l.isNull)
+        return;
 
     l.callback(nt::Event{});
 }
@@ -241,14 +246,21 @@ QString TopicStore::typeString(QString topic)
     nt::NetworkTableType type = entry.GetType();
 
     switch (type) {
-    case nt::NetworkTableType::kBoolean: return "bool";
-    case nt::NetworkTableType::kDouble: return "double";
-    case nt::NetworkTableType::kFloat: return "double";
-    case nt::NetworkTableType::kString: return "string";
-    case nt::NetworkTableType::kInteger: return "int";
+    case nt::NetworkTableType::kBoolean:
+        return "bool";
+    case nt::NetworkTableType::kDouble:
+        return "double";
+    case nt::NetworkTableType::kFloat:
+        return "double";
+    case nt::NetworkTableType::kString:
+        return "string";
+    case nt::NetworkTableType::kInteger:
+        return "int";
 
-    case nt::NetworkTableType::kBooleanArray: return "reef";
-    case nt::NetworkTableType::kStringArray: return "errors";
+    case nt::NetworkTableType::kBooleanArray:
+        return "reef";
+    case nt::NetworkTableType::kStringArray:
+        return "errors";
     default:
         return "";
     }

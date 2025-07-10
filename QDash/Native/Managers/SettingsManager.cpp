@@ -1,11 +1,8 @@
-#include "SettingsManager.h"
 #include "Misc/Constants.h"
 #include "Misc/Globals.h"
+#include "SettingsManager.h"
 
-SettingsManager::SettingsManager(Logger *logs, QObject *parent)
-    : QObject{parent}
-    , m_logs(logs)
-{}
+SettingsManager::SettingsManager(Logger *logs, QObject *parent) : QObject{parent}, m_logs(logs) {}
 
 void SettingsManager::reconnectServer()
 {

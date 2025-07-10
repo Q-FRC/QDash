@@ -3,6 +3,7 @@
 #include <networktables/NetworkTableInstance.h>
 
 // NAMESPACES //
-namespace Globals {
+namespace Globals
+{
 extern nt::NetworkTableInstance inst;
 }

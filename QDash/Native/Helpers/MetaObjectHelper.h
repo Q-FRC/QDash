@@ -11,7 +11,7 @@ class MetaObjectHelper : public QObject {
     QML_SINGLETON
 public:
     using QObject::QObject;
-    Q_INVOKABLE QString typeName(QObject* object, const QString& property) const
+    Q_INVOKABLE QString typeName(QObject *object, const QString &property) const
     {
         QQmlProperty qmlProperty(object, property);
         QMetaProperty metaProperty = qmlProperty.property();
@@ -20,4 +20,3 @@ public:
 };
 
 #endif // METAOBJECTHELPER_H
-

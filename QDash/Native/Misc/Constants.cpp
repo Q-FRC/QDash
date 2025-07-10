@@ -15,7 +15,8 @@ void Setting::setValue(const QVariant &value) const
     settings.setValue(Name, value);
 }
 
-void Setting::operator=(const QVariant &value) const {
+void Setting::operator=(const QVariant &value) const
+{
     setValue(value);
 }
 

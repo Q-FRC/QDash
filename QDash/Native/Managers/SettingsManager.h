@@ -7,14 +7,14 @@
 #include <QObject>
 #include <QQmlEngine>
 
-class SettingsManager : public QObject
-{
+class SettingsManager : public QObject {
     Q_OBJECT
 
     Logger *m_logs;
 
     Q_PROPERTY(bool loadRecent READ loadRecent WRITE setLoadRecent NOTIFY loadRecentChanged FINAL)
-    Q_PROPERTY(QStringList recentFiles READ recentFiles WRITE setRecentFiles NOTIFY recentFilesChanged FINAL)
+    Q_PROPERTY(QStringList recentFiles READ recentFiles WRITE setRecentFiles NOTIFY
+                   recentFilesChanged FINAL)
     Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged FINAL)
     Q_PROPERTY(QString accent READ accent WRITE setAccent NOTIFY accentChanged FINAL)
 
@@ -25,7 +25,8 @@ class SettingsManager : public QObject
     Q_PROPERTY(double scale READ scale WRITE setScale NOTIFY scaleChanged FINAL)
     Q_PROPERTY(bool resizeToDS READ resizeToDS WRITE setResizeToDS NOTIFY resizeToDSChanged FINAL)
     Q_PROPERTY(int logLevel READ logLevel WRITE setLogLevel NOTIFY logLevelChanged FINAL)
-    Q_PROPERTY(bool disableWidgets READ disableWidgets WRITE setDisableWidgets NOTIFY disableWidgetsChanged FINAL)
+    Q_PROPERTY(bool disableWidgets READ disableWidgets WRITE setDisableWidgets NOTIFY
+                   disableWidgetsChanged FINAL)
 
 public:
     explicit SettingsManager(Logger *logs, QObject *parent = nullptr);

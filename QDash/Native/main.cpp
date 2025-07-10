@@ -4,8 +4,8 @@
 #include <QQuickStyle>
 #include <QSortFilterProxyModel>
 
-#include "Models/TabListModel.h"
 #include "Models/AccentsListModel.h"
+#include "Models/TabListModel.h"
 #include "Models/TopicListModel.h"
 
 #include "buildconfig/BuildConfig.h"
@@ -89,56 +89,52 @@ int main(int argc, char *argv[])
     Globals::inst.StartClient4(BuildConfig.APPLICATION_NAME.toStdString());
     Globals::inst.StartDSClient(NT_DEFAULT_PORT4);
 
-    Globals::inst.AddListener({{""}}, nt::EventFlags::kTopic, [topics, logs](const nt::Event &event) {
-        std::string topicName(event.GetTopicInfo()->name);
+    Globals::inst.AddListener({{""}}, nt::EventFlags::kTopic,
+                              [topics, logs](const nt::Event &event) {
+                                  std::string topicName(event.GetTopicInfo()->name);
 
-        if (event.Is(nt::EventFlags::kPublish)) {
-            QMetaObject::invokeMethod(topics, [topics, topicName, logs] {
-                logs->debug("NT", "Received topic announcement for " + QString::fromStdString(topicName));
-                topics->add(QString::fromStdString(topicName));
-            });
+                                  if (event.Is(nt::EventFlags::kPublish)) {
+                                      QMetaObject::invokeMethod(topics, [topics, topicName, logs] {
+                                          logs->debug("NT", "Received topic announcement for " +
+                                                                QString::fromStdString(topicName));
+                                          topics->add(QString::fromStdString(topicName));
+                                      });
 
-        } else if (event.Is(nt::EventFlags::kUnpublish)) {
-            // TODO: handle unpublishing
-            // topics->remove(QString::fromStdString(topicName));
-        }
-    });
-
-    nt::NetworkTableEntry tabEntry = Globals::inst.GetEntry("/QDash/Tab");
-    Globals::inst.AddListener(tabEntry, nt::EventFlags::kValueAll, [tlm, logs](const nt::Event &event) {
-        std::string_view value = event.GetValueEventData()->value.GetString();
-        QString qvalue = QString::fromStdString(std::string{value});
-
-
-        QMetaObject::invokeMethod(tlm, [tlm, qvalue, logs] {
-            tlm->selectTab(qvalue);
-            logs->debug("NT", "Requested tab switch to tab " + qvalue);
-        });
-    });
-
-    nt::NetworkTableEntry notificationEntry = Globals::inst.GetEntry(
-        "/QDash/RobotNotifications");
-
-    Globals::inst.AddListener(notificationEntry,
-                              nt::EventFlags::kValueAll,
-                              [tlm, parent, notification, logs](const nt::Event &event) {
-                                  std::string_view value = event.GetValueEventData()
-                                  ->value.GetString();
-                                  QString qvalue = QString::fromStdString(std::string{value});
-                                  QJsonDocument doc = QJsonDocument::fromJson(qvalue.toUtf8());
-
-                                  QMetaObject::invokeMethod(notification, [doc, notification, logs, qvalue] {
-                                      notification->fromJson(doc);
-                                      logs->debug("Notifications", "Received notification data " + qvalue);
-                                  });
+                                  } else if (event.Is(nt::EventFlags::kUnpublish)) {
+                                      // TODO: handle unpublishing
+                                      // topics->remove(QString::fromStdString(topicName));
+                                  }
                               });
 
+    nt::NetworkTableEntry tabEntry = Globals::inst.GetEntry("/QDash/Tab");
+    Globals::inst.AddListener(
+        tabEntry, nt::EventFlags::kValueAll, [tlm, logs](const nt::Event &event) {
+            std::string_view value = event.GetValueEventData()->value.GetString();
+            QString qvalue = QString::fromStdString(std::string{value});
+
+            QMetaObject::invokeMethod(tlm, [tlm, qvalue, logs] {
+                tlm->selectTab(qvalue);
+                logs->debug("NT", "Requested tab switch to tab " + qvalue);
+            });
+        });
+
+    nt::NetworkTableEntry notificationEntry = Globals::inst.GetEntry("/QDash/RobotNotifications");
+
+    Globals::inst.AddListener(
+        notificationEntry, nt::EventFlags::kValueAll,
+        [tlm, parent, notification, logs](const nt::Event &event) {
+            std::string_view value = event.GetValueEventData()->value.GetString();
+            QString qvalue = QString::fromStdString(std::string{value});
+            QJsonDocument doc = QJsonDocument::fromJson(qvalue.toUtf8());
+
+            QMetaObject::invokeMethod(notification, [doc, notification, logs, qvalue] {
+                notification->fromJson(doc);
+                logs->debug("Notifications", "Received notification data " + qvalue);
+            });
+        });
+
     qmlRegisterUncreatableMetaObject(
-        QFDFlags::staticMetaObject,
-        "QFDFlags",
-        1,
-        0,
-        "QFDFlags",
+        QFDFlags::staticMetaObject, "QFDFlags", 1, 0, "QFDFlags",
         "Attempt to create uninstantiable object \"QFDFlags\" ignored");
 
     QQmlApplicationEngine engine;
@@ -156,11 +152,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("logs", logs);
 
     QObject::connect(
-        &engine,
-        &QQmlApplicationEngine::objectCreationFailed,
-        parent,
-        []() { QCoreApplication::exit(-1); },
-        Qt::QueuedConnection);
+        &engine, &QQmlApplicationEngine::objectCreationFailed, parent,
+        []() { QCoreApplication::exit(-1); }, Qt::QueuedConnection);
     engine.loadFromModule("QDash.Main", "Main");
 
     logs->info("QDash", "Application started");

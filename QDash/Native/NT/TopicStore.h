@@ -6,8 +6,8 @@
 
 #include "networktables/NetworkTableEntry.h"
 
-#include <QMultiHash>
 #include <QHash>
+#include <QMultiHash>
 #include <QObject>
 #include <qqmlintegration.h>
 
@@ -21,8 +21,7 @@ struct Listener {
     bool operator==(const Listener &other) const;
 };
 
-class TopicStore : public QObject
-{
+class TopicStore : public QObject {
     Q_OBJECT
 private:
     bool hasEntry(QString topic);

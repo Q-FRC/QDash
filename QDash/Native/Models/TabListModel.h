@@ -19,20 +19,15 @@ typedef struct {
     TabWidgetsModel *model;
 } Tab;
 
-class TabListModel : public QAbstractListModel
-{
+class TabListModel : public QAbstractListModel {
     Q_OBJECT
 
     Q_PROPERTY(int selectedTab READ selectedTab NOTIFY selectedTabChanged FINAL)
 public:
-    enum TLMRoleTypes {
-        TITLE = Qt::UserRole,
-        ROWS,
-        COLS,
-        WIDGETS
-    };
+    enum TLMRoleTypes { TITLE = Qt::UserRole, ROWS, COLS, WIDGETS };
 
-    explicit TabListModel(Logger *logs, SettingsManager *settings = nullptr, QObject *parent = nullptr);
+    explicit TabListModel(Logger *logs, SettingsManager *settings = nullptr,
+                          QObject *parent = nullptr);
 
     // Basic functionality:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

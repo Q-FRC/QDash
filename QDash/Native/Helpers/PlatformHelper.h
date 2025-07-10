@@ -4,8 +4,7 @@
 #include <QObject>
 #include <QQmlEngine>
 
-class PlatformHelper : public QObject
-{
+class PlatformHelper : public QObject {
     Q_OBJECT
     QML_ELEMENT
 public:

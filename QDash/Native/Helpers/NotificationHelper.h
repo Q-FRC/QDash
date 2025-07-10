@@ -4,15 +4,15 @@
 #include <QObject>
 #include <QQmlEngine>
 
-class NotificationHelper : public QObject
-{
+class NotificationHelper : public QObject {
     Q_OBJECT
     QML_ELEMENT
 
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged FINAL)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged FINAL)
     Q_PROPERTY(QString level READ level WRITE setLevel NOTIFY levelChanged FINAL)
-    Q_PROPERTY(int displayTime READ displayTime WRITE setDisplayTime NOTIFY displayTimeChanged FINAL)
+    Q_PROPERTY(
+        int displayTime READ displayTime WRITE setDisplayTime NOTIFY displayTimeChanged FINAL)
     Q_PROPERTY(int width READ width WRITE setWidth NOTIFY widthChanged FINAL)
     Q_PROPERTY(int height READ height WRITE setHeight NOTIFY heightChanged FINAL)
 

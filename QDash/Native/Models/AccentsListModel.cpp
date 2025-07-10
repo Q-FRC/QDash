@@ -2,19 +2,16 @@
 
 #include "buildconfig/BuildConfig.h"
 
+#include <QClipboard>
 #include <QDir>
 #include <QFile>
 #include <QJsonArray>
+#include <QJsonDocument>
 #include <QJsonObject>
 #include <QStandardPaths>
-#include <QJsonDocument>
-#include <QClipboard>
 #include <qguiapplication.h>
 
-AccentsListModel::AccentsListModel(QObject *parent)
-    : QAbstractListModel{parent}
-{
-}
+AccentsListModel::AccentsListModel(QObject *parent) : QAbstractListModel{parent} {}
 
 int AccentsListModel::rowCount(const QModelIndex &parent) const
 {
@@ -291,7 +288,7 @@ QStringList AccentsListModel::names() const
 
 QHash<int, QByteArray> AccentsListModel::roleNames() const
 {
-    QHash<int,QByteArray> rez;
+    QHash<int, QByteArray> rez;
     rez[NAME] = "name";
     rez[ACCENT] = "accent";
     rez[LIGHT] = "light";

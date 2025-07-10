@@ -1,7 +1,7 @@
 #pragma once
-#include <QString>
 #include <QObject>
 #include <QQmlEngine>
+#include <QString>
 
 class Config : public QObject {
     Q_OBJECT

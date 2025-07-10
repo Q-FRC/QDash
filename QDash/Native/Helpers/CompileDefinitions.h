@@ -14,11 +14,12 @@ class CompileDefinitions : public QObject {
     Q_PROPERTY(bool useWebView READ useWebView FINAL CONSTANT)
     Q_PROPERTY(bool useCameraView READ useCameraView FINAL CONSTANT)
     Q_PROPERTY(bool useNetwork READ useNetwork FINAL CONSTANT)
-    Q_PROPERTY(GenericMapModel * extraWidgets READ extraWidgets FINAL CONSTANT)
+    Q_PROPERTY(GenericMapModel *extraWidgets READ extraWidgets FINAL CONSTANT)
 public:
     using QObject::QObject;
 
-    GenericMapModel * extraWidgets() {
+    GenericMapModel *extraWidgets()
+    {
         GenericMapModel *model = new GenericMapModel(this);
 
 #ifdef QDASH_WEBVIEW
@@ -28,7 +29,8 @@ public:
         return model;
     }
 
-    constexpr bool useWebView() {
+    constexpr bool useWebView()
+    {
 #ifdef QDASH_WEBVIEW
         return true;
 #else
@@ -36,7 +38,8 @@ public:
 #endif
     }
 
-    constexpr bool useCameraView() {
+    constexpr bool useCameraView()
+    {
 #ifdef QDASH_CAMVIEW
         return true;
 #else
@@ -44,7 +47,8 @@ public:
 #endif
     }
 
-    constexpr bool useNetwork() {
+    constexpr bool useNetwork()
+    {
 #ifdef QDASH_NETWORK
         return true;
 #else

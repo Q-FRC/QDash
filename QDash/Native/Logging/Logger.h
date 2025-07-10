@@ -5,8 +5,7 @@
 #include <QObject>
 #include <QQmlEngine>
 
-class Logger : public QObject
-{
+class Logger : public QObject {
     Q_OBJECT
     QML_SINGLETON
     QML_ELEMENT

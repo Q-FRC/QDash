@@ -25,7 +25,8 @@ public:
     operator int() const;
 } Setting;
 
-namespace Settings {
+namespace Settings
+{
 Q_NAMESPACE
 extern const Setting RecentFiles;
 extern const Setting LoadRecent;
@@ -38,6 +39,6 @@ extern const Setting ConnMode;
 extern const Setting TeamNumber;
 extern const Setting IP;
 extern const Setting DisableWidgets;
-}
+} // namespace Settings
 
 #endif // CONSTANTS_H

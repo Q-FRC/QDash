@@ -3,9 +3,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-NotificationHelper::NotificationHelper(QObject *parent)
-    : QObject{parent}
-{}
+NotificationHelper::NotificationHelper(QObject *parent) : QObject{parent} {}
 
 void NotificationHelper::fromJson(const QJsonDocument &doc)
 {

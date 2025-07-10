@@ -4,8 +4,7 @@
 #include <QDir>
 #include <QStandardPaths>
 
-Logger::Logger(QObject *parent)
-    : QObject{parent}
+Logger::Logger(QObject *parent) : QObject{parent}
 {
     QDir dir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     dir.mkpath(".");
@@ -42,33 +41,29 @@ void Logger::log(const QString &level, const QString &subsystem, const QString &
 void Logger::info(const QString &subsystem, const QString &message)
 {
     if (Settings::LogLevel.value().toInt() > 1) {
-        QMetaObject::invokeMethod(this, [this, subsystem, message] () {
-            log("info", subsystem, message);
-        });
+        QMetaObject::invokeMethod(
+            this, [this, subsystem, message]() { log("info", subsystem, message); });
     }
 }
 
 void Logger::warn(const QString &subsystem, const QString &message)
 {
     if (Settings::LogLevel.value().toInt() > 0) {
-        QMetaObject::invokeMethod(this, [this, subsystem, message] () {
-            log("warn", subsystem, message);
-        });
+        QMetaObject::invokeMethod(
+            this, [this, subsystem, message]() { log("warn", subsystem, message); });
     }
 }
 
 void Logger::critical(const QString &subsystem, const QString &message)
 {
-    QMetaObject::invokeMethod(this, [this, subsystem, message] () {
-        log("crit", subsystem, message);
-    });
+    QMetaObject::invokeMethod(this,
+                              [this, subsystem, message]() { log("crit", subsystem, message); });
 }
 
 void Logger::debug(const QString &subsystem, const QString &message)
 {
     if (Settings::LogLevel.value().toInt() > 2) {
-        QMetaObject::invokeMethod(this, [this, subsystem, message] () {
-            log("debug", subsystem, message);
-        });
+        QMetaObject::invokeMethod(
+            this, [this, subsystem, message]() { log("debug", subsystem, message); });
     }
 }

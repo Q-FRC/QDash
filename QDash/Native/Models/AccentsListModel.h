@@ -2,9 +2,9 @@
 #define ACCENTSLISTMODEL_H
 
 #include <QAbstractListModel>
+#include <QJsonDocument>
 #include <QObject>
 #include <QQmlEngine>
-#include <QJsonDocument>
 
 typedef struct Accent {
     QString name;
@@ -13,18 +13,11 @@ typedef struct Accent {
     QString qml;
 } Accent;
 
-class AccentsListModel : public QAbstractListModel
-{
+class AccentsListModel : public QAbstractListModel {
     Q_OBJECT
     QML_ELEMENT
 public:
-    enum ALMRoleTypes {
-        NAME = Qt::UserRole + 1,
-        ACCENT,
-        LIGHT,
-        QML,
-        IDX
-    };
+    enum ALMRoleTypes { NAME = Qt::UserRole + 1, ACCENT, LIGHT, QML, IDX };
 
     explicit AccentsListModel(QObject *parent = nullptr);
 

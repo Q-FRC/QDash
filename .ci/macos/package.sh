@@ -12,12 +12,12 @@ unset DYLD_LIBRARY_PATH
 unset DYLD_FRAMEWORK_PATH
 
 macdeployqt QDash.app \
-            -qmldir=../QDash/qml \
+            -qmldir=../QDash \
             -qmlimport=$QML_SOURCES_PATHS \
             -verbose=2
 
 macdeployqt QDash.app \
-            -qmldir=../QDash/qml \
+            -qmldir=../QDash \
             -qmlimport=$QML_SOURCES_PATHS \
             -verbose=2 \
             -always-overwrite

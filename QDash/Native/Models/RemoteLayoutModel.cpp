@@ -1,11 +1,9 @@
-#include "RemoteLayoutModel.h"
 #include "Misc/Globals.h"
+#include "RemoteLayoutModel.h"
 
 #include <QNetworkReply>
 
-RemoteLayoutModel::RemoteLayoutModel(QObject *parent)
-    : QAbstractListModel(parent)
-{}
+RemoteLayoutModel::RemoteLayoutModel(QObject *parent) : QAbstractListModel(parent) {}
 
 int RemoteLayoutModel::rowCount(const QModelIndex &parent) const
 {
@@ -50,7 +48,8 @@ bool RemoteLayoutModel::load()
 {
     clear();
     auto conns = Globals::inst.GetConnections();
-    if (conns.empty()) return false;
+    if (conns.empty())
+        return false;
 
     nt::ConnectionInfo info = conns.at(0);
     QString ip = QString::fromStdString(info.remote_ip);
@@ -135,7 +134,7 @@ QUrl RemoteLayoutModel::url(int index)
 
 QHash<int, QByteArray> RemoteLayoutModel::roleNames() const
 {
-    QHash<int,QByteArray> rez;
+    QHash<int, QByteArray> rez;
     rez[URL] = "url";
     rez[NAME] = "name";
     rez[IDX] = "idx";

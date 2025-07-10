@@ -1,12 +1,10 @@
-#include "PlatformHelper.h"
 #include <QClipboard>
 #include <QFileInfo>
 #include <QGuiApplication>
 #include <QScreen>
+#include "PlatformHelper.h"
 
-PlatformHelper::PlatformHelper(QObject *parent)
-    : QObject{parent}
-{}
+PlatformHelper::PlatformHelper(QObject *parent) : QObject{parent} {}
 
 void PlatformHelper::copy(const QString &text)
 {

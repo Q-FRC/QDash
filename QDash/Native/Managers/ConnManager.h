@@ -1,12 +1,11 @@
 #ifndef CONNMANAGER_H
 #define CONNMANAGER_H
 
-#include "buildconfig/BuildConfig.h"
 #include <QObject>
 #include <QQmlEngine>
+#include "buildconfig/BuildConfig.h"
 
-class ConnManager : public QObject
-{
+class ConnManager : public QObject {
     Q_OBJECT
     QML_ELEMENT
 public:

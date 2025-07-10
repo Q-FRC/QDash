@@ -1,8 +1,6 @@
 #include "ConnManager.h"
 
-ConnManager::ConnManager(QObject *parent)
-    : QObject{parent}
-{}
+ConnManager::ConnManager(QObject *parent) : QObject{parent} {}
 
 QString ConnManager::title() const
 {
@@ -20,8 +18,8 @@ void ConnManager::setConnected(bool newConnected)
         return;
     m_connected = newConnected;
 
-    m_status = QString(newConnected ? "" : "Not ") + "Connected"
-               + (newConnected ? " (" + m_address + ")" : "");
+    m_status = QString(newConnected ? "" : "Not ") + "Connected" +
+               (newConnected ? " (" + m_address + ")" : "");
     m_title = BuildConfig.APPLICATION_NAME + " - " + m_status;
 
     emit titleChanged();

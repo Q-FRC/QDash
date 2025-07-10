@@ -1,12 +1,10 @@
-#include "Models/GenericMapModel.h"
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QRect>
 #include <qcolor.h>
+#include "Models/GenericMapModel.h"
 
-GenericMapModel::GenericMapModel(QObject *parent)
-    : QAbstractListModel(parent)
-{}
+GenericMapModel::GenericMapModel(QObject *parent) : QAbstractListModel(parent) {}
 
 int GenericMapModel::rowCount(const QModelIndex &parent) const
 {
@@ -80,7 +78,7 @@ void GenericMapModel::add(QString key, QString value)
 
 QHash<int, QByteArray> GenericMapModel::roleNames() const
 {
-    QHash<int,QByteArray> rez;
+    QHash<int, QByteArray> rez;
     rez[KEY] = "key";
     rez[VALUE] = "value";
 

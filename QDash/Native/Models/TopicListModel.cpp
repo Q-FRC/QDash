@@ -2,9 +2,9 @@
 
 #include "Misc/Globals.h"
 
-QList<QStandardItem*> recursiveSearch(QStandardItem *item, const QString &topic)
+QList<QStandardItem *> recursiveSearch(QStandardItem *item, const QString &topic)
 {
-    QList<QStandardItem*> foundItems;
+    QList<QStandardItem *> foundItems;
 
     // Check if the current item matches the search term
     if (item->data(TopicListModel::TOPIC) == topic) {
@@ -23,8 +23,7 @@ QList<QStandardItem*> recursiveSearch(QStandardItem *item, const QString &topic)
 }
 
 TopicListModel::TopicListModel(TopicStore &store, QObject *parent)
-    : QStandardItemModel(parent)
-    , m_store(&store)
+    : QStandardItemModel(parent), m_store(&store)
 {
     QHash<int, QByteArray> rez = QStandardItemModel::roleNames();
     rez.insert(TLMRoleTypes::NAME, "name");
@@ -53,10 +52,12 @@ void TopicListModel::reload()
 
 void TopicListModel::add(const QString &toAdd)
 {
-    if (toAdd.isEmpty() || toAdd == "/") return;
+    if (toAdd.isEmpty() || toAdd == "/")
+        return;
 
     QStringList split = toAdd.split('/');
-    if (split.at(0).isEmpty()) split.remove(0);
+    if (split.at(0).isEmpty())
+        split.remove(0);
 
     QStringList newList = split;
     newList.removeLast();
@@ -90,18 +91,20 @@ void TopicListModel::add(const QString &toAdd)
 
                             m_store->subscribe(toAdd);
 
-                            *conn = connect(m_store, &TopicStore::topicUpdate, this, [conn, toAdd, parentItem, parentPath, this](QString topic, QVariant value) mutable {
-                                if (topic == toAdd) {
-                                    parentItem->setData(parentPath, TOPIC);
-                                    QString typeStr = value.toString();
-                                    parentItem->setData(typeStr, TYPE);
+                            *conn = connect(m_store, &TopicStore::topicUpdate, this,
+                                            [conn, toAdd, parentItem, parentPath,
+                                             this](QString topic, QVariant value) mutable {
+                                                if (topic == toAdd) {
+                                                    parentItem->setData(parentPath, TOPIC);
+                                                    QString typeStr = value.toString();
+                                                    parentItem->setData(typeStr, TYPE);
 
-                                    m_store->unsubscribe(toAdd);
+                                                    m_store->unsubscribe(toAdd);
 
-                                    disconnect(*conn);
-                                    delete conn;
-                                }
-                            });
+                                                    disconnect(*conn);
+                                                    delete conn;
+                                                }
+                                            });
                         } else {
                             parentItem->setData(parentPath, TOPIC);
                             QString typeStr = QString::fromStdString(value);
@@ -132,7 +135,9 @@ void TopicListModel::add(const QString &toAdd)
         } else {
             for (QStandardItem *item : std::as_const(results)) {
 
-                if (item->parent() != nullptr && item->parent()->data(TLMRoleTypes::TYPE).toString() != "") goto end;
+                if (item->parent() != nullptr &&
+                    item->parent()->data(TLMRoleTypes::TYPE).toString() != "")
+                    goto end;
 
                 if (item->parent() == nullptr || item->parent()->text() == parentItem->text()) {
                     parentItem = item;
@@ -148,19 +153,23 @@ end:
 
 void TopicListModel::remove(const QString &toRemove)
 {
-    if (toRemove.isEmpty()) return;
+    if (toRemove.isEmpty())
+        return;
 
     QStringList split = toRemove.split('/');
-    if (split.at(0).isEmpty()) split.remove(0);
+    if (split.at(0).isEmpty())
+        split.remove(0);
 
     QStandardItem *parentItem = invisibleRootItem();
     for (const QString &sub : split) {
         auto results = findItems(sub, Qt::MatchRecursive | Qt::MatchExactly | Qt::MatchWrap);
 
-        if (results.isEmpty()) return;
+        if (results.isEmpty())
+            return;
         else {
             for (QStandardItem *item : results) {
-                if (item == nullptr) continue;
+                if (item == nullptr)
+                    continue;
 
                 if (item->parent() == nullptr || item->parent() == parentItem) {
                     if (!item->hasChildren()) {
@@ -180,4 +189,3 @@ void TopicListModel::remove(const QString &toRemove)
         }
     }
 }
-

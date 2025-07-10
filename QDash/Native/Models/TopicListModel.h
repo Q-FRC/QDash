@@ -1,19 +1,14 @@
 #ifndef TOPICLISTMODEL_H
 #define TOPICLISTMODEL_H
 
-#include "NT/TopicStore.h"
 #include <QStandardItemModel>
+#include "NT/TopicStore.h"
 
-class TopicListModel : public QStandardItemModel
-{
+class TopicListModel : public QStandardItemModel {
     Q_OBJECT
 
 public:
-    enum TLMRoleTypes {
-        NAME = Qt::UserRole,
-        TYPE,
-        TOPIC
-    };
+    enum TLMRoleTypes { NAME = Qt::UserRole, TYPE, TOPIC };
 
     TopicListModel(TopicStore &store, QObject *parent = nullptr);
 
