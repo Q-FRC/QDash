@@ -1,5 +1,5 @@
 import QtQuick 6.2
-import QtQuick.Controls 2.15
+import QtQuick.Controls.Material 2.15
 import QtQuick.Layouts 6.6
 import QtQuick.Shapes 2.15
 import fields

@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
                               nt::EventFlags::kValueAll,
                               [tlm, parent, notification, logs](const nt::Event &event) {
                                   std::string_view value = event.GetValueEventData()
-                                                               ->value.GetString();
+                                  ->value.GetString();
                                   QString qvalue = QString::fromStdString(std::string{value});
                                   QJsonDocument doc = QJsonDocument::fromJson(qvalue.toUtf8());
 
