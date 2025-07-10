@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTORCC ON)
 
+set(BUILD_SHARED_LIBS OFF)
+
 include(CMakeDependentOption)
 
 option(QDASH_WEBVIEW OFF "Enable web view widget (Requires QtWebEngine)")
@@ -17,7 +19,7 @@ option(QDASH_CAMVIEW ON "Enable camera view widget (Requires QtMultimedia)")
 cmake_dependent_option(QDASH_NETWORK "Enable remote layout feature (Requires QtNetwork)" ON "NOT QDASH_WEBVIEW" ON)
 
 set(QDASH_QT_COMPONENTS Core Quick QuickControls2)
-set(QDASH_QT_LIBRARIES Qt6::Quick Qt6::QuickControls2)
+set(QDASH_QT_LIBRARIES Qt6::Core Qt6::Quick Qt6::QuickControls2)
 
 if (QDASH_WEBVIEW)
     set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} WebEngineQuick)

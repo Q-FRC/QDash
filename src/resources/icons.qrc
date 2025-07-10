@@ -14,6 +14,6 @@
         <file alias="Valid">icons/valid.svg</file>
         <file alias="Forward">icons/forward.svg</file>
         <file alias="Back">icons/back.svg</file>
-        <file alias="QDash">../../dist/QDash.svg</file>
+        <file alias="QDash">../../dist/org.Q-FRC.QDash.svg</file>
     </qresource>
 </RCC>
