@@ -4,13 +4,13 @@
 
 Unicode true
 
-Name "@QDASH_NAME@"
-InstallDir "$LOCALAPPDATA\Programs\@QDASH_NAME@"
-InstallDirRegKey HKCU "Software\@QDASH_NAME@" "InstallDir"
+Name "QDash"
+InstallDir "$LOCALAPPDATA\Programs\QDash"
+InstallDirRegKey HKCU "Software\QDash" "InstallDir"
 RequestExecutionLevel user
-OutFile "../@QDASH_NAME@-Setup.exe"
+OutFile "../../QDash-Setup.exe"
 
-!define MUI_ICON "../dist/@QDASH_NAME@.ico"
+!define MUI_ICON "../../dist/QDash.ico"
 
 ;--------------------------------
 
@@ -21,7 +21,7 @@ OutFile "../@QDASH_NAME@-Setup.exe"
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
-!define MUI_FINISHPAGE_RUN "$InstDir\@QDASH_NAME@.exe"
+!define MUI_FINISHPAGE_RUN "$InstDir\QDash.exe"
 !insertmacro MUI_PAGE_FINISH
 
 !insertmacro MUI_UNPAGE_CONFIRM
@@ -38,24 +38,24 @@ OutFile "../@QDASH_NAME@-Setup.exe"
 ; Version info
 VIProductVersion "@QDASH_VERSION_WIN@"
 VIFileVersion "@QDASH_VERSION_WIN@"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "@QDASH_NAME@"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "@QDASH_NAME@ Installer"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Carson Rueter"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "QDash"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "QDash Installer"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "crueter"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "@QDASH_TAG@"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "@QDASH_TAG@"
 
 ;--------------------------------
 
 ; The stuff to install
-Section "@QDASH_NAME@"
+Section "QDash"
 
   SectionIn RO
 
-  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @QDASH_NAME@.exe /F'
+  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM QDash.exe /F'
 
   SetOutPath $INSTDIR
 
-  File "@QDASH_NAME@.exe"
+  File "QDash.exe"
   File *.dll
   File /r "imageformats"
   File /r "platforms"
@@ -64,19 +64,19 @@ Section "@QDASH_NAME@"
   File /r "qml"
 
   ; Write the installation path into the registry
-  WriteRegStr HKCU Software\@QDASH_NAME@ "InstallDir" "$INSTDIR"
+  WriteRegStr HKCU Software\QDash "InstallDir" "$INSTDIR"
 
   ; Write the uninstall keys for Windows
   ${GetParameters} $R0
   ${GetOptions} $R0 "/NoUninstaller" $R1
   ${If} ${Errors}
-    !define UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\@QDASH_NAME@"
-    WriteRegStr HKCU "${UNINST_KEY}" "DisplayName" "@QDASH_NAME@"
-    WriteRegStr HKCU "${UNINST_KEY}" "DisplayIcon" "$INSTDIR\@QDASH_NAME@.exe"
+    !define UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\QDash"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayName" "QDash"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayIcon" "$INSTDIR\QDash.exe"
     WriteRegStr HKCU "${UNINST_KEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
     WriteRegStr HKCU "${UNINST_KEY}" "QuietUninstallString" '"$INSTDIR\uninstall.exe" /S'
     WriteRegStr HKCU "${UNINST_KEY}" "InstallLocation" "$INSTDIR"
-    WriteRegStr HKCU "${UNINST_KEY}" "Publisher" "@QDASH_NAME@ Contributors"
+    WriteRegStr HKCU "${UNINST_KEY}" "Publisher" "QDash Contributors"
     WriteRegStr HKCU "${UNINST_KEY}" "Version" "@QDASH_TAG@"
     WriteRegStr HKCU "${UNINST_KEY}" "DisplayVersion" "@QDASH_TAG@"
     WriteRegStr HKCU "${UNINST_KEY}" "VersionMajor" "@QDASH_VERSION_MAJOR@"
@@ -93,13 +93,13 @@ SectionEnd
 
 Section "Start Menu Shortcut" SM_SHORTCUTS
 
-  CreateShortcut "$SMPROGRAMS\@QDASH_NAME@.lnk" "$INSTDIR\@QDASH_NAME@.exe" "" "$INSTDIR\@QDASH_NAME@.exe" 0
+  CreateShortcut "$SMPROGRAMS\QDash.lnk" "$INSTDIR\QDash.exe" "" "$INSTDIR\QDash.exe" 0
 
 SectionEnd
 
 Section /o "Desktop Shortcut" DESKTOP_SHORTCUTS
 
-  CreateShortcut "$DESKTOP\@QDASH_NAME@.lnk" "$INSTDIR\@QDASH_NAME@.exe" "" "$INSTDIR\@QDASH_NAME@.exe" 0
+  CreateShortcut "$DESKTOP\QDash.lnk" "$INSTDIR\QDash.exe" "" "$INSTDIR\QDash.exe" 0
 
 SectionEnd
 
@@ -109,12 +109,12 @@ SectionEnd
 
 Section "Uninstall"
 
-  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM @QDASH_NAME@.exe /F'
+  nsExec::Exec /TIMEOUT=2000 'TaskKill /IM QDash.exe /F'
 
-  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\@QDASH_NAME@"
-  DeleteRegKey HKCU SOFTWARE\@QDASH_NAME@
+  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\QDash"
+  DeleteRegKey HKCU SOFTWARE\QDash
 
-  Delete $INSTDIR\@QDASH_NAME@.exe
+  Delete $INSTDIR\QDash.exe
   Delete $INSTDIR\qt.conf
   Delete $INSTDIR\*.dll
 
@@ -125,8 +125,8 @@ Section "Uninstall"
   RMDir /r $INSTDIR\platforms
   RMDir /r $INSTDIR\styles
 
-  Delete "$SMPROGRAMS\@QDASH_NAME@.lnk"
-  Delete "$DESKTOP\@QDASH_NAME@.lnk"
+  Delete "$SMPROGRAMS\QDash.lnk"
+  Delete "$DESKTOP\QDash.lnk"
 
   RMDir "$INSTDIR"
 
@@ -140,7 +140,7 @@ Function .onInit
 ${GetParameters} $R0
 ${GetOptions} $R0 "/NoShortcuts" $R1
 ${IfNot} ${Errors}
-${OrIf} ${FileExists} "$InstDir\@QDASH_NAME@.exe"
+${OrIf} ${FileExists} "$InstDir\QDash.exe"
   !insertmacro UnselectSection ${SM_SHORTCUTS}
   !insertmacro UnselectSection ${DESKTOP_SHORTCUTS}
 ${EndIf}

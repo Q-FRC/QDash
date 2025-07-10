@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
-Name=@QDASH_NAME@
+Name=QDash
 Comment=Reliable, high-performance dashboard for FRC.
-StartupWMClass=@QDASH_NAME@
-Exec=@QDASH_NAME@
-Icon=@QDASH_NAME@
+StartupWMClass=org.Q-FRC.QDash
+Exec=QDash
+Icon=org.Q-FRC.QDash
 Categories=Education;Utility
