@@ -2,7 +2,7 @@ set -ex
 
 cd build
 rm -rf QDash.app
-cp -r src/native/QDash.app .
+cp -r QDash/Native/QDash.app .
 chmod a+x QDash.app/Contents/MacOS/QDash
 mkdir -p QDash.app/Contents/Resources
 cp ../dist/QDash.icns QDash.app/Contents/Resources
@@ -12,12 +12,12 @@ unset DYLD_LIBRARY_PATH
 unset DYLD_FRAMEWORK_PATH
 
 macdeployqt QDash.app \
-            -qmldir=../src/qml \
+            -qmldir=../QDash \
             -qmlimport=$QML_SOURCES_PATHS \
             -verbose=2
 
 macdeployqt QDash.app \
-            -qmldir=../src/qml \
+            -qmldir=../QDash \
             -qmlimport=$QML_SOURCES_PATHS \
             -verbose=2 \
             -always-overwrite

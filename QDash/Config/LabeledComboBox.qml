@@ -1,0 +1,32 @@
+import QtQuick
+import QtQuick.Controls.Material
+import QtQuick.Layouts
+import QtQuick.Shapes 2.15
+
+import QDash.Constants
+import QDash.Fields
+
+BetterComboBox {
+    /** what property to bind to */
+    required property string bindedProperty
+
+    /** the target to bind the property to */
+    required property var bindTarget
+
+    /** choices for the combobox */
+    required property var choices
+
+    id: combo
+    model: choices
+    font.pixelSize: 18
+
+    implicitHeight: 40
+
+    function open() {
+        currentIndex = indexOfValue(bindTarget[bindedProperty])
+    }
+
+    function accept() {
+        bindTarget[bindedProperty] = currentText
+    }
+}
