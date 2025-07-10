@@ -32,15 +32,11 @@ Windows, Linux, and macOS builds are available via GitHub Actions. Currently, al
 
 [![Release](https://github.com/Q-FRC/QDash/actions/workflows/trigger_release.yml/badge.svg)](https://github.com/Q-FRC/QDash/actions/workflows/trigger_release.yml)
 
-Development/debug builds are also available on a per-commit basis. These builds are generally unstable, have far larger executable sizes, and will perform slower, but are useful for users who wish to have the latest features or for developers who want to contribute and test.
-
-[![Debug](https://github.com/Q-FRC/QDash/actions/workflows/trigger_builds.yml/badge.svg)](https://github.com/Q-FRC/QDash/actions/workflows/trigger_builds.yml)
-
 ## Forking
 Follow the [GPL3](LICENSE) of this project, credit the original project, and make it clear that your application is not QDash itself.
 
 ## Building
-This project uses CMake. Additionally, you must initialize git submodules first.
+This project uses CMake.
 
 ```bash
 git submodule update --init
@@ -56,40 +52,33 @@ sudo cmake --install build --prefix /usr
 cmake --install build --prefix ${PKGDIR}
 ```
 
-### Submodules
-If you don't want to install ntcore to your system, CMake options are provided for such:
-
-- `USE_SYSTEM_NTCORE` (default OFF)
-
-Examples:
-
-```bash
-cmake -S . -B build -DUSE_SYSTEM_NTCORE=ON
-```
-
-Note that this configuration is only possible on Linux.
-
 ### Linux
+>[!WARNING]
+> QDash requires Qt 6.7 or later.
+> **Debian and Ubuntu LTS releases are currently stuck at earlier versions.**
+> Instead, it's recommended to use aqtinstall or the Qt online installer.
+
 ```bash
 # or whatever your distribution uses
-sudo apt install qt6-base-dev build-essential qt6-multimedia-dev ninja-build
+sudo pacman -S qt6-base qt6-multimedia base-devel ninja
+
 git clone https://github.com/Q-FRC/QDash.git
 cd QDash
-mkdir build && cd build
-cmake ..
-make -j$(nproc)
+cmake -S . -B build -G Ninja
+cmake --build build
 ```
 
 ### Windows
 - Install Qt from [here](https://www.qt.io/download-qt-installer-oss). Take note of where you download it!
-  * Note that you will need to create a Qt account.
+  * Note that you will need to create a Qt account; alternatively, you may use aqtinstall.
+  * By default, you will only need MSVC2022 and Qt Multimedia.
 - Install CMake https://cmake.org/download/ (add to `PATH`)
+
 ```bash
 git clone https://github.com/Q-FRC/QDash.git
 cd QDash
-mkdir build && cd build
-cmake -DCMAKE_PREFIX_PATH="C:\\Qt6\\6.6.1\\msvc2019_64" ..
-cmake --build .
-C:\Qt6\6.6.1\msvc2019_64\bin\windeployqt.exe .
+cmake -DCMAKE_PREFIX_PATH="C:\\Qt6\\6.9.1\\msvc2022_64" -S . -B build
+cmake --build build
 ```
-OR use [CLion](https://www.jetbrains.com/clion/) or Qt Creator from the online installer.
+
+Alternatively,  use [CLion](https://www.jetbrains.com/clion/) or Qt Creator from the online installer.
