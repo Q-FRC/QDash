@@ -2,7 +2,7 @@
 
 A reliable, high-performance, low-footprint dashboard for use with FRC.
 
-A mirror of this repository is available on my [git](https://git.swurl.xyz/QFRC/Dashboard.git) instance.
+This repository will be moved to my [Forgejo instance](https://git.crueter.xyz/QFRC/QDash.git) shortly. For future usage, please refer to the new link.
 
 ![image](https://github.com/user-attachments/assets/5e853a0c-3615-4f8f-9f2c-eb51aa793df9)
 
