@@ -5,11 +5,12 @@
 
 # This script assumes you're in the source directory
 
-export APPIMAGE_EXTRACT_AND_RUN=1
-export BASE_ARCH="$(uname -m)"
+URUNTIME="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/uruntime2appimage.sh"
+SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/quick-sharun.sh"
 
-SHARUN="https://github.com/VHSgunzo/sharun/releases/latest/download/sharun-${BASE_ARCH}-aio"
-URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-${BASE_ARCH}"
+export ICON="$PWD"/dist/org.Q-FRC.QDash.svg
+export DESKTOP="$PWD"/dist/org.Q-FRC.QDash.desktop
+export OPTIMIZE_LAUNCH=1
 
 case "$1" in
     amd64|"")
@@ -47,93 +48,21 @@ QDash_TAG=$(git describe --tags --abbrev=0)
 echo "Making \"$QDash_TAG\" build"
 VERSION="$QDash_TAG"
 
-# NOW MAKE APPIMAGE
-mkdir -p ./AppDir
-cd ./AppDir
+export UPINFO="gh-releases-zsync|Q-FRC|QDash|latest|*$ARCH.AppImage.zsync"
+export OUTNAME=QDash-"$VERSION"-"$ARCH".AppImage
 
-cp ../dist/org.Q-FRC.QDash.desktop .
-cp ../dist/org.Q-FRC.QDash.svg .
+# Deploy dependencies
+wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
+chmod +x ./quick-sharun
+./quick-sharun "$BUILDDIR"/QDash/Native/QDash
 
-ln -sf ./org.Q-FRC.QDash.svg ./.DirIcon
+# MAKE APPIMAGE WITH URUNTIME
+wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime2appimage
+chmod +x ./uruntime2appimage
+./uruntime2appimage
 
-UPINFO='gh-releases-zsync|Q-FRC|QDash|latest|*.AppImage.zsync'
-
-LIBDIR="/usr/lib"
-
-# Workaround for Gentoo
-if [ ! -d "$LIBDIR/qt6" ]
-then
-	LIBDIR="/usr/lib64"
+if [ "$DEVEL" = 'true' ]; then
+    rm -f ./*.AppImage.zsync
 fi
 
-# Workaround for Debian
-if [ ! -d "$LIBDIR/qt6" ]
-then
-    LIBDIR="/usr/lib/${BASE_ARCH}-linux-gnu"
-fi
-
-# Bundle all libs
-
-wget --retry-connrefused --tries=30 "$SHARUN" -O ./sharun-aio
-chmod +x ./sharun-aio
-xvfb-run -a ./sharun-aio l -p -v -e -s -k \
-	../$BUILDDIR/QDash/Native/QDash \
-	$LIBDIR/libXss.so* \
-	$LIBDIR/libdecor-0.so* \
-	$LIBDIR/qt6/plugins/audio/* \
-	$LIBDIR/qt6/plugins/bearer/* \
-	$LIBDIR/qt6/plugins/imageformats/* \
-	$LIBDIR/qt6/plugins/iconengines/* \
-	$LIBDIR/qt6/plugins/platforms/* \
-	$LIBDIR/qt6/plugins/platformthemes/* \
-	$LIBDIR/qt6/plugins/platforminputcontexts/* \
-	$LIBDIR/qt6/plugins/styles/* \
-	$LIBDIR/qt6/plugins/xcbglintegrations/* \
-	$LIBDIR/qt6/plugins/wayland-*/*
-
-rm -f ./sharun-aio
-
-# Copy QML Files
-mkdir -p shared/lib/qt6/qml
-set +e
-cp -r $LIBDIR/qt6/qml/Qt{,Core,Multimedia,Network,Quick} shared/lib/qt6/qml/
-set -e
-
-# Prepare sharun
-if [ "$ARCH" = 'aarch64' ]; then
-	# allow the host vulkan to be used for aarch64 given the sad situation
-	echo 'SHARUN_ALLOW_SYS_VKICD=1' > ./.env
-fi
-
-# Workaround for Gentoo
-if [ -d "shared/libproxy" ]; then
-	cp shared/libproxy/* lib/
-fi
-
-ln -f ./sharun ./AppRun
-./sharun -g
-
-# turn appdir into appimage
-cd ..
-wget -q "$URUNTIME" -O ./uruntime
-chmod +x ./uruntime
-
-#Add udpate info to runtime
-echo "Adding update information \"$UPINFO\" to runtime..."
-./uruntime --appimage-addupdinfo "$UPINFO"
-
-echo "Generating AppImage..."
-./uruntime --appimage-mkdwarfs -f \
-	--set-owner 0 --set-group 0 \
-	--no-history --no-create-timestamp \
-	--compression zstd:level=22 -S26 -B32 \
-	--header uruntime \
-    -N 4 \
-	-i ./AppDir -o QDash-"$VERSION"-"$ARCH".AppImage
-
-	# --categorize=hotness --hotness-list=.ci/linux/QDash.dwfsprof \
-if [ "$DEVEL" != 'true' ]; then
-    echo "Generating zsync file..."
-    zsyncmake *.AppImage -u *.AppImage
-fi
 echo "All Done!"
