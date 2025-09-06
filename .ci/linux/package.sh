@@ -6,7 +6,7 @@
 # This script assumes you're in the source directory
 
 URUNTIME="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/uruntime2appimage.sh"
-SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/quick-sharun.sh"
+SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/qml/useful-tools/quick-sharun.sh"
 
 export ICON="$PWD"/dist/org.Q-FRC.QDash.svg
 export DESKTOP="$PWD"/dist/org.Q-FRC.QDash.desktop
