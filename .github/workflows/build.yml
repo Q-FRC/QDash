@@ -13,6 +13,9 @@ on:
         description: Whether or not this is a development build
         type: string
         default: true
+env:
+  qt_version: 6.9.1
+  qt_modules: qtmultimedia
 
 jobs:
   linux:
@@ -107,15 +110,11 @@ jobs:
           - runs-on: windows-latest
             arch: amd64
             qt_arch: win64_msvc2022_64
-            qt_version: 6.9.1
-            qt_modules: qtmultimedia
             ccache: true
 
           - runs-on: windows-11-arm
             arch: arm64
             qt_arch: win64_msvc2022_arm64
-            qt_version: 6.9.1
-            qt_modules: qtmultimedia
             ccache: false
 
     steps:
@@ -127,8 +126,8 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: ${{ matrix.qt_version }}
-          modules: ${{ matrix.qt_modules }}
+          version: ${{ env.qt_version }}
+          modules: ${{ env.qt_modules }}
           cache: 'true'
 
       - name: Set up MSVC
@@ -159,7 +158,6 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          export PATH="${PATH}:${{ runner.workspace }}/Qt/${{ matrix.qt_version }}/${{ matrix.qt_arch }}/bin"
           export DEVEL=true
           export WINDEPLOYQT=windeployqt
           export USE_CCACHE=${{ matrix.ccache }}
@@ -207,6 +205,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.qt_version }}
+          modules: ${{ env.qt_modules }}
+          cache: 'true'
+
       - name: Install CMake
         uses: lukka/get-cmake@v4.0.1
 
@@ -230,7 +235,7 @@ jobs:
       - name: Install Dependencies
         run: |
           brew update
-          brew install llvm ninja qt@6
+          brew install llvm ninja
           pip install jinja2
 
       - name: Configure & Build
@@ -243,8 +248,7 @@ jobs:
 
       - name: Package
         run: |
-          export PATH="$PATH;$(brew --prefix qt@6)/bin"
-          export QML_SOURCES_PATHS="$(brew --prefix qt@6)/share/qt/qml"
+          export QML_SOURCES_PATHS="$QML2_IMPORT_PATH"
 
           chmod a+x .ci/macos/package.sh
           .ci/macos/package.sh
