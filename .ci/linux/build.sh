@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-# SPDX-FileCopyrightText: 2025 QDash
+# SPDX-FileCopyrightText: 2025 crueter
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 export ARCH="$(uname -m)"
@@ -10,25 +10,21 @@ case "$1" in
         echo "Making amd64-v3 optimized build of QDash"
         ARCH="amd64_v3"
         ARCH_FLAGS="-march=x86-64-v3"
-        export USE_CCACHE=true
         ;;
     steamdeck)
         echo "Making Steam Deck (Zen 2) optimized build of QDash"
         ARCH="steamdeck"
         ARCH_FLAGS="-march=znver2 -mtune=znver2"
-        export USE_CCACHE=true
         ;;
     rog-ally|allyx)
         echo "Making ROG Ally X (Zen 4) optimized build of QDash"
         ARCH="rog-ally-x"
-        ARCH_FLAGS="-march=znver3 -mtune=znver4" # GH actions runner is a Zen 3 CPU, so a small workaround
-        export USE_CCACHE=true
+        ARCH_FLAGS="-march=znver4 -mtune=znver4"
         ;;
     legacy)
         echo "Making amd64 generic build of QDash"
         ARCH=amd64
         ARCH_FLAGS="-march=x86-64 -mtune=generic"
-        export USE_CCACHE=true
         ;;
     aarch64)
         echo "Making armv8-a build of QDash"

@@ -1,4 +1,7 @@
-set -ex
+#!/bin/sh -ex
+
+# SPDX-FileCopyrightText: 2025 crueter
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 cd build
 rm -rf QDash.app

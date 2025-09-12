@@ -1,10 +1,10 @@
 #!/bin/bash -e
 
-# SPDX-FileCopyrightText: 2025 eden Emulator Project
+# SPDX-FileCopyrightText: 2025 crueter
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 if [ "$USE_CCACHE" = "true" ]; then
-    export EXTRA_CMAKE_FLAGS=("${EXTRA_CMAKE_FLAGS[@]}" -DUSE_CCACHE=ON)
+    export EXTRA_CMAKE_FLAGS=("${EXTRA_CMAKE_FLAGS[@]}" -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache)
 fi
 
 if [ "$WINDEPLOYQT" == "" ]; then

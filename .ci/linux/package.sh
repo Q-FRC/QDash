@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-# SPDX-FileCopyrightText: 2025 QDash
+# SPDX-FileCopyrightText: 2025 crueter
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # This script assumes you're in the source directory
