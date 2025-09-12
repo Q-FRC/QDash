@@ -16,7 +16,7 @@ export EXTRA_CMAKE_FLAGS=("${EXTRA_CMAKE_FLAGS[@]}" $@)
 mkdir -p build && cd build
 cmake .. -G Ninja \
     -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
-    -DCMAKE_OSX_ARCHITECTURES="arm64" \
+    -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" \
 	-DQDASH_WEBVIEW=OFF \
     -DBUILD_SHARED_LIBS=OFF \
 	"${EXTRA_CMAKE_FLAGS[@]}"
