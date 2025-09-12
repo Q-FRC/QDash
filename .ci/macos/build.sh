@@ -17,6 +17,7 @@ mkdir -p build && cd build
 cmake .. -G Ninja \
     -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
     -DCMAKE_OSX_ARCHITECTURES="arm64" \
+	-DQDASH_WEBVIEW=OFF \
     -DBUILD_SHARED_LIBS=OFF \
 	"${EXTRA_CMAKE_FLAGS[@]}"
 
