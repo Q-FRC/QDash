@@ -42,7 +42,7 @@ Config::Config()
 
 QString Config::buildInfo() const
 {
-    return "<p>Git: <a href=@QDASH_REPO@>@QDASH_REPO@</a></p>" +
-       "<p>Built on @QDASH_BUILD_TIMESTAMP@ for @QDASH_BUILD_PLATFORM@.</p>" +
+    return "<p>Git: <a href=@QDASH_REPO@>@QDASH_REPO@</a></p>"
+       "<p>Built on @QDASH_BUILD_TIMESTAMP@ for @QDASH_BUILD_PLATFORM@.</p>"
        "<p>QDash @QDASH_TAG@, commit @QDASH_COMMIT@, channel " + VERSION_CHANNEL + "</p>";
 }
