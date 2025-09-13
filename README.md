@@ -1,3 +1,8 @@
+# IMPORTANT
+
+QDash has moved to my [personal Forgejo instance](https://git.crueter.xyz/QFRC/QDash). This repository will stay up for the foreseeable future, serving as an archive for prior releases, PRs, and issues, but WILL NOT RECEIVE ANY NEW UPDATES OR RELEASES!
+
+## QDash
 ![QDash](QDash-display.png "QDash")
 
 A reliable, high-performance, low-footprint dashboard for use with FRC.
