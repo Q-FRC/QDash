@@ -5,7 +5,7 @@ if(UNIX AND NOT(APPLE))
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/org.Q-FRC.QDash-symbolic.svg DESTINATION "share/icons/hicolor/symbolic/apps" RENAME org.Q-FRC.QDash.svg)
 endif()
 
-set(QDASH_VERSION_WIN ${QDASH_VERSION_MAJOR}.${QDASH_VERSION_MINOR}.${QDASH_VERSION_HOTFIX}.0)
+set(QDASH_VERSION_WIN ${QDASH_NUMERIC_TAG}.0)
 
 configure_file(QDash.rc.in QDash.rc @ONLY)
 configure_file(QDash.manifest.in QDash.manifest @ONLY)

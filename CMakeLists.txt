@@ -1,10 +1,13 @@
-cmake_minimum_required(VERSION 3.16)
+# SPDX-FileCopyrightText: 2025 crueter
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+cmake_minimum_required(VERSION 3.22)
 
 set(QDASH_NAME QDash)
 set(QDASH_ORG "QFRC")
 set(QDASH_REPO https://git.crueter.xyz/${QDASH_ORG}/${QDASH_NAME})
 
-project(${QDASH_NAME} VERSION 0.1 LANGUAGES CXX)
+project(${QDASH_NAME} VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 20)
@@ -53,38 +56,8 @@ endif()
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
-function(get_timestamp _var)
-    string(TIMESTAMP timestamp UTC)
-    set(${_var} "${timestamp}" PARENT_SCOPE)
-endfunction()
-
 # Git
-include(GetGitRevisionDescription)
-if(NOT QDASH_REFSPEC)
-    get_git_head_revision(QDASH_REFSPEC QDASH_COMMIT)
-endif()
-
-if(NOT GIT_DESC)
-    git_describe(GIT_DESC --always --long)
-endif()
-if (NOT GIT_BRANCH)
-    git_branch_name(GIT_BRANCH)
-endif()
-get_timestamp(BUILD_DATE)
-
-git_describe(QDASH_TAG --tags --abbrev=0)
-if (QDASH_TAG MATCHES "NOTFOUND")
-  set(QDASH_TAG "${GIT_DESC}")
-endif()
-
-message(STATUS "Git commit: ${QDASH_COMMIT}")
-message(STATUS "Git tag: ${QDASH_TAG}")
-message(STATUS "Git refspec: ${QDASH_REFSPEC}")
-
-string(REPLACE "-beta" "." QDASH_NUMERIC_TAG ${QDASH_TAG})
-string(REPLACE "-rc" "." QDASH_NUMERIC_TAG ${QDASH_NUMERIC_TAG})
-
-project(${QDASH_NAME} VERSION ${QDASH_NUMERIC_TAG} LANGUAGES CXX)
+include(GetSCMRev)
 
 # Build Date
 string(TIMESTAMP TODAY "%Y-%m-%d")

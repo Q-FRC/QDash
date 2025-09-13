@@ -79,8 +79,6 @@ Section "QDash"
     WriteRegStr HKCU "${UNINST_KEY}" "Publisher" "QDash Contributors"
     WriteRegStr HKCU "${UNINST_KEY}" "Version" "@QDASH_TAG@"
     WriteRegStr HKCU "${UNINST_KEY}" "DisplayVersion" "@QDASH_TAG@"
-    WriteRegStr HKCU "${UNINST_KEY}" "VersionMajor" "@QDASH_VERSION_MAJOR@"
-    WriteRegStr HKCU "${UNINST_KEY}" "VersionMinor" "@QDASH_VERSION_MINOR@"
     ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
     IntFmt $0 "0x%08X" $0
     WriteRegDWORD HKCU "${UNINST_KEY}" "EstimatedSize" "$0"
