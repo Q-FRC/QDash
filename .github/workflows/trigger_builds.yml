@@ -1,23 +1,23 @@
 name: Build Application
 
-on:
-  pull_request:
-    branches:
-      - 'master'
-    paths-ignore:
-      - '**.md'
-      - '**/LICENSE'
-      - '.github/ISSUE_TEMPLATE/**'
-      - '.markdownlint**'
-  push:
-    branches:
-      - 'master'
-    paths-ignore:
-      - '**.md'
-      - '**/LICENSE'
-      - '.github/ISSUE_TEMPLATE/**'
-      - '.markdownlint**'
-  workflow_dispatch:
+# on:
+#   pull_request:
+#     branches:
+#       - 'master'
+#     paths-ignore:
+#       - '**.md'
+#       - '**/LICENSE'
+#       - '.github/ISSUE_TEMPLATE/**'
+#       - '.markdownlint**'
+#   push:
+#     branches:
+#       - 'master'
+#     paths-ignore:
+#       - '**.md'
+#       - '**/LICENSE'
+#       - '.github/ISSUE_TEMPLATE/**'
+#       - '.markdownlint**'
+#   workflow_dispatch:
 
 jobs:
 

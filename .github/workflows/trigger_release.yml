@@ -1,9 +1,9 @@
 name: Build Application and Make Release
 
-on:
-  push:
-    tags:
-      - '*'
+# on:
+#   push:
+#     tags:
+#       - '*'
 
 permissions:
   contents: write

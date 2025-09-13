@@ -2,8 +2,6 @@
 
 A reliable, high-performance, low-footprint dashboard for use with FRC.
 
-This repository will be moved to my [Forgejo instance](https://git.crueter.xyz/QFRC/QDash.git) shortly. For future usage, please refer to the new link.
-
 ![image](https://github.com/user-attachments/assets/5e853a0c-3615-4f8f-9f2c-eb51aa793df9)
 
 ## Lightweight
@@ -25,15 +23,15 @@ QDash excels with its lightweight performance thanks to many factors:
 - Widgets only update and repaint when they need to
 
 ## Usage
-For tutorials on getting started, robot code interaction, theming, and more, see the [wiki](https://github.com/Q-FRC/QDash/wiki).
+For tutorials on getting started, robot code interaction, theming, and more, see the [wiki](https://git.crueter.xyz/QFRC/QDash/wiki/Home).
 
 ## Download
-Windows, Linux, and macOS builds are available via GitHub Actions. Currently, all use WPILib 2025.3.1. Release builds are available either through Actions or in the releases tab:
+Windows, Linux, and macOS builds are available via GitHub Actions. Currently, all use WPILib 2025.3.1. Release builds are available on an [external GitHub repository](https://github.com/QDash-CI/Releases).
 
-[![Release](https://github.com/Q-FRC/QDash/actions/workflows/trigger_release.yml/badge.svg)](https://github.com/Q-FRC/QDash/actions/workflows/trigger_release.yml)
+[![Release](https://github.com/QDash-CI/Workflow/actions/workflows/tag.yml/badge.svg)](https://github.com/QDash-CI/Workflow/actions/workflows/tag.yml)
 
 ## Forking
-Follow the [GPL3](LICENSE) of this project, credit the original project, and make it clear that your application is not QDash itself.
+Follow the [GPLv3](LICENSE) of this project, credit the original project, and make it clear that your application is not QDash itself.
 
 ## Building
 This project uses CMake.
@@ -62,7 +60,7 @@ cmake --install build --prefix ${PKGDIR}
 # or whatever your distribution uses
 sudo pacman -S qt6-base qt6-multimedia base-devel ninja
 
-git clone https://github.com/Q-FRC/QDash.git
+git clone https://git.crueter.xyz/QFRC/QDash.git
 cd QDash
 cmake -S . -B build -G Ninja
 cmake --build build
@@ -75,7 +73,7 @@ cmake --build build
 - Install CMake https://cmake.org/download/ (add to `PATH`)
 
 ```bash
-git clone https://github.com/Q-FRC/QDash.git
+git clone https://git.crueter.xyz/QFRC/QDash.git
 cd QDash
 cmake -DCMAKE_PREFIX_PATH="C:\\Qt6\\6.9.1\\msvc2022_64" -S . -B build
 cmake --build build

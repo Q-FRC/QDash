@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 
 set(QDASH_NAME QDash)
-set(QDASH_ORG "Q-FRC")
-set(QDASH_REPO https://github.com/${QDASH_ORG}/${QDASH_NAME})
+set(QDASH_ORG "QFRC")
+set(QDASH_REPO https://git.crueter.xyz/${QDASH_ORG}/${QDASH_NAME})
 
 project(${QDASH_NAME} VERSION 0.1 LANGUAGES CXX)
 
@@ -53,10 +53,29 @@ endif()
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
+function(get_timestamp _var)
+    string(TIMESTAMP timestamp UTC)
+    set(${_var} "${timestamp}" PARENT_SCOPE)
+endfunction()
+
 # Git
 include(GetGitRevisionDescription)
-git_get_exact_tag(QDASH_TAG)
-get_git_head_revision(QDASH_REFSPEC QDASH_COMMIT)
+if(NOT QDASH_REFSPEC)
+    get_git_head_revision(QDASH_REFSPEC QDASH_COMMIT)
+endif()
+
+if(NOT GIT_DESC)
+    git_describe(GIT_DESC --always --long)
+endif()
+if (NOT GIT_BRANCH)
+    git_branch_name(GIT_BRANCH)
+endif()
+get_timestamp(BUILD_DATE)
+
+git_describe(QDASH_TAG --tags --abbrev=0)
+if (QDASH_TAG MATCHES "NOTFOUND")
+  set(QDASH_TAG "${GIT_DESC}")
+endif()
 
 message(STATUS "Git commit: ${QDASH_COMMIT}")
 message(STATUS "Git tag: ${QDASH_TAG}")
@@ -64,14 +83,6 @@ message(STATUS "Git refspec: ${QDASH_REFSPEC}")
 
 string(REPLACE "-beta" "." QDASH_NUMERIC_TAG ${QDASH_TAG})
 string(REPLACE "-rc" "." QDASH_NUMERIC_TAG ${QDASH_NUMERIC_TAG})
-
-string(REPLACE "." " " QDASH_SPLIT_VERSION ${QDASH_NUMERIC_TAG})
-
-separate_arguments(QDASH_SPLIT_VERSION)
-
-list(GET QDASH_SPLIT_VERSION 0 QDASH_VERSION_MAJOR)
-list(GET QDASH_SPLIT_VERSION 1 QDASH_VERSION_MINOR)
-list(GET QDASH_SPLIT_VERSION 2 QDASH_VERSION_HOTFIX)
 
 project(${QDASH_NAME} VERSION ${QDASH_NUMERIC_TAG} LANGUAGES CXX)
 
