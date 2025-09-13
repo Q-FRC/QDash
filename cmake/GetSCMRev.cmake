@@ -3,6 +3,11 @@
 
 include(GetGitRevisionDescription)
 
+function(trim var)
+  string(REGEX REPLACE "\n" "" new "${${var}}")
+  set(${var} ${new} PARENT_SCOPE)
+endfunction()
+
 set(TAG_FILE ${CMAKE_SOURCE_DIR}/GIT-TAG)
 set(REF_FILE ${CMAKE_SOURCE_DIR}/GIT-REFSPEC)
 set(COMMIT_FILE ${CMAKE_SOURCE_DIR}/GIT-COMMIT)
@@ -24,9 +29,13 @@ if (EXISTS ${TAG_FILE})
 else()
   git_describe(QDASH_TAG --tags --abbrev=0)
   if (QDASH_TAG MATCHES "NOTFOUND")
-    set(QDASH_TAG "${GIT_REFSPEC}")
+    set(QDASH_TAG "${QDASH_REFSPEC}")
   endif()
 endif()
+
+trim(QDASH_REFSPEC)
+trim(QDASH_COMMIT)
+trim(QDASH_TAG)
 
 message(STATUS "Git commit: ${QDASH_COMMIT}")
 message(STATUS "Git tag: ${QDASH_TAG}")
