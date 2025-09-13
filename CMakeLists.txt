@@ -20,6 +20,7 @@ include(CMakeDependentOption)
 option(QDASH_WEBVIEW OFF "Enable web view widget (Requires QtWebEngine)")
 option(QDASH_CAMVIEW ON "Enable camera view widget (Requires QtMultimedia)")
 cmake_dependent_option(QDASH_NETWORK "Enable remote layout feature (Requires QtNetwork)" ON "NOT QDASH_WEBVIEW" ON)
+option(USE_CCACHE OFF "Change some build settings to improve ccache reliability.")
 
 set(QDASH_QT_COMPONENTS Core Quick QuickControls2)
 set(QDASH_QT_LIBRARIES Qt6::Core Qt6::Quick Qt6::QuickControls2)
@@ -42,6 +43,10 @@ if (QDASH_NETWORK)
     set(QDASH_DEFINES ${QDASH_DEFINES} QDASH_NETWORK)
 endif()
 
+if (USE_CCACHE AND SIN32)
+    string(REPLACE "/Zi" "/Z7" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+    string(REPLACE "/Zi" "/Z7" CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+endif()
 find_package(Qt6 6.7 REQUIRED COMPONENTS ${QDASH_QT_COMPONENTS})
 
 qt_standard_project_setup(REQUIRES 6.7)
