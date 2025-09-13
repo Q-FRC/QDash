@@ -10,8 +10,8 @@ Config::Config()
     ORGANIZATION_NAME = "@QDASH_ORG@";
     REPOSITORY = "@QDASH_REPO@";
 
-    BUILD_PLATFORM = "@BUILD_PLATFORM@";
-    BUILD_DATE = "@BUILD_TIMESTAMP@";
+    BUILD_PLATFORM = "@QDASH_BUILD_PLATFORM@";
+    BUILD_DATE = "@QDASH_BUILD_TIMESTAMP@";
 
     GIT_COMMIT = "@QDASH_COMMIT@";
     GIT_TAG = "@QDASH_TAG@";
@@ -42,7 +42,7 @@ Config::Config()
 
 QString Config::buildInfo() const
 {
-    return "<p>GitHub: <a href=" + REPOSITORY + ">" + REPOSITORY + "</a></p>" +
-       "<p>Built on " + BUILD_DATE + " for " + BUILD_PLATFORM + " platform.</p>" +
-       "<p>Version: " + GIT_TAG + "</p>";
+    return "<p>Git: <a href=@QDASH_REPO@>@QDASH_REPO@</a></p>" +
+       "<p>Built on @QDASH_BUILD_TIMESTAMP@ for @QDASH_BUILD_PLATFORM@.</p>" +
+       "<p>QDash @QDASH_TAG@, commit @QDASH_COMMIT@, channel " + VERSION_CHANNEL + "</p>";
 }

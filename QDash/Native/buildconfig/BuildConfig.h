@@ -3,6 +3,7 @@
 #include <QQmlEngine>
 #include <QString>
 
+// TODO(crueter): Make this all constexpr if possible?
 class Config : public QObject {
     Q_OBJECT
     QML_ELEMENT
@@ -12,7 +13,7 @@ public:
     QString ORGANIZATION_NAME;
     QString REPOSITORY;
 
-    /// A short string identifying this build's platform. For example, "lin64" or "win32".
+    /// A short string identifying this build's platform, e.g. Linux, Windows, macOS
     QString BUILD_PLATFORM;
 
     /// A string containing the build timestamp

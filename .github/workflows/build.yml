@@ -2,17 +2,17 @@
 # See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
 name: CMake on multiple platforms
 
-on:
-  workflow_call:
-    inputs:
-      build_type:
-        description: Type of build (Debug, Release, RelWithDebInfo, MinSizeRel)
-        type: string
-        default: Debug
-      devel:
-        description: Whether or not this is a development build
-        type: string
-        default: true
+# on:
+#   workflow_call:
+#     inputs:
+#       build_type:
+#         description: Type of build (Debug, Release, RelWithDebInfo, MinSizeRel)
+#         type: string
+#         default: Debug
+#       devel:
+#         description: Whether or not this is a development build
+#         type: string
+#         default: true
 env:
   qt_version: 6.9.1
   qt_modules: qtmultimedia
@@ -70,7 +70,7 @@ jobs:
 
           chmod a+x .ci/linux/build.sh
           .ci/linux/build.sh ${{ matrix.pkg_arch }}
-      
+
       - name: Package (AppImage)
         run: |
           export DEVEL=${{ inputs.devel }}
@@ -221,7 +221,7 @@ jobs:
           path: build/_deps/*-src
           key: QDash
 
-      - name: Set up Python 3.8 
+      - name: Set up Python 3.8
         uses: actions/setup-python@v5
         with:
           python-version: 3.8

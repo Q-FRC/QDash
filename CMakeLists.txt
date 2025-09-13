@@ -48,16 +48,15 @@ qt_standard_project_setup(REQUIRES 6.7)
 
 if(WIN32)
     set(RCS_FILE ${CMAKE_CURRENT_BINARY_DIR}/dist/${QDASH_NAME}.rc)
-    set(QDASH_BUILD_PLATFORM "win32")
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 else()
-    set(QDASH_BUILD_PLATFORM "lin64")
 endif()
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
-# Git
+# Modules
 include(GetSCMRev)
+include(GetBuildPlatform)
 
 # Build Date
 string(TIMESTAMP TODAY "%Y-%m-%d")
