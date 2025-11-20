@@ -52,6 +52,10 @@ install(TARGETS ${QDASH_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+if (QDASH_STATIC)
+    static_qt_link(${QDASH_NAME})
+endif()
+
 if(UNIX AND APPLE)
     # Mac bundle settings
     set(MACOSX_BUNDLE_BUNDLE_NAME "${QDASH_NAME}")

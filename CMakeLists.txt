@@ -17,6 +17,13 @@ set(BUILD_SHARED_LIBS OFF)
 
 include(CMakeDependentOption)
 
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules/")
+
+## Options ##
+
+option(QDASH_STATIC OFF "Build QDash as a static executable.")
+cmake_dependent_option(QDASH_USE_FASTER_LD "Search for a faster linker if available." OFF "PLATFORM_LINUX" OFF)
+
 option(QDASH_WEBVIEW OFF "Enable web view widget (Requires QtWebEngine)")
 option(QDASH_CAMVIEW ON "Enable camera view widget (Requires QtMultimedia)")
 cmake_dependent_option(QDASH_NETWORK "Enable remote layout feature (Requires QtNetwork)" ON "NOT QDASH_WEBVIEW" ON)
@@ -43,32 +50,39 @@ if (QDASH_NETWORK)
     set(QDASH_DEFINES ${QDASH_DEFINES} QDASH_NETWORK)
 endif()
 
-if (USE_CCACHE AND SIN32)
-    string(REPLACE "/Zi" "/Z7" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-    string(REPLACE "/Zi" "/Z7" CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+## Modules ##
+include(DefaultConfig)
+include(DetectArchitecture)
+include(DetectPlatform)
+include(UseCcache)
+include(GetSCMRev)
+include(CPMUtil)
+
+if (QDASH_STATIC)
+    include(StaticBuild)
 endif()
+
 find_package(Qt6 6.7 REQUIRED COMPONENTS ${QDASH_QT_COMPONENTS})
+
+if(QT_KNOWN_POLICY_QTP0004)
+    qt_policy(SET QTP0004 NEW)
+endif()
 
 qt_standard_project_setup(REQUIRES 6.7)
 
 if(WIN32)
     set(RCS_FILE ${CMAKE_CURRENT_BINARY_DIR}/dist/${QDASH_NAME}.rc)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-else()
 endif()
 
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
-
-# Modules
-include(GetSCMRev)
-include(GetBuildPlatform)
 
 # Build Date
 string(TIMESTAMP TODAY "%Y-%m-%d")
 set(QDASH_BUILD_TIMESTAMP "${TODAY}")
 
 add_subdirectory(dist)
-add_subdirectory(ntcore EXCLUDE_FROM_ALL)
+add_subdirectory(externals)
+
 find_package(ntcore)
 
 set(QT_QML_GENERATE_QMLLS_INI ON)
