@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 crueter
+# SPDX-FileCopyrightText: Copyright 2025 crueter
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 ## DetectArchitecture ##
@@ -40,8 +40,8 @@ if (CMAKE_OSX_ARCHITECTURES)
     set(ARCHITECTURE "${CMAKE_OSX_ARCHITECTURES}")
 
     # hope and pray the architecture names match
-    foreach(ARCH IN ${CMAKE_OSX_ARCHITECTURES})
-        set(ARCHITECTURE_${ARCH} 1 PARENT_SCOPE)
+    foreach(ARCH ${CMAKE_OSX_ARCHITECTURES})
+        set(ARCHITECTURE_${ARCH} 1)
         add_definitions(-DARCHITECTURE_${ARCH}=1)
     endforeach()
 

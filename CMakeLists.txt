@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 crueter
+# SPDX-FileCopyrightText: Copyright 2025 crueter
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 cmake_minimum_required(VERSION 3.22)
@@ -74,7 +74,6 @@ if(WIN32)
     set(RCS_FILE ${CMAKE_CURRENT_BINARY_DIR}/dist/${QDASH_NAME}.rc)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
-
 
 # Build Date
 string(TIMESTAMP TODAY "%Y-%m-%d")

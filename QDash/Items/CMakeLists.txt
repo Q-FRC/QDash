@@ -6,12 +6,10 @@ qt6_add_qml_module(QDashQmlItems
     VERSION 1.0
     QML_FILES
         BetterMenu.qml
-
         IconButton.qml
         MainScreen.qml
         RadialGauge.qml
         Tab.qml
-        TitleBar.qml
         TopicView.qml
         ResizeAnchor.qml
         DoubleSpinBox.qml

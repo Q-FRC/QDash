@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import QtQuick
 import QtQuick.Controls.Material
 import QtQuick.Layouts
@@ -9,12 +12,10 @@ ColumnLayout {
     spacing: 15
 
     function accept() {
-        scale.accept()
         resize.accept()
     }
 
     function open() {
-        scale.open()
         resize.open()
     }
 

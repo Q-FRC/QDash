@@ -6,11 +6,8 @@ qt6_add_qml_module(QDashQmlDialogs
     VERSION 1.0
     QML_FILES
         AboutDialog.qml
-        AnimatedDialog.qml
         NotificationPopup.qml
         TextDialog.qml
-        accent/AccentDisplay.qml
-        accent/AccentEditor.qml
         remote/RemoteLayout.qml
         remote/RemoteLayoutsDialog.qml
         settings/AppearanceComboBox.qml
@@ -23,4 +20,5 @@ qt6_add_qml_module(QDashQmlDialogs
         tab/TabCloseDialog.qml
         tab/TabDialog.qml
         tab/TabNameDialog.qml
+        NativeDialog.qml
     )

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import QtCore
 import QtQuick
 import QtQuick.Controls.Material
@@ -7,6 +10,7 @@ import QDash.Dialogs
 import QDash.Constants
 import QDash.Items
 import QDash.Native.Logging
+import QDash.Native.Helpers
 
 ApplicationWindow {
     id: window
@@ -14,8 +18,6 @@ ApplicationWindow {
     height: Constants.height
     visible: true
     title: conn.title
-
-    flags: Qt.FramelessWindowHint | Qt.Window
 
     Material.theme: settings.theme === "light" ? Material.Light : Material.Dark
     Material.accent: accents.qml(
@@ -40,8 +42,16 @@ ApplicationWindow {
     }
 
     // Dialogs
-    AccentEditor {
-        id: accentEditor
+    Loader {
+        id: remoteLayouts
+
+        active: CompileDefinitions.useNetwork
+        sourceComponent: active ? Qt.createComponent(
+                                      "../Dialogs/remote/RemoteLayoutsDialog.qml") : null
+    }
+
+    AboutDialog {
+        id: about
     }
 
     NotificationPopup {
@@ -52,8 +62,12 @@ ApplicationWindow {
     }
 
     /** SAVE */
+
+    // TODO: QML fileDialog sucks, use Widgets :-)
     FileDialog {
         id: saveDialog
+
+        // TODO: move to AppLocalData?
         currentFolder: StandardPaths.writableLocation(
                            StandardPaths.HomeLocation)
         fileMode: FileDialog.SaveFile
@@ -101,29 +115,118 @@ ApplicationWindow {
         id: settingsDialog
     }
 
-    /** TITLE BAR */
-    TitleBar {
-        id: titleBar
+    /** MENU BAR */
+    menuBar: MenuBar {
+        Menu {
+            z: 25
+            title: qsTr("&File")
 
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-        }
+            Action {
+                text: qsTr("&Save")
+                onTriggered: save()
+                shortcut: "Ctrl+S"
+            }
 
-        onMinimize: window.visibility = Window.Minimized
-        onMaximize: {
-            if (window.visibility === Window.Maximized) {
-                window.visibility = Window.Windowed
-            } else {
-                window.visibility = Window.Maximized
+            Action {
+                text: qsTr("Save &As")
+                onTriggered: saveDialog.open()
+                shortcut: "Ctrl+Shift+S"
+            }
+
+            Action {
+                text: qsTr("&Open...")
+                onTriggered: loadDialog.open()
+                shortcut: "Ctrl+O"
+            }
+
+            BetterMenu {
+                title: qsTr("&Recent Files...")
+                Repeater {
+                    model: settings.recentFiles
+
+                    delegate: MenuItem {
+                        text: qsTr("&" + index + ". " + platformHelper.baseName(
+                                       modelData))
+                        onTriggered: {
+                            if (modelData === "" || modelData === null)
+                                return
+                            tlm.clear()
+                            tlm.load(modelData)
+                        }
+                    }
+                }
+            }
+            Action {
+                enabled: CompileDefinitions.useNetwork
+                text: qsTr("Remote &Layouts...")
+                onTriggered: remoteLayouts.item.open()
+
+                shortcut: "Ctrl+L"
             }
         }
-        onClose: window.close()
-        onBeginDrag: window.startSystemMove()
 
-        onAddWidget: (title, topic, type) => screen.addWidget(title,
-                                                              topic, type)
+        Menu {
+            z: 25
+            title: qsTr("&Edit")
+
+            Action {
+                text: qsTr("&Paste Widget")
+                onTriggered: screen.paste()
+                shortcut: "Ctrl+V"
+            }
+
+            Action {
+                text: qsTr("&Settings")
+                shortcut: "Ctrl+,"
+                onTriggered: settingsDialog.openDialog()
+            }
+
+            BetterMenu {
+                title: qsTr("&Extra Widgets")
+                Repeater {
+                    model: CompileDefinitions.extraWidgets.count
+
+                    delegate: MenuItem {
+                        text: qsTr("&" + model.key)
+                        onTriggered: {
+                            // TODO: make extensible
+                            screen.addWidget(model.key, "", model.value)
+                        }
+                    }
+                }
+            }
+        }
+
+        Menu {
+            z: 25
+            title: qsTr("&Tab")
+            Action {
+                text: qsTr("&New Tab")
+                onTriggered: screen.newTab()
+                shortcut: "Ctrl+T"
+            }
+
+            Action {
+                text: qsTr("&Close Tab")
+                onTriggered: screen.closeTab()
+                shortcut: "Ctrl+W"
+            }
+
+            Action {
+                text: qsTr("Configu&re Tab")
+                onTriggered: screen.configTab()
+                shortcut: "Ctrl+R"
+            }
+        }
+
+        Menu {
+            z: 25
+            title: qsTr("&About")
+            Action {
+                text: qsTr("&About QDash")
+                onTriggered: about.open()
+            }
+        }
     }
 
     /** THE REST */
@@ -145,7 +248,7 @@ ApplicationWindow {
     MainScreen {
         id: screen
         anchors {
-            top: titleBar.bottom
+            top: parent.top
             left: parent.left
             right: parent.right
             bottom: toolbar.top

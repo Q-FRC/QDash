@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import QtQuick 2.15
 import QtQuick.Controls.Material 2.15
 import QtQuick.Layouts 6.6
@@ -7,7 +10,7 @@ import QDash.Constants
 import QDash.Dialogs
 import QDash.Config
 
-AnimatedDialog {
+NativeDialog {
     id: tabNameDialog
 
     title: "New Tab"

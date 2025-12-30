@@ -1,8 +1,14 @@
 set(QRC_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/resources/fields.qrc
     ${CMAKE_CURRENT_SOURCE_DIR}/resources/accents.qrc
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/icons.qrc
-)
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources/icons.qrc)
+
+# Fix QML imports
+set(QT_QML_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/qml" CACHE PATH "Install path for QML" FORCE)
+set(QML_IMPORT_PATH ${CMAKE_BINARY_DIR}/qml CACHE STRING "Extra QML Import Paths" FORCE)
+
+# Put binaries into <build>/bin
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
 add_subdirectory(Config)
 add_subdirectory(Constants)
@@ -18,8 +24,7 @@ set(BASE_PLUGINS
     QDashQmlDialogs
     QDashQmlFields
     QDashQmlItems
-    QDashQmlMain
-)
+    QDashQmlMain)
 
 foreach(PLUGIN ${BASE_PLUGINS})
     set(QML_PLUGINS ${QML_PLUGINS} ${PLUGIN}plugin ${PLUGIN})

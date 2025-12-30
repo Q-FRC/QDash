@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "Models/AccentsListModel.h"
 
 #include "buildconfig/BuildConfig.h"
@@ -43,104 +46,11 @@ QVariant AccentsListModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool AccentsListModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-    Accent a = m_data[index.row()];
-    switch (role) {
-    case NAME:
-        a.name = value.toString();
-        break;
-    case ACCENT:
-        a.accent = value.toString();
-        break;
-    case LIGHT:
-        a.light = value.toString();
-        break;
-    case QML:
-        a.qml = value.toString();
-        break;
-    default:
-        break;
-    }
-
-    m_data.replace(index.row(), a);
-
-    emit dataChanged(index, index, {role});
-    return true;
-}
-
-Qt::ItemFlags AccentsListModel::flags(const QModelIndex &index) const
-{
-    if (!index.isValid())
-        return Qt::NoItemFlags;
-
-    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
-}
-
-void AccentsListModel::add()
-{
-    Accent a;
-    a.name = "New Accent";
-    a.accent = "#000000";
-    a.light = "#555555";
-    a.qml = "Blue";
-
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
-    m_data << a;
-    endInsertRows();
-}
-
-bool AccentsListModel::remove(int row, const QModelIndex &parent)
-{
-    beginRemoveRows(parent, row, row);
-    m_data.remove(row);
-    endRemoveRows();
-
-    return true;
-}
-
-void AccentsListModel::save()
-{
-    static QString name = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
-    QDir dir(name);
-    dir.mkpath(BuildConfig.ORGANIZATION_NAME);
-    dir.cd(BuildConfig.ORGANIZATION_NAME);
-
-    QFile file(dir.absoluteFilePath("accents.json"));
-
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qCritical() << "Failed to open file" << name << "for writing.";
-        return;
-    }
-
-    QTextStream stream(&file);
-    stream << saveObject().toJson();
-    file.close();
-}
-
-QJsonDocument AccentsListModel::saveObject() const
-{
-    QJsonArray arr;
-
-    for (const Accent &a : m_data) {
-        QJsonObject obj;
-
-        obj.insert("name", a.name);
-        obj.insert("accent", a.accent);
-        obj.insert("light", a.light);
-        obj.insert("qml", a.qml);
-
-        arr.append(obj);
-    }
-
-    return QJsonDocument(arr);
-}
-
 void AccentsListModel::loadObject(const QJsonDocument &doc)
 {
     QJsonArray arr = doc.array();
 
-    for (const QJsonValueRef ref : arr) {
+    for (const QJsonValueConstRef ref : std::as_const(arr)) {
         QJsonObject obj = ref.toObject();
 
         Accent a;
@@ -163,11 +73,11 @@ void AccentsListModel::load()
     dir.mkpath(BuildConfig.ORGANIZATION_NAME);
     dir.cd(BuildConfig.ORGANIZATION_NAME);
 
-    QFile file(dir.absoluteFilePath("accents.json"));
+    QFile file(":/accents.json");
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        file.setFileName(":/accents.json");
-        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        qCritical() << "Failed to load bundled accents!";
+        std::exit(1);
     }
 
     QTextStream stream(&file);
@@ -184,7 +94,7 @@ void AccentsListModel::load()
 
 QString AccentsListModel::accent(const QString &name)
 {
-    for (const Accent &a : m_data) {
+    for (const Accent &a : std::as_const(m_data)) {
         if (name == a.name) {
             return a.accent;
         }
@@ -195,7 +105,7 @@ QString AccentsListModel::accent(const QString &name)
 
 QString AccentsListModel::light(const QString &name)
 {
-    for (const Accent &a : m_data) {
+    for (const Accent &a : std::as_const(m_data)) {
         if (name == a.name) {
             return a.light;
         }
@@ -206,70 +116,13 @@ QString AccentsListModel::light(const QString &name)
 
 QString AccentsListModel::qml(const QString &name)
 {
-    for (const Accent &a : m_data) {
+    for (const Accent &a : std::as_const(m_data)) {
         if (name == a.name) {
             return a.qml;
         }
     }
 
     return "";
-}
-
-void AccentsListModel::copy(const QString &toCopy)
-{
-    QClipboard *clipboard = qApp->clipboard();
-    clipboard->setText(toCopy);
-}
-
-void AccentsListModel::exportJson(const QString filename)
-{
-    QString name = filename;
-#ifdef Q_OS_WINDOWS
-    name.replace("file:///", "");
-#else
-    name.replace("file://", "");
-#endif
-
-    QFile file(name);
-
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qCritical() << "Failed to open file" << name << "for writing.";
-        return;
-    }
-
-    QTextStream stream(&file);
-    stream << saveObject().toJson();
-    file.close();
-}
-
-void AccentsListModel::importJson(const QString filename)
-{
-    QString name = filename;
-#ifdef Q_OS_WINDOWS
-    name.replace("file:///", "");
-#else
-    name.replace("file://", "");
-#endif
-
-    QFile file(name);
-
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qCritical() << "Failed to open file" << name << "for reading.";
-        return;
-    }
-
-    QTextStream stream(&file);
-    QByteArray data = stream.readAll().toUtf8();
-
-    QJsonDocument doc = QJsonDocument::fromJson(data);
-    beginResetModel();
-    m_data.clear();
-    endResetModel();
-
-    loadObject(doc);
-    file.close();
-
-    save();
 }
 
 QStringList AccentsListModel::names() const

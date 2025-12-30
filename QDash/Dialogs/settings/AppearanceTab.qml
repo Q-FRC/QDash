@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import QtCore
 import QtQuick 2.15
 import QtQuick.Controls.Material 2.15
@@ -9,34 +12,6 @@ import QDash.Config
 
 ColumnLayout {
     spacing: 5
-
-    Component.onCompleted: {
-        accentEditor.accepted.connect(() => accent.choices = accents.names())
-    }
-
-    FileDialog {
-        id: saveAccentDialog
-        currentFolder: StandardPaths.writableLocation(
-                           StandardPaths.HomeLocation)
-        fileMode: FileDialog.SaveFile
-        defaultSuffix: "json"
-        selectedNameFilter.index: 0
-        nameFilters: ["JSON files (*.json)", "All files (*)"]
-
-        onAccepted: accents.exportJson(selectedFile)
-    }
-
-    FileDialog {
-        id: loadAccentDialog
-        currentFolder: StandardPaths.writableLocation(
-                           StandardPaths.HomeLocation)
-        fileMode: FileDialog.OpenFile
-        defaultSuffix: "json"
-        selectedNameFilter.index: 0
-        nameFilters: ["JSON files (*.json)", "All files (*)"]
-
-        onAccepted: accents.importJson(loadAccentDialog.selectedFile)
-    }
 
     function accept() {
         theme.accept()
@@ -78,37 +53,6 @@ ColumnLayout {
             bindTarget: settings
 
             choices: accents.names()
-        }
-    }
-
-    SectionHeader {
-        label: "Custom Accents"
-    }
-
-    RowLayout {
-        uniformCellSizes: true
-        Layout.fillWidth: true
-
-        Button {
-            Layout.fillWidth: true
-
-            font.pixelSize: 18
-            text: "&Edit"
-            onClicked: accentEditor.open()
-        }
-        Button {
-            Layout.fillWidth: true
-
-            font.pixelSize: 18
-            text: "E&xport"
-            onClicked: saveAccentDialog.open()
-        }
-        Button {
-            Layout.fillWidth: true
-
-            font.pixelSize: 18
-            text: "I&mport"
-            onClicked: loadAccentDialog.open()
         }
     }
 }

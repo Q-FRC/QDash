@@ -1,10 +1,13 @@
+// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import QtQuick
 import QtQuick.Controls.Material
 
 import QDash.Constants
 import QDash.Dialogs
 
-AnimatedDialog {
+NativeDialog {
     title: "Close Tab?"
 
     width: 250

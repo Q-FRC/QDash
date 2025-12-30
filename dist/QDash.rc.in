@@ -7,7 +7,7 @@ IDI_ICON1               ICON    DISCARDABLE     "QDash.ico"
 10255 RT_MANIFEST "QDash.manifest"
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION     @QDASH_NUMERIC_TAG@
+FILEVERSION     @QDASH_VERSION_COMMA@
 FILEOS          VOS_NT_WINDOWS32
 FILETYPE        VFT_APP
 BEGIN
@@ -17,7 +17,7 @@ BEGIN
                 BEGIN
                         VALUE "CompanyName", "@QDASH_ORG@"
                         VALUE "FileDescription", "QDash"
-                        VALUE "FileVersion", "@QDASH_TAG@"
+                        VALUE "FileVersion", "@QDASH_VERSION_WIN@"
                         VALUE "ProductName", "QDash"
                         VALUE "ProductVersion", "@GIT_TAG@"
                 END

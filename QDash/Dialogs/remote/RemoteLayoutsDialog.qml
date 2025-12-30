@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import QtCore
 import QtQuick
 import QtQuick.Controls.Material
@@ -7,7 +10,7 @@ import QDash.Constants
 import QDash.Dialogs
 import QDash.Native.Models
 
-AnimatedDialog {
+NativeDialog {
     property url selected
 
     id: remote

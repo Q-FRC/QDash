@@ -1,8 +1,7 @@
 qt_add_executable(${QDASH_NAME}
     main.cpp
     ${QRC_FILES}
-    ${RCS_FILE}
-)
+    ${RCS_FILE})
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories("$<TARGET_PROPERTY:ntcore,INTERFACE_INCLUDE_DIRECTORIES>")
@@ -22,8 +21,7 @@ set(BASE_PLUGINS
     QDashManagers
     QDashMisc
     QDashModels
-    QDashNt
-)
+    QDashNt)
 
 foreach(PLUGIN ${BASE_PLUGINS})
     set(PLUGINS ${PLUGINS} ${PLUGIN}plugin ${PLUGIN})
@@ -36,21 +34,18 @@ target_link_libraries(${QDASH_NAME}
 
     ${QDASH_QT_LIBRARIES}
     ${PLUGINS}
-    QDashQml
-)
+    QDashQml)
 
 set_target_properties(${QDASH_NAME} PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-)
+    MACOSX_BUNDLE TRUE)
 
 include(GNUInstallDirs)
 install(TARGETS ${QDASH_NAME}
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 if (QDASH_STATIC)
     static_qt_link(${QDASH_NAME})

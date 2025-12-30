@@ -1,16 +1,18 @@
+// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import QtQuick 6.7
-import QtQuick.Controls 6.6
+import QtQuick.Controls.Material 6.6
 import QtQuick.Layouts 6.6
 
 import QDash.Constants
 import QDash.Dialogs
 
-AnimatedDialog {
+NativeDialog {
     id: serverDialog
 
-    height: 475
-    width: 550
-
+    implicitWidth: 575
+    implicitHeight: 475
     title: "Settings"
 
     onAccepted: {
