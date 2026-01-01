@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import QtQuick 6.7
 import QtQuick.Controls.Material 2.15
 import QtQuick.Layouts 2.15
@@ -301,7 +304,8 @@ Rectangle {
                                      }
                                  }
             mouseArea.onReleased: mouse => {
-                                      if (mouse.button === Qt.LeftButton) {
+                                      if (!tab.isCopying && !tab.dragForced
+                                          && mouse.button === Qt.LeftButton) {
                                           if (grid.validResize(widget.width,
                                                                widget.height,
                                                                widget.x,

@@ -1,6 +1,6 @@
+
 // SPDX-FileCopyrightText: Copyright 2025 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtCore
 import QtQuick
 import QtQuick.Controls.Material
@@ -183,8 +183,9 @@ ApplicationWindow {
 
             BetterMenu {
                 title: qsTr("&Extra Widgets")
+
                 Repeater {
-                    model: CompileDefinitions.extraWidgets.count
+                    model: CompileDefinitions.extraWidgets
 
                     delegate: MenuItem {
                         text: qsTr("&" + model.key)

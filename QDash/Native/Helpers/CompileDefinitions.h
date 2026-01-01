@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef COMPILEDEFINITIONS_H
 #define COMPILEDEFINITIONS_H
 
@@ -24,6 +27,10 @@ public:
 
 #ifdef QDASH_WEBVIEW
         model->add("Web View", "web");
+#endif
+
+#ifdef QDASH_CAMVIEW
+        model->add("Camera View", "camera");
 #endif
 
         return model;
