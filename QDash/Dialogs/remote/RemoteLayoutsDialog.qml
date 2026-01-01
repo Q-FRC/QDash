@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: Copyright 2025 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtCore
 import QtQuick
 import QtQuick.Controls.Material
@@ -30,17 +29,20 @@ NativeDialog {
 
     onAccepted: {
         selected = rlm.url(list.currentIndex)
-        saveDialog.open()
+        let filename = FileSelect.getSaveFileName(
+                qsTr("Save Layout"), StandardPaths.writableLocation(
+                    StandardPaths.AppLocalDataLocation),
+                "JSON files (*.json);;All files (*)")
+        rlm.download(selected, filename)
     }
 
     onOpened: {
         busy.running = true
 
-        if (rlm.load()) {
+        if (rlm.load())
             busy.running = true
-        } else {
+        else
             fail.open()
-        }
     }
 
     TextDialog {
@@ -69,18 +71,6 @@ NativeDialog {
         }
     }
 
-    D.FileDialog {
-        id: saveDialog
-        currentFolder: StandardPaths.writableLocation(
-                           StandardPaths.HomeLocation)
-        fileMode: D.FileDialog.SaveFile
-        defaultSuffix: "json"
-        selectedNameFilter.index: 0
-        nameFilters: ["JSON files (*.json)", "All files (*)"]
-
-        onAccepted: rlm.download(selected, selectedFile)
-    }
-
     BusyIndicator {
         id: busy
 
@@ -99,13 +89,8 @@ NativeDialog {
             height: 40
             width: parent.width
 
-            onActivated: {
-                accept()
-            }
-
-            onClicked: {
-                list.currentIndex = index
-            }
+            onActivated: accept()
+            onClicked: list.currentIndex = index
         }
     }
 }

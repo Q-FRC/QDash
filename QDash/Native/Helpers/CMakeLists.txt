@@ -9,11 +9,13 @@ qt6_add_qml_module(QDashHelpers
     MetaObjectHelper.h
     NotificationHelper.cpp NotificationHelper.h
     PlatformHelper.cpp PlatformHelper.h
+    SOURCES FileSelect.h
 )
 
 target_link_libraries(QDashHelpers
     PRIVATE
     Qt6::Gui
     Qt6::Quick
+    Qt6::Widgets
 )
 

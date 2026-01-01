@@ -5,5 +5,16 @@
         "tag": "v%VERSION%",
         "git_version": "2025.3.2",
         "version": "2025.1.1"
+    },
+    "carboxyl": {
+        "package": "Carboxyl",
+        "repo": "crueter/Carboxyl",
+        "git_host": "git.crueter.xyz",
+        "sha": "ff49f168b0",
+        "hash": "a4a46be3aea6bb666c274c1ae323abb4b26746a4976e0595b9893cfba5297b78c267526ba99e02e6ce8d48da605f9ea448d8cf6bbd01e81953754a2131c65d2b",
+        "bundled": "true",
+        "options": [
+            "CARBOXYL_DEMO OFF"
+        ]
     }
 }

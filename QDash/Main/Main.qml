@@ -1,4 +1,3 @@
-
 // SPDX-FileCopyrightText: Copyright 2025 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtCore
@@ -62,50 +61,30 @@ ApplicationWindow {
     }
 
     /** SAVE */
-
-    // TODO: QML fileDialog sucks, use Widgets :-)
-    FileDialog {
-        id: saveDialog
-
-        // TODO: move to AppLocalData?
-        currentFolder: StandardPaths.writableLocation(
-                           StandardPaths.HomeLocation)
-        fileMode: FileDialog.SaveFile
-        defaultSuffix: "json"
-        selectedNameFilter.index: 0
-        nameFilters: ["JSON files (*.json)", "All files (*)"]
-
-        onAccepted: saveAs()
-    }
-
     function save() {
         if (filename === "")
-            return saveDialog.open()
+            return saveAs()
 
         tlm.save(filename)
     }
 
     function saveAs() {
-        filename = saveDialog.selectedFile
+        // TODO: move to AppLocalData?
+        filename = FileSelect.getSaveFileName(
+                    qsTr("Save Layout"), StandardPaths.writableLocation(
+                        StandardPaths.AppLocalDataLocation),
+                    "JSON files (*.json);;All files (*)")
 
         tlm.save(filename)
     }
 
     /** LOAD */
-    FileDialog {
-        id: loadDialog
-        currentFolder: StandardPaths.writableLocation(
-                           StandardPaths.HomeLocation)
-        fileMode: FileDialog.OpenFile
-        defaultSuffix: "json"
-        selectedNameFilter.index: 0
-        nameFilters: ["JSON files (*.json)", "All files (*)"]
-
-        onAccepted: load()
-    }
-
     function load() {
-        filename = loadDialog.selectedFile
+        filename = FileSelect.getOpenFileName(
+                    qsTr("Open Layout"), StandardPaths.writableLocation(
+                        StandardPaths.AppLocalDataLocation),
+                    "JSON files (*.json);;All files (*)")
+
         logs.info("IO", "Loading file " + filename)
         tlm.load(filename)
     }
@@ -129,13 +108,13 @@ ApplicationWindow {
 
             Action {
                 text: qsTr("Save &As")
-                onTriggered: saveDialog.open()
+                onTriggered: saveAs()
                 shortcut: "Ctrl+Shift+S"
             }
 
             Action {
                 text: qsTr("&Open...")
-                onTriggered: loadDialog.open()
+                onTriggered: load()
                 shortcut: "Ctrl+O"
             }
 

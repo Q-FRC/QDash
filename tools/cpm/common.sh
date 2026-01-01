@@ -13,7 +13,7 @@ MAXDEPTH=1
 # For your project you'll want to change this to define what dirs you have cpmfiles in
 # Remember to account for the MAXDEPTH variable!
 # Adding ./ before each will help to remove duplicates
-[ -z "$CPMFILES" ] && CPMFILES=$(find externals ./QDash -maxdepth "$MAXDEPTH" -name cpmfile.json | sort | uniq)
+[ -z "$CPMFILES" ] && CPMFILES=$(find . -maxdepth "$MAXDEPTH" -name cpmfile.json | sort | uniq)
 
 # shellcheck disable=SC2016
 [ -z "$PACKAGES" ] && PACKAGES=$(echo "$CPMFILES" | xargs jq -s 'reduce .[] as $item ({}; . * $item)')

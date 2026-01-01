@@ -1,4 +1,4 @@
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickStyle>
@@ -19,6 +19,7 @@
 
 #include "Helpers/NotificationHelper.h"
 #include "Helpers/PlatformHelper.h"
+#include "Helpers/FileSelect.h"
 
 #include "NT/TopicStore.h"
 
@@ -26,7 +27,9 @@
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
+
+    QWidget *root = new QWidget;
 
     app.setOrganizationName(BuildConfig.ORGANIZATION_NAME);
     app.setApplicationName(BuildConfig.APPLICATION_NAME);
@@ -137,6 +140,7 @@ int main(int argc, char *argv[])
         QFDFlags::staticMetaObject, "QFDFlags", 1, 0, "QFDFlags",
         "Attempt to create uninstantiable object \"QFDFlags\" ignored");
 
+    FileSelect *fileSelect = new FileSelect(root);
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty("topics", topics);
@@ -150,6 +154,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("notificationHelper", notification);
     engine.rootContext()->setContextProperty("buildConfig", &BuildConfig);
     engine.rootContext()->setContextProperty("logs", logs);
+    engine.rootContext()->setContextProperty("FileSelect", fileSelect);
 
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreationFailed, parent,

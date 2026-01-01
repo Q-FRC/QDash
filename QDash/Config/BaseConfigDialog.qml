@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: Copyright 2025 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick
 import QtQuick.Controls.Material
 
@@ -11,29 +10,20 @@ NativeDialog {
     required property Item content
     id: config
 
-    title: "Configure Widget"
+    width: 550
 
-    height: Math.min(
-                window.height, Math.max(
-                    implicitBackgroundHeight + topInset
-                    + bottomInset, contentHeight + topPadding + bottomPadding
-                    + (implicitHeaderHeight > 0 ? implicitHeaderHeight + spacing : 0) + (implicitFooterHeight > 0 ? implicitFooterHeight + spacing : 0)) + 75)
-    width: Math.min(window.width, 625)
+    title: "Configure Widget"
 
     standardButtons: Dialog.Ok | Dialog.Cancel
 
     ScrollView {
         clip: true
 
-        contentWidth: width - 5 - effectiveScrollBarWidth
-
         anchors {
             fill: parent
-
-            topMargin: 5
-
-            rightMargin: 5
         }
+
+        onWidthChanged: contentWidth = width - effectiveScrollBarWidth
 
         contentChildren: [content]
     }

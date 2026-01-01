@@ -29,8 +29,8 @@ option(QDASH_CAMVIEW ON "Enable camera view widget (Requires QtMultimedia)")
 cmake_dependent_option(QDASH_NETWORK "Enable remote layout feature (Requires QtNetwork)" ON "NOT QDASH_WEBVIEW" ON)
 option(USE_CCACHE OFF "Change some build settings to improve ccache reliability.")
 
-set(QDASH_QT_COMPONENTS Core Quick QuickControls2)
-set(QDASH_QT_LIBRARIES Qt6::Core Qt6::Quick Qt6::QuickControls2)
+set(QDASH_QT_COMPONENTS Core Quick QuickControls2 Widgets)
+set(QDASH_QT_LIBRARIES Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Widgets)
 
 if (QDASH_WEBVIEW)
     set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} WebEngineQuick)
