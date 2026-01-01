@@ -10,3 +10,5 @@ qt6_add_qml_module(QDashQmlConstants
     VERSION 1.0
     QML_FILES
         Constants.qml)
+
+QDashModule(QDashQmlConstants)

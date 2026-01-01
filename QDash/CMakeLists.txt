@@ -38,7 +38,6 @@ target_link_libraries(QDashQml
 
     ${QDASH_QT_LIBRARIES}
     ${QML_PLUGINS}
-    QDashQmlWidgets
-)
+    QDashQmlWidgets)
 
 add_subdirectory(Native)

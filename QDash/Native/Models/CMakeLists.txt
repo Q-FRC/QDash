@@ -5,23 +5,17 @@ qt6_add_qml_module(QDashModels
     URI QDash.Native.Models
     VERSION 1.0
     SOURCES
-        AccentsListModel.cpp
-        AccentsListModel.h
-        RemoteLayoutModel.cpp
-        RemoteLayoutModel.h
-        TabListModel.cpp
-        TabListModel.h
-        TabWidgetsModel.cpp
-        TabWidgetsModel.h
-        TopicListModel.cpp
-        TopicListModel.h
-        GenericMapModel.cpp
-        GenericMapModel.h
-)
+    AccentsListModel.cpp
+    AccentsListModel.h
+    RemoteLayoutModel.cpp
+    RemoteLayoutModel.h
+    TabListModel.cpp
+    TabListModel.h
+    TabWidgetsModel.cpp
+    TabWidgetsModel.h
+    TopicListModel.cpp
+    TopicListModel.h
+    GenericMapModel.cpp
+    GenericMapModel.h)
 
-target_link_libraries(QDashModels
-    PRIVATE
-    Qt6::Gui
-    Qt6::Quick
-)
-
+QDashModule(QDashModels)

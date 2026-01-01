@@ -29,8 +29,10 @@ option(QDASH_CAMVIEW ON "Enable camera view widget (Requires QtMultimedia)")
 cmake_dependent_option(QDASH_NETWORK "Enable remote layout feature (Requires QtNetwork)" ON "NOT QDASH_WEBVIEW" ON)
 option(USE_CCACHE OFF "Change some build settings to improve ccache reliability.")
 
+set(QT_NO_PRIVATE_MODULE_WARNING ON)
 set(QDASH_QT_COMPONENTS Core Quick QuickControls2 Widgets)
-set(QDASH_QT_LIBRARIES Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Widgets)
+set(QDASH_QT_OPTIONAL GuiPrivate QuickTemplates2Private)
+set(QDASH_QT_LIBRARIES Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Widgets Carboxyl::Carboxyl)
 
 if (QDASH_WEBVIEW)
     set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} WebEngineQuick)
@@ -57,18 +59,25 @@ include(DetectPlatform)
 include(UseCcache)
 include(GetSCMRev)
 include(CPMUtil)
+include(QDashModule)
 
 if (QDASH_STATIC)
     include(StaticBuild)
 endif()
 
-find_package(Qt6 6.7 REQUIRED COMPONENTS ${QDASH_QT_COMPONENTS})
+find_package(Qt6 6.4 REQUIRED
+    COMPONENTS ${QDASH_QT_COMPONENTS}
+    OPTIONAL_COMPONENTS ${QDASH_QT_OPTIONAL})
 
 if(QT_KNOWN_POLICY_QTP0004)
     qt_policy(SET QTP0004 NEW)
 endif()
 
-qt_standard_project_setup(REQUIRES 6.7)
+if(QT_KNOWN_POLICY_QTP0001)
+    qt_policy(SET QTP0001 NEW)
+endif()
+
+qt_standard_project_setup(REQUIRES 6.4)
 
 if(WIN32)
     set(RCS_FILE ${CMAKE_CURRENT_BINARY_DIR}/dist/${QDASH_NAME}.rc)
@@ -83,6 +92,7 @@ add_subdirectory(dist)
 add_subdirectory(externals)
 
 find_package(ntcore)
+find_package(Carboxyl)
 
 set(QT_QML_GENERATE_QMLLS_INI ON)
 

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 
 
 /*
@@ -27,7 +30,7 @@
     A copy of the GNU General Public License is available at <http://www.gnu.org/licenses/>.
 */
 import QtQuick
-import QtQuick.Controls.Material
+import QtQuick.Controls
 
 
 /*!

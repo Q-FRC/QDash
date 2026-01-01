@@ -20,5 +20,6 @@ qt6_add_qml_module(QDashQmlDialogs
         tab/TabCloseDialog.qml
         tab/TabDialog.qml
         tab/TabNameDialog.qml
-        NativeDialog.qml
-    )
+        NativeDialog.qml)
+
+QDashModule(QDashQmlDialogs)

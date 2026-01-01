@@ -11,11 +11,6 @@ qt6_add_qml_module(QDashMisc
     Globals.cpp
     Globals.h
     MaskedMouseArea.cpp
-    MaskedMouseArea.h
-)
+    MaskedMouseArea.h)
 
-target_link_libraries(QDashMisc
-    PRIVATE
-    Qt6::Gui
-    Qt6::Quick
-)
+QDashModule(QDashMisc)

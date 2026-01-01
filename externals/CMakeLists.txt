@@ -28,3 +28,6 @@ set(WITH_SIMULATION_MODULES OFF)
 set(NO_WERROR ON)
 
 AddJsonPackage(ntcore)
+
+# Carboxyl
+AddJsonPackage(carboxyl)

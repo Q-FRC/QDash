@@ -6,12 +6,7 @@ qt6_add_qml_module(QDashLogging
     VERSION 1.0
     SOURCES
     Logger.h
-    Logger.cpp
-)
+    Logger.cpp)
 
 
-target_link_libraries(QDashLogging
-    PRIVATE
-    Qt6::Gui
-    Qt6::Quick
-)
+QDashModule(QDashLogging)

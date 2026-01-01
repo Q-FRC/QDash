@@ -6,12 +6,7 @@ qt6_add_qml_module(QDashManagers
     VERSION 1.0
     SOURCES
     ConnManager.cpp ConnManager.h
-    SettingsManager.cpp SettingsManager.h
-)
+    SettingsManager.cpp SettingsManager.h)
 
 
-target_link_libraries(QDashManagers
-    PRIVATE
-    Qt6::Gui
-    Qt6::Quick
-)
+QDashModule(QDashManagers)

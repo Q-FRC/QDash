@@ -1,5 +1,8 @@
+// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import QtQuick 2.15
-import QtQuick.Controls.Material 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Shapes 2.15
  
 import QDash.Fields

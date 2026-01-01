@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: Copyright 2025 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 6.7
-import QtQuick.Controls.Material 6.6
-import QtQuick.Layouts 6.6
+import QtQuick 6.4
+import QtQuick.Controls 6.4
+import QtQuick.Layouts 6.4
 
 import QDash.Constants
 import QDash.Dialogs

@@ -5,13 +5,7 @@ qt6_add_qml_module(QDashNt
     URI QDash.Native.NT
     VERSION 1.0
     SOURCES
-        TopicStore.cpp
-        TopicStore.h
-    )
+    TopicStore.cpp
+    TopicStore.h)
 
-target_link_libraries(QDashNt
-    PRIVATE
-    Qt6::Gui
-    Qt6::Quick
-)
-
+QDashModule(QDashNt)
