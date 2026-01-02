@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 crueter
+# SPDX-FileCopyrightText: Copyright 2025 crueter
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 ## DetectPlatform ##
@@ -143,4 +143,10 @@ if (MINGW)
     set(MINGW_FLAGS "-Wl,--strip-all -Wl,--gc-sections")
     set(CMAKE_EXE_LINKER_FLAGS_RELEASE
         "${CMAKE_EXE_LINKER_FLAGS_RELEASE} ${MINGW_FLAGS}")
+endif()
+
+# awesome
+if (PLATFORM_FREEBSD OR PLATFORM_DRAGONFLYBSD)
+    set(CMAKE_EXE_LINKER_FLAGS
+        "${CMAKE_EXE_LINKER_FLAGS} -L${CMAKE_SYSROOT}/usr/local/lib")
 endif()

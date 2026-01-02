@@ -22,12 +22,10 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules/")
 ## Options ##
 
 option(QDASH_STATIC OFF "Build QDash as a static executable.")
-cmake_dependent_option(QDASH_USE_FASTER_LD "Search for a faster linker if available." OFF "PLATFORM_LINUX" OFF)
 
 option(QDASH_WEBVIEW OFF "Enable web view widget (Requires QtWebEngine)")
 option(QDASH_CAMVIEW ON "Enable camera view widget (Requires QtMultimedia)")
 cmake_dependent_option(QDASH_NETWORK "Enable remote layout feature (Requires QtNetwork)" ON "NOT QDASH_WEBVIEW" ON)
-option(USE_CCACHE OFF "Change some build settings to improve ccache reliability.")
 
 set(QT_NO_PRIVATE_MODULE_WARNING ON)
 set(QDASH_QT_COMPONENTS Core Quick QuickControls2 Widgets)
@@ -57,6 +55,8 @@ include(DefaultConfig)
 include(DetectArchitecture)
 include(DetectPlatform)
 include(UseCcache)
+include(UseLTO)
+include(FasterLinker)
 include(GetSCMRev)
 include(CPMUtil)
 include(QDashModule)
