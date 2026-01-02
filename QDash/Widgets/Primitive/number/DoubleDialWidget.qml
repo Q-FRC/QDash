@@ -1,15 +1,14 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick
 import QtQuick.Controls 6.4
 import QtQuick.Layouts
- 
+
 import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
-import QDash.Constants
+import Carboxyl.Clover
 
 PrimitiveWidget {
     id: widget
@@ -24,7 +23,7 @@ PrimitiveWidget {
     property double item_lowerBound: -100000.0
     property double item_upperBound: 100000.0
 
-    BetterMenu {
+    Menu {
         id: switchMenu
         title: "Switch Widget..."
 
@@ -71,13 +70,13 @@ PrimitiveWidget {
         dial.value = value
     }
 
-    BetterDoubleSpinBox {
+    DoubleSpinBox {
         id: spin
 
         font.pixelSize: item_fontSize
 
-        valid: widget.valid
-        connected: widget.connected
+        enabled: widget.connected
+        editable: true
 
         value: 0
 
@@ -87,13 +86,10 @@ PrimitiveWidget {
 
         anchors {
             bottom: parent.bottom
-            bottomMargin: parent.height / 10
-
             left: parent.left
             right: parent.right
 
-            leftMargin: 10
-            rightMargin: 10
+            margins: 10
         }
 
         onValueModified: {
@@ -111,54 +107,8 @@ PrimitiveWidget {
         }
     }
 
-    // TODO: improve look
     Dial {
         id: dial
-
-        background: Rectangle {
-            x: dial.width / 2 - width / 2
-            y: dial.height / 2 - height / 2
-
-            implicitWidth: 140
-            implicitHeight: 140
-
-            width: Math.max(64, Math.min(dial.width, dial.height))
-            height: width
-
-            color: "transparent"
-            radius: width / 2
-
-            border.color: Constants.accent
-            opacity: widget.connected ? 1 : 0.3
-        }
-
-        handle: Rectangle {
-            id: handleItem
-            x: dial.background.x + dial.background.width / 2 - width / 2
-            y: dial.background.y + dial.background.height / 2 - height / 2
-
-            width: Math.min(parent.width, parent.height) / 5
-            height: Math.min(parent.width, parent.height) / 5
-
-            color: Constants.accent
-            radius: width / 2
-
-            antialiasing: true
-            opacity: widget.connected ? 1 : 0.3
-
-            transform: [
-                Translate {
-                    y: -Math.min(
-                           dial.background.width,
-                           dial.background.height) * 0.4 + handleItem.height / 2
-                },
-                Rotation {
-                    angle: dial.angle
-                    origin.x: handleItem.width / 2
-                    origin.y: handleItem.height / 2
-                }
-            ]
-        }
 
         inputMode: Dial.Circular
 
@@ -167,8 +117,8 @@ PrimitiveWidget {
         value: 0
         stepSize: item_stepSize
 
-        height: parent.height / 3
-        width: parent.width / 3
+        width: Math.min(parent.width, spin.y - titleField.height - 40)
+        height: width
 
         from: item_lowerBound
         to: item_upperBound
@@ -180,10 +130,9 @@ PrimitiveWidget {
 
         anchors {
             top: titleField.bottom
-            bottom: spin.top
             horizontalCenter: parent.horizontalCenter
 
-            margins: 10
+            margins: 20
         }
 
         onMoved: {
@@ -206,28 +155,19 @@ PrimitiveWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
-
                 LabeledSpinBox {
+                    // TODO: commonize fillWidth
                     Layout.fillWidth: true
 
-                    id: titleFontField
-
                     label: "Title Font Size"
-
                     bindedProperty: "item_titleFontSize"
-                    bindTarget: widget
                 }
 
                 LabeledSpinBox {
                     Layout.fillWidth: true
 
-                    id: fontField
-
                     label: "Font Size"
-
                     bindedProperty: "item_fontSize"
-                    bindTarget: widget
                 }
             }
 
@@ -236,40 +176,27 @@ PrimitiveWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
 
                 LabeledDoubleSpinBox {
                     Layout.fillWidth: true
 
-                    id: lowField
-
                     label: "Lower Bound"
-
                     bindedProperty: "item_lowerBound"
-                    bindTarget: widget
                 }
 
                 LabeledDoubleSpinBox {
                     Layout.fillWidth: true
 
-                    id: upField
-
                     label: "Upper Bound"
-
                     bindedProperty: "item_upperBound"
-                    bindTarget: widget
                 }
             }
 
             LabeledDoubleSpinBox {
                 Layout.fillWidth: true
 
-                id: stepField
-
                 label: "Step Size"
-
                 bindedProperty: "item_stepSize"
-                bindTarget: widget
 
                 from: 0
                 stepSize: 0.1
@@ -280,28 +207,19 @@ PrimitiveWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
 
                 LabeledDoubleSpinBox {
                     Layout.fillWidth: true
 
-                    id: startField
-
                     label: "Start Angle"
-
                     bindedProperty: "item_startAngle"
-                    bindTarget: widget
                 }
 
                 LabeledDoubleSpinBox {
                     Layout.fillWidth: true
 
-                    id: endField
-
                     label: "End Angle"
-
                     bindedProperty: "item_endAngle"
-                    bindTarget: widget
                 }
             }
 
@@ -313,12 +231,8 @@ PrimitiveWidget {
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
 
-                id: topicField
-
                 label: "Topic"
-
                 bindedProperty: "item_topic"
-                bindTarget: widget
             }
         }
     }

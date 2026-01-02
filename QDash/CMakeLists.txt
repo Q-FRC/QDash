@@ -11,7 +11,6 @@ set(QML_IMPORT_PATH ${CMAKE_BINARY_DIR}/qml CACHE STRING "Extra QML Import Paths
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
 add_subdirectory(Config)
-add_subdirectory(Constants)
 add_subdirectory(Dialogs)
 add_subdirectory(Fields)
 add_subdirectory(Items)
@@ -19,7 +18,6 @@ add_subdirectory(Widgets)
 add_subdirectory(Main)
 
 set(BASE_PLUGINS
-    QDashQmlConstants
     QDashQmlConfig
     QDashQmlDialogs
     QDashQmlFields

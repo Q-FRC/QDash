@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 6.4
 import QtQuick.Controls 2.15
+import QtQuick.Controls.Basic as B
 import QtQuick.Layouts 2.15
 
-import QDash.Constants
+import Carboxyl.Clover
 import QDash.Items
 import QDash.Config
 
@@ -23,11 +23,6 @@ Rectangle {
 
     z: 3
 
-    border {
-        color: "transparent"
-        width: 10
-    }
-
     radius: 12
     property int item_titleFontSize: 16
 
@@ -38,7 +33,7 @@ Rectangle {
     property int minWidth: grid.colWidth - 16
     property int minHeight: grid.rowHeight - 16
 
-    color: Constants.palette.widgetBg
+    color: Clover.theme.dark
 
     Drag.active: dragArea.drag.active
 
@@ -221,7 +216,7 @@ Rectangle {
         y = grid.rowHeight * model.row + 8
     }
 
-    BetterMenu {
+    Menu {
         id: rcMenu
 
         MenuItem {
@@ -231,7 +226,7 @@ Rectangle {
 
         MenuItem {
             text: "Configure"
-            onTriggered: config.openDialog()
+            onTriggered: config.open()
         }
 
         MenuItem {
@@ -338,8 +333,7 @@ Rectangle {
     }
 
     /* ACTUAL DATA */
-    TextField {
-        z: 25
+    B.TextField {
         id: titleField
         font.pixelSize: item_titleFontSize
         font.bold: true
@@ -348,37 +342,24 @@ Rectangle {
 
         text: model.title
 
-        color: connected ? Constants.palette.text : Constants.palette.disabledText
-        Behavior on color {
-            ColorAnimation {
-                duration: 250
-            }
-        }
+        color: Clover.theme.text
+
+        enabled: !(Drag.active || dragForced)
 
         onTextEdited: model.title = text
 
         anchors {
             top: parent.top
-            horizontalCenter: parent.horizontalCenter
+            left: parent.left
+            right: parent.right
         }
 
-        background: Item {}
+        background: Rectangle {
+            color: Clover.theme.currentAccent
+        }
 
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-    }
-
-    Rectangle {
-        anchors {
-            top: titleField.top
-            left: parent.left
-            right: parent.right
-            bottom: titleField.bottom
-        }
-
-        topLeftRadius: 12
-        topRightRadius: 12
-        color: Constants.accent
     }
 
 

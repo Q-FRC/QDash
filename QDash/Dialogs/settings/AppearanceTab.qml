@@ -1,58 +1,78 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtCore
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.4
 import QtQuick.Dialogs
 
-import QDash.Constants
+import Carboxyl.Clover
 import QDash.Config
+
+import Carboxyl.Contour
+import Carboxyl.Clover
 
 ColumnLayout {
     spacing: 5
 
     function accept() {
-        theme.accept()
-        accent.accept()
-
-        Constants.setTheme(settings.theme)
-        Constants.setAccent(settings.accent)
-    }
-
-    function open() {
-        theme.open()
-        accent.open()
-    }
-
-    RowLayout {
-        Layout.fillWidth: true
-
-        AppearanceComboBox {
-            implicitHeight: 50
-            implicitWidth: 200
-            id: theme
-
-            label: "Theme"
-
-            bindedProperty: "theme"
-            bindTarget: settings
-
-            choices: ["Light", "Dark", "Midnight"]
+        if (QDashSettings.style !== style.currentText) {
+            QDashApplication.shouldReload = true
         }
 
-        AppearanceComboBox {
-            implicitWidth: 200
-            implicitHeight: 50
-            id: accent
+        QDashSettings.style = style.currentText
+        QDashSettings.theme = theme.currentIndex
+        QDashSettings.accent = accent.currentIndex
 
-            label: "Accent"
+        Clover.accent = Clover.accents[accent.currentIndex]
+        Clover.theme = Clover.themes[theme.currentIndex]
+    }
 
-            bindedProperty: "accent"
-            bindTarget: settings
+    CarboxylLabeledComboBox {
+        id: style
 
-            choices: accents.names()
-        }
+        model: CarboxylConfig.styles
+
+        implicitHeight: 45
+        implicitWidth: 350
+        Layout.alignment: Qt.AlignCenter
+        font.pixelSize: 20
+
+        label: "Style"
+
+        Component.onCompleted: currentIndex = model.indexOf(
+                                   CarboxylApplication.styleName)
+    }
+
+    CarboxylLabeledComboBox {
+        id: accent
+
+        model: Clover.accents
+        textRole: "name"
+
+        label: "Accent"
+
+        implicitHeight: 45
+        implicitWidth: 350
+        Layout.alignment: Qt.AlignCenter
+        font.pixelSize: 20
+
+        Component.onCompleted: currentIndex = QDashSettings.accent
+    }
+
+    CarboxylLabeledComboBox {
+        id: theme
+
+        model: Clover.themes
+        textRole: "name"
+
+        label: "Theme"
+
+        implicitHeight: 45
+        implicitWidth: 350
+        Layout.alignment: Qt.AlignCenter
+        font.pixelSize: 20
+
+        Component.onCompleted: currentIndex = QDashSettings.theme
     }
 }

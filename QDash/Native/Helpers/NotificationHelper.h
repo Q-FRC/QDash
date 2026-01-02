@@ -1,12 +1,16 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef NOTIFICATIONHELPER_H
 #define NOTIFICATIONHELPER_H
 
 #include <QObject>
 #include <QQmlEngine>
 
+class Logger;
+
 class NotificationHelper : public QObject {
     Q_OBJECT
-    QML_ELEMENT
 
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged FINAL)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged FINAL)
@@ -17,7 +21,7 @@ class NotificationHelper : public QObject {
     Q_PROPERTY(int height READ height WRITE setHeight NOTIFY heightChanged FINAL)
 
 public:
-    explicit NotificationHelper(QObject *parent = nullptr);
+    explicit NotificationHelper(Logger *logger, QObject *parent = nullptr);
 
     void fromJson(const QJsonDocument &doc);
 
@@ -41,17 +45,11 @@ public:
 
 signals:
     void titleChanged();
-
     void textChanged();
-
     void levelChanged();
-
     void displayTimeChanged();
-
     void widthChanged();
-
     void heightChanged();
-
     void ready();
 
 private:
@@ -61,6 +59,8 @@ private:
     int m_displayTime;
     int m_width;
     int m_height;
+
+    Logger *m_logger;
 };
 
 #endif // NOTIFICATIONHELPER_H

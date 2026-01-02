@@ -9,3 +9,4 @@ qt6_add_qml_module(QDashNt
     TopicStore.h)
 
 QDashModule(QDashNt)
+target_link_libraries(QDashNt PRIVATE ntcore)

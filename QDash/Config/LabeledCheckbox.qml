@@ -1,11 +1,8 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 2.15
-
-import QDash.Constants
 
 CheckBox {
     required property string label
@@ -14,7 +11,7 @@ CheckBox {
     required property string bindedProperty
 
     /** the target to bind the property to */
-    required property var bindTarget
+    property var bindTarget: widget
 
     id: textField
     font.pixelSize: 18

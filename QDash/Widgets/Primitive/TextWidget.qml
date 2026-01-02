@@ -1,6 +1,5 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -9,14 +8,14 @@ import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
-import QDash.Constants
+import Carboxyl.Clover
 
 PrimitiveWidget {
     id: widget
 
     property int item_fontSize: 20
 
-    BetterMenu {
+    Menu {
         id: switchMenu
         title: "Switch Widget..."
 
@@ -52,13 +51,12 @@ PrimitiveWidget {
             rightMargin: 10
         }
 
-        BetterTextField {
+        TextField {
             id: textField
 
             font.pixelSize: item_fontSize
 
-            valid: widget.valid
-            connected: widget.connected
+            enabled: widget.connected
 
             anchors {
                 verticalCenter: parent.verticalCenter
@@ -88,7 +86,6 @@ PrimitiveWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
 
                 LabeledSpinBox {
                     Layout.fillWidth: true

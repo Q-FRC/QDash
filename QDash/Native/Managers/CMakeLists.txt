@@ -8,5 +8,5 @@ qt6_add_qml_module(QDashManagers
     ConnManager.cpp ConnManager.h
     SettingsManager.cpp SettingsManager.h)
 
-
 QDashModule(QDashManagers)
+target_link_libraries(QDashManagers PRIVATE ntcore)

@@ -1,13 +1,22 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "NotificationHelper.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
 
-NotificationHelper::NotificationHelper(QObject *parent) : QObject{parent} {}
+#include "Logging/Logger.h"
+
+NotificationHelper::NotificationHelper(Logger *logger, QObject *parent)
+    : QObject{parent}, m_logger{logger}
+{}
 
 void NotificationHelper::fromJson(const QJsonDocument &doc)
 {
     QJsonObject obj = doc.object();
+
+    m_logger->debug("NotificationHelper", "Decoding notification object");
 
     setTitle(obj.value("title").toString("Notification"));
     setText(obj.value("description").toString("Text"));
@@ -16,6 +25,8 @@ void NotificationHelper::fromJson(const QJsonDocument &doc)
     setDisplayTime(obj.value("displayTime").toInt(3000));
     setWidth(obj.value("width").toInt(350));
     setHeight(obj.value("height").toInt(-1));
+
+    m_logger->debug("NotificationHelper", "Notification object decoded");
 
     emit ready();
 }

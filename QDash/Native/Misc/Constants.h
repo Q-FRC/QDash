@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
@@ -30,8 +33,16 @@ namespace Settings
 Q_NAMESPACE
 extern const Setting RecentFiles;
 extern const Setting LoadRecent;
+
 extern const Setting Theme;
 extern const Setting Accent;
+extern const Setting Style;
+
+extern const Setting WindowWidth;
+extern const Setting WindowHeight;
+extern const Setting WindowX;
+extern const Setting WindowY;
+
 extern const Setting Scale;
 extern const Setting ResizeToDS;
 extern const Setting LogLevel;

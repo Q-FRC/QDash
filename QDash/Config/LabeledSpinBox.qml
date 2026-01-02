@@ -1,22 +1,21 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 2.15
 
-import QDash.Constants
-import QDash.Fields
+import Carboxyl.Clover
 
-BetterSpinBox {
+import Carboxyl.Contour
+
+CarboxylLabeledSpinBox {
     id: spin
-    // required property string label
 
     /** what property to bind to */
     required property string bindedProperty
 
     /** the target to bind the property to */
-    required property var bindTarget
+    property var bindTarget: widget
 
     font.pixelSize: 18
 

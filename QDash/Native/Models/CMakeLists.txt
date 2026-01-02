@@ -19,3 +19,4 @@ qt6_add_qml_module(QDashModels
     GenericMapModel.h)
 
 QDashModule(QDashModels)
+target_link_libraries(QDashModels PRIVATE ntcore)

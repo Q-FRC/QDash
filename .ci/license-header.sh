@@ -1,13 +1,13 @@
 #!/bin/sh -e
 
-# SPDX-FileCopyrightText: Copyright 2025 crueter
+# SPDX-FileCopyrightText: Copyright 2026 crueter
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # specify full path if dupes may exist
-EXCLUDE_FILES=""
+EXCLUDE_FILES="tools/cpm lib"
 
 # license header constants, please change when needed :))))
-YEAR=2025
+YEAR=2026
 HOLDER="crueter"
 LICENSE="GPL-3.0-or-later"
 

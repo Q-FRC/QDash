@@ -1,7 +1,8 @@
 qt_add_executable(${QDASH_NAME}
     main.cpp
     ${QRC_FILES}
-    ${RCS_FILE})
+    ${RCS_FILE}
+    QDashApplication.h QDashApplication.cpp)
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories("$<TARGET_PROPERTY:ntcore,INTERFACE_INCLUDE_DIRECTORIES>")
@@ -60,7 +61,7 @@ if(UNIX AND APPLE)
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${QDASH_NUMERIC_TAG}")
     set(MACOSX_BUNDLE_LONG_VERSION_STRING "${QDASH_NUMERIC_TAG}")
     set(MACOSX_BUNDLE_ICON_FILE ${QDASH_NAME}.icns)
-    set(MACOSX_BUNDLE_COPYRIGHT "Copyleft 2023-2025 ${QDASH_ORG}")
+    set(MACOSX_BUNDLE_COPYRIGHT "Copyleft 2023-2026 ${QDASH_ORG}")
 
     # install as bundle
     set(INSTALL_BUNDLE "full")

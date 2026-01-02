@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
@@ -9,7 +9,7 @@ import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
-import QDash.Constants
+import Carboxyl.Clover
 
 PrimitiveWidget {
     id: widget
@@ -17,7 +17,7 @@ PrimitiveWidget {
     property int item_fontSize: 100
     property color item_warningColor: "yellow"
 
-    BetterMenu {
+    Menu {
         id: switchMenu
         title: "Switch Widget..."
 
@@ -73,7 +73,7 @@ PrimitiveWidget {
         text: Math.floor(value / 60) + ":" + String((value % 60).toFixed(
                                                         0)).padStart(2, '0')
 
-        color: value < 30 ? item_warningColor : Constants.accent
+        color: value < 30 ? item_warningColor : Clover.theme.currentAccent
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
@@ -104,7 +104,6 @@ PrimitiveWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
 
                 LabeledSpinBox {
                     Layout.fillWidth: true

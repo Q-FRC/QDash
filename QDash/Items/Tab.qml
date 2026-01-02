@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
-// SPDX-License-Identifier: GPL-3.0-or-later
 
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.4
@@ -8,7 +8,7 @@ import QtQuick.Layouts 6.4
 import Qt.labs.qmlmodels
 import QtQml.Models
 
-import QDash.Constants
+import Carboxyl.Clover
 import QDash.Native.Models
 import QDash.Widgets.Primitive
 import QDash.Widgets.Sendable
@@ -17,9 +17,7 @@ import QDash.Native.Helpers
 
 Rectangle {
     id: tab
-    width: Constants.width
-    height: Constants.height
-    color: Constants.palette.bg
+    color: Clover.theme.base
 
     signal copying(point mousePos)
     signal dropped(point mousePos)

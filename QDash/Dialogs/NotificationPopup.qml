@@ -1,12 +1,10 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import QDash.Constants
-import QDash.Native.Helpers
+import Carboxyl.Clover
 
 Popup {
     id: notif
@@ -14,12 +12,12 @@ Popup {
 
     closePolicy: "NoAutoClose"
 
-    width: notificationHelper.width
-    height: notificationHelper.height > 0 ? notificationHelper.height : implicitContentHeight + 20
+    width: NotificationHelper.width
+    height: NotificationHelper.height > 0 ? NotificationHelper.height : implicitContentHeight + 20
 
-    property string level: notificationHelper.level
-    property string title: notificationHelper.title
-    property string text: notificationHelper.text
+    property string level: NotificationHelper.level
+    property string title: NotificationHelper.title
+    property string text: NotificationHelper.text
 
     enter: Transition {
         NumberAnimation {
@@ -45,7 +43,7 @@ Popup {
         id: progClose
         target: prog
         property: "value"
-        duration: notificationHelper.displayTime >= 0 ? notificationHelper.displayTime : 0
+        duration: NotificationHelper.displayTime >= 0 ? NotificationHelper.displayTime : 0
 
         from: 1.0
         to: 0.0
@@ -54,20 +52,21 @@ Popup {
     }
 
     onOpened: progClose.start()
-    Component.onCompleted: notificationHelper.onReady.connect(() => {
-                                                                  progClose.stop()
-                                                                  prog.value = 1.0
-                                                                  open()
-                                                                  progClose.start()
-                                                              })
+    Component.onCompleted: {
+        NotificationHelper.onReady.connect(() => {
+                                               progClose.stop()
+                                               prog.value = 1.0
+                                               open()
+                                               progClose.start()
+                                           })
+    }
 
     background: Rectangle {
         id: back
 
-        topLeftRadius: 10
-        topRightRadius: 10
+        radius: 3
 
-        color: Constants.palette.dialogBg
+        color: Clover.theme.alternateBase
 
         MouseArea {
             anchors.fill: back
@@ -90,7 +89,7 @@ Popup {
 
             background: Rectangle {
                 radius: 10
-                color: Constants.palette.dialogBg
+                color: Clover.theme.alternateBase
                 implicitWidth: notif.width
                 implicitHeight: 5
             }
@@ -103,7 +102,7 @@ Popup {
                     width: prog.visualPosition * parent.width
                     height: parent.height
                     radius: 10
-                    color: Constants.accent
+                    color: Clover.theme.currentAccent
                 }
             }
         }
@@ -127,7 +126,7 @@ Popup {
             Layout.fillHeight: true
             Layout.preferredWidth: 2
 
-            color: Constants.palette.text
+            color: Clover.theme.text
         }
 
         ColumnLayout {
@@ -141,7 +140,7 @@ Popup {
                     bold: true
                 }
 
-                color: Constants.palette.text
+                color: Clover.theme.text
 
                 Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                 leftPadding: 10
@@ -157,7 +156,7 @@ Popup {
 
                 font.pixelSize: 14
 
-                color: Constants.palette.text
+                color: Clover.theme.text
 
                 Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                 leftPadding: 10

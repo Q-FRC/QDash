@@ -5,7 +5,6 @@ qt6_add_qml_module(QDashQmlItems
     URI QDash.Items
     VERSION 1.0
     QML_FILES
-    BetterMenu.qml
     IconButton.qml
     MainScreen.qml
     RadialGauge.qml

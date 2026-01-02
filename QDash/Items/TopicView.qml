@@ -1,16 +1,14 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
 
-import QDash.Constants
-import QDash.Fields
+import Carboxyl.Contour
 
 Row {
     id: tv
-    z: 5
+    z: 25
 
     property alias menuAnim: menuAnim
 
@@ -40,6 +38,8 @@ Row {
         addWidget(name, topic, type)
     }
 
+    // FIXME(crueter): stuff lower in the stacking order conflicts with this (??)
+    // change DragHandler -> MousEArea?
     Rectangle {
         id: topicView
         radius: 10
@@ -47,13 +47,13 @@ Row {
         width: parent.width - 40
         height: parent.height
 
-        color: Constants.palette.menu
+        color: palette.base
         border {
-            color: Constants.palette.menuBorder
+            color: palette.windowText
             width: 3
         }
 
-        BetterTextField {
+        CarboxylLabeledTextField {
             id: search
 
             anchors {
@@ -67,11 +67,9 @@ Row {
 
             font.pixelSize: 16
 
-            placeholderText: "Search"
+            label: "Search"
 
-            onTextEdited: {
-                topicsSorted.setFilterWildcard("*" + text + "*")
-            }
+            onTextEdited: topicsSorted.setFilterWildcard("*" + text + "*")
         }
 
         // modified from Qt's example TreeView
@@ -165,9 +163,7 @@ Row {
                 Rectangle {
                     id: background
                     anchors.fill: parent
-                    color: row === treeView.currentRow ? palette.highlight : Constants.palette.menuItem
-                    opacity: (treeView.alternatingRows
-                              && row % 2 !== 0) ? 0.3 : 0.1
+                    color: row === treeView.currentRow ? palette.highlight : (treeView.alternatingRows && row % 2 !== 0) ? palette.base : palette.alternateBase
                 }
 
                 Label {
@@ -176,7 +172,6 @@ Row {
                     anchors.verticalCenter: parent.verticalCenter
                     visible: isTreeNode && hasChildren
                     text: "▶"
-                    color: Constants.palette.text
 
                     TapHandler {
                         onSingleTapped: {
@@ -187,7 +182,7 @@ Row {
                         }
                     }
 
-                    font.pixelSize: 17
+                    font.pixelSize: 16
                 }
 
                 Label {
@@ -198,27 +193,24 @@ Row {
                     clip: true
                     text: model.name
 
-                    color: Constants.palette.text
-
-                    font.pixelSize: 17
+                    font.pixelSize: 16
                 }
 
                 Label {
                     id: typeLabel
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
+                    anchors.rightMargin: 5
                     clip: true
                     text: model.type
 
-                    color: Constants.palette.text
-
-                    font.pixelSize: 17
+                    font.pixelSize: 16
                 }
             }
         }
     }
 
-    Button {
+    ToolButton {
         id: button
         text: closedText
 
@@ -235,24 +227,6 @@ Row {
                 close()
                 text = closedText
             }
-        }
-
-        contentItem: Text {
-            font: parent.font
-
-            text: parent.text
-            color: Constants.palette.text
-
-            width: parent.width
-            height: parent.height
-
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-        }
-
-        background: Rectangle {
-            anchors.fill: parent
-            color: Constants.palette.dialogBg
         }
     }
 }

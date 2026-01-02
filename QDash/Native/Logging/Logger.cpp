@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "Logger.h"
 #include "Misc/Constants.h"
 
@@ -8,8 +11,14 @@ Logger::Logger(QObject *parent) : QObject{parent}
 {
     QDir dir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     dir.mkpath(".");
-    QString filename = QString("QDash-%1.log").arg(QDateTime::currentDateTime().toString(m_format));
-    m_logFile.setFileName(dir.absoluteFilePath(filename));
+    QString filename = QString("QDash.log");
+    QString abs = dir.absoluteFilePath(filename);
+
+    if (QFile::exists(abs)) {
+        QFile::rename(abs, QString("%1.%2").arg(abs, "old"));
+    }
+
+    m_logFile.setFileName(abs);
 }
 
 void Logger::log(const QString &level, const QString &subsystem, const QString &message)
@@ -20,6 +29,8 @@ void Logger::log(const QString &level, const QString &subsystem, const QString &
             return;
         }
     }
+
+    // TODO: use fmt instead
 
     QList<QByteArray> data;
     data << QDateTime::currentDateTime().toString(m_format).toUtf8();

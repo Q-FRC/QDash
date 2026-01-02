@@ -1,21 +1,21 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.4
 import QtQuick.Dialogs
 
-import QDash.Constants
-import QDash.Dialogs
+import Carboxyl.Clover
+import Carboxyl.Contour
+
 import QDash.Config
 
 NativeDialog {
     id: tabConfigDialog
 
     title: "Configure Tab"
-    height: 270
-    width: 400
+    height: cols.implicitHeight + footer.height + 20
+    width: 250
 
     property int columns
     property int rows
@@ -46,12 +46,13 @@ NativeDialog {
     }
 
     ColumnLayout {
+        id: cols
         anchors.fill: parent
-        spacing: 5
+        anchors.margins: 10
+        spacing: 15
 
         RowLayout {
             Layout.fillWidth: true
-            uniformCellSizes: true
 
             LabeledSpinBox {
                 Layout.fillWidth: true
@@ -83,6 +84,8 @@ NativeDialog {
             Layout.fillWidth: true
 
             label: "Tab Name"
+
+            horizontalAlignment: Text.AlignHCenter
 
             bindTarget: tabConfigDialog
             bindedProperty: "name"

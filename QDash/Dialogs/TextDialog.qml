@@ -1,17 +1,17 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick
 import QtQuick.Controls
 
-import QDash.Constants
+import Carboxyl.Clover
+import Carboxyl.Contour
 
 NativeDialog {
     id: dialog
     required property string text
 
     Text {
-        color: Constants.palette.text
+        color: Clover.theme.text
         font.pixelSize: (14)
 
         text: dialog.text

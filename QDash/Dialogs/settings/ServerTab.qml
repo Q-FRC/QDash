@@ -1,12 +1,11 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.4
 import QtQuick.Dialogs
 
-import QDash.Constants
+import Carboxyl.Clover
 import QDash.Config
 
 ColumnLayout {
@@ -15,59 +14,62 @@ ColumnLayout {
     function accept() {
         team.accept()
         ip.accept()
-        settings.mode = mode.currentIndex
+        QDashSettings.mode = mode.currentIndex
     }
 
     function open() {
         team.open()
         ip.open()
-        mode.currentIndex = settings.mode
+        mode.currentIndex = QDashSettings.connMode
     }
 
-    RowLayout {
-        Layout.leftMargin: 4
-        Layout.fillWidth: true
+    LabeledSpinBox {
+        id: team
+        implicitHeight: 45
+        implicitWidth: 350
+        Layout.alignment: Qt.AlignCenter
+        font.pixelSize: 20
 
-        LabeledSpinBox {
-            implicitWidth: 230
-            id: team
+        from: 0
+        to: 99999
 
-            from: 0
-            to: 99999
+        label: "Team Number"
 
-            label: "Team Number"
+        bindedProperty: "teamNumber"
+        bindTarget: QDashSettings
+    }
 
-            bindedProperty: "team"
-            bindTarget: settings
-        }
+    LabeledTextField {
+        id: ip
+        implicitHeight: 45
+        implicitWidth: 350
+        Layout.alignment: Qt.AlignCenter
+        font.pixelSize: 20
 
-        LabeledTextField {
-            implicitWidth: 230
-            id: ip
+        label: "IP Address"
 
-            label: "IP Address"
+        horizontalAlignment: "AlignHCenter"
 
-            horizontalAlignment: "AlignHCenter"
+        bindedProperty: "ip"
+        bindTarget: QDashSettings
 
-            bindedProperty: "ip"
-            bindTarget: settings
-
-            validator: RegularExpressionValidator {
-                regularExpression: /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/
-            }
+        validator: RegularExpressionValidator {
+            regularExpression: /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/
         }
     }
 
     LabeledComboBox {
         id: mode
-        implicitHeight: 50
-        implicitWidth: 250
+        implicitHeight: 45
+        implicitWidth: 350
+        Layout.alignment: Qt.AlignCenter
+        font.pixelSize: 20
 
         label: "Connection Mode"
 
         bindedProperty: "mode"
-        bindTarget: settings
+        bindTarget: QDashSettings
 
-        choices: ["IP Address", "Team Number", "Driver Station"]
+        model: ["IP Address", "Team Number", "Driver Station"]
     }
 }

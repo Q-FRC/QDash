@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
 
-import QDash.Constants
+import Carboxyl.Clover
 
 BaseWidget {
     id: widget
@@ -18,7 +18,7 @@ BaseWidget {
 
     function setValue(value) {
         valid = false
-        topicStore.setValue(trueTopic, value)
+        TopicStore.setValue(trueTopic, value)
     }
 
     function updateTopic(ntTopic, ntValue) {
@@ -29,19 +29,19 @@ BaseWidget {
             update(ntValue)
 
             valid = true
-            if (settings.disableWidgets)
+            if (QDashSettings.disableWidgets)
                 connected = true
         }
     }
 
     Connections {
-        target: topicStore
+        target: TopicStore
 
         function onConnected(conn) {
             if (conn) {
-                topicStore.forceUpdate(widget.trueTopic)
+                TopicStore.forceUpdate(widget.trueTopic)
             } else {
-                if (settings.disableWidgets)
+                if (QDashSettings.disableWidgets)
                     widget.connected = false
                 widget.valid = false
             }
@@ -49,24 +49,24 @@ BaseWidget {
     }
 
     Component.onCompleted: {
-        topicStore.topicUpdate.connect(updateTopic)
+        TopicStore.topicUpdate.connect(updateTopic)
         item_topic = model.topic
 
-        topicStore.subscribe(trueTopic)
+        TopicStore.subscribe(trueTopic)
     }
 
     Component.onDestruction: {
-        if (topicStore !== null) {
-            topicStore.topicUpdate.disconnect(updateTopic)
-            topicStore.unsubscribe(trueTopic)
+        if (TopicStore !== null) {
+            TopicStore.topicUpdate.disconnect(updateTopic)
+            TopicStore.unsubscribe(trueTopic)
         }
     }
 
     onItem_topicChanged: {
-        topicStore.unsubscribe(topic + suffix)
-        topicStore.subscribe(trueTopic)
+        TopicStore.unsubscribe(topic + suffix)
+        TopicStore.subscribe(trueTopic)
         model.topic = item_topic
 
-        topicStore.forceUpdate(trueTopic)
+        TopicStore.forceUpdate(trueTopic)
     }
 }

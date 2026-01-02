@@ -1,17 +1,22 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick
+import QtQuick.Controls
 
-import QDash.Constants
+import Carboxyl.Contour
 
-TextDialog {
+MessageDialog {
     title: "About QDash"
 
-    width: 325
-    height: 375
+    textFormat: Text.RichText
+
+    width: 400
+    height: 275
 
     text: "<p>QDash is a reliable, high-performance FRC dashboard with "
           + "a low resource cost, suited for low-end computers and for maximizing "
           + "Driver Station resources.</p>" + buildConfig.buildInfo(
-              ) + "Copyleft 2023-2025 crueter"
+              ) + "Copyleft 2023-2026 crueter"
 
-    standardButtons: "Close"
+    standardButtons: Dialog.Close
 }

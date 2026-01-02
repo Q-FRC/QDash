@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "TabListModel.h"
 
 #include <QFile>
@@ -128,8 +131,8 @@ void TabListModel::save(const QString &filename)
 QJsonDocument TabListModel::saveObject() const
 {
     QJsonObject doc;
-    doc.insert("mode", m_settings->mode());
-    doc.insert("team", m_settings->team());
+    doc.insert("mode", m_settings->connMode());
+    doc.insert("team", m_settings->teamNumber());
     doc.insert("ip", m_settings->ip());
 
     QJsonArray arr;
@@ -154,7 +157,7 @@ void TabListModel::loadObject(const QJsonDocument &doc)
 {
     QJsonObject ob = doc.object();
 
-    m_settings->reconnectServer();
+    m_settings->reconnect();
 
     QJsonArray arr = ob.value("tabs").toArray();
 

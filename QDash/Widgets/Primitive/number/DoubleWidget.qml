@@ -1,15 +1,14 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
- 
+
 import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
-import QDash.Constants
+import Carboxyl.Clover
 
 PrimitiveWidget {
     id: widget
@@ -20,7 +19,7 @@ PrimitiveWidget {
     property double item_lowerBound: -100000.0
     property double item_upperBound: 100000.0
 
-    BetterMenu {
+    Menu {
         id: switchMenu
         title: "Switch Widget..."
 
@@ -77,13 +76,14 @@ PrimitiveWidget {
             rightMargin: 10
         }
 
-        BetterDoubleSpinBox {
+        DoubleSpinBox {
             id: spin
 
             font.pixelSize: item_fontSize
 
-            valid: widget.valid
-            connected: widget.connected
+            // TODO: account for the setting or something
+            enabled: widget.connected
+            editable: true
 
             value: 0
             from: item_lowerBound
@@ -116,7 +116,6 @@ PrimitiveWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
 
                 LabeledSpinBox {
                     Layout.fillWidth: true
@@ -146,7 +145,6 @@ PrimitiveWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
 
                 LabeledDoubleSpinBox {
                     Layout.fillWidth: true

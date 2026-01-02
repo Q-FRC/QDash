@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
@@ -7,7 +7,7 @@ import QtQuick.Layouts
 import QtQuick.Shapes 2.15
 import QtQuick.Dialogs
 
-import QDash.Constants
+import Carboxyl.Clover
 
 RowLayout {
     required property string label

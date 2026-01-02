@@ -14,6 +14,6 @@ qt6_add_qml_module(QDashQmlConfig
         LabeledSpinBox.qml
         LabeledTextField.qml
         SectionHeader.qml
-        TitleComponent.qml)
+    )
 
 QDashModule(QDashQmlConfig)

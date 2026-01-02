@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
@@ -9,7 +9,7 @@ import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
-import QDash.Constants
+import Carboxyl.Clover
 
 import QFDFlags
 
@@ -49,7 +49,7 @@ SendableWidget {
         }
         case "FMSControlData":
         {
-            let word = topicStore.toWord(value)
+            let word = TopicStore.toWord(value)
 
             let state = ""
 
@@ -105,7 +105,7 @@ SendableWidget {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
 
-                color: Constants.palette.text
+                color: Clover.theme.text
 
                 property int matchNumber: 0
                 property string matchType: "Unknown"
@@ -122,7 +122,7 @@ SendableWidget {
 
         Text {
             Layout.fillWidth: true
-            color: Constants.palette.text
+            color: Clover.theme.text
 
             property string gameSpecificMessage: ""
 
@@ -139,7 +139,7 @@ SendableWidget {
 
         Text {
             Layout.fillWidth: true
-            color: Constants.palette.text
+            color: Clover.theme.text
 
             property string state: "Unknown"
 
@@ -168,7 +168,6 @@ SendableWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
 
                 LabeledSpinBox {
                     Layout.fillWidth: true

@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Shapes
 
-import QDash.Constants
+import Carboxyl.Clover
 
 Rectangle {
     id: gauge
@@ -56,7 +56,7 @@ Rectangle {
                 width: 2
                 height: 10
 
-                color: Constants.palette.text
+                color: Clover.theme.text
 
                 anchors {
                     top: parent.top
@@ -66,7 +66,7 @@ Rectangle {
             }
 
             Text {
-                color: Constants.palette.text
+                color: Clover.theme.text
 
                 text: (gauge.minValue + index * (gauge.maxValue - gauge.minValue)
                        / gauge.numTicks).toFixed(1)
@@ -138,7 +138,7 @@ Rectangle {
 
         ShapePath {
             strokeWidth: 5
-            strokeColor: Constants.accent
+            strokeColor: Clover.theme.currentAccent
             fillColor: "transparent"
 
             capStyle: ShapePath.FlatCap

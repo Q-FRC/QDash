@@ -1,6 +1,9 @@
+
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick
 
-import QDash.Constants
+import Carboxyl.Clover
 
 Rectangle {
     id: rem
@@ -8,7 +11,7 @@ Rectangle {
     signal clicked
     signal activated
 
-    color: mouseArea.containsMouse ? "#82bbff" : (ListView.isCurrentItem ? "#00aaff" : Constants.palette.dialogBg)
+    // color: mouseArea.containsMouse ? "#82bbff" : (ListView.isCurrentItem ? "#00aaff" : Constants.palette.dialogBg)
     radius: 5
     opacity: 1
 
@@ -19,7 +22,7 @@ Rectangle {
     }
 
     border {
-        color: Constants.palette.text
+        color: Clover.theme.text
         width: 1
     }
 
@@ -37,7 +40,7 @@ Rectangle {
         anchors.fill: parent
         anchors.leftMargin: 20
 
-        color: Constants.palette.text
+        color: Clover.theme.text
         text: model.name
         font.pixelSize: Math.round(18)
 

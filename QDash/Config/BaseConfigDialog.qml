@@ -1,15 +1,17 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick
 import QtQuick.Controls
 
-import QDash.Constants
-import QDash.Dialogs
+import Carboxyl.Clover
+
+import Carboxyl.Contour
 
 NativeDialog {
     required property Item content
     id: config
 
+    height: content.implicitHeight + footer.height + 10
     width: 550
 
     title: "Configure Widget"
@@ -21,14 +23,15 @@ NativeDialog {
 
         anchors {
             fill: parent
+
+            margins: 5
         }
 
         onWidthChanged: contentWidth = width - effectiveScrollBarWidth
-
         contentChildren: [content]
     }
 
-    function openDialog() {
+    function open() {
         // TODO: This should be recursive but also idc
         for (var i = 0; i < layout.children.length; ++i) {
             var child = layout.children[i]
@@ -46,7 +49,7 @@ NativeDialog {
             }
         }
 
-        open()
+        show()
     }
 
     onAccepted: {

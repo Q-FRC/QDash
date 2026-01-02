@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef CONNMANAGER_H
 #define CONNMANAGER_H
 
@@ -27,11 +30,8 @@ private:
     bool m_connected;
 
     Q_PROPERTY(QString title READ title NOTIFY titleChanged FINAL)
-
     Q_PROPERTY(bool connected READ connected WRITE setConnected NOTIFY connectedChanged FINAL)
-
     Q_PROPERTY(QString status READ status NOTIFY statusChanged FINAL)
-
     Q_PROPERTY(QString address READ address WRITE setAddress NOTIFY addressChanged FINAL)
 
 signals:

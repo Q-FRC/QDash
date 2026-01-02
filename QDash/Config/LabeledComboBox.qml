@@ -1,29 +1,18 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
+import Carboxyl.Contour
 
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import QtQuick.Shapes 2.15
-
-import QDash.Constants
-import QDash.Fields
-
-BetterComboBox {
+CarboxylLabeledComboBox {
     /** what property to bind to */
     required property string bindedProperty
 
     /** the target to bind the property to */
-    required property var bindTarget
-
-    /** choices for the combobox */
-    required property var choices
+    property var bindTarget: widget
 
     id: combo
-    model: choices
     font.pixelSize: 18
 
-    implicitHeight: 40
+    implicitHeight: 38
 
     function open() {
         currentIndex = indexOfValue(bindTarget[bindedProperty])

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "TopicListModel.h"
 
 #include "Misc/Globals.h"
@@ -22,8 +25,8 @@ QList<QStandardItem *> recursiveSearch(QStandardItem *item, const QString &topic
     return foundItems;
 }
 
-TopicListModel::TopicListModel(TopicStore &store, QObject *parent)
-    : QStandardItemModel(parent), m_store(&store)
+TopicListModel::TopicListModel(TopicStore *store, QObject *parent)
+    : QStandardItemModel(parent), m_store(store)
 {
     QHash<int, QByteArray> rez = QStandardItemModel::roleNames();
     rez.insert(TLMRoleTypes::NAME, "name");

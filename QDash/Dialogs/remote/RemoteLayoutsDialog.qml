@@ -1,12 +1,13 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtCore
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs as D
 
-import QDash.Constants
-import QDash.Dialogs
+import Carboxyl.Clover
+import Carboxyl.Contour
+
 import QDash.Native.Models
 
 NativeDialog {
@@ -18,12 +19,6 @@ NativeDialog {
     height: 350
 
     title: "Remote Layouts"
-
-    background: Rectangle {
-        color: Constants.palette.dialogBg
-
-        radius: 12
-    }
 
     standardButtons: Dialog.Ok | Dialog.Close
 
@@ -45,14 +40,12 @@ NativeDialog {
             fail.open()
     }
 
-    TextDialog {
+    MessageDialog {
         width: 350
         height: 350
 
-        modal: Qt.WindowModal
-
         id: fail
-        standardButtons: "Ok"
+        standardButtons: Dialog.Ok
         title: "Error"
         text: "You must be connected to a robot to download remote layouts."
 

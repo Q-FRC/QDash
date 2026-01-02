@@ -1,27 +1,44 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 6.4
 import QtQuick.Controls 6.4
 import QtQuick.Layouts 6.4
 
-import QDash.Constants
+import Carboxyl.Clover
 import QDash.Dialogs
+
+import Carboxyl.Contour
+import Carboxyl.Clover
 
 NativeDialog {
     id: serverDialog
 
-    implicitWidth: 575
-    implicitHeight: 475
+    width: 575
+    height: 475
     title: "Settings"
+
+    MessageDialog {
+        id: warn
+        text: qsTr("To apply the new style, QDash will now close and re-open.")
+        icon: CarboxylEnums.Warning
+        title: qsTr("Reloading")
+        standardButtons: DialogButtonBox.Ok
+
+        onClosed: QDashApplication.reload()
+    }
 
     onAccepted: {
         server.accept()
         appearance.accept()
         misc.accept()
-        windowTab.accept()
 
-        settings.reconnectServer()
+        QDashSettings.reconnect()
+
+        if (QDashApplication.shouldReload) {
+            QDashApplication.shouldReload = false
+
+            warn.show()
+        }
     }
 
     standardButtons: Dialog.Ok | Dialog.Cancel
@@ -31,13 +48,11 @@ NativeDialog {
         sequence: Qt.Key_Escape
     }
 
-    function openDialog() {
-        open()
+    function open() {
+        show()
 
         server.open()
-        appearance.open()
         misc.open()
-        windowTab.open()
     }
 
     SwipeView {
@@ -64,18 +79,13 @@ NativeDialog {
             clip: true
         }
 
-        WindowTab {
-            id: windowTab
-            clip: true
-        }
-
         MiscTab {
             id: misc
             clip: true
         }
     }
 
-    TabBar {
+    CarboxylTabBar {
         id: tabBar
         currentIndex: swipe.currentIndex
         position: TabBar.Header
@@ -88,22 +98,57 @@ NativeDialog {
             top: parent.top
             left: parent.left
             right: parent.right
-
-            leftMargin: -24
-            rightMargin: -24
-            topMargin: -23
         }
 
-        Repeater {
-            model: ["Network", "Appearance", "Window", "Miscellaneous"]
+        contentHeight: 80
 
-            SettingsTabButton {
+        Repeater {
+            model: ["Network", "Appearance", "Miscellaneous"]
+
+            CarboxylTabButton {
                 required property string modelData
                 required property int index
 
-                label: modelData
+                id: btn
 
-                onClicked: swipe.currentIndex = index
+                text: modelData
+
+                icon.height: 40
+                icon.width: 40
+                icon.source: "qrc:/" + modelData
+
+                Component.onCompleted: resetIconColor()
+
+                function resetIconColor() {
+                    icon.color = index
+                            === tabBar.currentIndex ? Clover.theme.currentAccent : Clover.theme.text
+                }
+
+                Connections {
+                    target: tabBar
+
+                    function onCurrentIndexChanged() {
+                        btn.resetIconColor()
+                    }
+                }
+
+                Connections {
+                    target: Clover.theme
+
+                    function onCurrentAccentChanged() {
+                        btn.resetIconColor()
+                    }
+                }
+
+                Connections {
+                    target: Clover
+
+                    function onThemeChanged() {
+                        btn.resetIconColor()
+                    }
+                }
+
+                inlineIcon: false
             }
         }
     }

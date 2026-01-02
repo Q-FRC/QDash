@@ -1,10 +1,13 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "Misc/Constants.h"
 #include "Misc/Globals.h"
 #include "SettingsManager.h"
 
 SettingsManager::SettingsManager(Logger *logs, QObject *parent) : QObject{parent}, m_logs(logs) {}
 
-void SettingsManager::reconnectServer()
+void SettingsManager::reconnect()
 {
     std::string server = QString(Settings::IP).toStdString();
     int team = Settings::TeamNumber;
@@ -53,125 +56,4 @@ void SettingsManager::addRecentFile(QFile &file)
     Settings::RecentFiles = recentFiles;
 
     emit recentFilesChanged();
-}
-
-bool SettingsManager::loadRecent() const
-{
-    return Settings::LoadRecent;
-}
-
-void SettingsManager::setLoadRecent(bool newLoadRecent)
-{
-    Settings::LoadRecent = newLoadRecent;
-    emit loadRecentChanged();
-}
-
-QStringList SettingsManager::recentFiles() const
-{
-    return Settings::RecentFiles;
-}
-
-void SettingsManager::setRecentFiles(const QStringList &newRecentFiles)
-{
-    Settings::RecentFiles = newRecentFiles;
-    emit recentFilesChanged();
-}
-
-QString SettingsManager::theme() const
-{
-    return Settings::Theme;
-}
-
-void SettingsManager::setTheme(const QString &newTheme)
-{
-    Settings::Theme = newTheme;
-    emit themeChanged();
-}
-
-QString SettingsManager::accent() const
-{
-    return Settings::Accent;
-}
-
-void SettingsManager::setAccent(const QString &newAccent)
-{
-    Settings::Accent = newAccent;
-    emit accentChanged();
-}
-
-QString SettingsManager::ip() const
-{
-    return Settings::IP;
-}
-
-void SettingsManager::setIp(const QString &newIp)
-{
-    Settings::IP = newIp;
-    emit ipChanged();
-}
-
-int SettingsManager::team() const
-{
-    return Settings::TeamNumber;
-}
-
-void SettingsManager::setTeam(int newTeam)
-{
-    Settings::TeamNumber = newTeam;
-    emit teamChanged();
-}
-
-int SettingsManager::mode() const
-{
-    return Settings::ConnMode;
-}
-
-void SettingsManager::setMode(int newMode)
-{
-    Settings::ConnMode = newMode;
-    emit modeChanged();
-}
-
-double SettingsManager::scale() const
-{
-    return Settings::Scale;
-}
-
-void SettingsManager::setScale(double newScale)
-{
-    Settings::Scale = newScale;
-    emit scaleChanged();
-}
-
-bool SettingsManager::resizeToDS() const
-{
-    return Settings::ResizeToDS;
-}
-
-void SettingsManager::setResizeToDS(bool newResizeToDS)
-{
-    Settings::ResizeToDS = newResizeToDS;
-    emit resizeToDSChanged();
-}
-
-int SettingsManager::logLevel() const
-{
-    return Settings::LogLevel;
-}
-
-void SettingsManager::setLogLevel(int newLogLevel)
-{
-    Settings::LogLevel = newLogLevel;
-    emit logLevelChanged();
-}
-
-bool SettingsManager::disableWidgets() const
-{
-    return Settings::DisableWidgets;
-}
-
-void SettingsManager::setDisableWidgets(bool newDisableWidgets)
-{
-    Settings::DisableWidgets = newDisableWidgets;
-    emit disableWidgetsChanged();
 }

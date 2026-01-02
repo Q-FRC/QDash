@@ -1,6 +1,5 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 6.2
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.4
@@ -10,7 +9,7 @@ import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
-import QDash.Constants
+import Carboxyl.Clover
 
 PrimitiveWidget {
     id: widget
@@ -62,18 +61,18 @@ PrimitiveWidget {
     }
 
     function unsubscribeMirror() {
-        if (topicStore !== null) {
-            topicStore.topicUpdate.disconnect(updateMirror)
-            topicStore.unsubscribe("/FMSInfo/IsRedAlliance")
+        if (TopicStore !== null) {
+            TopicStore.topicUpdate.disconnect(updateMirror)
+            TopicStore.unsubscribe("/FMSInfo/IsRedAlliance")
         }
     }
 
     onItem_mirrorForRedAllianceChanged: {
         if (item_mirrorForRedAlliance) {
-            topicStore.topicUpdate.connect(updateMirror)
-            topicStore.subscribe("/FMSInfo/IsRedAlliance")
+            TopicStore.topicUpdate.connect(updateMirror)
+            TopicStore.subscribe("/FMSInfo/IsRedAlliance")
 
-            topicStore.forceUpdate("/FMSInfo/IsRedAlliance")
+            TopicStore.forceUpdate("/FMSInfo/IsRedAlliance")
         } else {
             unsubscribeMirror()
             mirrorField = false
@@ -152,6 +151,7 @@ PrimitiveWidget {
             id: path
             strokeWidth: 3
             strokeColor: item_robotShape === "Robot" ? "light green" : "transparent"
+            fillColor: "transparent"
 
             PathLine {
                 id: start
@@ -216,7 +216,6 @@ PrimitiveWidget {
 
             RowLayout {
                 Layout.fillWidth: true
-                uniformCellSizes: true
 
                 LabeledComboBox {
                     id: robotShapeField
@@ -228,7 +227,7 @@ PrimitiveWidget {
                     bindedProperty: "item_robotShape"
                     bindTarget: widget
 
-                    choices: robotShapeChoices
+                    model: robotShapeChoices
                 }
 
                 ColorField {
@@ -245,7 +244,6 @@ PrimitiveWidget {
 
             RowLayout {
                 Layout.fillWidth: true
-                uniformCellSizes: true
 
                 LabeledDoubleSpinBox {
                     id: robotWField
@@ -281,7 +279,6 @@ PrimitiveWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
                 Layout.fillWidth: true
 
                 LabeledCheckbox {
@@ -310,7 +307,7 @@ PrimitiveWidget {
                 Layout.fillWidth: true
 
                 label: "Field Type"
-                choices: fieldChoices
+                model: fieldChoices
 
                 bindedProperty: "item_field"
                 bindTarget: widget

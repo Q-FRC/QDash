@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
@@ -9,17 +9,17 @@ import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
-import QDash.Constants
+import Carboxyl.Clover
 
 
 PrimitiveWidget {
     id: widget
 
     property int item_fontSize: 100
-    property color item_color: Constants.accent
+    property color item_color: Clover.theme.currentAccent
     property bool item_wrap: true
 
-    BetterMenu {
+    Menu {
         id: switchMenu
         title: "Switch Widget..."
 
@@ -86,7 +86,6 @@ PrimitiveWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
 
                 LabeledSpinBox {
                     Layout.fillWidth: true
@@ -115,7 +114,6 @@ PrimitiveWidget {
                 label: "Display Settings"
             }
             RowLayout {
-                uniformCellSizes: true
 
                 ColorField {
                     Layout.fillWidth: true

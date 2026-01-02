@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
@@ -9,7 +9,7 @@ import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
-import QDash.Constants
+import Carboxyl.Clover
 
 PrimitiveWidget {
     id: widget
@@ -25,7 +25,7 @@ PrimitiveWidget {
 
     property bool item_vertical: false
 
-    BetterMenu {
+    Menu {
         id: switchMenu
         title: "Switch Widget..."
 
@@ -106,11 +106,11 @@ PrimitiveWidget {
                     width: 2
                     height: 10
 
-                    color: Constants.palette.text
+                    color: Clover.theme.text
                 }
 
                 Text {
-                    color: Constants.palette.text
+                    color: Clover.theme.text
 
                     text: (bar.from + index * (bar.to - bar.from) / item_numTicks).toFixed(
                               1) + item_suffix
@@ -132,7 +132,7 @@ PrimitiveWidget {
         Text {
             id: txt
 
-            color: Constants.palette.text
+            color: Clover.theme.text
             font.pixelSize: item_fontSize
 
             text: parent.value + item_suffix
@@ -162,7 +162,6 @@ PrimitiveWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
 
                 LabeledSpinBox {
                     Layout.fillWidth: true
@@ -192,7 +191,6 @@ PrimitiveWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
 
                 LabeledDoubleSpinBox {
                     Layout.fillWidth: true
@@ -218,7 +216,6 @@ PrimitiveWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
 
                 LabeledSpinBox {
                     Layout.fillWidth: true

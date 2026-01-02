@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtCore
 import QtQuick
@@ -6,30 +6,33 @@ import QtQuick.Controls
 import QtQuick.Dialogs
 
 import QDash.Dialogs
-import QDash.Constants
+import Carboxyl.Clover
 import QDash.Items
+
 import QDash.Native.Logging
 import QDash.Native.Helpers
 
+import Carboxyl.Clover
+
 ApplicationWindow {
     id: window
-    width: Constants.width
-    height: Constants.height
     visible: true
     title: conn.title
 
-    Material.theme: settings.theme === "light" ? Material.Light : Material.Dark
-    Material.accent: accents.qml(
-                         settings.accent) // "qml" is the Material Theme accent. Affects checkboxes, etc.
+    palette: Clover.theme
 
-    Material.roundedScale: Material.NotRounded
+    width: QDashSettings.windowWidth
+    height: QDashSettings.windowHeight
+
+    x: QDashSettings.windowX === -1 ? null : QDashSettings.windowX
+    y: QDashSettings.windowY === -1 ? null : QDashSettings.windowY
 
     property string filename: ""
     property int minWidth: 250
     property int minHeight: 250
 
     function dsResize() {
-        if (settings.resizeToDS) {
+        if (QDashSettings.resizeToDS) {
             logs.debug("UI", "DS Resize")
 
             height = platformHelper.screenHeight() - 236
@@ -69,24 +72,31 @@ ApplicationWindow {
     }
 
     function saveAs() {
-        // TODO: move to AppLocalData?
-        filename = FileSelect.getSaveFileName(
-                    qsTr("Save Layout"), StandardPaths.writableLocation(
-                        StandardPaths.AppLocalDataLocation),
-                    "JSON files (*.json);;All files (*)")
+        console.log(QDashApplication.dataLocation + "/layout.json")
+        let newName = FileSelect.getSaveFileName(
+                qsTr("Save Layout"),
+                QDashApplication.dataLocation + "/layout.json",
+                "JSON files (*.json);;All files (*)")
 
-        tlm.save(filename)
+        if (newName !== "") {
+            filename = newName
+            logs.info("IO", "Saving to " + filename)
+            tlm.save(filename)
+        }
     }
 
     /** LOAD */
     function load() {
-        filename = FileSelect.getOpenFileName(
-                    qsTr("Open Layout"), StandardPaths.writableLocation(
-                        StandardPaths.AppLocalDataLocation),
-                    "JSON files (*.json);;All files (*)")
+        let newName = FileSelect.getOpenFileName(
+                qsTr("Open Layout"),
+                QDashApplication.dataLocation + "/layout.json",
+                "JSON files (*.json);;All files (*)")
 
-        logs.info("IO", "Loading file " + filename)
-        tlm.load(filename)
+        if (newName !== "") {
+            fileName = newName
+            logs.info("IO", "Loading file " + filename)
+            tlm.load(filename)
+        }
     }
 
     /** SERVER SETTINGS */
@@ -118,10 +128,10 @@ ApplicationWindow {
                 shortcut: "Ctrl+O"
             }
 
-            BetterMenu {
+            Menu {
                 title: qsTr("&Recent Files...")
                 Repeater {
-                    model: settings.recentFiles
+                    model: QDashSettings.recentFiles
 
                     delegate: MenuItem {
                         text: qsTr("&" + index + ". " + platformHelper.baseName(
@@ -157,10 +167,10 @@ ApplicationWindow {
             Action {
                 text: qsTr("&Settings")
                 shortcut: "Ctrl+,"
-                onTriggered: settingsDialog.openDialog()
+                onTriggered: settingsDialog.open()
             }
 
-            BetterMenu {
+            Menu {
                 title: qsTr("&Extra Widgets")
 
                 Repeater {
@@ -206,23 +216,35 @@ ApplicationWindow {
                 text: qsTr("&About QDash")
                 onTriggered: about.open()
             }
+
+            Action {
+                text: qsTr("About &Qt")
+                onTriggered: QDashApplication.aboutQt()
+            }
         }
     }
 
     /** THE REST */
     Component.onCompleted: {
-        Constants.setTheme(settings.theme)
-        Constants.setAccent(settings.accent)
+        Clover.accent = Clover.accents[QDashSettings.accent]
+        Clover.theme = Clover.themes[QDashSettings.theme]
 
         dsResize()
-        settings.resizeToDSChanged.connect(dsResize)
+        QDashSettings.resizeToDSChanged.connect(dsResize)
 
-        if (settings.loadRecent && settings.recentFiles.length > 0) {
-            filename = settings.recentFiles[0]
+        if (QDashSettings.loadRecent && QDashSettings.recentFiles.length > 0) {
+            filename = QDashSettings.recentFiles[0]
             if (filename === "" || filename === null)
                 return
             tlm.load(filename)
         }
+    }
+
+    Component.onDestruction: {
+        QDashSettings.windowWidth = width
+        QDashSettings.windowHeight = height
+        QDashSettings.windowY = y
+        QDashSettings.windowX = x
     }
 
     MainScreen {
@@ -236,12 +258,11 @@ ApplicationWindow {
     }
 
     /** Status Bar */
-    // TODO: Remove leading file:///
     ToolBar {
         id: toolbar
 
         background: Rectangle {
-            color: Constants.accent
+            color: Clover.theme.highlight
         }
 
         anchors {
@@ -261,7 +282,7 @@ ApplicationWindow {
 
             text: "Status: " + conn.status
 
-            color: Constants.palette.text
+            color: Clover.theme.text
             font.pixelSize: 16
         }
 
@@ -270,28 +291,10 @@ ApplicationWindow {
                 centerIn: parent
             }
 
-            // TODO: Remove file://
             text: filename === "" ? "No File" : filename
 
-            color: Constants.palette.text
+            color: Clover.theme.text
             font.pixelSize: 16
-        }
-    }
-
-    /* RESIZE ANCHORS */
-    Repeater {
-        model: [Qt.RightEdge, Qt.LeftEdge, Qt.TopEdge, Qt.BottomEdge, Qt.RightEdge
-            | Qt.TopEdge, Qt.RightEdge | Qt.BottomEdge, Qt.LeftEdge
-            | Qt.TopEdge, Qt.LeftEdge | Qt.BottomEdge]
-
-        ResizeAnchor {
-            required property int modelData
-            direction: modelData
-
-            mouseArea.onPressed: window.startSystemResize(direction)
-            mouseArea.drag.target: null
-
-            divisor: 80
         }
     }
 }

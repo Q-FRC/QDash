@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright 2025 crueter
+# SPDX-FileCopyrightText: Copyright 2026 crueter
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 cmake_minimum_required(VERSION 3.22)
@@ -31,7 +31,7 @@ option(USE_CCACHE OFF "Change some build settings to improve ccache reliability.
 
 set(QT_NO_PRIVATE_MODULE_WARNING ON)
 set(QDASH_QT_COMPONENTS Core Quick QuickControls2 Widgets)
-set(QDASH_QT_OPTIONAL GuiPrivate QuickTemplates2Private)
+set(QDASH_QT_OPTIONAL GuiPrivate QuickTemplates2Private QuickPrivate)
 set(QDASH_QT_LIBRARIES Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Widgets Carboxyl::Carboxyl)
 
 if (QDASH_WEBVIEW)

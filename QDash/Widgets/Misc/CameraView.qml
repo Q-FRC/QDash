@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
@@ -9,7 +9,7 @@ import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
-import QDash.Constants
+import Carboxyl.Clover
 
 import QtMultimedia
 
@@ -202,7 +202,7 @@ PrimitiveWidget {
                 Text {
                     font.pixelSize: 16
                     text: "Resolution"
-                    color: Constants.palette.text
+                    color: Clover.theme.text
                 }
 
                 LabeledSpinBox {
@@ -218,7 +218,7 @@ PrimitiveWidget {
                 Text {
                     font.pixelSize: 18
                     text: "x"
-                    color: Constants.palette.text
+                    color: Clover.theme.text
                 }
 
                 LabeledSpinBox {
@@ -239,7 +239,7 @@ PrimitiveWidget {
                 Text {
                     font.pixelSize: 16
                     text: "Quality"
-                    color: Constants.palette.text
+                    color: Clover.theme.text
                 }
 
                 Slider {

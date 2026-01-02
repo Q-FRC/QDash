@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
-// SPDX-License-Identifier: GPL-3.0-or-later
 
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -9,7 +9,7 @@ import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
-import QDash.Constants
+import Carboxyl.Clover
 
 SendableWidget {
     id: widget
@@ -57,9 +57,6 @@ SendableWidget {
         SearchableComboBox {
             id: combo
 
-            valid: widget.valid
-            connected: widget.connected
-
             anchors {
                 verticalCenter: parent.verticalCenter
 
@@ -74,7 +71,7 @@ SendableWidget {
             property int previousIndex: -1
 
             Connections {
-                target: topicStore
+                target: TopicStore
 
                 function onConnected(conn) {
                     if (conn) {
@@ -137,7 +134,6 @@ SendableWidget {
             }
 
             RowLayout {
-                uniformCellSizes: true
 
                 LabeledSpinBox {
                     Layout.fillWidth: true

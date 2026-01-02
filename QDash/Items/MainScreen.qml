@@ -1,20 +1,19 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtCore
 import QtQuick 6.4
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.4
 import QtQuick.Dialogs
 
-import QDash.Constants
+import Carboxyl.Clover
 import QDash.Dialogs
+
+import Carboxyl.Contour
 
 Rectangle {
     id: mainScreen
-    width: Constants.width
-    height: Constants.height
-    color: Constants.palette.bg
+    color: Clover.theme.base
 
     property bool readyDragging
     property var clipboard: null
@@ -41,7 +40,7 @@ Rectangle {
         if (currentTab() !== null) {
             let w = currentTab().latestWidget
             w.x = pos.x
-            w.y = pos.y - (fromList ? tabs.height : 0)
+            w.y = pos.y - (fromList ? tabs.height + 5 : 0)
 
             w.width = currentTab().colWidth - 16
             w.height = currentTab().rowWidth - 16
@@ -87,6 +86,8 @@ Rectangle {
 
     TopicView {
         id: tv
+
+        z: 25
 
         onAddWidget: (title, topic, type) => {
                          currentTab().add(title, topic, type)
@@ -134,7 +135,7 @@ Rectangle {
     }
 
     function newTab() {
-        tabNameDialog.openDialog()
+        tabNameDialog.open()
     }
 
     function setTabConfig() {
@@ -175,14 +176,14 @@ Rectangle {
 
     /** CONTENT */
     Text {
-        color: Constants.palette.text
+        color: Clover.theme.text
         font.pixelSize: 20
 
         horizontalAlignment: Text.AlignHCenter
 
         text: "Welcome to QDash!\n" + "To get started, connect to your robot WiFi\n"
-              + "and go to Settings (Ctrl+Comma).\n" + "Add a tab with Ctrl+T, and add a widget\n"
-              + "through the arrow menu on the left."
+              + "and go to QDashSettings (Ctrl+Comma).\n"
+              + "Add a tab with Ctrl+T, and add a widget\n" + "through the arrow menu on the left."
 
         anchors.centerIn: parent
         z: 0
@@ -220,9 +221,9 @@ Rectangle {
         }
     }
 
-    TabBar {
+    CarboxylTabBar {
         id: tabs
-        height: 40
+        height: 45
         contentHeight: 40
 
         anchors {
@@ -242,28 +243,11 @@ Rectangle {
             id: tabRep
             model: tlm
 
-            TabButton {
+            CarboxylTabButton {
                 text: model.title
 
                 width: Math.max(100, tabs.width / 6)
                 height: 40
-
-                contentItem: Label {
-                    font.pixelSize: 18
-                    text: parent.text
-
-                    verticalAlignment: Qt.AlignVCenter
-                    horizontalAlignment: Qt.AlignHCenter
-
-                    color: index === tabs.currentIndex ? Constants.tab : Constants.palette.text
-                }
-
-                background: Rectangle {
-                    implicitWidth: parent.width
-                    topLeftRadius: 12
-                    topRightRadius: 12
-                    color: index !== tabs.currentIndex ? Constants.tab : Constants.palette.text
-                }
             }
         }
     }

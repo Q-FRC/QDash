@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtCore
@@ -10,7 +10,7 @@ import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
-import QDash.Constants
+import Carboxyl.Clover
 
 import QtWebEngine
 
@@ -20,7 +20,7 @@ BaseWidget {
     property string item_url: ""
     connected: true
 
-    BetterMenu {
+    Menu {
         id: webMenu
         title: "Web Actions"
 

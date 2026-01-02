@@ -1,14 +1,14 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick
 import QtCore
 import QtQuick.Controls
 
-import QDash.Constants
+import Carboxyl.Contour
+import Carboxyl.Clover
 
-BetterComboBox {
-    property list<string> choices
+CarboxylLabeledComboBox {
+    property list<var> choices
 
     model: choices
     onChoicesChanged: model = choices
@@ -36,10 +36,6 @@ BetterComboBox {
         topMargin: 12
         bottomMargin: 12
         verticalPadding: 8
-
-        Material.theme: control.Material.theme
-        Material.accent: control.Material.accent
-        Material.primary: control.Material.primary
 
         enter: Transition {
             // grow_fade_in
@@ -77,7 +73,7 @@ BetterComboBox {
             implicitHeight: search.height + 28 + listView.contentHeight
             width: parent.width
 
-            BetterTextField {
+            CarboxylLabeledTextField {
                 id: search
 
                 anchors {
@@ -91,7 +87,7 @@ BetterComboBox {
 
                 font.pixelSize: 16
 
-                placeholderText: "Search"
+                label: "Search"
 
                 onTextEdited: control.filter(text)
             }
@@ -119,7 +115,7 @@ BetterComboBox {
 
         background: Rectangle {
             radius: 4
-            color: parent.Material.dialogColor
+            color: Clover.theme.base
 
             layer.enabled: control.enabled
         }

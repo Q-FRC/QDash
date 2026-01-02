@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: Copyright 2025 crueter
+// SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
 
-import QDash.Constants
+import Carboxyl.Clover
 
 BaseWidget {
     id: widget
@@ -18,7 +18,7 @@ BaseWidget {
 
     function setValue(topic, value) {
         valid = false
-        topicStore.setValue(item_topic + "/" + topic, value)
+        TopicStore.setValue(item_topic + "/" + topic, value)
     }
 
     function updateTopic(ntTopic, ntValue) {
@@ -32,45 +32,45 @@ BaseWidget {
             update(topic, ntValue)
             valid = true
 
-            if (settings.disableWidgets)
+            if (QDashSettings.disableWidgets)
                 connected = true
         }
     }
 
     Connections {
-        target: topicStore
+        target: TopicStore
 
         function onConnected(conn) {
             if (conn) {
                 for (var i = 0; i < topics.length; ++i) {
                     let suffix = "/" + topics[i]
 
-                    topicStore.forceUpdate(item_topic + suffix)
+                    TopicStore.forceUpdate(item_topic + suffix)
                 }
             } else {
                 widget.valid = false
-                if (settings.disableWidgets)
+                if (QDashSettings.disableWidgets)
                     widget.connected = false
             }
         }
     }
 
     Component.onCompleted: {
-        topicStore.topicUpdate.connect(updateTopic)
+        TopicStore.topicUpdate.connect(updateTopic)
 
         item_topic = model.topic
 
         for (var i = 0; i < topics.length; ++i) {
-            topicStore.subscribe(item_topic + "/" + topics[i])
+            TopicStore.subscribe(item_topic + "/" + topics[i])
         }
     }
 
     Component.onDestruction: {
-        if (topicStore !== null) {
-            topicStore.topicUpdate.disconnect(updateTopic)
+        if (TopicStore !== null) {
+            TopicStore.topicUpdate.disconnect(updateTopic)
 
             for (var i = 0; i < topics.length; ++i) {
-                topicStore.unsubscribe(item_topic + "/" + topics[i])
+                TopicStore.unsubscribe(item_topic + "/" + topics[i])
             }
         }
     }
@@ -78,10 +78,10 @@ BaseWidget {
     onItem_topicChanged: {
         for (var i = 0; i < topics.length; ++i) {
             let suffix = "/" + topics[i]
-            topicStore.unsubscribe(topic + suffix)
-            topicStore.subscribe(item_topic + suffix)
+            TopicStore.unsubscribe(topic + suffix)
+            TopicStore.subscribe(item_topic + suffix)
 
-            topicStore.forceUpdate(item_topic + suffix)
+            TopicStore.forceUpdate(item_topic + suffix)
         }
 
         model.topic = item_topic
