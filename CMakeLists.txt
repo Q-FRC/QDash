@@ -63,6 +63,9 @@ include(QDashModule)
 
 if (QDASH_STATIC)
     include(StaticBuild)
+
+    # static builds require explicitly provided zlib
+    AddJsonPackage(zlib)
 endif()
 
 find_package(Qt6 6.4 REQUIRED
