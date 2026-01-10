@@ -66,13 +66,14 @@ if (QDASH_BUNDLE_QT)
     if (APPLE OR NOT UNIX)
         set(QDASH_STATIC ON)
     endif()
+
+    if (MSVC AND ARCHITECTURE_arm64)
+        set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded)
+    endif()
 endif()
 
 if (QDASH_STATIC)
     include(StaticBuild)
-
-    # static builds require explicitly provided zlib
-    AddJsonPackage(zlib)
 endif()
 
 find_package(Qt6 6.4 REQUIRED

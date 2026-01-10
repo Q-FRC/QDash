@@ -7,6 +7,6 @@
 
 JSON=$(echo "$CPMFILES" | xargs grep -l "\"$1\"")
 
-[ -n "$JSON" ] || echo "!! No cpmfile definition for $1" >&2 && exit 1
+[ -n "$JSON" ] || { echo "!! No cpmfile definition for $1" >&2 && exit 1; }
 
 echo "$JSON"
