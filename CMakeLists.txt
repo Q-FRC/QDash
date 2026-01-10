@@ -22,7 +22,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules/")
 ## Options ##
 
 option(QDASH_STATIC OFF "Build QDash as a static executable.")
-
+option(QDASH_BUNDLE_QT OFF "Use a bundled Qt build")
 option(QDASH_WEBVIEW OFF "Enable web view widget (Requires QtWebEngine)")
 option(QDASH_CAMVIEW ON "Enable camera view widget (Requires QtMultimedia)")
 cmake_dependent_option(QDASH_NETWORK "Enable remote layout feature (Requires QtNetwork)" ON "NOT QDASH_WEBVIEW" ON)
@@ -60,6 +60,13 @@ include(FasterLinker)
 include(GetSCMRev)
 include(CPMUtil)
 include(QDashModule)
+
+if (QDASH_BUNDLE_QT)
+    AddQt(6.9.3)
+    if (APPLE OR NOT UNIX)
+        set(QDASH_STATIC ON)
+    endif()
+endif()
 
 if (QDASH_STATIC)
     include(StaticBuild)
