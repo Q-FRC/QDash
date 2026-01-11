@@ -8,7 +8,6 @@ import Carboxyl.Clover
 import QDash.Dialogs
 
 import Carboxyl.Contour
-import Carboxyl.Clover
 
 NativeDialog {
     id: serverDialog
@@ -117,37 +116,7 @@ NativeDialog {
                 icon.width: 40
                 icon.source: "qrc:/" + modelData
 
-                Component.onCompleted: resetIconColor()
-
-                function resetIconColor() {
-                    icon.color = index
-                            === tabBar.currentIndex ? Clover.theme.currentAccent : Clover.theme.text
-                }
-
-                Connections {
-                    target: tabBar
-
-                    function onCurrentIndexChanged() {
-                        btn.resetIconColor()
-                    }
-                }
-
-                Connections {
-                    target: Clover.theme
-
-                    function onCurrentAccentChanged() {
-                        btn.resetIconColor()
-                    }
-                }
-
-                Connections {
-                    target: Clover
-
-                    function onThemeChanged() {
-                        btn.resetIconColor()
-                    }
-                }
-
+                coloredIcon: true
                 inlineIcon: false
             }
         }

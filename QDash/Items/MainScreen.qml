@@ -4,7 +4,6 @@ import QtCore
 import QtQuick 6.4
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.4
-import QtQuick.Dialogs
 
 import Carboxyl.Clover
 import QDash.Dialogs
@@ -20,12 +19,20 @@ Rectangle {
 
     Shortcut {
         sequences: ["Ctrl+Tab"]
-        onActivated: swipe.incrementCurrentIndex()
+        onActivated: if (swipe.currentIndex < swipe.count - 1) {
+                         swipe.incrementCurrentIndex()
+                     } else {
+                         swipe.setCurrentIndex(0)
+                     }
     }
 
     Shortcut {
         sequences: ["Ctrl+Shift+Tab"]
-        onActivated: swipe.decrementCurrentIndex()
+        onActivated: if (swipe.currentIndex > 0) {
+                         swipe.decrementCurrentIndex()
+                     } else {
+                         swipe.setCurrentIndex(swipe.count - 1)
+                     }
     }
 
     function setTab() {
@@ -139,11 +146,13 @@ Rectangle {
     }
 
     function setTabConfig() {
+        if (!currentTab()) return
         currentTab().setSize(tabConfigDialog.rows, tabConfigDialog.columns)
         currentTab().setName(tabConfigDialog.name)
     }
 
     function configTab() {
+        if (!currentTab()) return
         tabConfigDialog.openUp(currentTab().rows, currentTab().cols,
                                currentTab().name())
     }
@@ -160,6 +169,7 @@ Rectangle {
     }
 
     function closeTab() {
+        if (!currentTab()) return
         tabClose.open()
     }
 
@@ -195,12 +205,10 @@ Rectangle {
         z: 0
 
         anchors {
-            top: parent.top
+            top: tabs.bottom
             left: parent.left
             right: parent.right
             bottom: parent.bottom
-
-            topMargin: 40
         }
 
         currentIndex: tabs.currentIndex
@@ -221,10 +229,13 @@ Rectangle {
         }
     }
 
+    // TODO(crueter): Use font.pointSize for everything.
     CarboxylTabBar {
         id: tabs
-        height: 45
+        height: 40
         contentHeight: 40
+
+        font.pointSize: 12
 
         anchors {
             top: parent.top
@@ -247,7 +258,6 @@ Rectangle {
                 text: model.title
 
                 width: Math.max(100, tabs.width / 6)
-                height: 40
             }
         }
     }

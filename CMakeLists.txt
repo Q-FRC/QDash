@@ -11,7 +11,6 @@ project(${QDASH_NAME} VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_AUTORCC ON)
 
 set(BUILD_SHARED_LIBS OFF)
 
@@ -21,16 +20,23 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules/")
 
 ## Options ##
 
-option(QDASH_STATIC OFF "Build QDash as a static executable.")
+option(QDASH_STATIC OFF "Build QDash as a static executable")
 option(QDASH_BUNDLE_QT OFF "Use a bundled Qt build")
 option(QDASH_WEBVIEW OFF "Enable web view widget (Requires QtWebEngine)")
 option(QDASH_CAMVIEW ON "Enable camera view widget (Requires QtMultimedia)")
 cmake_dependent_option(QDASH_NETWORK "Enable remote layout feature (Requires QtNetwork)" ON "NOT QDASH_WEBVIEW" ON)
 
 set(QT_NO_PRIVATE_MODULE_WARNING ON)
-set(QDASH_QT_COMPONENTS Core Quick QuickControls2 Widgets)
+set(QDASH_QT_COMPONENTS Core Quick QuickControls2 Widgets QmlCore LabsQmlModels QuickDialogs2
+    QuickLayouts QuickEffects QuickControls2Basic QuickControls2Material QuickControls2Fusion QuickControls2Universal)
 set(QDASH_QT_OPTIONAL GuiPrivate QuickTemplates2Private QuickPrivate)
-set(QDASH_QT_LIBRARIES Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Widgets Carboxyl::Carboxyl)
+set(QDASH_QT_LIBRARIES
+    Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Widgets Qt6::Qml
+    Carboxyl::Carboxyl
+
+    Qt6::LabsQmlModels
+    Qt6::qmlshapesplugin
+    Qt6::QuickDialogs2)
 
 if (QDASH_WEBVIEW)
     set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} WebEngineQuick)
@@ -63,6 +69,7 @@ include(QDashModule)
 
 if (QDASH_BUNDLE_QT)
     AddQt(6.9.3)
+
     if (APPLE OR NOT UNIX)
         set(QDASH_STATIC ON)
     endif()
@@ -71,6 +78,8 @@ if (QDASH_BUNDLE_QT)
         set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded)
     endif()
 endif()
+
+set(CMAKE_AUTORCC ON)
 
 if (QDASH_STATIC)
     include(StaticBuild)

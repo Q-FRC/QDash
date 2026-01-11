@@ -112,7 +112,7 @@ for file in $FILES; do
 	[ "$excluded" = "true" ] && continue
 
 	case "$file" in
-		*.cmake|*.sh|CMakeLists.txt)
+		*.cmake|*.sh|*CMakeLists.txt)
 			begin="#"
 			;;
 		*.kt*|*.cpp|*.h|*.qml)
@@ -185,7 +185,7 @@ if [ "$UPDATE" = "true" ]; then
 
 	for file in $SRC_FILES $OTHER_FILES; do
 		case $(basename -- "$file") in
-			*.cmake|CMakeLists.txt)
+			*.cmake|*CMakeLists.txt)
 				begin="#"
 				shell="false"
 				;;

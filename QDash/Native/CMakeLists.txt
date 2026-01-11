@@ -1,7 +1,13 @@
+# SPDX-FileCopyrightText: Copyright 2026 crueter
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+set(qdash_icon ${CMAKE_SOURCE_DIR}/dist/${QDASH_NAME}.icns)
+
 qt_add_executable(${QDASH_NAME}
     main.cpp
     ${QRC_FILES}
     ${RCS_FILE}
+    ${qdash_icon}
     QDashApplication.h QDashApplication.cpp)
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
@@ -60,8 +66,11 @@ if(UNIX AND APPLE)
     set(MACOSX_BUNDLE_BUNDLE_VERSION "${QDASH_NUMERIC_TAG}")
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${QDASH_NUMERIC_TAG}")
     set(MACOSX_BUNDLE_LONG_VERSION_STRING "${QDASH_NUMERIC_TAG}")
-    set(MACOSX_BUNDLE_ICON_FILE ${QDASH_NAME}.icns)
+    set(MACOSX_BUNDLE_ICON_FILE ${QDASH_NAME})
     set(MACOSX_BUNDLE_COPYRIGHT "Copyleft 2023-2026 ${QDASH_ORG}")
+
+    set_source_files_properties(${qdash_icon} PROPERTIES
+           MACOSX_PACKAGE_LOCATION "Resources")
 
     # install as bundle
     set(INSTALL_BUNDLE "full")

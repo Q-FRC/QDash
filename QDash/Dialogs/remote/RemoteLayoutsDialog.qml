@@ -3,7 +3,6 @@
 import QtCore
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Dialogs as D
 
 import Carboxyl.Clover
 import Carboxyl.Contour
@@ -36,8 +35,6 @@ NativeDialog {
 
         if (rlm.load())
             busy.running = true
-        else
-            fail.open()
     }
 
     MessageDialog {
@@ -59,8 +56,13 @@ NativeDialog {
                           tlm.load(filename)
                           remote.close()
                       }
+
         onListReady: {
             busy.running = false
+        }
+
+        onFailed: {
+            fail.open()
         }
     }
 

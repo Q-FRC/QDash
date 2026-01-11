@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "Misc/Globals.h"
 #include "RemoteLayoutModel.h"
 
@@ -48,8 +51,11 @@ bool RemoteLayoutModel::load()
 {
     clear();
     auto conns = Globals::inst.GetConnections();
-    if (conns.empty())
+    if (conns.empty()) {
+        // slight delay because uhhhhhh i forget
+        QTimer::singleShot(100, [this]() { emit failed(); });
         return false;
+    }
 
     nt::ConnectionInfo info = conns.at(0);
     QString ip = QString::fromStdString(info.remote_ip);

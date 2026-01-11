@@ -1,4 +1,3 @@
-
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick 2.15
@@ -118,9 +117,10 @@ Rectangle {
         id: validRect
         color: "transparent"
         z: 5
+        radius: 15
 
         border {
-            width: 5
+            width: 4
             color: "transparent"
         }
     }

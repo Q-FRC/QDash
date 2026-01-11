@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef REMOTELAYOUTMODEL_H
 #define REMOTELAYOUTMODEL_H
 
@@ -36,6 +39,7 @@ protected:
 signals:
     void listReady();
     void fileOpened(const QString &filename);
+    void failed();
 
 private:
     QList<RemoteLayout> m_data;

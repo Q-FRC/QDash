@@ -3,7 +3,6 @@
 import QtCore
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Dialogs
 
 import QDash.Dialogs
 import Carboxyl.Clover
@@ -35,11 +34,17 @@ ApplicationWindow {
         if (QDashSettings.resizeToDS) {
             logs.debug("UI", "DS Resize")
 
-            height = platformHelper.screenHeight() - 236
-            width = platformHelper.screenWidth()
+            QDashSettings.windowHeight = platformHelper.screenHeight() - 236
+            QDashSettings.windowWidth = platformHelper.screenWidth()
 
-            x = 0
-            y = 0
+            // Explicitly disallow resizing, because the user probably doesn't want to
+            // accidentally overwrite the height. Note that some Linux window managers (and Wayland)
+            // will just straight up ignore this.
+            maximumHeight = height
+            minimumHeight = height
+
+            QDashSettings.windowX = 0
+            QDashSettings.windowY = 0
         }
     }
 
@@ -72,7 +77,6 @@ ApplicationWindow {
     }
 
     function saveAs() {
-        console.log(QDashApplication.dataLocation + "/layout.json")
         let newName = FileSelect.getSaveFileName(
                 qsTr("Save Layout"),
                 QDashApplication.dataLocation + "/layout.json",
@@ -93,7 +97,7 @@ ApplicationWindow {
                 "JSON files (*.json);;All files (*)")
 
         if (newName !== "") {
-            fileName = newName
+            filename = newName
             logs.info("IO", "Loading file " + filename)
             tlm.load(filename)
         }
@@ -140,6 +144,7 @@ ApplicationWindow {
                             if (modelData === "" || modelData === null)
                                 return
                             tlm.clear()
+                            filename = modelData
                             tlm.load(modelData)
                         }
                     }
@@ -166,7 +171,7 @@ ApplicationWindow {
 
             Action {
                 text: qsTr("&Settings")
-                shortcut: "Ctrl+,"
+                shortcut: StandardKey.Preferences
                 onTriggered: settingsDialog.open()
             }
 
@@ -202,10 +207,12 @@ ApplicationWindow {
                 shortcut: "Ctrl+W"
             }
 
+            // FUN FACT: Configure is a keyword that gets hijacked by macOS's absolutely horrifically garbage
+            // menu implementation. AWESOME! GREAT! WONDERFUL!
             Action {
-                text: qsTr("Configu&re Tab")
+                text: qsTr("&Edit Tab")
                 onTriggered: screen.configTab()
-                shortcut: "Ctrl+R"
+                shortcut: "Ctrl+E"
             }
         }
 

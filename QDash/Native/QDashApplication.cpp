@@ -20,6 +20,7 @@
 #include <QSortFilterProxyModel>
 #include <QStandardPaths>
 #include <QWidget>
+#include <QQmlContext>
 
 #include "Helpers/CompileDefinitions.h"
 
@@ -128,7 +129,6 @@ int QDashApplication::run()
         engine.loadFromModule("QDash.Main", "Main");
 
         ret = exec();
-
     } while (ret == EXIT_RELOAD);
 
     return ret;
