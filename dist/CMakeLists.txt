@@ -7,7 +7,14 @@ endif()
 
 string(REPLACE "-beta" "." QDASH_NUMERIC_TAG ${GIT_TAG})
 string(REPLACE "-rc" "." QDASH_NUMERIC_TAG ${QDASH_NUMERIC_TAG})
-set(QDASH_VERSION_WIN ${QDASH_NUMERIC_TAG}.0)
+string(REPLACE "." ";" tmp_list_tag ${QDASH_NUMERIC_TAG})
+list(LENGTH tmp_list_tag length_tmp)
+if (length_tmp LESS 4)
+    set(QDASH_VERSION_WIN ${QDASH_NUMERIC_TAG}.0)
+else()
+    set(QDASH_VERSION_WIN ${QDASH_NUMERIC_TAG})
+endif()
+
 string(REPLACE "." "," QDASH_VERSION_COMMA "${QDASH_VERSION_WIN}")
 
 configure_file(QDash.rc.in QDash.rc @ONLY)
