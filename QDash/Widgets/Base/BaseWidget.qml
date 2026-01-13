@@ -21,6 +21,8 @@ Rectangle {
     property bool connected: false
     property bool valid: false
 
+    property bool tvOverlap: false
+
     z: 3
 
     radius: 12
@@ -36,6 +38,15 @@ Rectangle {
     color: Clover.theme.dark
 
     Drag.active: dragArea.drag.active
+
+    Connections {
+        target: tab
+        function onTopicViewRectChanged() {
+            let rc = tab.topicViewRect
+            let tvRight = rc.x + rc.width
+            widget.tvOverlap = tvRight >= x
+        }
+    }
 
     function checkDrag() {
         if (Drag.active || dragForced) {
@@ -60,6 +71,7 @@ Rectangle {
 
     function cancelDrag() {
         dragForced = false
+        resizeActive = false
         Drag.cancel()
         grid.resetValid()
     }
@@ -121,10 +133,12 @@ Rectangle {
         resizeBackAnimX.to = originalRect.x
         resizeBackAnimY.from = widget.y
         resizeBackAnimY.to = originalRect.y
+
         resizeBackAnimWidth.from = widget.width
         resizeBackAnimWidth.to = originalRect.width
         resizeBackAnimHeight.from = widget.height
         resizeBackAnimHeight.to = originalRect.height
+
         resizeBackAnim.start()
     }
 
@@ -237,11 +251,11 @@ Rectangle {
 
     MouseArea {
         id: dragArea
-        z: 0
 
         anchors.fill: parent
 
         drag.target: parent
+
         acceptedButtons: Qt.AllButtons
         pressAndHoldInterval: 100
 
@@ -286,9 +300,10 @@ Rectangle {
             | Qt.TopEdge, Qt.LeftEdge | Qt.BottomEdge]
 
         ResizeAnchor {
-
             required property int modelData
+            enabled: !widget.tvOverlap
             direction: modelData
+            z: horiz && vert ? 26 : 24
 
             mouseArea.onPressed: mouse => {
                                      if (mouse.button === Qt.RightButton) {
@@ -323,7 +338,6 @@ Rectangle {
                                           }
 
                                           resizeActive = false
-
                                           grid.resetValid()
 
                                           widget.z = 3
@@ -335,16 +349,17 @@ Rectangle {
     /* ACTUAL DATA */
     B.TextField {
         id: titleField
+        z: enabled ? 25 : 0
+
         font.pixelSize: item_titleFontSize
         font.bold: true
 
         clip: true
 
         text: model.title
-
         color: Clover.theme.text
 
-        enabled: !(Drag.active || dragForced)
+        enabled: !(Drag.active || dragForced) && !widget.tvOverlap
 
         onTextEdited: model.title = text
 

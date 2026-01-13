@@ -14,8 +14,6 @@ Logger::Logger(QObject *parent) : QObject{parent}
     QString filename = QString("QDash.log");
     QString abs = m_dir.absoluteFilePath(filename);
 
-    qDebug() << "Exists:" << m_dir.exists(filename);
-
     if (m_dir.exists(filename)) {
         const QString old = QString("%1.%2").arg(filename, "old");
         m_dir.remove(old);

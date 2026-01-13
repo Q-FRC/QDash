@@ -146,13 +146,15 @@ Rectangle {
     }
 
     function setTabConfig() {
-        if (!currentTab()) return
+        if (!currentTab())
+            return
         currentTab().setSize(tabConfigDialog.rows, tabConfigDialog.columns)
         currentTab().setName(tabConfigDialog.name)
     }
 
     function configTab() {
-        if (!currentTab()) return
+        if (!currentTab())
+            return
         tabConfigDialog.openUp(currentTab().rows, currentTab().cols,
                                currentTab().name())
     }
@@ -169,7 +171,8 @@ Rectangle {
     }
 
     function closeTab() {
-        if (!currentTab()) return
+        if (!currentTab())
+            return
         tabClose.open()
     }
 
@@ -217,14 +220,15 @@ Rectangle {
             model: tlm
 
             Tab {
+                id: tab
                 width: swipe.width
                 height: swipe.height
 
                 onCopying: pos => drag(pos, false)
-
                 onDropped: pos => drop(pos, false)
-
                 onStoreWidget: w => clipboard = w
+
+                topicViewRect: mapFromItem(mainScreen, tv.geometry)
             }
         }
     }

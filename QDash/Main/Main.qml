@@ -63,7 +63,7 @@ ApplicationWindow {
         id: notif
 
         x: parent.width - width - 10
-        y: parent.height - height - 10
+        y: parent.height - toolbar.height - height - 10
     }
 
     /** SAVE */

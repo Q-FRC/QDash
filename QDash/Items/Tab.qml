@@ -33,6 +33,7 @@ Rectangle {
 
     property double colWidth: tab.width / tab.cols
     property double rowHeight: tab.height / tab.rows
+    property rect topicViewRect
 
     MouseArea {
         id: mouseArea

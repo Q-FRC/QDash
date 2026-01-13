@@ -11,8 +11,10 @@ Row {
 
     property alias menuAnim: menuAnim
 
-    property string closedText: ">>"
-    property string openText: "<<"
+    readonly property string closedText: ">>"
+    readonly property string openText: "<<"
+    property rect geometry: Qt.rect(0, 0, 0, 0)
+    property bool opened: false
 
     width: (parent.width / 3) + 40
     height: parent.height
@@ -22,6 +24,8 @@ Row {
         target: tv
         property: "anchors.leftMargin"
         duration: 500
+
+        onFinished: geometry = mapToItem(parent, Qt.rect(x, y, width, height))
     }
 
     signal open
@@ -37,8 +41,6 @@ Row {
         addWidget(name, topic, type)
     }
 
-    // FIXME(crueter): stuff lower in the stacking order conflicts with this (??)
-    // change DragHandler -> MousEArea?
     Rectangle {
         id: topicView
         radius: 10
@@ -220,9 +222,11 @@ Row {
 
         onClicked: {
             if (text === closedText) {
+                opened = true
                 open()
                 text = openText
             } else {
+                opened = false
                 close()
                 text = closedText
             }
