@@ -10,6 +10,10 @@ import QDash.Config
 ColumnLayout {
     spacing: 15
 
+    readonly property int controlWidth: Math.min(width, 350)
+    readonly property bool centered: controlWidth < width
+
+    // anchors
     function accept() {
         load.accept()
         level.accept()
@@ -26,47 +30,72 @@ ColumnLayout {
 
     LabeledCheckbox {
         id: load
-        label: "Load Recent Files?"
+        label: qsTr("Load Recent Files?")
 
         bindTarget: QDashSettings
         bindedProperty: "loadRecent"
+
+        implicitHeight: 45
+        implicitWidth: controlWidth
+        Layout.alignment: centered ? Qt.AlignCenter : Qt.AlignLeft
     }
 
     LabeledCheckbox {
         id: disable
-        label: "Disable Widgets on Disconnect?"
+        label: qsTr("Disable Widgets on Disconnect?")
 
         bindTarget: QDashSettings
         bindedProperty: "disableWidgets"
+
+        implicitHeight: 45
+        implicitWidth: controlWidth
+        Layout.alignment: centered ? Qt.AlignCenter : Qt.AlignLeft
     }
 
     LabeledCheckbox {
         id: resize
-        label: "Resize to Driver Station?"
+        label: qsTr("Resize to Driver Station?")
 
         bindTarget: QDashSettings
         bindedProperty: "resizeToDS"
-    }
-
-    LabeledIndexComboBox {
-        Layout.fillWidth: true
 
         implicitHeight: 45
-        implicitWidth: 350
+        implicitWidth: controlWidth
+        Layout.alignment: centered ? Qt.AlignCenter : Qt.AlignLeft
+    }
+
+    RowLayout {
         Layout.alignment: Qt.AlignCenter
-        font.pixelSize: 20
+        implicitHeight: 45
+        implicitWidth: Math.min(450, parent.width)
 
-        id: level
-        label: "Log Level"
+        LabeledIndexComboBox {
+            font.pixelSize: 20
+            implicitHeight: 45
 
-        model: ["Critical", "Warning", "Info", "Debug"]
+            id: level
+            label: "Log Level"
 
-        hoverEnabled: true
+            model: [qsTr("Critical"), qsTr("Warning"), qsTr(
+                    "Info"), qsTr("Debug")]
 
-        ToolTip.visible: hovered
-        ToolTip.text: "The log file is located in the local data location."
+            hoverEnabled: true
 
-        bindTarget: QDashSettings
-        bindedProperty: "logLevel"
+            ToolTip.visible: hovered
+            ToolTip.text: "The log file is located in the local data location."
+
+            bindTarget: QDashSettings
+            bindedProperty: "logLevel"
+        }
+
+        Button {
+            font.pixelSize: 20
+            implicitHeight: 40
+
+            Layout.topMargin: 2
+
+            text: qsTr("Open Log Location")
+            onClicked: logs.openLogLocation()
+        }
     }
 }

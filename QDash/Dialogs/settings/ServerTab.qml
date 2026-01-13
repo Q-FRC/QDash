@@ -8,7 +8,9 @@ import Carboxyl.Clover
 import QDash.Config
 
 ColumnLayout {
-    spacing: 5
+    spacing: 15
+
+    readonly property int controlWidth: Math.min(width, 350)
 
     function accept() {
         team.accept()
@@ -25,14 +27,14 @@ ColumnLayout {
     LabeledSpinBox {
         id: team
         implicitHeight: 45
-        implicitWidth: 350
+        implicitWidth: controlWidth
         Layout.alignment: Qt.AlignCenter
         font.pixelSize: 20
 
         from: 0
         to: 99999
 
-        label: "Team Number"
+        label: qsTr("Team Number")
 
         bindedProperty: "teamNumber"
         bindTarget: QDashSettings
@@ -41,11 +43,11 @@ ColumnLayout {
     LabeledTextField {
         id: ip
         implicitHeight: 45
-        implicitWidth: 350
+        implicitWidth: controlWidth
         Layout.alignment: Qt.AlignCenter
         font.pixelSize: 20
 
-        label: "IP Address"
+        label: qsTr("IP Address")
 
         horizontalAlignment: "AlignHCenter"
 
@@ -60,11 +62,11 @@ ColumnLayout {
     LabeledComboBox {
         id: mode
         implicitHeight: 45
-        implicitWidth: 350
+        implicitWidth: controlWidth
         Layout.alignment: Qt.AlignCenter
         font.pixelSize: 20
 
-        label: "Connection Mode"
+        label: qsTr("Connection Mode")
 
         bindedProperty: "mode"
         bindTarget: QDashSettings

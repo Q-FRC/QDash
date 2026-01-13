@@ -1,6 +1,10 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#include <QDir>
 #include <QFile>
 #include <QObject>
 #include <QQmlEngine>
@@ -18,8 +22,12 @@ public:
     Q_INVOKABLE void critical(const QString &subsystem, const QString &message);
     Q_INVOKABLE void debug(const QString &subsystem, const QString &message);
 
+public slots:
+    void openLogLocation();
+
 private:
     QFile m_logFile;
+    QDir m_dir;
 
     static constexpr char m_format[] = "dd.MM.yyyy-hh:mm:ss";
 };

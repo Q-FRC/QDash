@@ -11,8 +11,6 @@ import QDash.Items
 import QDash.Native.Logging
 import QDash.Native.Helpers
 
-import Carboxyl.Clover
-
 ApplicationWindow {
     id: window
     visible: true
@@ -171,12 +169,13 @@ ApplicationWindow {
 
             Action {
                 text: qsTr("&Settings")
-                shortcut: StandardKey.Preferences
+                shortcut: "Ctrl+,"
                 onTriggered: settingsDialog.open()
             }
 
             Menu {
                 title: qsTr("&Extra Widgets")
+                enabled: CompileDefinitions.extraWidgets.count > 0
 
                 Repeater {
                     model: CompileDefinitions.extraWidgets

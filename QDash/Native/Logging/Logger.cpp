@@ -4,18 +4,22 @@
 #include "Logger.h"
 #include "Misc/Constants.h"
 
-#include <QDir>
 #include <QStandardPaths>
+#include <QDesktopServices>
 
 Logger::Logger(QObject *parent) : QObject{parent}
 {
-    QDir dir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    dir.mkpath(".");
+    m_dir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    m_dir.mkpath(".");
     QString filename = QString("QDash.log");
-    QString abs = dir.absoluteFilePath(filename);
+    QString abs = m_dir.absoluteFilePath(filename);
 
-    if (QFile::exists(abs)) {
-        QFile::rename(abs, QString("%1.%2").arg(abs, "old"));
+    qDebug() << "Exists:" << m_dir.exists(filename);
+
+    if (m_dir.exists(filename)) {
+        const QString old = QString("%1.%2").arg(filename, "old");
+        m_dir.remove(old);
+        m_dir.rename(filename, old);
     }
 
     m_logFile.setFileName(abs);
@@ -77,4 +81,8 @@ void Logger::debug(const QString &subsystem, const QString &message)
         QMetaObject::invokeMethod(
             this, [this, subsystem, message]() { log("debug", subsystem, message); });
     }
+}
+
+void Logger::openLogLocation() {
+    QDesktopServices::openUrl(QUrl::fromLocalFile(m_dir.absolutePath()));
 }

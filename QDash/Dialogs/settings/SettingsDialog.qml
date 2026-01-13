@@ -65,7 +65,8 @@ NativeDialog {
             left: parent.left
             right: parent.right
 
-            topMargin: 10
+            // topMargin: 10
+            margins: 15
         }
 
         ServerTab {

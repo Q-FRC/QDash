@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QRect>
@@ -38,43 +41,9 @@ void GenericMapModel::add(QString key, QString value)
     endInsertRows();
 }
 
-// bool GenericMapModel::setData(const QModelIndex &index, const QVariant &value, int role)
-// {
-//     // if (data(index, role) != value) {
-//     //     Widget &w = m_data[index.row()];
-
-//     //     switch (role) {
-//     //     case TITLE:
-//     //         w.title = value.toString();
-//     //         break;
-//     //     case TYPE:
-//     //         w.type = value.toString();
-//     //         break;
-//     //     case TOPIC:
-//     //         w.topic = value.toString();
-//     //         break;
-//     //     case COL:
-//     //         w.col = value.toInt();
-//     //         break;
-//     //     case ROW:
-//     //         w.row = value.toInt();
-//     //         break;
-//     //     case COLSPAN:
-//     //         w.colSpan = value.toInt();
-//     //         break;
-//     //     case ROWSPAN:
-//     //         w.rowSpan = value.toInt();
-//     //         break;
-//     //     case PROPERTIES:
-//     //         w.properties = value.toMap();
-//     //         break;
-//     //     }
-
-//     //     emit dataChanged(index, index, {role});
-//     //     return true;
-//     // }
-//     return false;
-// }
+int GenericMapModel::count() {
+    return m_data.count();
+}
 
 QHash<int, QByteArray> GenericMapModel::roleNames() const
 {

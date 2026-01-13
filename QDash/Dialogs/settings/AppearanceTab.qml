@@ -10,7 +10,9 @@ import QDash.Config
 import Carboxyl.Contour
 
 ColumnLayout {
-    spacing: 5
+    spacing: 15
+
+    readonly property int controlWidth: Math.min(width, 350)
 
     function accept() {
         if (QDashSettings.style !== style.currentText) {
@@ -31,11 +33,11 @@ ColumnLayout {
         model: CarboxylConfig.styles
 
         implicitHeight: 45
-        implicitWidth: 350
+        implicitWidth: controlWidth
         Layout.alignment: Qt.AlignCenter
         font.pixelSize: 20
 
-        label: "Style"
+        label: qsTr("Style")
 
         Component.onCompleted: currentIndex = model.indexOf(
                                    CarboxylApplication.styleName)
@@ -47,10 +49,10 @@ ColumnLayout {
         model: Clover.accents
         textRole: "name"
 
-        label: "Accent"
+        label: qsTr("Accent")
 
         implicitHeight: 45
-        implicitWidth: 350
+        implicitWidth: controlWidth
         Layout.alignment: Qt.AlignCenter
         font.pixelSize: 20
 
@@ -63,10 +65,10 @@ ColumnLayout {
         model: Clover.themes
         textRole: "name"
 
-        label: "Theme"
+        label: qsTr("Theme")
 
         implicitHeight: 45
-        implicitWidth: 350
+        implicitWidth: controlWidth
         Layout.alignment: Qt.AlignCenter
         font.pixelSize: 20
 

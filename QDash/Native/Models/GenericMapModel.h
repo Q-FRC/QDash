@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef GENERICMAPMODEL_H
 #define GENERICMAPMODEL_H
 
@@ -12,6 +15,8 @@ typedef struct {
 class GenericMapModel : public QAbstractListModel {
     Q_OBJECT
     QML_ELEMENT
+
+    Q_PROPERTY(int count READ count CONSTANT FINAL)
 public:
     enum MMRoleTypes { KEY = Qt::UserRole, VALUE };
 
@@ -22,6 +27,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     void add(QString key, QString value);
+
+    int count();
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
