@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "NT/TopicStore.h"
 
 #include "Misc/Globals.h"
@@ -36,7 +39,7 @@ Listener TopicStore::entry(QString topic)
 
 Listener TopicStore::changeNumSubscribed(QString topic, int changeBy)
 {
-    for (Listener listener : Listeners) {
+    for (Listener &listener : Listeners) {
         if (listener.topic == topic) {
             listener.numSubscribed += changeBy;
             return listener;
@@ -155,7 +158,6 @@ void TopicStore::subscribe(QString ntTopic)
     listener = changeNumSubscribed(ntTopic);
     if (listener.isNull) {
         listener = {ntTopic, 0, nt::ListenerCallback(), 1, false};
-
         nt::NetworkTableEntry entry = Globals::inst.GetEntry(ntTopic.toStdString());
 
         topicEntryMap.insert(ntTopic, entry);

@@ -140,7 +140,6 @@ void QDashApplication::setupNetworkTables() {
     Globals::inst.StartDSClient(NT_DEFAULT_PORT4);
 
     Globals::inst.AddConnectionListener(true, [this](const nt::Event &event) {
-        logs->info("NT", "PLOOOOOO");
         bool connected = event.Is(nt::EventFlags::kConnected);
 
         store->connect(connected);

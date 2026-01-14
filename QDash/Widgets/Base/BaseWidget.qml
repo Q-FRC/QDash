@@ -34,6 +34,7 @@ Rectangle {
 
     property int minWidth: grid.colWidth - 16
     property int minHeight: grid.rowHeight - 16
+    property bool dragging: Drag.active || dragForced
 
     color: Clover.theme.dark
 
@@ -253,7 +254,6 @@ Rectangle {
         id: dragArea
 
         anchors.fill: parent
-
         drag.target: parent
 
         acceptedButtons: Qt.AllButtons
@@ -265,7 +265,11 @@ Rectangle {
                            drag.target = null
                            rcMenu.popup()
                        } else if (mouse.button === Qt.LeftButton) {
-                           startDrag()
+                           if (dragForced || widget.Drag.active) {
+                               cancelDrag()
+                           } else {
+                               startDrag()
+                           }
                        }
                    }
 
@@ -301,7 +305,8 @@ Rectangle {
 
         ResizeAnchor {
             required property int modelData
-            enabled: !widget.tvOverlap
+            enabled: !widget.tvOverlap && !(widget.dragForced
+                                            || widget.Drag.active)
             direction: modelData
             z: horiz && vert ? 26 : 24
 

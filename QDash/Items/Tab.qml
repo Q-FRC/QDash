@@ -40,17 +40,21 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
 
+        z: isCopying ? 10 : 0
+
         property point mouseCoordinates: Qt.point(0, 0)
 
         onPositionChanged: mouse => {
                                mouseCoordinates = Qt.point(mouse.x, mouse.y)
+
+                               // TODO(crueter): This code sucks. Rewrite it again please
                                if (isCopying) {
                                    copying(mouseCoordinates)
                                }
                            }
 
         onClicked: {
-            if (copying) {
+            if (isCopying) {
                 isCopying = false
                 dropped(mouseCoordinates)
             }

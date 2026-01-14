@@ -43,11 +43,14 @@ Rectangle {
         tlm.onSelectedTabChanged.connect(setTab)
     }
 
+    // This function is called for copying and dragging from the TopicView
+    // In-widget drags are done via the Drag object
     function drag(pos, fromList) {
         if (currentTab() !== null) {
             let w = currentTab().latestWidget
+
             w.x = pos.x
-            w.y = pos.y - (fromList ? tabs.height + 5 : 0)
+            w.y = pos.y - (fromList ? tabs.height + 5 : 0) - w.titleField.height
 
             w.width = currentTab().colWidth - 16
             w.height = currentTab().rowWidth - 16
@@ -74,8 +77,7 @@ Rectangle {
 
             if (!currentTab().lastOpSuccessful) {
                 w.cancelDrag()
-                if (fromList)
-                    currentTab().removeLatest()
+                currentTab().removeLatest()
             } else {
                 let point = w.getPoint()
 

@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -50,9 +49,9 @@ BaseWidget {
 
     Component.onCompleted: {
         TopicStore.topicUpdate.connect(updateTopic)
-        item_topic = model.topic
+        TopicStore.subscribe(model.topic + suffix)
 
-        TopicStore.subscribe(trueTopic)
+        item_topic = model.topic
     }
 
     Component.onDestruction: {
@@ -64,9 +63,9 @@ BaseWidget {
 
     onItem_topicChanged: {
         TopicStore.unsubscribe(topic + suffix)
-        TopicStore.subscribe(trueTopic)
+        TopicStore.subscribe(item_topic + suffix)
         model.topic = item_topic
 
-        TopicStore.forceUpdate(trueTopic)
+        TopicStore.forceUpdate(item_topic + suffix)
     }
 }
