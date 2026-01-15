@@ -21,7 +21,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.PubSubOption;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StringTopic;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.TimedRobot;
 
 /** Class for interacting with QDash. */
 public class QFRCLib {
@@ -142,6 +144,18 @@ public class QFRCLib {
     }
 
     /**
+     * Publishes the match time to the dashboard periodically.
+     * @param robot the TimedRobot instance to add the periodic task to
+     */
+    public static void publishMatchTime(TimedRobot robot) {
+        NetworkTableEntry matchTimeEntry = table.getEntry("Match Time");
+        robot.addPeriodic(() -> {
+            double matchTime = DriverStation.getMatchTime();
+            matchTimeEntry.setDouble(matchTime);
+        }, 0.1);
+    }
+
+    /**
      * Represents an notification object to be sent to the Elastic dashboard. This
      * object holds
      * properties such as level, title, description, display time, and dimensions to
@@ -215,7 +229,7 @@ public class QFRCLib {
          * @param description the descriptive text of the notification
          */
         public Notification(ErrorLevel level, String title, String description) {
-            this(level, title, description, 3000, 350, -1);
+            this(level, title, description, 5000, 350, -1);
         }
 
         /**
@@ -246,7 +260,7 @@ public class QFRCLib {
          */
         public Notification(
                 ErrorLevel level, String title, String description, double width, double height) {
-            this(level, title, description, 3000, width, height);
+            this(level, title, description, 5000, width, height);
         }
 
         /**
