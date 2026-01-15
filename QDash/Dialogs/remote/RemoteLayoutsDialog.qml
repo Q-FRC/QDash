@@ -53,6 +53,7 @@ NativeDialog {
         id: rlm
 
         onFileOpened: filename => {
+                          window.filename = filename
                           tlm.load(filename)
                           remote.close()
                       }
@@ -78,11 +79,12 @@ NativeDialog {
     ListView {
         id: list
         anchors.fill: parent
+        anchors.margins: 20
         model: rlm
 
         delegate: RemoteLayout {
             height: 40
-            width: parent.width
+            width: ListView.view.width
 
             onActivated: accept()
             onClicked: list.currentIndex = index
