@@ -22,12 +22,12 @@ PrimitiveWidget {
     property double item_robotWidthMeters: 0.5
     property double item_robotLengthMeters: 0.5
 
-    property string item_field: "2025"
+    property string item_field: "2026"
 
-    property list<string> fieldChoices: ["2025", "2024", "2023"]
+    property list<string> fieldChoices: ["2026", "2025", "2024", "2023"]
 
-    property double fieldWidth: 8.051902
-    property double fieldLength: 17.54825
+    property double fieldWidth: 8.0692752
+    property double fieldLength: 16.5411912
 
     property bool mirrorField: false
 
@@ -101,6 +101,8 @@ PrimitiveWidget {
     }
 
     Rectangle {
+        id: robot
+
         color: item_robotShape === "Robot" ? "transparent" : item_robotColor
         border {
             color: item_robotColor
@@ -112,8 +114,6 @@ PrimitiveWidget {
         property double xMeters: 0
         property double yMeters: 0
         property double angleDeg: 0
-
-        id: robot
 
         function redraw() {
             let meterRatio = (item_useVerticalField ? field.paintedWidth : field.paintedHeight)

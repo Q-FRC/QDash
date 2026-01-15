@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -58,10 +57,14 @@ BaseWidget {
     Component.onCompleted: {
         TopicStore.topicUpdate.connect(updateTopic)
 
-        item_topic = model.topic
-
         for (var i = 0; i < topics.length; ++i) {
             TopicStore.subscribe(item_topic + "/" + topics[i])
+        }
+
+        item_topic = model.topic
+
+        for (i = 0; i < topics.length; ++i) {
+            TopicStore.forceUpdate(item_topic + "/" + topics[i])
         }
     }
 

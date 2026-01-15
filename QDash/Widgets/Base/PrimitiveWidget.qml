@@ -9,7 +9,7 @@ import Carboxyl.Clover
 BaseWidget {
     id: widget
 
-    property string trueTopic: item_topic + suffix
+    property string trueTopic: topic + suffix
     property string suffix: ""
     property bool readOnly: false
 
@@ -23,6 +23,7 @@ BaseWidget {
         }
     }
 
+    // TODO: find a way to prevent every single widget from getting this call?
     function updateTopic(ntTopic, ntValue) {
         if (typeof ntValue === "undefined")
             return

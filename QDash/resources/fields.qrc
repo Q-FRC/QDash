@@ -6,5 +6,7 @@
         <file alias="2024FieldVertical.png">images/2024-field-vertical.png</file>
         <file alias="2025Field.png">images/2025-field.png</file>
         <file alias="2025FieldVertical.png">images/2025-field-vertical.png</file>
+        <file alias="2026Field.png">images/2026-field.png</file>
+        <file alias="2026FieldVertical.png">images/2026-field-vertical.png</file>
     </qresource>
 </RCC>
