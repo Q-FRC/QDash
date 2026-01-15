@@ -18,12 +18,23 @@ include(CMakeDependentOption)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules/")
 
+## Modules ##
+include(DefaultConfig)
+include(DetectArchitecture)
+include(DetectPlatform)
+include(UseCcache)
+include(UseLTO)
+include(FasterLinker)
+include(GetSCMRev)
+include(CPMUtil)
+include(QDashModule)
+
 ## Options ##
 
-option(QDASH_STATIC OFF "Build QDash as a static executable")
-option(QDASH_BUNDLE_QT OFF "Use a bundled Qt build")
-option(QDASH_WEBVIEW OFF "Enable web view widget (Requires QtWebEngine)")
-option(QDASH_CAMVIEW ON "Enable camera view widget (Requires QtMultimedia)")
+option(QDASH_STATIC "Build QDash as a static executable" OFF)
+option(QDASH_BUNDLE_QT "Use a bundled Qt build" OFF)
+option(QDASH_WEBVIEW "Enable web view widget (Requires QtWebEngine)" OFF)
+option(QDASH_CAMVIEW "Enable camera view widget (Requires QtMultimedia)" ON)
 cmake_dependent_option(QDASH_NETWORK "Enable remote layout feature (Requires QtNetwork)" ON "NOT QDASH_WEBVIEW" ON)
 
 set(QT_NO_PRIVATE_MODULE_WARNING ON)
@@ -39,33 +50,25 @@ set(QDASH_QT_LIBRARIES
     Qt6::QuickDialogs2)
 
 if (QDASH_WEBVIEW)
+    message(STATUS "[QDash] Building with web support")
     set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} WebEngineQuick)
     set(QDASH_QT_LIBRARIES ${QDASH_QT_LIBRARIES} Qt6::WebEngineQuick)
     set(QDASH_DEFINES ${QDASH_DEFINES} QDASH_WEBVIEW)
 endif()
 
 if (QDASH_CAMVIEW)
-    set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} Multimedia)
-    set(QDASH_QT_LIBRARIES ${QDASH_QT_LIBRARIES} Qt6::Multimedia)
+    message(STATUS "[QDash] Building with camera support")
+    set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} Multimedia MultimediaQuickPrivate)
+    set(QDASH_QT_LIBRARIES ${QDASH_QT_LIBRARIES} Qt6::Multimedia Qt6::MultimediaQuickPrivate)
     set(QDASH_DEFINES ${QDASH_DEFINES} QDASH_CAMVIEW)
 endif()
 
 if (QDASH_NETWORK)
+    message(STATUS "[QDash] Building with network support")
     set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} Network)
     set(QDASH_QT_LIBRARIES ${QDASH_QT_LIBRARIES} Qt6::Network)
     set(QDASH_DEFINES ${QDASH_DEFINES} QDASH_NETWORK)
 endif()
-
-## Modules ##
-include(DefaultConfig)
-include(DetectArchitecture)
-include(DetectPlatform)
-include(UseCcache)
-include(UseLTO)
-include(FasterLinker)
-include(GetSCMRev)
-include(CPMUtil)
-include(QDashModule)
 
 if (QDASH_BUNDLE_QT)
     AddQt(6.9.3)
