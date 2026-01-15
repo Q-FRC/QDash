@@ -11,13 +11,16 @@ BaseWidget {
 
     property string trueTopic: item_topic + suffix
     property string suffix: ""
+    property bool readOnly: false
 
     // Define this in your widget
     function update(value) {}
 
     function setValue(value) {
-        valid = false
-        TopicStore.setValue(trueTopic, value)
+        if (!readOnly) {
+            valid = false
+            TopicStore.setValue(trueTopic, value)
+        }
     }
 
     function updateTopic(ntTopic, ntValue) {
@@ -52,6 +55,7 @@ BaseWidget {
         TopicStore.subscribe(model.topic + suffix)
 
         item_topic = model.topic
+        TopicStore.forceUpdate(item_topic)
     }
 
     Component.onDestruction: {

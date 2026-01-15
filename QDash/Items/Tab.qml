@@ -362,6 +362,11 @@ Rectangle {
                 roleValue: "textDisplay"
                 StringDisplay {}
             }
+
+            DelegateChoice {
+                roleValue: "phaseShift"
+                PhaseShift {}
+            }
         }
 
         Component {

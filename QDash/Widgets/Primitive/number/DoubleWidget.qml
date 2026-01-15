@@ -57,6 +57,13 @@ PrimitiveWidget {
                 model.type = "matchTime"
             }
         }
+
+        MenuItem {
+            text: "Phase Display"
+            onTriggered: {
+                model.type = "phaseShift"
+            }
+        }
     }
 
     Component.onCompleted: rcMenu.addMenu(switchMenu)
