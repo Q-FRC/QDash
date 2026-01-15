@@ -21,8 +21,8 @@ ApplicationWindow {
     width: QDashSettings.windowWidth
     height: QDashSettings.windowHeight
 
-    x: QDashSettings.windowX === -1 ? null : QDashSettings.windowX
-    y: QDashSettings.windowY === -1 ? null : QDashSettings.windowY
+    x: QDashSettings.windowX === -1 ? 0 : QDashSettings.windowX
+    y: QDashSettings.windowY === -1 ? 0 : QDashSettings.windowY
 
     property string filename: ""
     property int minWidth: 250

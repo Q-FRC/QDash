@@ -10,6 +10,7 @@
 #include <vector>
 
 #include <wpi/json.h>
+#include <wpi/print.h>
 #include <wpinet/WebServer.h>
 #include <frc/Filesystem.h>
 #include <frc/DriverStation.h>
@@ -17,6 +18,7 @@
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/StringTopic.h>
+#include <networktables/DoubleTopic.h>
 
 using namespace nt;
 
@@ -45,6 +47,9 @@ namespace QFRCLib
   static StringTopic notificationsTopic =
       NetworkTableInstance::GetDefault().GetStringTopic("/QDash/RobotNotifications");
   static StringPublisher notificationsPublisher = notificationsTopic.Publish();
+
+  static DoubleTopic matchTimeTopic = NetworkTableInstance::GetDefault().GetDoubleTopic("/QDash/Match Time");
+  static DoublePublisher matchTimePublisher = matchTimeTopic.Publish();
 
   // c++ doesn't have reflection
   // epic
@@ -112,12 +117,11 @@ namespace QFRCLib
 
   void publishMatchTime(frc::TimedRobot *robot)
   {
-    NetworkTableEntry matchTimeEntry = table->GetEntry("Match Time");
     robot->AddPeriodic(
-        [&matchTimeEntry]()
+        []()
         {
-          double time = frc::DriverStation::GetMatchTime().to<double>();
-          matchTimeEntry.SetDouble(time);
+          double time = frc::DriverStation::GetMatchTime().value();
+          matchTimePublisher.Set(time);
         },
         100_ms);
   }

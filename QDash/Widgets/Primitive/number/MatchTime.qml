@@ -1,10 +1,10 @@
+
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
- 
+
 import QDash.Fields
 import QDash.Items
 import QDash.Config
@@ -60,7 +60,7 @@ PrimitiveWidget {
     Component.onCompleted: rcMenu.addMenu(switchMenu)
 
     function update(value) {
-        txt.value = value
+        txt.value = Math.ceil(value)
     }
 
     Text {

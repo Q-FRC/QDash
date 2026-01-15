@@ -19,7 +19,7 @@ PrimitiveWidget {
     readOnly: true
 
     readonly property color warningColor: "yellow"
-    readonly property color activeColor: "green"
+    readonly property color activeColor: "#00c500"
     readonly property color inactiveColor: "red"
 
     enum Active {
@@ -37,9 +37,11 @@ PrimitiveWidget {
     property int remainingTime: 25
     property bool redAlliance: false
     property bool needsWarning: false
+    property double rawTime: 130
     property int time: 130
 
     function updatePhase() {
+        time = Math.ceil(rawTime)
         needsWarning = true
         // Transition Shift
         if (time > 130) {
@@ -82,7 +84,7 @@ PrimitiveWidget {
     }
 
     function update(value) {
-        time = value
+        rawTime = value
 
         updatePhase()
     }
