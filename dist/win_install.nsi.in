@@ -56,12 +56,6 @@ Section "QDash"
   SetOutPath $INSTDIR
 
   File "QDash.exe"
-  File *.dll
-  File /r "imageformats"
-  File /r "platforms"
-  File /r "tls"
-  File /r "multimedia"
-  File /r "qml"
 
   ; Write the installation path into the registry
   WriteRegStr HKCU Software\QDash "InstallDir" "$INSTDIR"
