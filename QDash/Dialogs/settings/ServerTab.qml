@@ -15,13 +15,13 @@ ColumnLayout {
     function accept() {
         team.accept()
         ip.accept()
-        QDashSettings.mode = mode.currentIndex
+        mode.accept()
     }
 
     function open() {
         team.open()
         ip.open()
-        mode.currentIndex = QDashSettings.connMode
+        mode.open()
     }
 
     LabeledSpinBox {
@@ -59,7 +59,7 @@ ColumnLayout {
         }
     }
 
-    LabeledComboBox {
+    LabeledIndexComboBox {
         id: mode
         implicitHeight: 45
         implicitWidth: controlWidth
@@ -68,7 +68,7 @@ ColumnLayout {
 
         label: qsTr("Connection Mode")
 
-        bindedProperty: "mode"
+        bindedProperty: "connMode"
         bindTarget: QDashSettings
 
         model: ["IP Address", "Team Number", "Driver Station"]

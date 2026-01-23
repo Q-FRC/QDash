@@ -24,7 +24,7 @@ void SettingsManager::reconnect()
         Globals::inst.SetServerTeam(team, NT_DEFAULT_PORT4);
         m_logs->info("NT", "Requested connect to team number " + QString::number(team));
         break;
-    // DS&
+    // DS
     case 2:
         Globals::inst.StartDSClient(NT_DEFAULT_PORT4);
         m_logs->info("NT", "Requested connect to DS");
