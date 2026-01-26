@@ -5,6 +5,7 @@
 
 #include <QApplication>
 
+class QQmlApplicationEngine;
 class FileSelect;
 class NotificationHelper;
 class PlatformHelper;
@@ -30,10 +31,14 @@ public:
 
 public slots:
     void reload();
+
     int run();
 
 private:
     void setupNetworkTables();
+
+    QQmlApplicationEngine *m_engine;
+    QWidget *m_widget;
 
     TopicListModel *topics;
     QSortFilterProxyModel *topicsSorted;
