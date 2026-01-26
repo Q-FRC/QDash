@@ -1,8 +1,8 @@
-![QDash](QDash-display.png "QDash")
+# QDash
 
 A reliable, high-performance, low-footprint dashboard for use with FRC.
 
-![image](https://github.com/user-attachments/assets/5e853a0c-3615-4f8f-9f2c-eb51aa793df9)
+![QDash](QDash-display.png "QDash")
 
 ## Lightweight
 
