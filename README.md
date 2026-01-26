@@ -14,8 +14,8 @@ The following numbers were measured on a ThinkPad X220T (i5-2520M). The numbers 
 
 | Metric            | Shuffleboard  | QDash         | Elastic |
 | ----------------- | ------------- | ------------- | ------- |
-| Memory (Base)     | 550MB         | 70MB          | 228MB   |
-| Memory (Heavy Use)| 620MB-1.5GB   | 130MB         | 472MB   |
+| Memory (Base)     | 550MB         | 70MB          | 140MB   |
+| Memory (Heavy Use)| 620MB-1.5GB   | 228MB         | 472MB   |
 | CPU (Base)        | 2-20%         | 0%            | 0%      |
 | CPU (Heavy Use)   | 30-85%        | 5%            | 35%     |
 
