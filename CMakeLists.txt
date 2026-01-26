@@ -29,6 +29,11 @@ include(GetSCMRev)
 include(CPMUtil)
 include(QDashModule)
 
+# Target Windows 7 ABI
+if (WIN32)
+    add_compile_definitions(_WIN32_WINNT=0x0601 NTDDI_VERSION=0x06010000 WINVER=0x0601)
+endif()
+
 ## Options ##
 
 option(QDASH_STATIC "Build QDash as a static executable" OFF)

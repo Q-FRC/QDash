@@ -1,0 +1,61 @@
+From 17bacad0496ea42fb1c7569443f847d4f2be3549 Mon Sep 17 00:00:00 2001
+From: crueter <crueter@eden-emu.dev>
+Date: Sun, 25 Jan 2026 22:18:16 -0500
+Subject: [PATCH] wpiutil: windows 7 compat
+
+Uses GetSystemTimeAsFileTime instead of the precise function introduced
+in some later version
+
+Signed-off-by: crueter <crueter@eden-emu.dev>
+---
+ wpiutil/src/main/native/cpp/timestamp.cpp | 29 ++++++++++-------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
+
+diff --git a/wpiutil/src/main/native/cpp/timestamp.cpp b/wpiutil/src/main/native/cpp/timestamp.cpp
+index 64725eb7f..465e1cd07 100644
+--- a/wpiutil/src/main/native/cpp/timestamp.cpp
++++ b/wpiutil/src/main/native/cpp/timestamp.cpp
+@@ -159,28 +159,23 @@ static HMBHolder hmb;
+ }  // namespace
+ #endif
+ 
+-// offset in microseconds
+ static uint64_t time_since_epoch() noexcept {
+ #ifdef _WIN32
+   FILETIME ft;
+-  uint64_t tmpres = 0;
+-  // 100-nanosecond intervals since January 1, 1601 (UTC)
+-  // which means 0.1 us
+-  GetSystemTimePreciseAsFileTime(&ft);
+-  tmpres |= ft.dwHighDateTime;
+-  tmpres <<= 32;
+-  tmpres |= ft.dwLowDateTime;
+-  tmpres /= 10u;  // convert to us
+-  // January 1st, 1970 - January 1st, 1601 UTC ~ 369 years
+-  // or 11644473600000000 us
+-  static const uint64_t deltaepoch = 11644473600000000ull;
+-  tmpres -= deltaepoch;
+-  return tmpres;
++  ULARGE_INTEGER uli;
++
++  GetSystemTimeAsFileTime(&ft);
++
++  uli.LowPart  = ft.dwLowDateTime;
++  uli.HighPart = ft.dwHighDateTime;
++
++  uint64_t us = uli.QuadPart / 10;
++  static constexpr uint64_t EPOCH_DIFF_US = 11644473600000000ull;
++
++  return us - EPOCH_DIFF_US;
+ #else
+-  // 1-us intervals
+   return std::chrono::duration_cast<std::chrono::microseconds>(
+-             std::chrono::system_clock::now().time_since_epoch())
+-      .count();
++    std::chrono::system_clock::now().time_since_epoch()).count();
+ #endif
+ }
+ 
+-- 
+2.51.2
+

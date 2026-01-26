@@ -1,0 +1,46 @@
+From de6531bc55d74d48796df88d55714f0527db1f2f Mon Sep 17 00:00:00 2001
+From: crueter <crueter@eden-emu.dev>
+Date: Sun, 25 Jan 2026 22:38:05 -0500
+Subject: [PATCH] libuv: remove precise time call
+
+Fallback on the less precise call if it exists. I have no idea if this
+will work
+
+Signed-off-by: crueter <crueter@eden-emu.dev>
+---
+ .../native/thirdparty/libuv/src/win/util.cpp  | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/wpinet/src/main/native/thirdparty/libuv/src/win/util.cpp b/wpinet/src/main/native/thirdparty/libuv/src/win/util.cpp
+index bbb9fa6..97d0077 100644
+--- a/wpinet/src/main/native/thirdparty/libuv/src/win/util.cpp
++++ b/wpinet/src/main/native/thirdparty/libuv/src/win/util.cpp
+@@ -450,7 +450,24 @@ int uv_clock_gettime(uv_clock_id clock_id, uv_timespec64_t* ts) {
+       ts->tv_nsec = t % 1000000000;
+       return 0;
+     case UV_CLOCK_REALTIME:
+-      GetSystemTimePreciseAsFileTime(&ft);
++      typedef VOID (WINAPI *GetSystemTimePreciseAsFileTime)(LPFILETIME);
++      static GetSystemTimePreciseAsFileTime precise_time = NULL;
++      static int initialized = 0;
++
++      // if precise time exists use it
++      // if not don't... windows 7 won't bite
++      if (!initialized) {
++        HMODULE h = GetModuleHandleW(L"kernel32.dll");
++        if (h)
++          precise_time = (GetSystemTimePreciseAsFileTime) GetProcAddress(h, "GetSystemTimePreciseAsFileTime");
++        initialized = 1;
++      }
++
++      if (precise_time)
++        precise_time(&ft);
++      else
++        GetSystemTimeAsFileTime(&ft);
++
+       /* In 100-nanosecond increments from 1601-01-01 UTC because why not? */
+       t = (int64_t) ft.dwHighDateTime << 32 | ft.dwLowDateTime;
+       /* Convert to UNIX epoch, 1970-01-01. Still in 100 ns increments. */
+-- 
+2.51.2
+
