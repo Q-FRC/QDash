@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -21,6 +20,7 @@ SendableWidget {
     property int item_fontSize: 18
 
     function update(topic, value) {
+        widget.connected = true
         switch (topic) {
         case "MatchNumber":
         {
@@ -99,13 +99,11 @@ SendableWidget {
 
             implicitHeight: item_fontSize * 2
 
-            Text {
+            Label {
                 anchors.fill: parent
 
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-
-                color: Clover.theme.text
 
                 property int matchNumber: 0
                 property string matchType: "Unknown"
@@ -117,12 +115,12 @@ SendableWidget {
                 font.pixelSize: item_fontSize
 
                 text: eventName + ": " + matchType + " Match " + matchNumber
+                enabled: widget.connected
             }
         }
 
-        Text {
+        Label {
             Layout.fillWidth: true
-            color: Clover.theme.text
 
             property string gameSpecificMessage: ""
 
@@ -135,11 +133,11 @@ SendableWidget {
             text: gameSpecificMessage
 
             visible: gameSpecificMessage !== ""
+            enabled: widget.connected
         }
 
-        Text {
+        Label {
             Layout.fillWidth: true
-            color: Clover.theme.text
 
             property string state: "Unknown"
 
@@ -150,6 +148,7 @@ SendableWidget {
             horizontalAlignment: Text.AlignHCenter
 
             text: state
+            enabled: widget.connected
         }
     }
 

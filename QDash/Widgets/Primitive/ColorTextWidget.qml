@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -44,11 +43,12 @@ PrimitiveWidget {
 
     function setColor() {
         shape.itemColor = itemValue
-        shape.itemShape = item_shape
+        // shape.itemShape = item_shape
         shape.setColor()
     }
 
     function update(value) {
+        widget.connected = true
         itemValue = value
         setColor()
     }

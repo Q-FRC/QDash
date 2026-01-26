@@ -52,6 +52,7 @@ PrimitiveWidget {
     Component.onCompleted: rcMenu.addMenu(switchMenu)
 
     function update(value) {
+        widget.connected = true
         spin.value = value
         dial.value = value
     }

@@ -9,31 +9,20 @@ import Carboxyl.Clover
 BaseWidget {
     id: widget
 
+    property string oldTopic
     property list<string> topics
+    property list<var> funcs
 
     // Define this in your widget
     // this takes in the suffix only
-    function update(topic, value) {}
+    function update(topic, value) {
+        console.log("SendableWidget's update function should NEVER be called. "
+                    + "If this is the case, you likely forgot to define the update function in your widget.")
+    }
 
     function setValue(topic, value) {
         valid = false
         TopicStore.setValue(item_topic + "/" + topic, value)
-    }
-
-    function updateTopic(ntTopic, ntValue) {
-        if (typeof ntValue === "undefined")
-            return
-
-        if (ntTopic.startsWith(item_topic)) {
-            // suffix only
-            let topic = ntTopic.replace(item_topic + "/", "")
-
-            update(topic, ntValue)
-            valid = true
-
-            if (QDashSettings.disableWidgets)
-                connected = true
-        }
     }
 
     Connections {
@@ -55,38 +44,37 @@ BaseWidget {
     }
 
     Component.onCompleted: {
-        TopicStore.topicUpdate.connect(updateTopic)
-
-        for (var i = 0; i < topics.length; ++i) {
-            TopicStore.subscribe(item_topic + "/" + topics[i])
-        }
-
         item_topic = model.topic
 
-        for (i = 0; i < topics.length; ++i) {
-            TopicStore.forceUpdate(item_topic + "/" + topics[i])
+        for (var i = 0; i < topics.length; ++i) {
+            let topic = topics[i]
+            funcs[i] = value => update(topic, value)
+            TopicStore.subscribe(item_topic + "/" + topic, funcs[i])
         }
+
+        oldTopic = model.topic
+
+        item_topicChanged.connect(() => {
+                                      model.topic = item_topic
+
+                                      for (var i = 0; i < topics.length; ++i) {
+                                          let suffix = "/" + topics[i]
+                                          let f = funcs[i]
+                                          TopicStore.unsubscribe(
+                                              oldTopic + suffix, f)
+                                          TopicStore.subscribe(
+                                              item_topic + suffix, f)
+                                      }
+
+                                      oldTopic = item_topic
+                                  })
     }
 
     Component.onDestruction: {
         if (TopicStore !== null) {
-            TopicStore.topicUpdate.disconnect(updateTopic)
-
             for (var i = 0; i < topics.length; ++i) {
-                TopicStore.unsubscribe(item_topic + "/" + topics[i])
+                TopicStore.unsubscribe(item_topic + "/" + topics[i], funcs[i])
             }
         }
-    }
-
-    onItem_topicChanged: {
-        for (var i = 0; i < topics.length; ++i) {
-            let suffix = "/" + topics[i]
-            TopicStore.unsubscribe(topic + suffix)
-            TopicStore.subscribe(item_topic + suffix)
-
-            TopicStore.forceUpdate(item_topic + suffix)
-        }
-
-        model.topic = item_topic
     }
 }

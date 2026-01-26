@@ -12,9 +12,8 @@ NativeDialog {
     width: 175
     height: 100
 
-    Text {
+    Label {
         font.pixelSize: 15
-        color: Clover.theme.text
         text: "Are you sure you want to close this tab?"
 
         wrapMode: Text.WordWrap

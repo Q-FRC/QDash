@@ -1,4 +1,3 @@
-
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick 2.15
@@ -21,6 +20,7 @@ SendableWidget {
     property bool readyToUpdate: true
 
     function update(topic, value) {
+        widget.connected = true
         switch (topic) {
         case "options":
         {
@@ -56,6 +56,8 @@ SendableWidget {
 
         SearchableComboBox {
             id: combo
+
+            enabled: widget.connected
 
             anchors {
                 verticalCenter: parent.verticalCenter

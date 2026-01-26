@@ -69,6 +69,7 @@ PrimitiveWidget {
     Component.onCompleted: rcMenu.addMenu(switchMenu)
 
     function update(value) {
+        widget.connected = true
         spin.value = value
     }
 
@@ -88,7 +89,6 @@ PrimitiveWidget {
 
             font.pixelSize: item_fontSize
 
-            // TODO: account for the setting or something
             enabled: widget.connected
             editable: true
 

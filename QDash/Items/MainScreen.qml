@@ -190,8 +190,7 @@ Rectangle {
     }
 
     /** CONTENT */
-    Text {
-        color: Clover.theme.text
+    Label {
         font.pixelSize: 20
 
         horizontalAlignment: Text.AlignHCenter

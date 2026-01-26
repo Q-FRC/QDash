@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -19,6 +18,7 @@ PrimitiveWidget {
     property list<string> errors
 
     function update(value) {
+        widget.connected = true
         errors = value
     }
 
@@ -38,13 +38,21 @@ PrimitiveWidget {
                 source: "qrc:/" + errors[modelData * 2]
                 width: item_fontSize
                 height: item_fontSize
+
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                }
             }
 
-            Text {
+            Label {
+                enabled: widget.connected
                 font.pixelSize: item_fontSize
-                color: Clover.theme.text
                 text: errors[modelData * 2 + 1]
                 wrapMode: Text.WrapAnywhere
+
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                }
             }
         }
 

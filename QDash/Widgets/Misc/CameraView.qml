@@ -199,10 +199,9 @@ PrimitiveWidget {
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
 
-                Text {
+                Label {
                     font.pixelSize: 16
                     text: "Resolution"
-                    color: Clover.theme.text
                 }
 
                 LabeledSpinBox {
@@ -215,10 +214,9 @@ PrimitiveWidget {
                     bindTarget: widget
                 }
 
-                Text {
+                Label {
                     font.pixelSize: 18
                     text: "x"
-                    color: Clover.theme.text
                 }
 
                 LabeledSpinBox {
@@ -236,10 +234,9 @@ PrimitiveWidget {
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
 
-                Text {
+                Label {
                     font.pixelSize: 16
                     text: "Quality"
-                    color: Clover.theme.text
                 }
 
                 Slider {

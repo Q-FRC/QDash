@@ -278,7 +278,8 @@ ApplicationWindow {
         }
 
         implicitHeight: 30
-        Text {
+
+        Label {
             anchors {
                 left: parent.left
                 verticalCenter: parent.verticalCenter
@@ -288,18 +289,16 @@ ApplicationWindow {
 
             text: "Status: " + conn.status
 
-            color: Clover.theme.text
             font.pixelSize: 16
         }
 
-        Text {
+        Label {
             anchors {
                 centerIn: parent
             }
 
             text: filename === "" ? "No File" : filename
 
-            color: Clover.theme.text
             font.pixelSize: 16
         }
     }

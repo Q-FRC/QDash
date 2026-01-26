@@ -9,31 +9,21 @@ import Carboxyl.Clover
 BaseWidget {
     id: widget
 
+    property string oldTopic
     property string trueTopic: topic + suffix
     property string suffix: ""
     property bool readOnly: false
 
     // Define this in your widget
-    function update(value) {}
+    function update(value) {
+        console.log("PrimitiveWidget's update function should NEVER be called. "
+                    + "If this is the case, you likely forgot to define the update function in your widget.")
+    }
 
     function setValue(value) {
         if (!readOnly) {
             valid = false
             TopicStore.setValue(trueTopic, value)
-        }
-    }
-
-    // TODO: find a way to prevent every single widget from getting this call?
-    function updateTopic(ntTopic, ntValue) {
-        if (typeof ntValue === "undefined")
-            return
-
-        if (ntTopic === trueTopic) {
-            update(ntValue)
-
-            valid = true
-            if (QDashSettings.disableWidgets)
-                connected = true
         }
     }
 
@@ -52,25 +42,23 @@ BaseWidget {
     }
 
     Component.onCompleted: {
-        TopicStore.topicUpdate.connect(updateTopic)
-        TopicStore.subscribe(model.topic + suffix)
-
         item_topic = model.topic
-        TopicStore.forceUpdate(item_topic)
+        oldTopic = trueTopic
+        TopicStore.subscribe(trueTopic, update)
+
+        item_topicChanged.connect(() => {
+                                      model.topic = item_topic
+
+                                      TopicStore.unsubscribe(oldTopic, update)
+                                      TopicStore.subscribe(trueTopic, update)
+
+                                      oldTopic = trueTopic
+                                  })
     }
 
     Component.onDestruction: {
         if (TopicStore !== null) {
-            TopicStore.topicUpdate.disconnect(updateTopic)
-            TopicStore.unsubscribe(trueTopic)
+            TopicStore.unsubscribe(trueTopic, update)
         }
-    }
-
-    onItem_topicChanged: {
-        TopicStore.unsubscribe(topic + suffix)
-        TopicStore.subscribe(item_topic + suffix)
-        model.topic = item_topic
-
-        TopicStore.forceUpdate(item_topic + suffix)
     }
 }

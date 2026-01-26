@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -19,6 +18,8 @@ SendableWidget {
     property int item_fontSize: 18
 
     function update(topic, value) {
+        widget.connected = true
+
         switch (topic) {
         case ".name":
         {
@@ -55,6 +56,7 @@ SendableWidget {
             }
 
             font.pixelSize: item_fontSize
+            enabled: widget.connected
 
             property bool running: false
             property string name: "Command"

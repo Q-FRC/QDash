@@ -23,7 +23,7 @@ PrimitiveWidget {
 
     property list<string> shapeChoices: ["Rectangle", "Circle", "Triangle"]
 
-    property bool itemValue
+    property bool itemValue: false
 
     Menu {
         id: switchMenu
@@ -39,11 +39,12 @@ PrimitiveWidget {
 
     function setColor() {
         shape.itemColor = itemValue ? item_trueColor : item_falseColor
-        shape.itemShape = item_shape
+        // shape.itemShape = item_shape
         shape.setColor()
     }
 
     function update(value) {
+        connected = true
         itemValue = value
         setColor()
     }

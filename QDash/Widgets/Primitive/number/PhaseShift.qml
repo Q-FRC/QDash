@@ -89,40 +89,38 @@ PrimitiveWidget {
         updatePhase()
     }
 
-    function updateFMSData(topic, value) {
-        if (topic === "/FMSInfo/IsRedAlliance") {
-            redAlliance = value
-        } else if (topic === "/FMSInfo/GameSpecificMessage") {
-            switch (value) {
-            case 'B':
-                firstActive = PhaseShift.Red
-                secondActive = PhaseShift.Blue
-                break
-            case 'R':
-                firstActive = PhaseShift.Blue
-                secondActive = PhaseShift.Red
-                break
-            default:
-                break
-            }
+    function updateRedAlliance(value) {
+        redAlliance = value
+    }
 
-            updatePhase()
+    function updateGSM(value) {
+        switch (value) {
+        case 'B':
+            firstActive = PhaseShift.Red
+            secondActive = PhaseShift.Blue
+            break
+        case 'R':
+            firstActive = PhaseShift.Blue
+            secondActive = PhaseShift.Red
+            break
+        default:
+            break
         }
+
+        updatePhase()
     }
 
     function unsubscribeFMSData() {
         if (TopicStore !== null) {
-            TopicStore.topicUpdate.disconnect(updateFMSData)
-            TopicStore.unsubscribe("/FMSInfo/IsRedAlliance")
-            TopicStore.unsubscribe("/FMSInfo/GameSpecificMessage")
+            TopicStore.unsubscribe("/FMSInfo/IsRedAlliance", updateRedAlliance)
+            TopicStore.unsubscribe("/FMSInfo/GameSpecificMessage", updateGSM)
         }
     }
 
     function subscribeFMSData() {
         if (TopicStore !== null) {
-            TopicStore.topicUpdate.connect(updateFMSData)
-            TopicStore.subscribe("/FMSInfo/IsRedAlliance")
-            TopicStore.subscribe("/FMSInfo/GameSpecificMessage")
+            TopicStore.subscribe("/FMSInfo/IsRedAlliance", updateRedAlliance)
+            TopicStore.subscribe("/FMSInfo/GameSpecificMessage", updateGSM)
         }
     }
 

@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick
+import QtQuick.Controls
 
 import Carboxyl.Clover
 
@@ -35,11 +36,10 @@ Rectangle {
         onClicked: rem.clicked()
     }
 
-    Text {
+    Label {
         anchors.fill: parent
         anchors.leftMargin: 20
 
-        color: Clover.theme.text
         text: model.name
         font.pixelSize: Math.round(18)
 

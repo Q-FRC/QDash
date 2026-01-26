@@ -1,16 +1,14 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
- 
+
 import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
 import Carboxyl.Clover
-
 
 PrimitiveWidget {
     id: widget
@@ -43,6 +41,7 @@ PrimitiveWidget {
     }
 
     function update(value) {
+        widget.connected = true
         txt.text = value
     }
 
@@ -60,6 +59,7 @@ PrimitiveWidget {
         fontSizeMode: Text.Fit
 
         wrapMode: item_wrap ? Text.WrapAtWordBoundaryOrAnywhere : Text.NoWrap
+        enabled: widget.connected
 
         anchors {
             top: titleField.bottom

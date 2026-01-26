@@ -37,6 +37,7 @@ PrimitiveWidget {
     Component.onCompleted: rcMenu.addMenu(switchMenu)
 
     function update(value) {
+        widget.connected = true
         textField.text = value
     }
 

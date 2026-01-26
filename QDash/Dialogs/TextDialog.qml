@@ -10,9 +10,8 @@ NativeDialog {
     id: dialog
     required property string text
 
-    Text {
-        color: Clover.theme.text
-        font.pixelSize: (14)
+    Label {
+        font.pixelSize: 14
 
         text: dialog.text
 

@@ -133,14 +133,12 @@ Popup {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            Text {
+            Label {
                 Layout.fillHeight: true
                 font {
                     pixelSize: 16
                     bold: true
                 }
-
-                color: Clover.theme.text
 
                 Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                 leftPadding: 10
@@ -150,13 +148,11 @@ Popup {
                 wrapMode: Text.WordWrap
             }
 
-            Text {
+            Label {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
 
                 font.pixelSize: 14
-
-                color: Clover.theme.text
 
                 Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                 leftPadding: 10

@@ -91,6 +91,7 @@ PrimitiveWidget {
     }
 
     function update(value) {
+        widget.connected = true
         gauge.value = value
     }
 
@@ -104,6 +105,8 @@ PrimitiveWidget {
             leftMargin: 10
             rightMargin: 10
         }
+
+        enabled: widget.connected
 
         // TODO: Fix clipping
         RadialGauge {

@@ -54,25 +54,19 @@ PrimitiveWidget {
 
     // TODO: This is kinda weird
     // might want to make this global or something? idk
-    function updateMirror(topic, value) {
-        if (topic === "/FMSInfo/IsRedAlliance") {
-            mirrorField = value
-        }
+    function updateMirror(value) {
+        mirrorField = value
     }
 
     function unsubscribeMirror() {
         if (TopicStore !== null) {
-            TopicStore.topicUpdate.disconnect(updateMirror)
-            TopicStore.unsubscribe("/FMSInfo/IsRedAlliance")
+            TopicStore.unsubscribe("/FMSInfo/IsRedAlliance", updateMirror)
         }
     }
 
     onItem_mirrorForRedAllianceChanged: {
         if (item_mirrorForRedAlliance) {
-            TopicStore.topicUpdate.connect(updateMirror)
-            TopicStore.subscribe("/FMSInfo/IsRedAlliance")
-
-            TopicStore.forceUpdate("/FMSInfo/IsRedAlliance")
+            TopicStore.subscribe("/FMSInfo/IsRedAlliance", updateMirror)
         } else {
             unsubscribeMirror()
             mirrorField = false

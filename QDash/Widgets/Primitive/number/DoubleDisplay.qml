@@ -67,13 +67,14 @@ PrimitiveWidget {
     Component.onCompleted: rcMenu.addMenu(switchMenu)
 
     function update(value) {
+        widget.connected = true
         txt.value = value
     }
 
     Text {
         id: txt
 
-        font.pixelSize: item_fontSize
+        font.pixelSize: 0
 
         property double value
 
@@ -84,6 +85,7 @@ PrimitiveWidget {
         verticalAlignment: Text.AlignVCenter
 
         fontSizeMode: Text.Fit
+        enabled: widget.connected
 
         anchors {
             top: titleField.bottom

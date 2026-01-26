@@ -1,4 +1,3 @@
-
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick 2.15
@@ -77,6 +76,7 @@ PrimitiveWidget {
     }
 
     function update(value) {
+        widget.connected = true
         bar.value = value
     }
 
@@ -89,6 +89,7 @@ PrimitiveWidget {
         to: item_upperBound
 
         rotation: item_vertical ? -90 : 0
+        enabled: widget.connected
 
         anchors {
             horizontalCenter: parent.horizontalCenter

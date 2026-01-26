@@ -74,7 +74,7 @@ void TopicListModel::add(const QString &toAdd)
 
     // TODO: refactor
     QString total = "";
-    for (const QString &sub : split) {
+    for (const QString &sub : std::as_const(split)) {
         total += "/" + sub;
         bool isLast = sub == split.last();
 
@@ -90,24 +90,12 @@ void TopicListModel::add(const QString &toAdd)
                         std::string value = type.GetString("invalid");
 
                         if (value == "invalid") {
-                            QMetaObject::Connection *conn = new QMetaObject::Connection;
-
-                            m_store->subscribe(toAdd);
-
-                            *conn = connect(m_store, &TopicStore::topicUpdate, this,
-                                            [conn, toAdd, parentItem, parentPath,
-                                             this](QString topic, QVariant value) mutable {
-                                                if (topic == toAdd) {
-                                                    parentItem->setData(parentPath, TOPIC);
-                                                    QString typeStr = value.toString();
-                                                    parentItem->setData(typeStr, TYPE);
-
-                                                    m_store->unsubscribe(toAdd);
-
-                                                    disconnect(*conn);
-                                                    delete conn;
-                                                }
-                                            });
+                            m_store->subscribeOneShot(
+                                toAdd, [this,  parentItem, parentPath](const QVariant &value) mutable {
+                                    parentItem->setData(parentPath, TOPIC);
+                                    QString typeStr = value.toString();
+                                    parentItem->setData(typeStr, TYPE);
+                                });
                         } else {
                             parentItem->setData(parentPath, TOPIC);
                             QString typeStr = QString::fromStdString(value);
@@ -164,13 +152,13 @@ void TopicListModel::remove(const QString &toRemove)
         split.remove(0);
 
     QStandardItem *parentItem = invisibleRootItem();
-    for (const QString &sub : split) {
+    for (const QString &sub : std::as_const(split)) {
         auto results = findItems(sub, Qt::MatchRecursive | Qt::MatchExactly | Qt::MatchWrap);
 
         if (results.isEmpty())
             return;
         else {
-            for (QStandardItem *item : results) {
+            for (QStandardItem *item : std::as_const(results)) {
                 if (item == nullptr)
                     continue;
 

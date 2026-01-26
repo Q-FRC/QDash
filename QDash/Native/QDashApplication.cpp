@@ -68,13 +68,15 @@ int QDashApplication::run()
         QObject *parent = new QObject(this);
         QWidget *widget = new QWidget;
 
+        QQmlApplicationEngine engine;
+
         conn = new ConnManager(parent);
         platform = new PlatformHelper(parent);
         logs = new Logger(parent);
         defs = new CompileDefinitions(parent);
         fileSelect = new FileSelect(widget);
 
-        store = new TopicStore(logs, parent);
+        store = new TopicStore(&engine, logs, parent);
         settings = new SettingsManager(logs, parent);
         notification = new NotificationHelper(logs, parent);
 
@@ -90,8 +92,6 @@ int QDashApplication::run()
 
         /// NETWORKTABLES //
         setupNetworkTables();
-
-        QQmlApplicationEngine engine;
 
         // carboxyl setup
         CarboxylApplication *carboxylApp =
