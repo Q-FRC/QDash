@@ -13,7 +13,7 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int item_fontSize: 100
+    property int item_maxFontSize: 100
     property int item_decimals: 2
     property color item_color: Clover.theme.currentAccent
 
@@ -74,7 +74,7 @@ PrimitiveWidget {
     Text {
         id: txt
 
-        font.pixelSize: 0
+        font.pixelSize: item_maxFontSize
 
         property double value
 
@@ -131,7 +131,7 @@ PrimitiveWidget {
 
                     label: "Maximum Font Size"
 
-                    bindedProperty: "item_fontSize"
+                    bindedProperty: "item_maxFontSize"
                     bindTarget: widget
                 }
             }

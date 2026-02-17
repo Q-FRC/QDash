@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include <QQuickWindow>
 
 class PlatformHelper : public QObject {
     Q_OBJECT
@@ -15,6 +16,8 @@ public:
 
     Q_INVOKABLE double screenWidth();
     Q_INVOKABLE double screenHeight();
+
+    Q_INVOKABLE double titlebarHeight(QQuickWindow *window);
 
     Q_INVOKABLE bool isMac();
 signals:

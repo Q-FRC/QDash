@@ -28,6 +28,11 @@ double PlatformHelper::screenHeight()
     return qApp->primaryScreen()->availableSize().height();
 }
 
+double PlatformHelper::titlebarHeight(QQuickWindow *window)
+{
+    return window->frameGeometry().height() - window->geometry().height();
+}
+
 bool PlatformHelper::isMac()
 {
 #ifdef Q_OS_APPLE

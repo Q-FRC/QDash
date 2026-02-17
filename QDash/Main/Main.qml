@@ -32,7 +32,8 @@ ApplicationWindow {
         if (QDashSettings.resizeToDS) {
             logs.debug("UI", "DS Resize")
 
-            QDashSettings.windowHeight = platformHelper.screenHeight() - 236
+            // TODO(crueter): Better heuristic for DS resize.
+            QDashSettings.windowHeight = platformHelper.screenHeight() - 230
             QDashSettings.windowWidth = platformHelper.screenWidth()
 
             // Explicitly disallow resizing, because the user probably doesn't want to
@@ -42,7 +43,7 @@ ApplicationWindow {
             minimumHeight = height
 
             QDashSettings.windowX = 0
-            QDashSettings.windowY = 0
+            QDashSettings.windowY = platformHelper.titlebarHeight(this)
         }
     }
 
