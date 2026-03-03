@@ -108,102 +108,110 @@ PrimitiveWidget {
         }
     }
 
-    BaseConfigDialog {
-        id: config
+    Loader {
+        id: configLoader
+        active: false
+        asynchronous: true
 
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
+        onLoaded: item.open()
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+        sourceComponent: BaseConfigDialog {
+            id: config
 
-            RowLayout {
+            content: ColumnLayout {
+                id: layout
+                spacing: 12
+                anchors.fill: parent
+                anchors.leftMargin: 2
+                clip: true
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-
-                    id: titleFontField
-
-                    label: "Title Font Size"
-
-                    bindedProperty: "item_titleFontSize"
-                    bindTarget: widget
+                SectionHeader {
+                    label: "Font Settings"
                 }
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
+                RowLayout {
 
-                    id: fontField
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
 
-                    label: "Font Size"
+                        id: titleFontField
 
-                    bindedProperty: "item_fontSize"
-                    bindTarget: widget
+                        label: "Title Font Size"
+
+                        bindedProperty: "item_titleFontSize"
+                        bindTarget: widget
+                    }
+
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+
+                        id: fontField
+
+                        label: "Font Size"
+
+                        bindedProperty: "item_fontSize"
+                        bindTarget: widget
+                    }
                 }
-            }
 
-            SectionHeader {
-                label: "Spin Box Settings"
-            }
+                SectionHeader {
+                    label: "Spin Box Settings"
+                }
 
-            RowLayout {
+                RowLayout {
+
+                    LabeledDoubleSpinBox {
+                        Layout.fillWidth: true
+
+                        id: lowField
+
+                        label: "Lower Bound"
+
+                        bindedProperty: "item_lowerBound"
+                        bindTarget: widget
+                    }
+
+                    LabeledDoubleSpinBox {
+                        Layout.fillWidth: true
+
+                        id: upField
+
+                        label: "Upper Bound"
+
+                        bindedProperty: "item_upperBound"
+                        bindTarget: widget
+                    }
+                }
 
                 LabeledDoubleSpinBox {
                     Layout.fillWidth: true
 
-                    id: lowField
+                    id: stepField
 
-                    label: "Lower Bound"
+                    label: "Step Size"
 
-                    bindedProperty: "item_lowerBound"
+                    bindedProperty: "item_stepSize"
                     bindTarget: widget
+
+                    from: 0
+                    stepSize: 0.1
                 }
 
-                LabeledDoubleSpinBox {
+                SectionHeader {
+                    label: "NT Settings"
+                }
+
+                LabeledTextField {
                     Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-                    id: upField
+                    id: topicField
 
-                    label: "Upper Bound"
+                    label: "Topic"
 
-                    bindedProperty: "item_upperBound"
+                    bindedProperty: "item_topic"
                     bindTarget: widget
                 }
-            }
-
-            LabeledDoubleSpinBox {
-                Layout.fillWidth: true
-
-                id: stepField
-
-                label: "Step Size"
-
-                bindedProperty: "item_stepSize"
-                bindTarget: widget
-
-                from: 0
-                stepSize: 0.1
-            }
-
-            SectionHeader {
-                label: "NT Settings"
-            }
-
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-
-                id: topicField
-
-                label: "Topic"
-
-                bindedProperty: "item_topic"
-                bindTarget: widget
             }
         }
     }

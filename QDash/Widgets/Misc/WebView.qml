@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtCore
 import QtQuick 2.15
 import QtQuick.Controls 2.15
@@ -44,6 +43,57 @@ BaseWidget {
             onTriggered: item_url = web.url
         }
     }
+    Loader {
+        id: configLoader
+        active: false
+        asynchronous: true
+
+        onLoaded: item.open()
+
+        sourceComponent: BaseConfigDialog {
+            id: config
+
+            content: ColumnLayout {
+                id: layout
+                spacing: 12
+                anchors.fill: parent
+                anchors.leftMargin: 2
+                clip: true
+
+                SectionHeader {
+                    label: "Font Settings"
+                }
+
+                LabeledSpinBox {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+
+                    id: titleFontField
+
+                    label: "Title Font Size"
+
+                    bindedProperty: "item_titleFontSize"
+                    bindTarget: widget
+                }
+
+                SectionHeader {
+                    label: "Web View Settings"
+                }
+
+                LabeledTextField {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+
+                    id: urlField
+
+                    label: "URL"
+
+                    bindedProperty: "item_url"
+                    bindTarget: widget
+                }
+            }
+        }
+    }
 
     Component.onCompleted: {
         rcMenu.addMenu(webMenu)
@@ -71,50 +121,6 @@ BaseWidget {
                 storageName: "QDash"
                 persistentCookiesPolicy: WebEngineProfile.ForcePersistentCookies
                 offTheRecord: false
-            }
-        }
-    }
-
-    BaseConfigDialog {
-        id: config
-
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
-
-            SectionHeader {
-                label: "Font Settings"
-            }
-
-            LabeledSpinBox {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-
-                id: titleFontField
-
-                label: "Title Font Size"
-
-                bindedProperty: "item_titleFontSize"
-                bindTarget: widget
-            }
-
-            SectionHeader {
-                label: "Web View Settings"
-            }
-
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-
-                id: urlField
-
-                label: "URL"
-
-                bindedProperty: "item_url"
-                bindTarget: widget
             }
         }
     }

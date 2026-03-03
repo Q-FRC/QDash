@@ -105,14 +105,13 @@ Widget TabWidgetsModel::copy(int idx)
     return nw;
 }
 
-void TabWidgetsModel::add(const QList<Widget> &w) {
-    beginInsertRows(QModelIndex(), rowCount(), rowCount() + w.count() - 1);
-    m_data << w;
-    endInsertRows();
+void TabWidgetsModel::reset(const QList<Widget>& w) {
+    beginResetModel();
+    m_data = w;
+    endResetModel();
 }
 
-void TabWidgetsModel::add(Widget w)
-{
+void TabWidgetsModel::add(const Widget &w) {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_data << w;
     endInsertRows();
@@ -130,9 +129,7 @@ void TabWidgetsModel::add(QString title, QString topic, QString type)
     w.rowSpan = 1;
     w.colSpan = 1;
 
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
-    m_data << w;
-    endInsertRows();
+    add(w);
 }
 
 void TabWidgetsModel::setEqualTo(TabWidgetsModel *w)
@@ -291,7 +288,7 @@ TabWidgetsModel *TabWidgetsModel::loadObject(QObject *parent, const QJsonArray &
         widgets << w;
     }
 
-    model->add(widgets);
+    model->reset(widgets);
 
     return model;
 }

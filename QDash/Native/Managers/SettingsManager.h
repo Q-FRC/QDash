@@ -51,6 +51,7 @@ public:
     explicit SettingsManager(Logger *logs, QObject *parent = nullptr);
 
     void addRecentFile(QFile &file);
+    void addRecentFile(const QString &file);
 
     Q_INVOKABLE void reconnect();
 };

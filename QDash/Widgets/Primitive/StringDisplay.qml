@@ -71,87 +71,95 @@ PrimitiveWidget {
         }
     }
 
-    BaseConfigDialog {
-        id: config
+    Loader {
+        id: configLoader
+        active: false
+        asynchronous: true
 
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
+        onLoaded: item.open()
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+        sourceComponent: BaseConfigDialog {
+            id: config
 
-            RowLayout {
+            content: ColumnLayout {
+                id: layout
+                spacing: 12
+                anchors.fill: parent
+                anchors.leftMargin: 2
+                clip: true
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-
-                    id: titleFontField
-
-                    label: "Title Font Size"
-
-                    bindedProperty: "item_titleFontSize"
-                    bindTarget: widget
+                SectionHeader {
+                    label: "Font Settings"
                 }
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
+                RowLayout {
 
-                    id: fontField
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
 
-                    label: "Maximum Font Size"
+                        id: titleFontField
 
-                    bindedProperty: "item_fontSize"
-                    bindTarget: widget
-                }
-            }
+                        label: "Title Font Size"
 
-            SectionHeader {
-                label: "Display Settings"
-            }
-            RowLayout {
+                        bindedProperty: "item_titleFontSize"
+                        bindTarget: widget
+                    }
 
-                ColorField {
-                    Layout.fillWidth: true
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
 
-                    id: colorField
+                        id: fontField
 
-                    label: "Text Color"
+                        label: "Maximum Font Size"
 
-                    bindedProperty: "item_color"
-                    bindTarget: widget
+                        bindedProperty: "item_fontSize"
+                        bindTarget: widget
+                    }
                 }
 
-                LabeledCheckbox {
+                SectionHeader {
+                    label: "Display Settings"
+                }
+                RowLayout {
+
+                    ColorField {
+                        Layout.fillWidth: true
+
+                        id: colorField
+
+                        label: "Text Color"
+
+                        bindedProperty: "item_color"
+                        bindTarget: widget
+                    }
+
+                    LabeledCheckbox {
+                        Layout.fillWidth: true
+
+                        id: wrapField
+
+                        label: "Wrap Text?"
+
+                        bindedProperty: "item_wrap"
+                        bindTarget: widget
+                    }
+                }
+
+                SectionHeader {
+                    label: "NT Settings"
+                }
+
+                LabeledTextField {
                     Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-                    id: wrapField
+                    id: topicField
 
-                    label: "Wrap Text?"
+                    label: "Topic"
 
-                    bindedProperty: "item_wrap"
+                    bindedProperty: "item_topic"
                     bindTarget: widget
                 }
-            }
-
-            SectionHeader {
-                label: "NT Settings"
-            }
-
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-
-                id: topicField
-
-                label: "Topic"
-
-                bindedProperty: "item_topic"
-                bindTarget: widget
             }
         }
     }

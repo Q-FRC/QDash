@@ -150,99 +150,107 @@ PrimitiveWidget {
         }
     }
 
-    BaseConfigDialog {
-        id: config
+    Loader {
+        id: configLoader
+        active: false
+        asynchronous: true
 
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
+        onLoaded: item.open()
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+        sourceComponent: BaseConfigDialog {
+            id: config
 
-            RowLayout {
-                LabeledSpinBox {
-                    // TODO: commonize fillWidth
-                    Layout.fillWidth: true
+            content: ColumnLayout {
+                id: layout
+                spacing: 12
+                anchors.fill: parent
+                anchors.leftMargin: 2
+                clip: true
 
-                    label: "Title Font Size"
-                    bindedProperty: "item_titleFontSize"
+                SectionHeader {
+                    label: "Font Settings"
                 }
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
+                RowLayout {
+                    LabeledSpinBox {
+                        // TODO: commonize fillWidth
+                        Layout.fillWidth: true
 
-                    label: "Font Size"
-                    bindedProperty: "item_fontSize"
-                }
-            }
+                        label: "Title Font Size"
+                        bindedProperty: "item_titleFontSize"
+                    }
 
-            SectionHeader {
-                label: "Spin Box Settings"
-            }
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
 
-            RowLayout {
-
-                LabeledDoubleSpinBox {
-                    Layout.fillWidth: true
-
-                    label: "Lower Bound"
-                    bindedProperty: "item_lowerBound"
+                        label: "Font Size"
+                        bindedProperty: "item_fontSize"
+                    }
                 }
 
-                LabeledDoubleSpinBox {
-                    Layout.fillWidth: true
-
-                    label: "Upper Bound"
-                    bindedProperty: "item_upperBound"
+                SectionHeader {
+                    label: "Spin Box Settings"
                 }
-            }
 
-            LabeledDoubleSpinBox {
-                Layout.fillWidth: true
+                RowLayout {
 
-                label: "Step Size"
-                bindedProperty: "item_stepSize"
+                    LabeledDoubleSpinBox {
+                        Layout.fillWidth: true
 
-                from: 0
-                stepSize: 0.1
-            }
+                        label: "Lower Bound"
+                        bindedProperty: "item_lowerBound"
+                    }
 
-            SectionHeader {
-                label: "Dial Settings"
-            }
+                    LabeledDoubleSpinBox {
+                        Layout.fillWidth: true
 
-            RowLayout {
-
-                LabeledDoubleSpinBox {
-                    Layout.fillWidth: true
-
-                    label: "Start Angle"
-                    bindedProperty: "item_startAngle"
+                        label: "Upper Bound"
+                        bindedProperty: "item_upperBound"
+                    }
                 }
 
                 LabeledDoubleSpinBox {
                     Layout.fillWidth: true
 
-                    label: "End Angle"
-                    bindedProperty: "item_endAngle"
+                    label: "Step Size"
+                    bindedProperty: "item_stepSize"
+
+                    from: 0
+                    stepSize: 0.1
                 }
-            }
 
-            SectionHeader {
-                label: "NT Settings"
-            }
+                SectionHeader {
+                    label: "Dial Settings"
+                }
 
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
+                RowLayout {
 
-                label: "Topic"
-                bindedProperty: "item_topic"
+                    LabeledDoubleSpinBox {
+                        Layout.fillWidth: true
+
+                        label: "Start Angle"
+                        bindedProperty: "item_startAngle"
+                    }
+
+                    LabeledDoubleSpinBox {
+                        Layout.fillWidth: true
+
+                        label: "End Angle"
+                        bindedProperty: "item_endAngle"
+                    }
+                }
+
+                SectionHeader {
+                    label: "NT Settings"
+                }
+
+                LabeledTextField {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+
+                    label: "Topic"
+                    bindedProperty: "item_topic"
+                }
             }
         }
     }

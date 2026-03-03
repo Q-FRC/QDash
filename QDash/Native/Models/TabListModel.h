@@ -43,7 +43,6 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     // Add data:
-    void add(const QList<Tab> &t);
     Q_INVOKABLE void add(Tab t);
     Q_INVOKABLE void add(QString title);
 
@@ -52,7 +51,6 @@ public:
 
     Q_INVOKABLE void save(const QString &filename = "");
     Q_INVOKABLE QJsonDocument saveObject() const;
-    Q_INVOKABLE void loadObject(const QJsonDocument &doc);
     Q_INVOKABLE void load(const QString &fileName = "");
 
     Q_INVOKABLE void clear();

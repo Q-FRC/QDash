@@ -57,8 +57,8 @@ public:
 
     // Add data:
     Q_INVOKABLE Widget copy(int idx);
-    void add(const QList<Widget>& w);
-    Q_INVOKABLE void add(Widget w);
+    void reset(const QList<Widget>& w);
+    Q_INVOKABLE void add(const Widget& w);
     Q_INVOKABLE void add(QString title, QString topic, QString type);
 
     Q_INVOKABLE void setEqualTo(TabWidgetsModel *w);

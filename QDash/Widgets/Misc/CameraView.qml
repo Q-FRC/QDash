@@ -154,123 +154,131 @@ PrimitiveWidget {
         }
     }
 
-    BaseConfigDialog {
-        id: config
+    Loader {
+        id: configLoader
+        active: false
+        asynchronous: true
 
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
+        onLoaded: item.open()
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+        sourceComponent: BaseConfigDialog {
+            id: config
 
-            LabeledSpinBox {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
+            content: ColumnLayout {
+                id: layout
+                spacing: 12
+                anchors.fill: parent
+                anchors.leftMargin: 2
+                clip: true
 
-                id: titleFontField
-
-                label: "Title Font Size"
-
-                bindedProperty: "item_titleFontSize"
-                bindTarget: widget
-            }
-
-            SectionHeader {
-                label: "Stream Settings"
-            }
-
-            LabeledSpinBox {
-                Layout.fillWidth: true
-
-                id: fpsField
-
-                label: "FPS"
-
-                bindedProperty: "item_fps"
-                bindTarget: widget
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-
-                Label {
-                    font.pixelSize: 16
-                    text: "Resolution"
+                SectionHeader {
+                    label: "Font Settings"
                 }
 
                 LabeledSpinBox {
                     Layout.fillWidth: true
-                    id: resWField
+                    Layout.alignment: Qt.AlignTop
 
-                    label: "Width"
+                    id: titleFontField
 
-                    bindedProperty: "item_resW"
+                    label: "Title Font Size"
+
+                    bindedProperty: "item_titleFontSize"
                     bindTarget: widget
                 }
 
-                Label {
-                    font.pixelSize: 18
-                    text: "x"
+                SectionHeader {
+                    label: "Stream Settings"
                 }
 
                 LabeledSpinBox {
                     Layout.fillWidth: true
-                    id: resHField
 
-                    label: "Height"
+                    id: fpsField
 
-                    bindedProperty: "item_resH"
+                    label: "FPS"
+
+                    bindedProperty: "item_fps"
                     bindTarget: widget
                 }
-            }
 
-            RowLayout {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-
-                Label {
-                    font.pixelSize: 16
-                    text: "Quality"
-                }
-
-                Slider {
+                RowLayout {
                     Layout.fillWidth: true
-                    id: qualityField
+                    Layout.alignment: Qt.AlignTop
 
-                    from: 0
-                    to: 100
-                    stepSize: 10
-
-                    function open() {
-                        value = widget.item_quality
+                    Label {
+                        font.pixelSize: 16
+                        text: "Resolution"
                     }
 
-                    function accept() {
-                        widget.item_quality = value
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+                        id: resWField
+
+                        label: "Width"
+
+                        bindedProperty: "item_resW"
+                        bindTarget: widget
+                    }
+
+                    Label {
+                        font.pixelSize: 18
+                        text: "x"
+                    }
+
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+                        id: resHField
+
+                        label: "Height"
+
+                        bindedProperty: "item_resH"
+                        bindTarget: widget
                     }
                 }
-            }
 
-            SectionHeader {
-                label: "NT Settings"
-            }
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
+                    Label {
+                        font.pixelSize: 16
+                        text: "Quality"
+                    }
 
-                id: topicField
+                    Slider {
+                        Layout.fillWidth: true
+                        id: qualityField
 
-                label: "Topic"
+                        from: 0
+                        to: 100
+                        stepSize: 10
 
-                bindedProperty: "item_topic"
-                bindTarget: widget
+                        function open() {
+                            value = widget.item_quality
+                        }
+
+                        function accept() {
+                            widget.item_quality = value
+                        }
+                    }
+                }
+
+                SectionHeader {
+                    label: "NT Settings"
+                }
+
+                LabeledTextField {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+
+                    id: topicField
+
+                    label: "Topic"
+
+                    bindedProperty: "item_topic"
+                    bindTarget: widget
+                }
             }
         }
     }

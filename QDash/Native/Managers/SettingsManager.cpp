@@ -36,17 +36,14 @@ void SettingsManager::reconnect()
     Globals::inst.Disconnect();
 }
 
-void SettingsManager::addRecentFile(QFile &file)
-{
+void SettingsManager::addRecentFile(const QString& filename) {
     QStringList recentFiles = Settings::RecentFiles;
-
-    QString fileName = file.fileName();
-    int index = recentFiles.indexOf(fileName);
+    int index = recentFiles.indexOf(filename);
 
     if (index != -1) {
         recentFiles.move(index, 0);
     } else {
-        recentFiles.prepend(fileName);
+        recentFiles.prepend(filename);
     }
 
     if (recentFiles.length() > 5) {
@@ -56,4 +53,9 @@ void SettingsManager::addRecentFile(QFile &file)
     Settings::RecentFiles = recentFiles;
 
     emit recentFilesChanged();
+}
+
+void SettingsManager::addRecentFile(QFile& file) {
+    QString fileName = file.fileName();
+    addRecentFile(fileName);
 }

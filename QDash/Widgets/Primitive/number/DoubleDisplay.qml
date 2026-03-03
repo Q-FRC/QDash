@@ -97,90 +97,98 @@ PrimitiveWidget {
         }
     }
 
-    BaseConfigDialog {
-        id: config
+    Loader {
+        id: configLoader
+        active: false
+        asynchronous: true
 
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
+        onLoaded: item.open()
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+        sourceComponent: BaseConfigDialog {
+            id: config
 
-            RowLayout {
+            content: ColumnLayout {
+                id: layout
+                spacing: 12
+                anchors.fill: parent
+                anchors.leftMargin: 2
+                clip: true
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-
-                    id: titleFontField
-
-                    label: "Title Font Size"
-
-                    bindedProperty: "item_titleFontSize"
-                    bindTarget: widget
+                SectionHeader {
+                    label: "Font Settings"
                 }
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
+                RowLayout {
 
-                    id: fontField
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
 
-                    label: "Maximum Font Size"
+                        id: titleFontField
 
-                    bindedProperty: "item_maxFontSize"
-                    bindTarget: widget
-                }
-            }
+                        label: "Title Font Size"
 
-            SectionHeader {
-                label: "Display Settings"
-            }
+                        bindedProperty: "item_titleFontSize"
+                        bindTarget: widget
+                    }
 
-            RowLayout {
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
+                        id: fontField
 
-                    id: decField
+                        label: "Maximum Font Size"
 
-                    label: "Number of Decimals"
-
-                    bindedProperty: "item_decimals"
-                    bindTarget: widget
-
-                    from: 0
+                        bindedProperty: "item_maxFontSize"
+                        bindTarget: widget
+                    }
                 }
 
-                ColorField {
+                SectionHeader {
+                    label: "Display Settings"
+                }
+
+                RowLayout {
+
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+
+                        id: decField
+
+                        label: "Number of Decimals"
+
+                        bindedProperty: "item_decimals"
+                        bindTarget: widget
+
+                        from: 0
+                    }
+
+                    ColorField {
+                        Layout.fillWidth: true
+
+                        id: colorField
+
+                        label: "Text Color"
+
+                        bindedProperty: "item_color"
+                        bindTarget: widget
+                    }
+                }
+
+                SectionHeader {
+                    label: "NT Settings"
+                }
+
+                LabeledTextField {
                     Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-                    id: colorField
+                    id: topicField
 
-                    label: "Text Color"
+                    label: "Topic"
 
-                    bindedProperty: "item_color"
+                    bindedProperty: "item_topic"
                     bindTarget: widget
                 }
-            }
-
-            SectionHeader {
-                label: "NT Settings"
-            }
-
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-
-                id: topicField
-
-                label: "Topic"
-
-                bindedProperty: "item_topic"
-                bindTarget: widget
             }
         }
     }

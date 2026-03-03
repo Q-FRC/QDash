@@ -71,74 +71,82 @@ PrimitiveWidget {
         }
     }
 
-    BaseConfigDialog {
-        id: config
+    Loader {
+        id: configLoader
+        active: false
+        asynchronous: true
 
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
+        onLoaded: item.open()
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+        sourceComponent: BaseConfigDialog {
+            id: config
 
-            RowLayout {
+            content: ColumnLayout {
+                id: layout
+                spacing: 12
+                anchors.fill: parent
+                anchors.leftMargin: 2
+                clip: true
 
-                LabeledSpinBox {
+                SectionHeader {
+                    label: "Font Settings"
+                }
+
+                RowLayout {
+
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+
+                        id: titleFontField
+
+                        label: "Title Font Size"
+
+                        bindedProperty: "item_titleFontSize"
+                        bindTarget: widget
+                    }
+
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+
+                        id: fontField
+
+                        label: "Maximum Font Size"
+
+                        bindedProperty: "item_maxFontSize"
+                        bindTarget: widget
+                    }
+                }
+
+                SectionHeader {
+                    label: "Display Settings"
+                }
+
+                ColorField {
                     Layout.fillWidth: true
 
-                    id: titleFontField
+                    id: colorField
 
-                    label: "Title Font Size"
+                    label: "Text Color"
 
-                    bindedProperty: "item_titleFontSize"
+                    bindedProperty: "item_color"
                     bindTarget: widget
                 }
 
-                LabeledSpinBox {
+                SectionHeader {
+                    label: "NT Settings"
+                }
+
+                LabeledTextField {
                     Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-                    id: fontField
+                    id: topicField
 
-                    label: "Maximum Font Size"
+                    label: "Topic"
 
-                    bindedProperty: "item_maxFontSize"
+                    bindedProperty: "item_topic"
                     bindTarget: widget
                 }
-            }
-
-            SectionHeader {
-                label: "Display Settings"
-            }
-
-            ColorField {
-                Layout.fillWidth: true
-
-                id: colorField
-
-                label: "Text Color"
-
-                bindedProperty: "item_color"
-                bindTarget: widget
-            }
-
-            SectionHeader {
-                label: "NT Settings"
-            }
-
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-
-                id: topicField
-
-                label: "Topic"
-
-                bindedProperty: "item_topic"
-                bindTarget: widget
             }
         }
     }

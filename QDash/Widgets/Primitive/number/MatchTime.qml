@@ -1,4 +1,3 @@
-
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick 2.15
@@ -89,74 +88,82 @@ PrimitiveWidget {
         }
     }
 
-    BaseConfigDialog {
-        id: config
+    Loader {
+        id: configLoader
+        active: false
+        asynchronous: true
 
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
+        onLoaded: item.open()
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+        sourceComponent: BaseConfigDialog {
+            id: config
 
-            RowLayout {
+            content: ColumnLayout {
+                id: layout
+                spacing: 12
+                anchors.fill: parent
+                anchors.leftMargin: 2
+                clip: true
 
-                LabeledSpinBox {
+                SectionHeader {
+                    label: "Font Settings"
+                }
+
+                RowLayout {
+
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+
+                        id: titleFontField
+
+                        label: "Title Font Size"
+
+                        bindedProperty: "item_titleFontSize"
+                        bindTarget: widget
+                    }
+
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+
+                        id: fontField
+
+                        label: "Maximum Font Size"
+
+                        bindedProperty: "item_fontSize"
+                        bindTarget: widget
+                    }
+                }
+
+                SectionHeader {
+                    label: "Display Settings"
+                }
+
+                ColorField {
                     Layout.fillWidth: true
 
-                    id: titleFontField
+                    id: warnField
 
-                    label: "Title Font Size"
+                    label: "Warning Color"
 
-                    bindedProperty: "item_titleFontSize"
+                    bindedProperty: "item_warningColor"
                     bindTarget: widget
                 }
 
-                LabeledSpinBox {
+                SectionHeader {
+                    label: "NT Settings"
+                }
+
+                LabeledTextField {
                     Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-                    id: fontField
+                    id: topicField
 
-                    label: "Maximum Font Size"
+                    label: "Topic"
 
-                    bindedProperty: "item_fontSize"
+                    bindedProperty: "item_topic"
                     bindTarget: widget
                 }
-            }
-
-            SectionHeader {
-                label: "Display Settings"
-            }
-
-            ColorField {
-                Layout.fillWidth: true
-
-                id: warnField
-
-                label: "Warning Color"
-
-                bindedProperty: "item_warningColor"
-                bindTarget: widget
-            }
-
-            SectionHeader {
-                label: "NT Settings"
-            }
-
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-
-                id: topicField
-
-                label: "Topic"
-
-                bindedProperty: "item_topic"
-                bindTarget: widget
             }
         }
     }

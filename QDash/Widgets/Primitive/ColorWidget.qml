@@ -69,88 +69,96 @@ PrimitiveWidget {
         }
     }
 
-    BaseConfigDialog {
-        id: config
+    Loader {
+        id: configLoader
+        active: false
+        asynchronous: true
 
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
+        onLoaded: item.open()
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+        sourceComponent: BaseConfigDialog {
+            id: config
 
-            LabeledSpinBox {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
+            content: ColumnLayout {
+                id: layout
+                spacing: 12
+                anchors.fill: parent
+                anchors.leftMargin: 2
+                clip: true
 
-                id: titleFontField
+                SectionHeader {
+                    label: "Font Settings"
+                }
 
-                label: "Title Font Size"
-
-                bindedProperty: "item_titleFontSize"
-                bindTarget: widget
-            }
-
-            SectionHeader {
-                label: "Color Settings"
-            }
-
-            LabeledComboBox {
-                id: shapeField
-
-                Layout.fillWidth: true
-                model: shapeChoices
-
-                label: "Shape"
-
-                bindedProperty: "item_shape"
-                bindTarget: widget
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                ColorField {
-                    id: trueField
-
+                LabeledSpinBox {
                     Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-                    label: "True Color"
+                    id: titleFontField
 
-                    bindedProperty: "item_trueColor"
+                    label: "Title Font Size"
+
+                    bindedProperty: "item_titleFontSize"
                     bindTarget: widget
                 }
 
-                ColorField {
-                    id: falseField
+                SectionHeader {
+                    label: "Color Settings"
+                }
+
+                LabeledComboBox {
+                    id: shapeField
 
                     Layout.fillWidth: true
+                    model: shapeChoices
 
-                    label: "False Color"
+                    label: "Shape"
 
-                    bindedProperty: "item_falseColor"
+                    bindedProperty: "item_shape"
                     bindTarget: widget
                 }
-            }
 
-            SectionHeader {
-                label: "NT Settings"
-            }
+                RowLayout {
+                    Layout.fillWidth: true
 
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
+                    ColorField {
+                        id: trueField
 
-                id: topicField
+                        Layout.fillWidth: true
 
-                label: "Topic"
+                        label: "True Color"
 
-                bindedProperty: "item_topic"
-                bindTarget: widget
+                        bindedProperty: "item_trueColor"
+                        bindTarget: widget
+                    }
+
+                    ColorField {
+                        id: falseField
+
+                        Layout.fillWidth: true
+
+                        label: "False Color"
+
+                        bindedProperty: "item_falseColor"
+                        bindTarget: widget
+                    }
+                }
+
+                SectionHeader {
+                    label: "NT Settings"
+                }
+
+                LabeledTextField {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+
+                    id: topicField
+
+                    label: "Topic"
+
+                    bindedProperty: "item_topic"
+                    bindTarget: widget
+                }
             }
         }
     }

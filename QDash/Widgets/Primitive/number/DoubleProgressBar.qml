@@ -155,126 +155,134 @@ PrimitiveWidget {
         }
     }
 
-    BaseConfigDialog {
-        id: config
+    Loader {
+        id: configLoader
+        active: false
+        asynchronous: true
 
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
+        onLoaded: item.open()
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+        sourceComponent: BaseConfigDialog {
+            id: config
 
-            RowLayout {
+            content: ColumnLayout {
+                id: layout
+                spacing: 12
+                anchors.fill: parent
+                anchors.leftMargin: 2
+                clip: true
 
-                LabeledSpinBox {
+                SectionHeader {
+                    label: "Font Settings"
+                }
+
+                RowLayout {
+
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+
+                        id: titleFontField
+
+                        label: "Title Font Size"
+
+                        bindedProperty: "item_titleFontSize"
+                        bindTarget: widget
+                    }
+
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+
+                        id: fontField
+
+                        label: "Font Size"
+
+                        bindedProperty: "item_fontSize"
+                        bindTarget: widget
+                    }
+                }
+
+                SectionHeader {
+                    label: "Bar Settings"
+                }
+
+                RowLayout {
+
+                    LabeledDoubleSpinBox {
+                        Layout.fillWidth: true
+
+                        id: lowField
+
+                        label: "Lower Bound"
+
+                        bindedProperty: "item_lowerBound"
+                        bindTarget: widget
+                    }
+
+                    LabeledDoubleSpinBox {
+                        Layout.fillWidth: true
+
+                        id: upField
+
+                        label: "Upper Bound"
+
+                        bindedProperty: "item_upperBound"
+                        bindTarget: widget
+                    }
+                }
+
+                RowLayout {
+
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+
+                        id: tickField
+
+                        label: "Number of Ticks"
+
+                        bindedProperty: "item_numTicks"
+                        bindTarget: widget
+
+                        stepSize: 1
+                    }
+
+                    LabeledTextField {
+                        Layout.fillWidth: true
+
+                        id: suffixField
+
+                        label: "Suffix"
+
+                        bindedProperty: "item_suffix"
+                        bindTarget: widget
+                    }
+                }
+
+                LabeledCheckbox {
                     Layout.fillWidth: true
 
-                    id: titleFontField
+                    id: vertField
 
-                    label: "Title Font Size"
+                    label: "Vertical?"
 
-                    bindedProperty: "item_titleFontSize"
+                    bindedProperty: "item_vertical"
                     bindTarget: widget
                 }
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-
-                    id: fontField
-
-                    label: "Font Size"
-
-                    bindedProperty: "item_fontSize"
-                    bindTarget: widget
-                }
-            }
-
-            SectionHeader {
-                label: "Bar Settings"
-            }
-
-            RowLayout {
-
-                LabeledDoubleSpinBox {
-                    Layout.fillWidth: true
-
-                    id: lowField
-
-                    label: "Lower Bound"
-
-                    bindedProperty: "item_lowerBound"
-                    bindTarget: widget
-                }
-
-                LabeledDoubleSpinBox {
-                    Layout.fillWidth: true
-
-                    id: upField
-
-                    label: "Upper Bound"
-
-                    bindedProperty: "item_upperBound"
-                    bindTarget: widget
-                }
-            }
-
-            RowLayout {
-
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-
-                    id: tickField
-
-                    label: "Number of Ticks"
-
-                    bindedProperty: "item_numTicks"
-                    bindTarget: widget
-
-                    stepSize: 1
+                SectionHeader {
+                    label: "NT Settings"
                 }
 
                 LabeledTextField {
                     Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-                    id: suffixField
+                    id: topicField
 
-                    label: "Suffix"
+                    label: "Topic"
 
-                    bindedProperty: "item_suffix"
+                    bindedProperty: "item_topic"
                     bindTarget: widget
                 }
-            }
-
-            LabeledCheckbox {
-                Layout.fillWidth: true
-
-                id: vertField
-
-                label: "Vertical?"
-
-                bindedProperty: "item_vertical"
-                bindTarget: widget
-            }
-
-            SectionHeader {
-                label: "NT Settings"
-            }
-
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-
-                id: topicField
-
-                label: "Topic"
-
-                bindedProperty: "item_topic"
-                bindTarget: widget
             }
         }
     }

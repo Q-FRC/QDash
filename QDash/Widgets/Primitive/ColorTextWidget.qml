@@ -74,62 +74,70 @@ PrimitiveWidget {
         }
     }
 
-    BaseConfigDialog {
-        id: config
+    Loader {
+        id: configLoader
+        active: false
+        asynchronous: true
 
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
+        onLoaded: item.open()
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+        sourceComponent: BaseConfigDialog {
+            id: config
 
-            LabeledSpinBox {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
+            content: ColumnLayout {
+                id: layout
+                spacing: 12
+                anchors.fill: parent
+                anchors.leftMargin: 2
+                clip: true
 
-                id: titleFontField
+                SectionHeader {
+                    label: "Font Settings"
+                }
 
-                label: "Title Font Size"
+                LabeledSpinBox {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-                bindedProperty: "item_titleFontSize"
-                bindTarget: widget
-            }
+                    id: titleFontField
 
-            SectionHeader {
-                label: "Color Settings"
-            }
+                    label: "Title Font Size"
 
-            LabeledComboBox {
-                id: shapeField
+                    bindedProperty: "item_titleFontSize"
+                    bindTarget: widget
+                }
 
-                Layout.fillWidth: true
-                model: shapeChoices
+                SectionHeader {
+                    label: "Color Settings"
+                }
 
-                label: "Shape"
+                LabeledComboBox {
+                    id: shapeField
 
-                bindedProperty: "item_shape"
-                bindTarget: widget
-            }
+                    Layout.fillWidth: true
+                    model: shapeChoices
 
-            SectionHeader {
-                label: "NT Settings"
-            }
+                    label: "Shape"
 
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
+                    bindedProperty: "item_shape"
+                    bindTarget: widget
+                }
 
-                id: topicField
+                SectionHeader {
+                    label: "NT Settings"
+                }
 
-                label: "Topic"
+                LabeledTextField {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-                bindedProperty: "item_topic"
-                bindTarget: widget
+                    id: topicField
+
+                    label: "Topic"
+
+                    bindedProperty: "item_topic"
+                    bindTarget: widget
+                }
             }
         }
     }

@@ -241,7 +241,13 @@ Rectangle {
 
         MenuItem {
             text: "Configure"
-            onTriggered: config.open()
+            onTriggered: {
+                if (configLoader) {
+                    configLoader.active = true
+                } else if (config) {
+                    config.open()
+                }
+            }
         }
 
         MenuItem {
@@ -387,46 +393,49 @@ Rectangle {
     * This is the "base" configuration dialog containing the NT and font settings.
     * Copy it for your widget.
     */
-    BaseConfigDialog {
+    Loader {
         // Uncomment this for your widget
-        // id: config
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
+        // id: configLoader
+        active: false
+        asynchronous: true
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+        onLoaded: item.open()
 
-            LabeledSpinBox {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
+        sourceComponent: BaseConfigDialog {
+            content: ColumnLayout {
+                id: layout
+                spacing: 12
+                anchors.fill: parent
+                anchors.leftMargin: 2
+                clip: true
 
-                id: titleFontField
+                SectionHeader {
+                    label: "Font Settings"
+                }
 
-                label: "Title Font Size"
+                LabeledSpinBox {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-                bindedProperty: "item_titleFontSize"
-                bindTarget: widget
-            }
+                    label: "Title Font Size"
 
-            SectionHeader {
-                label: "NT Settings"
-            }
+                    bindedProperty: "item_titleFontSize"
+                    bindTarget: widget
+                }
 
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
+                SectionHeader {
+                    label: "NT Settings"
+                }
 
-                id: topicField
+                LabeledTextField {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
 
-                label: "Topic"
+                    label: "Topic"
 
-                bindedProperty: "item_topic"
-                bindTarget: widget
+                    bindedProperty: "item_topic"
+                    bindTarget: widget
+                }
             }
         }
     }
