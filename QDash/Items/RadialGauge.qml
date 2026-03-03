@@ -21,6 +21,12 @@ Rectangle {
 
     property int valueFontSize: 20
 
+    // 8x sampling, and antialiasing. to make things s m o o t h
+    layer.enabled: true
+    layer.samples: 8
+    layer.smooth: true
+    antialiasing: true
+
     onValueChanged: {
         if (value <= minValue)
             value = minValue
@@ -40,154 +46,164 @@ Rectangle {
 
     radius: width / 2
 
-    Repeater {
-        model: gauge.numTicks + (endAngle - startAngle >= 360 ? 0 : 1)
-
-        Item {
-            width: gauge.width
-            height: gauge.height
-
-            rotation: index * (gauge.endAngle - gauge.startAngle)
-                      / gauge.numTicks + gauge.startAngle
-
-            Rectangle {
-                id: tick
-                width: 2
-                height: 10
-
-                color: Clover.theme.text
-
-                anchors {
-                    top: parent.top
-                    topMargin: 10
-                    horizontalCenter: parent.horizontalCenter
-                }
-            }
-
-            Label {
-                text: (gauge.minValue + index * (gauge.maxValue - gauge.minValue)
-                       / gauge.numTicks).toFixed(1)
-
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    top: tick.bottom
-                    topMargin: 5
-                }
-
-                rotation: -parent.rotation
-            }
-        }
-    }
-
-    Rectangle {
-        id: knob
-        color: "lightgray"
-
-        width: parent.width / 15
-        height: width
-
-        radius: width / 2
-
-        anchors.centerIn: parent
-
-        z: 1
-    }
-
-    Shape {
-        id: needle
-
-        anchors.bottom: parent.verticalCenter
-        anchors.horizontalCenter: parent.horizontalCenter
-
-        rotation: gauge.angle
-        transformOrigin: Item.Bottom
-
-        width: knob.width
-        height: gauge.width / 3
-
-        ShapePath {
-            fillColor: "red"
-
-            startX: needle.width / 2
-            startY: 0
-
-            PathLine {
-                x: needle.width * 3 / 4
-                y: needle.height
-            }
-
-            PathLine {
-                x: needle.width * 1 / 4
-                y: needle.height
-            }
-
-            PathLine {
-                x: needle.width / 2
-                y: 0
-            }
-        }
-    }
-
-    // Filled
-    Shape {
-        id: filled
-        anchors.fill: parent
-
-        ShapePath {
-            strokeWidth: 5
-            strokeColor: Clover.theme.currentAccent
-            fillColor: "transparent"
-
-            capStyle: ShapePath.FlatCap
-
-            startX: gauge.width / 2
-            startY: gauge.height / 2
-
-            PathAngleArc {
-                radiusX: gauge.width / 2 - 2
-                radiusY: gauge.height / 2 - 2
-                centerX: gauge.width / 2
-                centerY: gauge.height / 2
-                startAngle: gauge.startAngle - 90
-                sweepAngle: gauge.angle - gauge.startAngle
-            }
-        }
-    }
-
-    // Unfilled
-    Shape {
-        id: unfilled
-        anchors.fill: parent
-
-        ShapePath {
-            strokeWidth: 3
-            strokeColor: gauge.angle >= gauge.endAngle ? "transparent" : "lightgray"
-            fillColor: "transparent"
-
-            capStyle: ShapePath.FlatCap
-
-            startX: gauge.width / 2
-            startY: gauge.height / 2
-
-            PathAngleArc {
-                radiusX: gauge.width / 2 - 2
-                radiusY: gauge.height / 2 - 2
-                centerX: gauge.width / 2
-                centerY: gauge.height / 2
-                startAngle: gauge.angle - 90
-                sweepAngle: gauge.endAngle - gauge.angle
-            }
-        }
-    }
-
-    Label {
-        text: gauge.value.toFixed(2)
-        font.pixelSize: valueFontSize
+    Item {
+        id: container
 
         anchors {
-            top: parent.verticalCenter
-            horizontalCenter: parent.horizontalCenter
-            topMargin: 20
+            fill: parent
+            margins: 8
+        }
+
+        Repeater {
+            model: gauge.numTicks + (endAngle - startAngle >= 360 ? 0 : 1)
+
+            Item {
+                id: tickContainer
+                width: container.width
+                height: container.height
+
+                rotation: index * (gauge.endAngle - gauge.startAngle)
+                          / gauge.numTicks + gauge.startAngle
+
+                Column {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: 5
+
+                    spacing: txt.contentWidth / 2.5
+
+                    Rectangle {
+                        id: tick
+                        width: 2
+                        height: 12
+                        color: Clover.theme.text
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+
+                    Label {
+                        id: txt
+
+                        text: (gauge.minValue + index * (gauge.maxValue - gauge.minValue)
+                               / gauge.numTicks).toFixed(1)
+
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        rotation: -tickContainer.rotation
+                        font.pointSize: 8
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            id: knob
+            color: "lightgray"
+
+            width: parent.width / 15
+            height: width
+
+            radius: width / 2
+
+            anchors.centerIn: parent
+
+            z: 1
+        }
+
+        AcceleratedShape {
+            id: needle
+
+            anchors.bottom: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            rotation: gauge.angle
+            transformOrigin: Item.Bottom
+
+            width: knob.width
+            height: gauge.width / 3
+
+            ShapePath {
+                fillColor: "red"
+
+                startX: needle.width / 2
+                startY: 0
+
+                PathLine {
+                    x: needle.width * 3 / 4
+                    y: needle.height
+                }
+
+                PathLine {
+                    x: needle.width * 1 / 4
+                    y: needle.height
+                }
+
+                PathLine {
+                    x: needle.width / 2
+                    y: 0
+                }
+            }
+        }
+
+        // Filled
+        AcceleratedShape {
+            id: filled
+            anchors.fill: parent
+            z: 2
+
+            component GaugePath: ShapePath {
+                id: gaugePath
+
+                required property int sweep
+                required property int start
+                required property color stroke
+
+                capStyle: ShapePath.FlatCap
+
+                strokeWidth: 4
+                strokeColor: stroke
+                fillColor: "transparent"
+
+                startX: container.width / 2
+                startY: container.height / 2
+
+                PathAngleArc {
+                    radiusX: container.width / 2 - 2
+                    radiusY: container.height / 2 - 2
+                    centerX: container.width / 2
+                    centerY: container.height / 2
+                    startAngle: gaugePath.start
+                    sweepAngle: gaugePath.sweep
+                }
+            }
+
+            // unfilled
+            GaugePath {
+                stroke: gauge.angle >= gauge.endAngle ? "transparent" : "lightgray"
+
+                start: gauge.startAngle - 90
+                sweep: gauge.endAngle - gauge.startAngle
+            }
+
+            // filled
+            // draw it "over" the unfilled... because otherwise you get jank garbage
+            // like weird gaps and such
+            GaugePath {
+                stroke: Clover.theme.currentAccent
+
+                start: gauge.startAngle - 90
+                sweep: gauge.angle - gauge.startAngle
+            }
+        }
+
+        Label {
+            text: gauge.value.toFixed(2)
+            font.pixelSize: valueFontSize
+
+            anchors {
+                top: parent.verticalCenter
+                horizontalCenter: parent.horizontalCenter
+                topMargin: 20
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ import QDash.Config
 import QDash.Widgets.Base
 import Carboxyl.Clover
 
-Shape {
+AcceleratedShape {
     id: shape
 
     function setColor() {

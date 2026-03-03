@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include <QClipboard>
 #include <QFileInfo>
 #include <QGuiApplication>
@@ -31,6 +34,10 @@ double PlatformHelper::screenHeight()
 double PlatformHelper::titlebarHeight(QQuickWindow *window)
 {
     return window->frameGeometry().height() - window->geometry().height();
+}
+
+QString PlatformHelper::basename(const QString& path) {
+    return QFileInfo(path).fileName();
 }
 
 bool PlatformHelper::isMac()

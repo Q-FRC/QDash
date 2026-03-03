@@ -33,8 +33,8 @@ ApplicationWindow {
             logs.debug("UI", "DS Resize")
 
             // TODO(crueter): Better heuristic for DS resize.
-            QDashSettings.windowHeight = platformHelper.screenHeight() - 230
-            QDashSettings.windowWidth = platformHelper.screenWidth()
+            QDashSettings.windowHeight = PlatformHelper.screenHeight() - 230
+            QDashSettings.windowWidth = PlatformHelper.screenWidth()
 
             // Explicitly disallow resizing, because the user probably doesn't want to
             // accidentally overwrite the height. Note that some Linux window managers (and Wayland)
@@ -43,7 +43,7 @@ ApplicationWindow {
             minimumHeight = height
 
             QDashSettings.windowX = 0
-            QDashSettings.windowY = platformHelper.titlebarHeight(this)
+            QDashSettings.windowY = PlatformHelper.titlebarHeight(this)
         }
     }
 
@@ -137,7 +137,7 @@ ApplicationWindow {
                     model: QDashSettings.recentFiles
 
                     delegate: MenuItem {
-                        text: qsTr("&" + index + ". " + platformHelper.baseName(
+                        text: qsTr("&" + index + ". " + PlatformHelper.baseName(
                                        modelData))
                         onTriggered: {
                             if (modelData === "" || modelData === null)
@@ -288,7 +288,7 @@ ApplicationWindow {
                 leftMargin: 20
             }
 
-            text: "Status: " + conn.status
+            text: conn.status
 
             font.pixelSize: 16
         }
@@ -298,7 +298,8 @@ ApplicationWindow {
                 centerIn: parent
             }
 
-            text: filename === "" ? "No File" : filename
+            text: filename === "" ? "No File" : PlatformHelper.basename(
+                                        filename)
 
             font.pixelSize: 16
         }

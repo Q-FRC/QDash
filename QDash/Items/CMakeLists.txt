@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright 2026 crueter
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 set(CMAKE_AUTOMOC ON)
 
 qt_add_library(QDashQmlItems STATIC)
@@ -11,6 +14,7 @@ qt6_add_qml_module(QDashQmlItems
     Tab.qml
     TopicView.qml
     ResizeAnchor.qml
-    DoubleSpinBox.qml)
+    DoubleSpinBox.qml
+    QML_FILES AcceleratedShape.qml)
 
 QDashModule(QDashQmlItems)

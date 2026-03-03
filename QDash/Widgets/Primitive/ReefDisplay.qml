@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick
 import QtQuick.Shapes
 import QtQuick.Layouts
@@ -38,7 +37,7 @@ PrimitiveWidget {
 
         Repeater {
             model: 6
-            Shape {
+            AcceleratedShape {
                 id: shape
 
                 height: Math.min(parent.height, parent.width) / 2.3

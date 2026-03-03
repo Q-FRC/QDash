@@ -16,6 +16,8 @@ PrimitiveWidget {
 
     suffix: "/Robot"
 
+    antialiasing: true
+
     property bool item_useVerticalField: false
     property bool item_mirrorForRedAlliance: false
 
@@ -100,7 +102,7 @@ PrimitiveWidget {
         color: item_robotShape === "Robot" ? "transparent" : item_robotColor
         border {
             color: item_robotColor
-            width: 2
+            width: 3
         }
 
         radius: item_robotShape === "Circle" ? Math.max(width, height) / 2 : 0
@@ -138,12 +140,13 @@ PrimitiveWidget {
         }
     }
 
-    Shape {
+    AcceleratedShape {
         id: shape
+        z: 2
 
         ShapePath {
             id: path
-            strokeWidth: 3
+            strokeWidth: 4
             strokeColor: item_robotShape === "Robot" ? "light green" : "transparent"
             fillColor: "transparent"
 
@@ -167,10 +170,10 @@ PrimitiveWidget {
                 start.x = w
                 start.y = h / 2
 
-                middle.x = 0
-                middle.y = h
+                middle.x = 2
+                middle.y = h - 2
 
-                end.x = 0
+                end.x = 2
                 end.y = 0
 
                 shape.rotation = -rot + (item_useVerticalField ? 270 : 0)

@@ -74,7 +74,7 @@ QDashApplication::QDashApplication(int& argc, char* argv[]) : QApplication(argc,
     ctx->setContextProperty("TopicStore", store);
     ctx->setContextProperty("tlm", tlm);
     ctx->setContextProperty("conn", conn);
-    ctx->setContextProperty("platformHelper", platform);
+    ctx->setContextProperty("PlatformHelper", platform);
     ctx->setContextProperty("NotificationHelper", notification);
     ctx->setContextProperty("buildConfig", &BuildConfig);
     ctx->setContextProperty("logs", logs);

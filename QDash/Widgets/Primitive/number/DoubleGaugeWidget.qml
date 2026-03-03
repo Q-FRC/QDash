@@ -104,6 +104,8 @@ PrimitiveWidget {
 
             leftMargin: 10
             rightMargin: 10
+
+            topMargin: 4
         }
 
         enabled: widget.connected

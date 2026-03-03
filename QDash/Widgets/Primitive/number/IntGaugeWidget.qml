@@ -71,26 +71,41 @@ PrimitiveWidget {
         gauge.value = value
     }
 
-    RadialGauge {
-        id: gauge
-
-        valueFontSize: item_fontSize
-
+    Item {
         anchors {
-            horizontalCenter: parent.horizontalCenter
+            top: titleField.bottom
             bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+
+            leftMargin: 10
+            rightMargin: 10
+            margins: 4
         }
 
-        value: 0
-
-        numTicks: item_ticks
-
-        minValue: item_min
-        maxValue: item_max
         enabled: widget.connected
 
-        startAngle: item_startAngle
-        endAngle: item_endAngle
+        // TODO: Fix clipping
+        RadialGauge {
+            id: gauge
+
+            valueFontSize: item_fontSize
+
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+                bottom: parent.bottom
+            }
+
+            value: 0
+
+            numTicks: item_ticks
+
+            minValue: item_min
+            maxValue: item_max
+
+            startAngle: item_startAngle
+            endAngle: item_endAngle
+        }
     }
 
     BaseConfigDialog {

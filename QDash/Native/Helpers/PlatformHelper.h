@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef PLATFORMHELPER_H
 #define PLATFORMHELPER_H
 
@@ -18,6 +21,8 @@ public:
     Q_INVOKABLE double screenHeight();
 
     Q_INVOKABLE double titlebarHeight(QQuickWindow *window);
+
+    Q_INVOKABLE QString basename(const QString &path);
 
     Q_INVOKABLE bool isMac();
 signals:
