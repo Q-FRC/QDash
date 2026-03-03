@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef TABLISTMODEL_H
 #define TABLISTMODEL_H
 
@@ -40,6 +43,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     // Add data:
+    void add(const QList<Tab> &t);
     Q_INVOKABLE void add(Tab t);
     Q_INVOKABLE void add(QString title);
 

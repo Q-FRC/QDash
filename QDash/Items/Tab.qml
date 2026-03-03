@@ -61,21 +61,7 @@ Rectangle {
         }
     }
 
-    TabWidgetsModel {
-        id: twm
-
-        rows: model.rows
-        cols: model.cols
-    }
-
-    Component.onCompleted: {
-        if (model.widgets === null)
-            model.widgets = twm
-        else {
-            twm.setEqualTo(model.widgets)
-            model.widgets = twm
-        }
-    }
+    readonly property TabWidgetsModel twm: model.widgets
 
     function copy(idx) {
         let w = twm.copy(idx)
@@ -375,25 +361,41 @@ Rectangle {
         }
     }
 
-    Repeater {
-        id: gridLines
+    Canvas {
+        anchors.fill: parent
+        z: 2
 
-        model: tab.rows * tab.cols
+        property real colW: tab.colWidth
+        property real rowH: tab.rowHeight
+        property int r: tab.rows
+        property int c: tab.cols
 
-        Rectangle {
-            color: "transparent"
-            z: 2
+        onColWChanged: requestPaint()
+        onRowHChanged: requestPaint()
 
-            border {
-                color: "gray"
-                width: 1
+        renderStrategy: Canvas.Threaded
+
+        onPaint: {
+            let ctx = getContext("2d")
+            ctx.clearRect(0, 0, width, height)
+
+            ctx.strokeStyle = "gray"
+            ctx.lineWidth = 1
+            ctx.beginPath()
+
+            for (var i = 1; i < c; i++) {
+                let x = Math.round(i * colW)
+                ctx.moveTo(x, 0)
+                ctx.lineTo(x, height)
             }
 
-            width: tab.colWidth
-            height: tab.rowHeight
+            for (var j = 1; j < r; j++) {
+                let y = Math.round(j * rowH)
+                ctx.moveTo(0, y)
+                ctx.lineTo(width, y)
+            }
 
-            x: tab.colWidth * (modelData % tab.cols)
-            y: tab.rowHeight * Math.floor(modelData / tab.cols)
+            ctx.stroke()
         }
     }
 }

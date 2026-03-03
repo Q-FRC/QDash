@@ -5,12 +5,10 @@
 #define PLATFORMHELPER_H
 
 #include <QObject>
-#include <QQmlEngine>
 #include <QQuickWindow>
 
 class PlatformHelper : public QObject {
     Q_OBJECT
-    QML_ELEMENT
 public:
     PlatformHelper(QObject *parent = nullptr);
 
@@ -22,7 +20,7 @@ public:
 
     Q_INVOKABLE double titlebarHeight(QQuickWindow *window);
 
-    Q_INVOKABLE QString basename(const QString &path);
+    Q_INVOKABLE QString filename(const QString &path);
 
     Q_INVOKABLE bool isMac();
 signals:

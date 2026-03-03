@@ -298,7 +298,7 @@ ApplicationWindow {
                 centerIn: parent
             }
 
-            text: filename === "" ? "No File" : PlatformHelper.basename(
+            text: filename === "" ? "No File" : PlatformHelper.filename(
                                         filename)
 
             font.pixelSize: 16

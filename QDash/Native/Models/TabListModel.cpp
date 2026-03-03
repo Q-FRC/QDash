@@ -22,7 +22,7 @@ QVariant TabListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    Tab t = m_data[index.row()];
+    const Tab &t = m_data.at(index.row());
 
     switch (role) {
     case TITLE:
@@ -74,8 +74,13 @@ Qt::ItemFlags TabListModel::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
-void TabListModel::add(Tab t)
-{
+void TabListModel::add(const QList<Tab>& t) {
+    beginInsertRows(QModelIndex(), rowCount(), rowCount() + t.count() - 1);
+    m_data << t;
+    endInsertRows();
+}
+
+void TabListModel::add(Tab t) {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_data << t;
     endInsertRows();
@@ -88,7 +93,9 @@ void TabListModel::add(QString title)
     t.rows = 3;
     t.cols = 5;
 
-    t.model = nullptr;
+    t.model = new TabWidgetsModel(this);
+    t.model->setRows(t.rows);
+    t.model->setCols(t.cols);
 
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_data << t;
@@ -123,8 +130,7 @@ void TabListModel::save(const QString &filename)
 
     m_settings->addRecentFile(file);
 
-    QTextStream stream(&file);
-    stream << saveObject().toJson();
+    file.write(saveObject().toJson());
     file.close();
 }
 
@@ -161,6 +167,7 @@ void TabListModel::loadObject(const QJsonDocument &doc)
 
     QJsonArray arr = ob.value("tabs").toArray();
 
+    QList<Tab> tabs;
     for (const QJsonValueRef ref : arr) {
         QJsonObject obj = ref.toObject();
 
@@ -173,8 +180,10 @@ void TabListModel::loadObject(const QJsonDocument &doc)
         t.model->setCols(t.cols);
         t.model->setRows(t.rows);
 
-        add(t);
+        tabs << t;
     }
+
+    add(tabs);
 }
 
 void TabListModel::load(const QString &filename)
@@ -188,21 +197,19 @@ void TabListModel::load(const QString &filename)
 
     QFile file(name);
 
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
-    }
 
     m_settings->addRecentFile(file);
 
-    QTextStream stream(&file);
-    QByteArray data = stream.readAll().toUtf8();
-
+    QByteArray data = file.readAll();
     QJsonDocument doc = QJsonDocument::fromJson(data);
+
+    file.close();
 
     clear();
 
     loadObject(doc);
-    file.close();
 }
 
 void TabListModel::clear()

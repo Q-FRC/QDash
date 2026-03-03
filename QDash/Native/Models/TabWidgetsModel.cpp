@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QRect>
@@ -16,7 +19,7 @@ QVariant TabWidgetsModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    Widget w = m_data[index.row()];
+    const Widget &w = m_data.at(index.row());
 
     switch (role) {
     case TITLE:
@@ -102,6 +105,12 @@ Widget TabWidgetsModel::copy(int idx)
     return nw;
 }
 
+void TabWidgetsModel::add(const QList<Widget> &w) {
+    beginInsertRows(QModelIndex(), rowCount(), rowCount() + w.count() - 1);
+    m_data << w;
+    endInsertRows();
+}
+
 void TabWidgetsModel::add(Widget w)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
@@ -128,16 +137,17 @@ void TabWidgetsModel::add(QString title, QString topic, QString type)
 
 void TabWidgetsModel::setEqualTo(TabWidgetsModel *w)
 {
+    if (!w || w == this) return;
+
     beginResetModel();
-    m_data = w->data();
+    m_data = w->internalData();
     endResetModel();
 
     m_rows = w->rows();
     m_cols = w->cols();
 }
 
-QList<Widget> TabWidgetsModel::data()
-{
+const QList<Widget>& TabWidgetsModel::internalData()  {
     return m_data;
 }
 
@@ -242,25 +252,7 @@ QJsonArray TabWidgetsModel::saveObject() const
         obj.insert("rowSpan", w.rowSpan);
         obj.insert("colSpan", w.colSpan);
 
-        QJsonObject prop;
-
-        QMapIterator iter(w.properties);
-
-        while (iter.hasNext()) {
-            iter.next();
-            // I hate Qt
-            if (iter.value().metaType() == QMetaType::fromType<QColor>()) {
-                prop.insert(iter.key(), iter.value().value<QColor>().name());
-            } else if (iter.value().metaType() == QMetaType::fromType<QSizeF>()) {
-                QSize size = iter.value().value<QSizeF>().toSize();
-                prop.insert(iter.key(),
-                            QString::number(size.width()) + "x" + QString::number(size.height()));
-            } else {
-                prop.insert(iter.key(), iter.value().toJsonValue());
-            }
-        }
-
-        obj.insert("properties", prop);
+        obj.insert("properties", QJsonObject::fromVariantMap(w.properties));
 
         arr.append(obj);
     }
@@ -272,31 +264,34 @@ TabWidgetsModel *TabWidgetsModel::loadObject(QObject *parent, const QJsonArray &
 {
     TabWidgetsModel *model = new TabWidgetsModel(parent);
 
+    QList<Widget> widgets;
     for (const QJsonValueConstRef ref : arr) {
         QJsonObject obj = ref.toObject();
 
+        auto const type = obj.value("type").toString();
+#ifndef QDASH_CAMVIEW
+        if (type == "camera") continue;
+#endif
+
+#ifndef QDASH_WEBVIEW
+        if (type == "web") continue;
+#endif
+
         Widget w;
+
         w.title = obj.value("title").toString("");
         w.topic = obj.value("topic").toString("");
-        w.type = obj.value("type").toString("");
+        w.type = type;
         w.col = obj.value("column").toInt(0);
         w.row = obj.value("row").toInt(0);
         w.rowSpan = obj.value("rowSpan").toInt(0);
         w.colSpan = obj.value("colSpan").toInt(0);
+        w.properties = obj.value("properties").toObject().toVariantMap();
 
-        QJsonObject properties = obj.value("properties").toObject();
-
-        QVariantMap props;
-
-        QStringList keys = properties.keys();
-        for (const QString &key : std::as_const(keys)) {
-            props.insert(key, properties.value(key));
-        }
-
-        w.properties = props;
-
-        model->add(w);
+        widgets << w;
     }
+
+    model->add(widgets);
 
     return model;
 }

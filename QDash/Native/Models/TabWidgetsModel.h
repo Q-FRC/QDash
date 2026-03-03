@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef TABWIDGETSMODEL_H
 #define TABWIDGETSMODEL_H
 
@@ -54,12 +57,13 @@ public:
 
     // Add data:
     Q_INVOKABLE Widget copy(int idx);
+    void add(const QList<Widget>& w);
     Q_INVOKABLE void add(Widget w);
     Q_INVOKABLE void add(QString title, QString topic, QString type);
 
     Q_INVOKABLE void setEqualTo(TabWidgetsModel *w);
 
-    QList<Widget> data();
+    const QList<Widget> &internalData();
 
     // Remove data:
     Q_INVOKABLE bool remove(int idx);
