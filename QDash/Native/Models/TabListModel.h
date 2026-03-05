@@ -7,12 +7,10 @@
 #include <QAbstractListModel>
 #include <QJsonArray>
 #include <QJsonDocument>
-#include <qdir.h>
-#include <qqmlintegration.h>
 
 #include "Managers/SettingsManager.h"
-#include "Models/TabWidgetsModel.h"
 
+class TabWidgetsModel;
 typedef struct {
     QString title;
 
@@ -29,8 +27,7 @@ class TabListModel : public QAbstractListModel {
 public:
     enum TLMRoleTypes { TITLE = Qt::UserRole, ROWS, COLS, WIDGETS };
 
-    explicit TabListModel(Logger *logs, SettingsManager *settings = nullptr,
-                          QObject *parent = nullptr);
+    explicit TabListModel(QObject *parent = nullptr);
 
     // Basic functionality:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -43,15 +40,17 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     // Add data:
-    Q_INVOKABLE void add(Tab t);
+    void reset(const QList<Tab> &data);
+    Q_INVOKABLE void add(const Tab &t);
     Q_INVOKABLE void add(QString title);
 
     // Remove data:
     Q_INVOKABLE bool remove(int row, const QModelIndex &parent = QModelIndex());
 
-    Q_INVOKABLE void save(const QString &filename = "");
-    Q_INVOKABLE QJsonDocument saveObject() const;
-    Q_INVOKABLE void load(const QString &fileName = "");
+    static TabListModel *loadObject(QObject *parent, const QJsonArray &arr);
+
+    Q_INVOKABLE QJsonObject saveObject() const;
+    // Q_INVOKABLE void load(const QString &fileName = "");
 
     Q_INVOKABLE void clear();
 
@@ -67,8 +66,6 @@ protected:
 private:
     QList<Tab> m_data;
 
-    SettingsManager *m_settings;
-    Logger *m_logs;
     int m_selectedTab = 0;
 };
 #endif // TABLISTMODEL_H

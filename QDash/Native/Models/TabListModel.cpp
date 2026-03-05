@@ -3,13 +3,15 @@
 
 #include "TabListModel.h"
 
+#include "TabWidgetsModel.h"
+
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QSaveFile>
 
-TabListModel::TabListModel(Logger *logs, SettingsManager *settings, QObject *parent)
-    : QAbstractListModel(parent), m_settings(settings), m_logs(logs)
+TabListModel::TabListModel(QObject *parent)
+    : QAbstractListModel(parent)
 {
 }
 
@@ -75,7 +77,13 @@ Qt::ItemFlags TabListModel::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
-void TabListModel::add(Tab t) {
+void TabListModel::reset(const QList<Tab> &data) {
+    beginResetModel();
+    m_data = data;
+    endResetModel();
+}
+
+void TabListModel::add(const Tab &t) {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_data << t;
     endInsertRows();
@@ -92,9 +100,7 @@ void TabListModel::add(QString title)
     t.model->setRows(t.rows);
     t.model->setCols(t.cols);
 
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
-    m_data << t;
-    endInsertRows();
+    add(t);
 }
 
 bool TabListModel::remove(int row, const QModelIndex &parent)
@@ -106,88 +112,14 @@ bool TabListModel::remove(int row, const QModelIndex &parent)
     return true;
 }
 
-void TabListModel::save(const QString &filename)
+TabListModel *TabListModel::loadObject(QObject *parent, const QJsonArray &arr)
 {
-    QString name = filename;
-#ifdef Q_OS_WINDOWS
-    name.replace("file:///", "");
-#else
-    name.replace("file://", "");
-#endif
-
-    QSaveFile file(name);
-
-    QByteArray data = saveObject().toJson(QJsonDocument::Compact);
-
-    if (file.write(data) == -1) {
-        m_logs->critical("Layout", "Failed to write layout to " + name);
-        file.cancelWriting();
-        return;
-    }
-
-    if (!file.commit()) {
-        m_logs->critical("Layout", "Failed to commit layout file " + name);
-        return;
-    }
-
-    m_settings->addRecentFile(file.fileName());
-
-}
-
-QJsonDocument TabListModel::saveObject() const
-{
-    QJsonObject doc;
-    doc.insert("mode", m_settings->connMode());
-    doc.insert("team", m_settings->teamNumber());
-    doc.insert("ip", m_settings->ip());
-
-    QJsonArray arr;
-
-    for (const Tab &t : m_data) {
-        QJsonObject obj;
-
-        obj.insert("title", t.title);
-        obj.insert("rows", t.rows);
-        obj.insert("cols", t.cols);
-        obj.insert("widgets", t.model->saveObject());
-
-        arr.append(obj);
-    }
-
-    doc.insert("tabs", arr);
-
-    return QJsonDocument(doc);
-}
-
-void TabListModel::load(const QString &filename)
-{
-    QString name = filename;
-#ifdef Q_OS_WINDOWS
-    name.replace("file:///", "");
-#else
-    name.replace("file://", "");
-#endif
-
-    QFile file(name);
-
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
-
-    m_settings->addRecentFile(file);
-
-    QByteArray data = file.readAll();
-    QJsonDocument doc = QJsonDocument::fromJson(data);
-
-    file.close();
-
-    QJsonObject ob = doc.object();
-
-    QJsonArray arr = ob.value("tabs").toArray();
+    TabListModel *model = new TabListModel(parent);
 
     QList<Tab> tabs;
     tabs.reserve(arr.size());
 
-    for (const QJsonValueRef ref : arr) {
+    for (const QJsonValueConstRef ref : std::as_const(arr)) {
         QJsonObject obj = ref.toObject();
 
         Tab t;
@@ -195,18 +127,39 @@ void TabListModel::load(const QString &filename)
         t.title = obj.value("title").toString();
         t.rows = obj.value("rows").toInt();
         t.cols = obj.value("cols").toInt();
-        t.model = TabWidgetsModel::loadObject(this, obj.value("widgets").toArray());
+        t.model = TabWidgetsModel::loadObject(model, obj.value("widgets").toArray());
         t.model->setCols(t.cols);
         t.model->setRows(t.rows);
 
         tabs << t;
     }
 
-    m_settings->reconnect();
-    beginResetModel();
-    m_data = tabs;
-    endResetModel();
+    model->reset(tabs);
+    return model;
 }
+
+QJsonObject TabListModel::saveObject() const
+{
+    QJsonObject obj;
+    QJsonArray arr;
+
+    for (const Tab &t : m_data) {
+        QJsonObject tab;
+
+        tab.insert("title", t.title);
+        tab.insert("rows", t.rows);
+        tab.insert("cols", t.cols);
+        tab.insert("widgets", t.model->saveObject());
+
+        arr.append(tab);
+    }
+
+    obj.insert("tabs", arr);
+
+    return obj;
+}
+
+
 
 void TabListModel::clear()
 {
@@ -230,8 +183,6 @@ void TabListModel::selectTab(const QString &tab)
             return;
         }
     }
-
-    m_logs->warn("Layout", "Failed to select nonexistent " + tab + ".");
 }
 
 QHash<int, QByteArray> TabListModel::roleNames() const

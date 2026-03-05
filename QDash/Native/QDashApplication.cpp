@@ -21,6 +21,7 @@
 #include <QQmlContext>
 #include <QSortFilterProxyModel>
 #include <QStandardPaths>
+#include <QStringLiteral>
 #include <QWidget>
 #include "Helpers/CompileDefinitions.h"
 
@@ -55,7 +56,7 @@ QDashApplication::QDashApplication(int& argc, char* argv[]) : QApplication(argc,
     topicsSorted->setFilterCaseSensitivity(Qt::CaseInsensitive);
     topicsSorted->setRecursiveFilteringEnabled(true);
 
-    tlm = new TabListModel(logs, settings, this);
+    // tlm = new TabListModel(logs, settings, this);
 
     /// NETWORKTABLES //
     setupNetworkTables();
@@ -72,7 +73,7 @@ QDashApplication::QDashApplication(int& argc, char* argv[]) : QApplication(argc,
     ctx->setContextProperty("topicsSorted", topicsSorted);
     ctx->setContextProperty("QDashSettings", settings);
     ctx->setContextProperty("TopicStore", store);
-    ctx->setContextProperty("tlm", tlm);
+    // ctx->setContextProperty("tlm", tlm);
     ctx->setContextProperty("conn", conn);
     ctx->setContextProperty("PlatformHelper", platform);
     ctx->setContextProperty("NotificationHelper", notification);
