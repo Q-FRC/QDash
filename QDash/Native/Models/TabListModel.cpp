@@ -117,6 +117,12 @@ void TabListModel::save(const QString &filename)
 
     QSaveFile file(name);
 
+    if (!file.open(QIODevice::Truncate | QIODevice::WriteOnly)) {
+        m_logs->critical("Layout", "Failed to open file " % name);
+        qCritical() << "Failed to open file" << name;
+        return;
+    }
+
     QByteArray data = saveObject().toJson(QJsonDocument::Compact);
 
     if (file.write(data) == -1) {
