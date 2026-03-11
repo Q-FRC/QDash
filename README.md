@@ -4,6 +4,10 @@ A reliable, high-performance, low-footprint dashboard for use with FRC.
 
 ![QDash](QDash-display.png "QDash")
 
+## GitHub Mirror
+
+If you're reading this from GitHub, keep in mind that this repository is a mirror of the main code stored on [my Forgejo instance](https://git.crueter.xyz/QFRC/QDash). Issues and pull requests submitted here *will* still be reviewed and addressed, though, so don't be afraid!
+
 ## Lightweight
 
 Dashboards don't have to be resource hogs. In fact, dashboards should be designed to take up as few resources as possible. Dashboards that use up resources like nobody's business will cause **packet loss** and **comms issues** when run on driver stations! To counteract this, QDash has been specifically designed from the ground up to use as few resources as possible, *without* sacrificing aesthetics or usability.
