@@ -58,6 +58,10 @@ if (QDASH_STATIC AND MINGW)
     static_qt_link(${QDASH_NAME})
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set_property(TARGET ${QDASH_NAME} PROPERTY WIN32_EXECUTABLE TRUE)
+endif()
+
 if(UNIX AND APPLE)
     # Mac bundle settings
     set(MACOSX_BUNDLE_BUNDLE_NAME "${QDASH_NAME}")
