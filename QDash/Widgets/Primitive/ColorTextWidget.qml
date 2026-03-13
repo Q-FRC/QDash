@@ -15,8 +15,9 @@ import QtQuick.Shapes 2.15
 PrimitiveWidget {
     id: widget
 
-    // @disable-check M311
-    property var item_shape: "Rectangle"
+    property string shape: "Rectangle"
+
+    propertyKeys: ["shape"]
 
     property list<string> shapeChoices: ["Rectangle", "Circle", "Triangle"]
 
@@ -45,7 +46,7 @@ PrimitiveWidget {
 
     function setColor() {
         shape.itemColor = itemValue
-        // shape.itemShape = item_shape
+        // shape.itemShape = shape
         shape.setColor()
     }
 
@@ -55,12 +56,12 @@ PrimitiveWidget {
         setColor()
     }
 
-    onItem_shapeChanged: setColor()
+    onShapeChanged: setColor()
 
     ShapeHandler {
         id: shape
 
-        itemShape: item_shape
+        itemShape: shape
 
         anchors {
             top: titleField.bottom
@@ -101,7 +102,7 @@ PrimitiveWidget {
 
                     label: "Title Font Size"
 
-                    bindedProperty: "item_titleFontSize"
+                    bindedProperty: "titleFontSize"
                     bindTarget: widget
                 }
 
@@ -117,7 +118,7 @@ PrimitiveWidget {
 
                     label: "Shape"
 
-                    bindedProperty: "item_shape"
+                    bindedProperty: "shape"
                     bindTarget: widget
                 }
 

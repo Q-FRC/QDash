@@ -15,11 +15,12 @@ import QtQuick.Shapes 2.15
 PrimitiveWidget {
     id: widget
 
-    property color item_falseColor: "#FF0000"
-    property color item_trueColor: "#00FF00"
+    property color falseColor: "#FF0000"
+    property color trueColor: "#00FF00"
 
-    // @disable-check M311
-    property var item_shape: "Rectangle"
+    property string shape: "Rectangle"
+
+    propertyKeys: ["falseColor", "trueColor", "shape"]
 
     property list<string> shapeChoices: ["Rectangle", "Circle", "Triangle"]
 
@@ -40,8 +41,8 @@ PrimitiveWidget {
     }
 
     function setColor() {
-        shape.itemColor = itemValue ? item_trueColor : item_falseColor
-        // shape.itemShape = item_shape
+        shape.itemColor = itemValue ? trueColor : falseColor
+        // shape.itemShape = shape
         shape.setColor()
     }
 
@@ -51,14 +52,14 @@ PrimitiveWidget {
         setColor()
     }
 
-    onItem_falseColorChanged: setColor()
-    onItem_trueColorChanged: setColor()
-    onItem_shapeChanged: setColor()
+    onFalseColorChanged: setColor()
+    onTrueColorChanged: setColor()
+    onShapeChanged: setColor()
 
     ShapeHandler {
         id: shape
 
-        itemShape: item_shape
+        itemShape: shape
 
         anchors {
             top: titleField.bottom
@@ -99,7 +100,7 @@ PrimitiveWidget {
 
                     label: "Title Font Size"
 
-                    bindedProperty: "item_titleFontSize"
+                    bindedProperty: "titleFontSize"
                     bindTarget: widget
                 }
 
@@ -115,7 +116,7 @@ PrimitiveWidget {
 
                     label: "Shape"
 
-                    bindedProperty: "item_shape"
+                    bindedProperty: "shape"
                     bindTarget: widget
                 }
 
@@ -129,7 +130,7 @@ PrimitiveWidget {
 
                         label: "True Color"
 
-                        bindedProperty: "item_trueColor"
+                        bindedProperty: "trueColor"
                         bindTarget: widget
                     }
 
@@ -140,7 +141,7 @@ PrimitiveWidget {
 
                         label: "False Color"
 
-                        bindedProperty: "item_falseColor"
+                        bindedProperty: "falseColor"
                         bindTarget: widget
                     }
                 }

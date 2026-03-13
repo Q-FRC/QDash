@@ -13,9 +13,12 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int item_fontSize: 100
-    property int item_warningThreshold: 3
-    property int item_flashInterval: 500
+    property int fontSize: 100
+    property int warningThreshold: 3
+    property int flashInterval: 500
+
+    propertyKeys: ["fontSize", "warningThreshold", "flashInterval"]
+
     readOnly: true
 
     readonly property color warningColor: "yellow"
@@ -73,7 +76,7 @@ PrimitiveWidget {
 
     // absolute HACK
     onRemainingTimeChanged: {
-        if (remainingTime < item_warningThreshold + 2) {
+        if (remainingTime < warningThreshold + 2) {
             warningTimer.start()
         } else if (remainingTime >= 20 || !needsWarning) {
             warningTimer.stop()
@@ -173,18 +176,13 @@ PrimitiveWidget {
         }
     }
 
-    Component.onCompleted: {
-        subscribeFMSData()
-    }
-
-    Component.onDestruction: {
-        unsubscribeFMSData()
-    }
+    Component.onCompleted: subscribeFMSData()
+    Component.onDestruction: unsubscribeFMSData()
 
     Text {
         id: txt
 
-        font.pixelSize: item_fontSize
+        font.pixelSize: fontSize
 
         property color currentColor: hubActive ? activeColor : inactiveColor
         text: remainingTime
@@ -192,13 +190,13 @@ PrimitiveWidget {
         // 3 seconds before each shift, alternate yellow and current color
         Timer {
             id: warningTimer
-            interval: item_flashInterval
+            interval: flashInterval
             repeat: true
             triggeredOnStart: true
             running: false
 
             onTriggered: {
-                if (remainingTime > item_warningThreshold || !needsWarning) {
+                if (remainingTime > warningThreshold || !needsWarning) {
                     txt.color = txt.currentColor
                 } else if (txt.color === txt.currentColor) {
                     txt.color = widget.warningColor
@@ -251,14 +249,14 @@ PrimitiveWidget {
                         Layout.fillWidth: true
 
                         label: qsTr("Title Font Size")
-                        bindedProperty: "item_titleFontSize"
+                        bindedProperty: "titleFontSize"
                     }
 
                     LabeledSpinBox {
                         Layout.fillWidth: true
 
                         label: qsTr("Maximum Font Size")
-                        bindedProperty: "item_fontSize"
+                        bindedProperty: "fontSize"
                     }
                 }
 
@@ -271,7 +269,7 @@ PrimitiveWidget {
                         Layout.fillWidth: true
 
                         label: qsTr("Warning Threshold")
-                        bindedProperty: "item_warningThreshold"
+                        bindedProperty: "warningThreshold"
 
                         from: 0
                         to: 10
@@ -281,7 +279,7 @@ PrimitiveWidget {
                         Layout.fillWidth: true
 
                         label: qsTr("Warning Flash Interval")
-                        bindedProperty: "item_flashInterval"
+                        bindedProperty: "flashInterval"
                     }
                 }
 

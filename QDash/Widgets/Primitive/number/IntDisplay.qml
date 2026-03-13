@@ -13,8 +13,10 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int item_maxFontSize: 100
-    property color item_color: Clover.theme.currentAccent
+    property int maxFontSize: 100
+    property color fontColor: Clover.theme.currentAccent
+
+    propertyKeys: ["maxFontSize", "fontColor"]
 
     menuExtension: Component {
         Menu {
@@ -52,9 +54,9 @@ PrimitiveWidget {
     Text {
         id: txt
 
-        font.pixelSize: item_maxFontSize
+        font.pixelSize: maxFontSize
 
-        color: item_color
+        color: widget.fontColor
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
@@ -101,7 +103,7 @@ PrimitiveWidget {
 
                         label: "Title Font Size"
 
-                        bindedProperty: "item_titleFontSize"
+                        bindedProperty: "titleFontSize"
                         bindTarget: widget
                     }
 
@@ -112,7 +114,7 @@ PrimitiveWidget {
 
                         label: "Maximum Font Size"
 
-                        bindedProperty: "item_maxFontSize"
+                        bindedProperty: "maxFontSize"
                         bindTarget: widget
                     }
                 }
@@ -128,7 +130,7 @@ PrimitiveWidget {
 
                     label: "Text Color"
 
-                    bindedProperty: "item_color"
+                    bindedProperty: "color"
                     bindTarget: widget
                 }
 

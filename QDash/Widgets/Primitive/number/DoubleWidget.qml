@@ -13,11 +13,13 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property double item_stepSize: 0.1
-    property int item_fontSize: 20
+    property double stepSize: 0.1
+    property int fontSize: 20
 
-    property double item_lowerBound: -100000.0
-    property double item_upperBound: 100000.0
+    property double lowerBound: -100000.0
+    property double upperBound: 100000.0
+
+    propertyKeys: ["stepSize", "fontSize", "lowerBound", "upperBound"]
 
     menuExtension: Component {
         Menu {
@@ -87,15 +89,15 @@ PrimitiveWidget {
         DoubleSpinBox {
             id: spin
 
-            font.pixelSize: item_fontSize
+            font.pixelSize: fontSize
 
             enabled: widget.connected
             editable: true
 
             value: 0
-            from: item_lowerBound
-            to: item_upperBound
-            stepSize: item_stepSize
+            from: lowerBound
+            to: upperBound
+            stepSize: stepSize
 
             anchors {
                 verticalCenter: parent.verticalCenter
@@ -138,7 +140,7 @@ PrimitiveWidget {
 
                         label: "Title Font Size"
 
-                        bindedProperty: "item_titleFontSize"
+                        bindedProperty: "titleFontSize"
                         bindTarget: widget
                     }
 
@@ -149,7 +151,7 @@ PrimitiveWidget {
 
                         label: "Font Size"
 
-                        bindedProperty: "item_fontSize"
+                        bindedProperty: "fontSize"
                         bindTarget: widget
                     }
                 }
@@ -167,7 +169,7 @@ PrimitiveWidget {
 
                         label: "Lower Bound"
 
-                        bindedProperty: "item_lowerBound"
+                        bindedProperty: "lowerBound"
                         bindTarget: widget
                     }
 
@@ -178,7 +180,7 @@ PrimitiveWidget {
 
                         label: "Upper Bound"
 
-                        bindedProperty: "item_upperBound"
+                        bindedProperty: "upperBound"
                         bindTarget: widget
                     }
                 }
@@ -190,7 +192,7 @@ PrimitiveWidget {
 
                     label: "Step Size"
 
-                    bindedProperty: "item_stepSize"
+                    bindedProperty: "stepSize"
                     bindTarget: widget
 
                     from: 0

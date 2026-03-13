@@ -13,9 +13,11 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int item_fontSize: 100
-    property color item_color: Clover.theme.currentAccent
-    property bool item_wrap: true
+    property int fontSize: 100
+    property color fontColor: Clover.theme.currentAccent
+    property bool wrap: true
+
+    propertyKeys: ["fontSize", "fontColor", "wrap"]
 
     menuExtension: Component {
         Menu {
@@ -46,17 +48,17 @@ PrimitiveWidget {
     Text {
         id: txt
 
-        font.pixelSize: item_fontSize
+        font.pixelSize: fontSize
 
         property string value
 
-        color: item_color
+        color: widget.fontColor
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
         fontSizeMode: Text.Fit
 
-        wrapMode: item_wrap ? Text.WrapAtWordBoundaryOrAnywhere : Text.NoWrap
+        wrapMode: wrap ? Text.WrapAtWordBoundaryOrAnywhere : Text.NoWrap
         enabled: widget.connected
 
         anchors {
@@ -99,7 +101,7 @@ PrimitiveWidget {
 
                         label: "Title Font Size"
 
-                        bindedProperty: "item_titleFontSize"
+                        bindedProperty: "titleFontSize"
                         bindTarget: widget
                     }
 
@@ -110,7 +112,7 @@ PrimitiveWidget {
 
                         label: "Maximum Font Size"
 
-                        bindedProperty: "item_fontSize"
+                        bindedProperty: "fontSize"
                         bindTarget: widget
                     }
                 }
@@ -127,7 +129,7 @@ PrimitiveWidget {
 
                         label: "Text Color"
 
-                        bindedProperty: "item_color"
+                        bindedProperty: "color"
                         bindTarget: widget
                     }
 
@@ -138,7 +140,7 @@ PrimitiveWidget {
 
                         label: "Wrap Text?"
 
-                        bindedProperty: "item_wrap"
+                        bindedProperty: "wrap"
                         bindTarget: widget
                     }
                 }

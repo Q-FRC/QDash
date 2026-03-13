@@ -13,15 +13,17 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int item_fontSize: 20
+    property int fontSize: 20
 
-    property double item_startAngle: 180
-    property double item_endAngle: 540
+    property double startAngle: 180
+    property double endAngle: 540
 
-    property int item_stepSize: 1
+    property int stepSize: 1
 
-    property int item_lowerBound: -1000
-    property int item_upperBound: 1000
+    property int lowerBound: -1000
+    property int upperBound: 1000
+
+    propertyKeys: ["stepSize", "fontSize", "startAngle", "endAngle", "lowerBound", "upperBound"]
 
     menuExtension: Component {
         Menu {
@@ -60,13 +62,13 @@ PrimitiveWidget {
     SpinBox {
         id: spin
 
-        font.pixelSize: item_fontSize
+        font.pixelSize: fontSize
 
         value: 0
 
-        from: item_lowerBound
-        to: item_upperBound
-        stepSize: item_stepSize
+        from: lowerBound
+        to: upperBound
+        stepSize: stepSize
 
         enabled: widget.connected
         editable: true
@@ -99,19 +101,19 @@ PrimitiveWidget {
 
         inputMode: Dial.Circular
 
-        font.pixelSize: item_fontSize
+        font.pixelSize: fontSize
 
         value: 0
-        stepSize: item_stepSize
+        stepSize: stepSize
 
         width: Math.min(parent.width, spin.y - titleField.height - 40)
         height: width
 
-        from: item_lowerBound
-        to: item_upperBound
+        from: lowerBound
+        to: upperBound
 
-        startAngle: item_startAngle
-        endAngle: item_endAngle
+        startAngle: startAngle
+        endAngle: endAngle
 
         enabled: widget.connected
 
@@ -156,7 +158,7 @@ PrimitiveWidget {
 
                         label: "Title Font Size"
 
-                        bindedProperty: "item_titleFontSize"
+                        bindedProperty: "titleFontSize"
                         bindTarget: widget
                     }
 
@@ -167,7 +169,7 @@ PrimitiveWidget {
 
                         label: "Font Size"
 
-                        bindedProperty: "item_fontSize"
+                        bindedProperty: "fontSize"
                         bindTarget: widget
                     }
                 }
@@ -185,7 +187,7 @@ PrimitiveWidget {
 
                         label: "Lower Bound"
 
-                        bindedProperty: "item_lowerBound"
+                        bindedProperty: "lowerBound"
                         bindTarget: widget
                     }
 
@@ -196,7 +198,7 @@ PrimitiveWidget {
 
                         label: "Upper Bound"
 
-                        bindedProperty: "item_upperBound"
+                        bindedProperty: "upperBound"
                         bindTarget: widget
                     }
                 }
@@ -208,7 +210,7 @@ PrimitiveWidget {
 
                     label: "Step Size"
 
-                    bindedProperty: "item_stepSize"
+                    bindedProperty: "stepSize"
                     bindTarget: widget
 
                     from: 0
@@ -227,7 +229,7 @@ PrimitiveWidget {
 
                         label: "Start Angle"
 
-                        bindedProperty: "item_startAngle"
+                        bindedProperty: "startAngle"
                         bindTarget: widget
                     }
 
@@ -238,7 +240,7 @@ PrimitiveWidget {
 
                         label: "End Angle"
 
-                        bindedProperty: "item_endAngle"
+                        bindedProperty: "endAngle"
                         bindTarget: widget
                     }
                 }

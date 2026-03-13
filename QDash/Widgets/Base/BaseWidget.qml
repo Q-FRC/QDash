@@ -15,7 +15,11 @@ Rectangle {
     property string item_topic
 
     id: widget
-    clip: true
+
+    // *all* widgets must define their properties in this list.
+    // They are then updated, and passed to the JSON.
+    // This is primarily done to reduce startup overhead on AMD E-350
+    property list<string> propertyKeys
 
     // default to disconnected and invalid
     property bool connected: false
@@ -26,7 +30,7 @@ Rectangle {
     z: 3
 
     radius: 12
-    property int item_titleFontSize: 16
+    property int titleFontSize: 16
 
     property alias dragArea: dragArea
     property alias titleField: titleField
@@ -182,31 +186,21 @@ Rectangle {
 
         fixSize()
 
-        for (var p in this) {
-            if (p.startsWith("item_") && typeof this[p] !== "function") {
-                let propName = p
-                let substr = propName.substring(5)
-                let prop = model.properties[substr]
-                this[p] = typeof prop === "undefined" ? this[propName] : prop
+        // TODO(crueter): Technically this could be made even better by construction properties OBJECT
+        // at save time...?
+        propertyKeys.push("titleFontSize")
+        for (var property in propertyKeys) {
+            let p = propertyKeys[property]
 
-                if (substr === "topic") {
-                    this.item_topicChanged.connect(() => {
-                                                       model.topic = this.item_topic
-                                                   })
-                } else {
-                    this[p + "Changed"].connect(() => {
-                                                    logs.debug(
-                                                        "Widget",
-                                                        "Updating property " + propName
-                                                        + " for widget " + model.title
-                                                        + " to " + this[propName])
+            let jsonProp = model.properties[p]
+            if (typeof jsonProp !== "undefined")
+                this[p] = jsonProp
 
-                                                    let x = model.properties
-                                                    x[substr] = this[propName]
-                                                    model.properties = x
-                                                })
-                }
-            }
+            this[p + "Changed"].connect(() => {
+                                            let x = model.properties
+                                            x[p] = this[p]
+                                            model.properties = x
+                                        })
         }
     }
 
@@ -392,7 +386,7 @@ Rectangle {
         id: titleField
         z: enabled ? 25 : 0
 
-        font.pixelSize: item_titleFontSize
+        font.pixelSize: titleFontSize
         font.bold: true
 
         clip: true
@@ -449,7 +443,7 @@ Rectangle {
 
                     label: "Title Font Size"
 
-                    bindedProperty: "item_titleFontSize"
+                    bindedProperty: "titleFontSize"
                     bindTarget: widget
                 }
 

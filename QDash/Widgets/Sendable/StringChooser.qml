@@ -144,7 +144,7 @@ SendableWidget {
 
                     label: "Title Font Size"
 
-                    bindedProperty: "item_titleFontSize"
+                    bindedProperty: "titleFontSize"
                     bindTarget: widget
                 }
 

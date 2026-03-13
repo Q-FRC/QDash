@@ -13,7 +13,9 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int item_checkboxSize: 40
+    property int checkboxSize: 40
+
+    propertyKeys: ["checkboxSize"]
 
     menuExtension: Component {
         Menu {
@@ -56,8 +58,8 @@ PrimitiveWidget {
                 centerIn: parent
             }
 
-            indicator.implicitHeight: item_checkboxSize
-            indicator.implicitWidth: item_checkboxSize
+            indicator.implicitHeight: checkboxSize
+            indicator.implicitWidth: checkboxSize
 
             onToggled: widget.setValue(checked)
         }
@@ -93,7 +95,7 @@ PrimitiveWidget {
 
                         label: "Title Font Size"
 
-                        bindedProperty: "item_titleFontSize"
+                        bindedProperty: "titleFontSize"
                         bindTarget: widget
                     }
 
@@ -104,7 +106,7 @@ PrimitiveWidget {
 
                         label: "Checkbox Size"
 
-                        bindedProperty: "item_checkboxSize"
+                        bindedProperty: "checkboxSize"
                         bindTarget: widget
                     }
                 }

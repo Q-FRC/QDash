@@ -13,9 +13,11 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int item_maxFontSize: 100
-    property int item_decimals: 2
-    property color item_color: Clover.theme.currentAccent
+    property int maxFontSize: 100
+    property int decimals: 2
+    property color fontColor: Clover.theme.currentAccent
+
+    propertyKeys: ["maxFontSize", "decimals", "fontColor"]
 
     // TODO(crueter): There should be some kind of interface that maps names to model types
     // That way we can just use Repeater or whatever, or define all the widget types for a specific
@@ -77,13 +79,13 @@ PrimitiveWidget {
     Text {
         id: txt
 
-        font.pixelSize: item_maxFontSize
+        font.pixelSize: maxFontSize
 
         property double value
 
-        text: value.toFixed(item_decimals)
+        text: value.toFixed(decimals)
 
-        color: item_color
+        color: widget.fontColor
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
@@ -130,7 +132,7 @@ PrimitiveWidget {
 
                         label: "Title Font Size"
 
-                        bindedProperty: "item_titleFontSize"
+                        bindedProperty: "titleFontSize"
                         bindTarget: widget
                     }
 
@@ -141,7 +143,7 @@ PrimitiveWidget {
 
                         label: "Maximum Font Size"
 
-                        bindedProperty: "item_maxFontSize"
+                        bindedProperty: "maxFontSize"
                         bindTarget: widget
                     }
                 }
@@ -159,7 +161,7 @@ PrimitiveWidget {
 
                         label: "Number of Decimals"
 
-                        bindedProperty: "item_decimals"
+                        bindedProperty: "decimals"
                         bindTarget: widget
 
                         from: 0
@@ -172,7 +174,7 @@ PrimitiveWidget {
 
                         label: "Text Color"
 
-                        bindedProperty: "item_color"
+                        bindedProperty: "color"
                         bindTarget: widget
                     }
                 }

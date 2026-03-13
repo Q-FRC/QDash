@@ -13,15 +13,17 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int item_fontSize: 20
+    property int fontSize: 20
 
-    property int item_ticks: 15
+    property int ticks: 15
 
-    property double item_startAngle: -135
-    property double item_endAngle: 135
+    property double startAngle: -135
+    property double endAngle: 135
 
-    property int item_min: 0
-    property int item_max: 100
+    property int min: 0
+    property int max: 100
+
+    propertyKeys: ["fontSize", "ticks", "startAngle", "endAngle", "min", "max"]
 
     Menu {
         id: switchMenu
@@ -83,7 +85,7 @@ PrimitiveWidget {
         RadialGauge {
             id: gauge
 
-            valueFontSize: item_fontSize
+            valueFontSize: fontSize
 
             anchors {
                 horizontalCenter: parent.horizontalCenter
@@ -92,13 +94,13 @@ PrimitiveWidget {
 
             value: 0
 
-            numTicks: item_ticks
+            numTicks: ticks
 
-            minValue: item_min
-            maxValue: item_max
+            minValue: min
+            maxValue: max
 
-            startAngle: item_startAngle
-            endAngle: item_endAngle
+            startAngle: startAngle
+            endAngle: endAngle
         }
     }
 
@@ -132,7 +134,7 @@ PrimitiveWidget {
 
                         label: "Title Font Size"
 
-                        bindedProperty: "item_titleFontSize"
+                        bindedProperty: "titleFontSize"
                         bindTarget: widget
                     }
 
@@ -143,7 +145,7 @@ PrimitiveWidget {
 
                         label: "Font Size"
 
-                        bindedProperty: "item_fontSize"
+                        bindedProperty: "fontSize"
                         bindTarget: widget
                     }
                 }
@@ -159,7 +161,7 @@ PrimitiveWidget {
 
                     label: "Number of Ticks"
 
-                    bindedProperty: "item_ticks"
+                    bindedProperty: "ticks"
                     bindTarget: widget
                 }
 
@@ -172,7 +174,7 @@ PrimitiveWidget {
 
                         label: "Minimum Value"
 
-                        bindedProperty: "item_min"
+                        bindedProperty: "min"
                         bindTarget: widget
                     }
 
@@ -183,7 +185,7 @@ PrimitiveWidget {
 
                         label: "Maximum Value"
 
-                        bindedProperty: "item_max"
+                        bindedProperty: "max"
                         bindTarget: widget
                     }
                 }
@@ -197,7 +199,7 @@ PrimitiveWidget {
 
                         label: "Start Angle"
 
-                        bindedProperty: "item_startAngle"
+                        bindedProperty: "startAngle"
                         bindTarget: widget
                     }
 
@@ -208,7 +210,7 @@ PrimitiveWidget {
 
                         label: "End Angle"
 
-                        bindedProperty: "item_endAngle"
+                        bindedProperty: "endAngle"
                         bindTarget: widget
                     }
                 }

@@ -15,8 +15,6 @@ import QDash.Native.Misc
 PrimitiveWidget {
     id: widget
 
-    property string item_topic
-
     property list<bool> values
 
     function valueChanged() {
@@ -149,7 +147,7 @@ PrimitiveWidget {
 
                         label: "Title Font Size"
 
-                        bindedProperty: "item_titleFontSize"
+                        bindedProperty: "titleFontSize"
                         bindTarget: widget
                     }
                 }

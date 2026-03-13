@@ -13,16 +13,18 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int item_fontSize: 20
+    property int fontSize: 20
 
-    property int item_numTicks: 5
+    property int numTicks: 5
 
-    property string item_suffix: ""
+    property string suffix: ""
 
-    property double item_lowerBound: 0.0
-    property double item_upperBound: 100.0
+    property double lowerBound: 0.0
+    property double upperBound: 100.0
 
-    property bool item_vertical: false
+    property bool vertical: false
+
+    propertyKeys: ["fontSize", "numTicks", "suffix", "lowerBound", "upperBound", "vertical"]
 
     menuExtension: Component {
         Menu {
@@ -81,12 +83,12 @@ PrimitiveWidget {
     ProgressBar {
         id: bar
 
-        font.pixelSize: item_fontSize
+        font.pixelSize: fontSize
 
-        from: item_lowerBound
-        to: item_upperBound
+        from: lowerBound
+        to: upperBound
 
-        rotation: item_vertical ? -90 : 0
+        rotation: vertical ? -90 : 0
         enabled: widget.connected
 
         anchors {
@@ -95,17 +97,17 @@ PrimitiveWidget {
             verticalCenterOffset: titleField.height / 2
         }
 
-        width: item_vertical ? (parent.height - titleField.height - 50) : (parent.width - 50)
+        width: vertical ? (parent.height - titleField.height - 50) : (parent.width - 50)
 
         Repeater {
-            model: item_numTicks + 1
+            model: numTicks + 1
 
             Item {
                 anchors {
                     top: bar.bottom
                 }
 
-                x: (bar.width * index) / item_numTicks
+                x: (bar.width * index) / numTicks
 
                 Rectangle {
                     id: tick
@@ -118,8 +120,8 @@ PrimitiveWidget {
                 Text {
                     color: Clover.theme.text
 
-                    text: (bar.from + index * (bar.to - bar.from) / item_numTicks).toFixed(
-                              1) + item_suffix
+                    text: (bar.from + index * (bar.to - bar.from) / numTicks).toFixed(
+                              1) + suffix
 
                     font.pixelSize: 15
 
@@ -130,7 +132,7 @@ PrimitiveWidget {
                         horizontalCenter: tick.horizontalCenter
                     }
 
-                    rotation: item_vertical ? 90 : 0
+                    rotation: vertical ? 90 : 0
                 }
             }
         }
@@ -139,10 +141,10 @@ PrimitiveWidget {
             id: txt
 
             color: Clover.theme.text
-            font.pixelSize: item_fontSize
+            font.pixelSize: fontSize
 
-            text: parent.value + item_suffix
-            rotation: item_vertical ? 90 : 0
+            text: parent.value + suffix
+            rotation: vertical ? 90 : 0
 
             anchors {
                 bottom: bar.top
@@ -183,7 +185,7 @@ PrimitiveWidget {
 
                         label: "Title Font Size"
 
-                        bindedProperty: "item_titleFontSize"
+                        bindedProperty: "titleFontSize"
                         bindTarget: widget
                     }
 
@@ -194,7 +196,7 @@ PrimitiveWidget {
 
                         label: "Font Size"
 
-                        bindedProperty: "item_fontSize"
+                        bindedProperty: "fontSize"
                         bindTarget: widget
                     }
                 }
@@ -212,7 +214,7 @@ PrimitiveWidget {
 
                         label: "Lower Bound"
 
-                        bindedProperty: "item_lowerBound"
+                        bindedProperty: "lowerBound"
                         bindTarget: widget
                     }
 
@@ -223,7 +225,7 @@ PrimitiveWidget {
 
                         label: "Upper Bound"
 
-                        bindedProperty: "item_upperBound"
+                        bindedProperty: "upperBound"
                         bindTarget: widget
                     }
                 }
@@ -237,7 +239,7 @@ PrimitiveWidget {
 
                         label: "Number of Ticks"
 
-                        bindedProperty: "item_numTicks"
+                        bindedProperty: "numTicks"
                         bindTarget: widget
 
                         stepSize: 1
@@ -250,7 +252,7 @@ PrimitiveWidget {
 
                         label: "Suffix"
 
-                        bindedProperty: "item_suffix"
+                        bindedProperty: "suffix"
                         bindTarget: widget
                     }
                 }
@@ -262,7 +264,7 @@ PrimitiveWidget {
 
                     label: "Vertical?"
 
-                    bindedProperty: "item_vertical"
+                    bindedProperty: "vertical"
                     bindTarget: widget
                 }
 

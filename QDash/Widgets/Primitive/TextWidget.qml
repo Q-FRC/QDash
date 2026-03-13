@@ -13,7 +13,9 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int item_fontSize: 20
+    property int fontSize: 20
+
+    propertyKeys: ["fontSize"]
 
     menuExtension: Component {
         Menu {
@@ -55,7 +57,7 @@ PrimitiveWidget {
         TextField {
             id: textField
 
-            font.pixelSize: item_fontSize
+            font.pixelSize: fontSize
 
             enabled: widget.connected
 
@@ -102,7 +104,7 @@ PrimitiveWidget {
 
                         label: "Title Font Size"
 
-                        bindedProperty: "item_titleFontSize"
+                        bindedProperty: "titleFontSize"
                         bindTarget: widget
                     }
 
@@ -113,7 +115,7 @@ PrimitiveWidget {
 
                         label: "Font Size"
 
-                        bindedProperty: "item_fontSize"
+                        bindedProperty: "fontSize"
                         bindTarget: widget
                     }
                 }
