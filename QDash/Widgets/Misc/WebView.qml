@@ -54,46 +54,48 @@ BaseWidget {
 
         onLoaded: item.open()
 
-        sourceComponent: BaseConfigDialog {
-            id: config
+        sourceComponent: Component {
+            BaseConfigDialog {
+                id: config
 
-            content: ColumnLayout {
-                id: layout
-                spacing: 12
-                anchors.fill: parent
-                anchors.leftMargin: 2
-                clip: true
+                content: ColumnLayout {
+                    id: layout
+                    spacing: 12
+                    anchors.fill: parent
+                    anchors.leftMargin: 2
+                    clip: true
 
-                SectionHeader {
-                    label: "Font Settings"
-                }
+                    SectionHeader {
+                        label: "Font Settings"
+                    }
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
 
-                    id: titleFontField
+                        id: titleFontField
 
-                    label: "Title Font Size"
+                        label: "Title Font Size"
 
-                    bindedProperty: "titleFontSize"
-                    bindTarget: widget
-                }
+                        bindedProperty: "titleFontSize"
+                        bindTarget: widget
+                    }
 
-                SectionHeader {
-                    label: "Web View Settings"
-                }
+                    SectionHeader {
+                        label: "Web View Settings"
+                    }
 
-                LabeledTextField {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
+                    LabeledTextField {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
 
-                    id: urlField
+                        id: urlField
 
-                    label: "URL"
+                        label: "URL"
 
-                    bindedProperty: "item_url"
-                    bindTarget: widget
+                        bindedProperty: "item_url"
+                        bindTarget: widget
+                    }
                 }
             }
         }

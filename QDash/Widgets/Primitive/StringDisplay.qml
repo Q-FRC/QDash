@@ -78,87 +78,89 @@ PrimitiveWidget {
 
         onLoaded: item.open()
 
-        sourceComponent: BaseConfigDialog {
-            id: config
+        sourceComponent: Component {
+            BaseConfigDialog {
+                id: config
 
-            content: ColumnLayout {
-                id: layout
-                spacing: 12
-                anchors.fill: parent
-                anchors.leftMargin: 2
-                clip: true
+                content: ColumnLayout {
+                    id: layout
+                    spacing: 12
+                    anchors.fill: parent
+                    anchors.leftMargin: 2
+                    clip: true
 
-                SectionHeader {
-                    label: "Font Settings"
-                }
-
-                RowLayout {
-
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
-
-                        id: titleFontField
-
-                        label: "Title Font Size"
-
-                        bindedProperty: "titleFontSize"
-                        bindTarget: widget
+                    SectionHeader {
+                        label: "Font Settings"
                     }
 
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
+                    RowLayout {
 
-                        id: fontField
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
 
-                        label: "Maximum Font Size"
+                            id: titleFontField
 
-                        bindedProperty: "fontSize"
-                        bindTarget: widget
-                    }
-                }
+                            label: "Title Font Size"
 
-                SectionHeader {
-                    label: "Display Settings"
-                }
-                RowLayout {
+                            bindedProperty: "titleFontSize"
+                            bindTarget: widget
+                        }
 
-                    ColorField {
-                        Layout.fillWidth: true
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
 
-                        id: colorField
+                            id: fontField
 
-                        label: "Text Color"
+                            label: "Maximum Font Size"
 
-                        bindedProperty: "color"
-                        bindTarget: widget
+                            bindedProperty: "fontSize"
+                            bindTarget: widget
+                        }
                     }
 
-                    LabeledCheckbox {
+                    SectionHeader {
+                        label: "Display Settings"
+                    }
+                    RowLayout {
+
+                        ColorField {
+                            Layout.fillWidth: true
+
+                            id: colorField
+
+                            label: "Text Color"
+
+                            bindedProperty: "color"
+                            bindTarget: widget
+                        }
+
+                        LabeledCheckbox {
+                            Layout.fillWidth: true
+
+                            id: wrapField
+
+                            label: "Wrap Text?"
+
+                            bindedProperty: "wrap"
+                            bindTarget: widget
+                        }
+                    }
+
+                    SectionHeader {
+                        label: "NT Settings"
+                    }
+
+                    LabeledTextField {
                         Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
 
-                        id: wrapField
+                        id: topicField
 
-                        label: "Wrap Text?"
+                        label: "Topic"
 
-                        bindedProperty: "wrap"
+                        bindedProperty: "item_topic"
                         bindTarget: widget
                     }
-                }
-
-                SectionHeader {
-                    label: "NT Settings"
-                }
-
-                LabeledTextField {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
-
-                    id: topicField
-
-                    label: "Topic"
-
-                    bindedProperty: "item_topic"
-                    bindTarget: widget
                 }
             }
         }

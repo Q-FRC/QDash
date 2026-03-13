@@ -230,70 +230,72 @@ PrimitiveWidget {
 
         onLoaded: item.open()
 
-        sourceComponent: BaseConfigDialog {
-            id: config
+        sourceComponent: Component {
+            BaseConfigDialog {
+                id: config
 
-            content: ColumnLayout {
-                id: layout
-                spacing: 12
-                anchors.fill: parent
-                anchors.leftMargin: 2
-                clip: true
+                content: ColumnLayout {
+                    id: layout
+                    spacing: 12
+                    anchors.fill: parent
+                    anchors.leftMargin: 2
+                    clip: true
 
-                SectionHeader {
-                    label: "Font Settings"
-                }
-
-                RowLayout {
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
-
-                        label: qsTr("Title Font Size")
-                        bindedProperty: "titleFontSize"
+                    SectionHeader {
+                        label: "Font Settings"
                     }
 
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
+                    RowLayout {
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
 
-                        label: qsTr("Maximum Font Size")
-                        bindedProperty: "fontSize"
-                    }
-                }
+                            label: qsTr("Title Font Size")
+                            bindedProperty: "titleFontSize"
+                        }
 
-                SectionHeader {
-                    label: qsTr("Display Settings")
-                }
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
 
-                RowLayout {
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
-
-                        label: qsTr("Warning Threshold")
-                        bindedProperty: "warningThreshold"
-
-                        from: 0
-                        to: 10
+                            label: qsTr("Maximum Font Size")
+                            bindedProperty: "fontSize"
+                        }
                     }
 
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
-
-                        label: qsTr("Warning Flash Interval")
-                        bindedProperty: "flashInterval"
+                    SectionHeader {
+                        label: qsTr("Display Settings")
                     }
-                }
 
-                SectionHeader {
-                    label: "NT Settings"
-                }
+                    RowLayout {
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
 
-                LabeledTextField {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
+                            label: qsTr("Warning Threshold")
+                            bindedProperty: "warningThreshold"
 
-                    label: qsTr("Topic")
+                            from: 0
+                            to: 10
+                        }
 
-                    bindedProperty: "item_topic"
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
+
+                            label: qsTr("Warning Flash Interval")
+                            bindedProperty: "flashInterval"
+                        }
+                    }
+
+                    SectionHeader {
+                        label: "NT Settings"
+                    }
+
+                    LabeledTextField {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
+
+                        label: qsTr("Topic")
+
+                        bindedProperty: "item_topic"
+                    }
                 }
             }
         }

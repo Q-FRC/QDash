@@ -121,59 +121,69 @@ SendableWidget {
         }
     }
 
-    BaseConfigDialog {
-        id: config
+    Loader {
+        id: configLoader
+        active: false
+        asynchronous: true
 
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
+        onLoaded: item.open()
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+        sourceComponent: Component {
+            BaseConfigDialog {
+                id: config
 
-            RowLayout {
+                content: ColumnLayout {
+                    id: layout
+                    spacing: 12
+                    anchors.fill: parent
+                    anchors.leftMargin: 2
+                    clip: true
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
+                    SectionHeader {
+                        label: "Font Settings"
+                    }
 
-                    id: titleFontField
+                    RowLayout {
 
-                    label: "Title Font Size"
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
 
-                    bindedProperty: "titleFontSize"
-                    bindTarget: widget
+                            id: titleFontField
+
+                            label: "Title Font Size"
+
+                            bindedProperty: "titleFontSize"
+                            bindTarget: widget
+                        }
+
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
+
+                            id: fontField
+
+                            label: "Font Size"
+
+                            bindedProperty: "item_fontSize"
+                            bindTarget: widget
+                        }
+                    }
+
+                    SectionHeader {
+                        label: "NT Settings"
+                    }
+
+                    LabeledTextField {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
+
+                        id: topicField
+
+                        label: "Topic"
+
+                        bindedProperty: "item_topic"
+                        bindTarget: widget
+                    }
                 }
-
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-
-                    id: fontField
-
-                    label: "Font Size"
-
-                    bindedProperty: "item_fontSize"
-                    bindTarget: widget
-                }
-            }
-
-            SectionHeader {
-                label: "NT Settings"
-            }
-
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-
-                id: topicField
-
-                label: "Topic"
-
-                bindedProperty: "item_topic"
-                bindTarget: widget
             }
         }
     }

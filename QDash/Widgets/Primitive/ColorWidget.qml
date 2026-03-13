@@ -78,88 +78,90 @@ PrimitiveWidget {
 
         onLoaded: item.open()
 
-        sourceComponent: BaseConfigDialog {
-            id: config
+        sourceComponent: Component {
+            BaseConfigDialog {
+                id: config
 
-            content: ColumnLayout {
-                id: layout
-                spacing: 12
-                anchors.fill: parent
-                anchors.leftMargin: 2
-                clip: true
+                content: ColumnLayout {
+                    id: layout
+                    spacing: 12
+                    anchors.fill: parent
+                    anchors.leftMargin: 2
+                    clip: true
 
-                SectionHeader {
-                    label: "Font Settings"
-                }
+                    SectionHeader {
+                        label: "Font Settings"
+                    }
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
-
-                    id: titleFontField
-
-                    label: "Title Font Size"
-
-                    bindedProperty: "titleFontSize"
-                    bindTarget: widget
-                }
-
-                SectionHeader {
-                    label: "Color Settings"
-                }
-
-                LabeledComboBox {
-                    id: shapeField
-
-                    Layout.fillWidth: true
-                    model: shapeChoices
-
-                    label: "Shape"
-
-                    bindedProperty: "shape"
-                    bindTarget: widget
-                }
-
-                RowLayout {
-                    Layout.fillWidth: true
-
-                    ColorField {
-                        id: trueField
-
+                    LabeledSpinBox {
                         Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
 
-                        label: "True Color"
+                        id: titleFontField
 
-                        bindedProperty: "trueColor"
+                        label: "Title Font Size"
+
+                        bindedProperty: "titleFontSize"
                         bindTarget: widget
                     }
 
-                    ColorField {
-                        id: falseField
+                    SectionHeader {
+                        label: "Color Settings"
+                    }
+
+                    LabeledComboBox {
+                        id: shapeField
 
                         Layout.fillWidth: true
+                        model: shapeChoices
 
-                        label: "False Color"
+                        label: "Shape"
 
-                        bindedProperty: "falseColor"
+                        bindedProperty: "shape"
                         bindTarget: widget
                     }
-                }
 
-                SectionHeader {
-                    label: "NT Settings"
-                }
+                    RowLayout {
+                        Layout.fillWidth: true
 
-                LabeledTextField {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
+                        ColorField {
+                            id: trueField
 
-                    id: topicField
+                            Layout.fillWidth: true
 
-                    label: "Topic"
+                            label: "True Color"
 
-                    bindedProperty: "item_topic"
-                    bindTarget: widget
+                            bindedProperty: "trueColor"
+                            bindTarget: widget
+                        }
+
+                        ColorField {
+                            id: falseField
+
+                            Layout.fillWidth: true
+
+                            label: "False Color"
+
+                            bindedProperty: "falseColor"
+                            bindTarget: widget
+                        }
+                    }
+
+                    SectionHeader {
+                        label: "NT Settings"
+                    }
+
+                    LabeledTextField {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
+
+                        id: topicField
+
+                        label: "Topic"
+
+                        bindedProperty: "item_topic"
+                        bindTarget: widget
+                    }
                 }
             }
         }

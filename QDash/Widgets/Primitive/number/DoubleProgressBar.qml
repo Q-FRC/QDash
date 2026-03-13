@@ -162,126 +162,128 @@ PrimitiveWidget {
 
         onLoaded: item.open()
 
-        sourceComponent: BaseConfigDialog {
-            id: config
+        sourceComponent: Component {
+            BaseConfigDialog {
+                id: config
 
-            content: ColumnLayout {
-                id: layout
-                spacing: 12
-                anchors.fill: parent
-                anchors.leftMargin: 2
-                clip: true
+                content: ColumnLayout {
+                    id: layout
+                    spacing: 12
+                    anchors.fill: parent
+                    anchors.leftMargin: 2
+                    clip: true
 
-                SectionHeader {
-                    label: "Font Settings"
-                }
+                    SectionHeader {
+                        label: "Font Settings"
+                    }
 
-                RowLayout {
+                    RowLayout {
 
-                    LabeledSpinBox {
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
+
+                            id: titleFontField
+
+                            label: "Title Font Size"
+
+                            bindedProperty: "titleFontSize"
+                            bindTarget: widget
+                        }
+
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
+
+                            id: fontField
+
+                            label: "Font Size"
+
+                            bindedProperty: "fontSize"
+                            bindTarget: widget
+                        }
+                    }
+
+                    SectionHeader {
+                        label: "Bar Settings"
+                    }
+
+                    RowLayout {
+
+                        LabeledDoubleSpinBox {
+                            Layout.fillWidth: true
+
+                            id: lowField
+
+                            label: "Lower Bound"
+
+                            bindedProperty: "lowerBound"
+                            bindTarget: widget
+                        }
+
+                        LabeledDoubleSpinBox {
+                            Layout.fillWidth: true
+
+                            id: upField
+
+                            label: "Upper Bound"
+
+                            bindedProperty: "upperBound"
+                            bindTarget: widget
+                        }
+                    }
+
+                    RowLayout {
+
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
+
+                            id: tickField
+
+                            label: "Number of Ticks"
+
+                            bindedProperty: "numTicks"
+                            bindTarget: widget
+
+                            stepSize: 1
+                        }
+
+                        LabeledTextField {
+                            Layout.fillWidth: true
+
+                            id: suffixField
+
+                            label: "Suffix"
+
+                            bindedProperty: "suffix"
+                            bindTarget: widget
+                        }
+                    }
+
+                    LabeledCheckbox {
                         Layout.fillWidth: true
 
-                        id: titleFontField
+                        id: vertField
 
-                        label: "Title Font Size"
+                        label: "Vertical?"
 
-                        bindedProperty: "titleFontSize"
+                        bindedProperty: "vertical"
                         bindTarget: widget
                     }
 
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
-
-                        id: fontField
-
-                        label: "Font Size"
-
-                        bindedProperty: "fontSize"
-                        bindTarget: widget
-                    }
-                }
-
-                SectionHeader {
-                    label: "Bar Settings"
-                }
-
-                RowLayout {
-
-                    LabeledDoubleSpinBox {
-                        Layout.fillWidth: true
-
-                        id: lowField
-
-                        label: "Lower Bound"
-
-                        bindedProperty: "lowerBound"
-                        bindTarget: widget
-                    }
-
-                    LabeledDoubleSpinBox {
-                        Layout.fillWidth: true
-
-                        id: upField
-
-                        label: "Upper Bound"
-
-                        bindedProperty: "upperBound"
-                        bindTarget: widget
-                    }
-                }
-
-                RowLayout {
-
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
-
-                        id: tickField
-
-                        label: "Number of Ticks"
-
-                        bindedProperty: "numTicks"
-                        bindTarget: widget
-
-                        stepSize: 1
+                    SectionHeader {
+                        label: "NT Settings"
                     }
 
                     LabeledTextField {
                         Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
 
-                        id: suffixField
+                        id: topicField
 
-                        label: "Suffix"
+                        label: "Topic"
 
-                        bindedProperty: "suffix"
+                        bindedProperty: "item_topic"
                         bindTarget: widget
                     }
-                }
-
-                LabeledCheckbox {
-                    Layout.fillWidth: true
-
-                    id: vertField
-
-                    label: "Vertical?"
-
-                    bindedProperty: "vertical"
-                    bindTarget: widget
-                }
-
-                SectionHeader {
-                    label: "NT Settings"
-                }
-
-                LabeledTextField {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
-
-                    id: topicField
-
-                    label: "Topic"
-
-                    bindedProperty: "item_topic"
-                    bindTarget: widget
                 }
             }
         }

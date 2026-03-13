@@ -425,40 +425,42 @@ Rectangle {
 
         onLoaded: item.open()
 
-        sourceComponent: BaseConfigDialog {
-            content: ColumnLayout {
-                id: layout
-                spacing: 12
-                anchors.fill: parent
-                anchors.leftMargin: 2
-                clip: true
+        sourceComponent: Component {
+            BaseConfigDialog {
+                content: ColumnLayout {
+                    id: layout
+                    spacing: 12
+                    anchors.fill: parent
+                    anchors.leftMargin: 2
+                    clip: true
 
-                SectionHeader {
-                    label: "Font Settings"
-                }
+                    SectionHeader {
+                        label: "Font Settings"
+                    }
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
 
-                    label: "Title Font Size"
+                        label: "Title Font Size"
 
-                    bindedProperty: "titleFontSize"
-                    bindTarget: widget
-                }
+                        bindedProperty: "titleFontSize"
+                        bindTarget: widget
+                    }
 
-                SectionHeader {
-                    label: "NT Settings"
-                }
+                    SectionHeader {
+                        label: "NT Settings"
+                    }
 
-                LabeledTextField {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
+                    LabeledTextField {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
 
-                    label: "Topic"
+                        label: "Topic"
 
-                    bindedProperty: "item_topic"
-                    bindTarget: widget
+                        bindedProperty: "item_topic"
+                        bindTarget: widget
+                    }
                 }
             }
         }

@@ -72,59 +72,61 @@ PrimitiveWidget {
 
         onLoaded: item.open()
 
-        sourceComponent: BaseConfigDialog {
-            id: config
+        sourceComponent: Component {
+            BaseConfigDialog {
+                id: config
 
-            content: ColumnLayout {
-                id: layout
-                spacing: 12
-                anchors.fill: parent
-                anchors.leftMargin: 2
-                clip: true
+                content: ColumnLayout {
+                    id: layout
+                    spacing: 12
+                    anchors.fill: parent
+                    anchors.leftMargin: 2
+                    clip: true
 
-                SectionHeader {
-                    label: "Font Settings"
-                }
-
-                RowLayout {
-
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
-
-                        id: titleFontField
-
-                        label: "Title Font Size"
-
-                        bindedProperty: "titleFontSize"
-                        bindTarget: widget
+                    SectionHeader {
+                        label: "Font Settings"
                     }
 
-                    LabeledSpinBox {
+                    RowLayout {
+
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
+
+                            id: titleFontField
+
+                            label: "Title Font Size"
+
+                            bindedProperty: "titleFontSize"
+                            bindTarget: widget
+                        }
+
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
+
+                            id: checkboxField
+
+                            label: "Checkbox Size"
+
+                            bindedProperty: "checkboxSize"
+                            bindTarget: widget
+                        }
+                    }
+
+                    SectionHeader {
+                        label: "NT Settings"
+                    }
+
+                    LabeledTextField {
                         Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
 
-                        id: checkboxField
+                        id: topicField
 
-                        label: "Checkbox Size"
+                        label: "Topic"
 
-                        bindedProperty: "checkboxSize"
+                        bindedProperty: "item_topic"
                         bindTarget: widget
                     }
-                }
-
-                SectionHeader {
-                    label: "NT Settings"
-                }
-
-                LabeledTextField {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
-
-                    id: topicField
-
-                    label: "Topic"
-
-                    bindedProperty: "item_topic"
-                    bindTarget: widget
                 }
             }
         }

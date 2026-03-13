@@ -111,124 +111,126 @@ PrimitiveWidget {
 
         onLoaded: item.open()
 
-        sourceComponent: BaseConfigDialog {
-            id: config
+        sourceComponent: Component {
+            BaseConfigDialog {
+                id: config
 
-            content: ColumnLayout {
-                id: layout
-                spacing: 12
-                anchors.fill: parent
-                anchors.leftMargin: 2
-                clip: true
+                content: ColumnLayout {
+                    id: layout
+                    spacing: 12
+                    anchors.fill: parent
+                    anchors.leftMargin: 2
+                    clip: true
 
-                SectionHeader {
-                    label: "Font Settings"
-                }
+                    SectionHeader {
+                        label: "Font Settings"
+                    }
 
-                RowLayout {
+                    RowLayout {
 
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
 
-                        id: titleFontField
+                            id: titleFontField
 
-                        label: "Title Font Size"
+                            label: "Title Font Size"
 
-                        bindedProperty: "titleFontSize"
-                        bindTarget: widget
+                            bindedProperty: "titleFontSize"
+                            bindTarget: widget
+                        }
+
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
+
+                            id: fontField
+
+                            label: "Font Size"
+
+                            bindedProperty: "fontSize"
+                            bindTarget: widget
+                        }
+                    }
+
+                    SectionHeader {
+                        label: "Gauge Settings"
                     }
 
                     LabeledSpinBox {
                         Layout.fillWidth: true
 
-                        id: fontField
+                        id: tickField
 
-                        label: "Font Size"
+                        label: "Number of Ticks"
 
-                        bindedProperty: "fontSize"
+                        bindedProperty: "ticks"
                         bindTarget: widget
                     }
-                }
 
-                SectionHeader {
-                    label: "Gauge Settings"
-                }
+                    RowLayout {
 
-                LabeledSpinBox {
-                    Layout.fillWidth: true
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
 
-                    id: tickField
+                            id: lowField
 
-                    label: "Number of Ticks"
+                            label: "Minimum Value"
 
-                    bindedProperty: "ticks"
-                    bindTarget: widget
-                }
+                            bindedProperty: "min"
+                            bindTarget: widget
+                        }
 
-                RowLayout {
+                        LabeledSpinBox {
+                            Layout.fillWidth: true
 
-                    LabeledSpinBox {
+                            id: upField
+
+                            label: "Maximum Value"
+
+                            bindedProperty: "max"
+                            bindTarget: widget
+                        }
+                    }
+
+                    RowLayout {
+
+                        LabeledDoubleSpinBox {
+                            Layout.fillWidth: true
+
+                            id: startField
+
+                            label: "Start Angle"
+
+                            bindedProperty: "startAngle"
+                            bindTarget: widget
+                        }
+
+                        LabeledDoubleSpinBox {
+                            Layout.fillWidth: true
+
+                            id: endField
+
+                            label: "End Angle"
+
+                            bindedProperty: "endAngle"
+                            bindTarget: widget
+                        }
+                    }
+
+                    SectionHeader {
+                        label: "NT Settings"
+                    }
+
+                    LabeledTextField {
                         Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
 
-                        id: lowField
+                        id: topicField
 
-                        label: "Minimum Value"
+                        label: "Topic"
 
-                        bindedProperty: "min"
+                        bindedProperty: "item_topic"
                         bindTarget: widget
                     }
-
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
-
-                        id: upField
-
-                        label: "Maximum Value"
-
-                        bindedProperty: "max"
-                        bindTarget: widget
-                    }
-                }
-
-                RowLayout {
-
-                    LabeledDoubleSpinBox {
-                        Layout.fillWidth: true
-
-                        id: startField
-
-                        label: "Start Angle"
-
-                        bindedProperty: "startAngle"
-                        bindTarget: widget
-                    }
-
-                    LabeledDoubleSpinBox {
-                        Layout.fillWidth: true
-
-                        id: endField
-
-                        label: "End Angle"
-
-                        bindedProperty: "endAngle"
-                        bindTarget: widget
-                    }
-                }
-
-                SectionHeader {
-                    label: "NT Settings"
-                }
-
-                LabeledTextField {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
-
-                    id: topicField
-
-                    label: "Topic"
-
-                    bindedProperty: "item_topic"
-                    bindTarget: widget
                 }
             }
         }

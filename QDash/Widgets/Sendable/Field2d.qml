@@ -181,149 +181,159 @@ PrimitiveWidget {
         }
     }
 
-    BaseConfigDialog {
-        id: config
+    Loader {
+        id: configLoader
+        active: false
+        asynchronous: true
 
-        content: ColumnLayout {
-            id: layout
-            spacing: 12
-            anchors.fill: parent
-            anchors.leftMargin: 2
-            clip: true
+        onLoaded: item.open()
 
-            SectionHeader {
-                label: "Font Settings"
-            }
+        sourceComponent: Component {
+            BaseConfigDialog {
+                id: config
 
-            LabeledSpinBox {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
+                content: ColumnLayout {
+                    id: layout
+                    spacing: 12
+                    anchors.fill: parent
+                    anchors.leftMargin: 2
+                    clip: true
 
-                id: titleFontField
+                    SectionHeader {
+                        label: "Font Settings"
+                    }
 
-                label: "Title Font Size"
+                    LabeledSpinBox {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
 
-                bindedProperty: "titleFontSize"
-                bindTarget: widget
-            }
+                        id: titleFontField
 
-            SectionHeader {
-                label: "Robot Settings"
-            }
+                        label: "Title Font Size"
 
-            RowLayout {
-                Layout.fillWidth: true
+                        bindedProperty: "titleFontSize"
+                        bindTarget: widget
+                    }
 
-                LabeledComboBox {
-                    id: robotShapeField
+                    SectionHeader {
+                        label: "Robot Settings"
+                    }
 
-                    Layout.fillWidth: true
+                    RowLayout {
+                        Layout.fillWidth: true
 
-                    label: "Robot Shape"
+                        LabeledComboBox {
+                            id: robotShapeField
 
-                    bindedProperty: "item_robotShape"
-                    bindTarget: widget
+                            Layout.fillWidth: true
 
-                    model: robotShapeChoices
+                            label: "Robot Shape"
+
+                            bindedProperty: "item_robotShape"
+                            bindTarget: widget
+
+                            model: robotShapeChoices
+                        }
+
+                        ColorField {
+                            id: colorField
+
+                            Layout.fillWidth: true
+
+                            label: "Robot Color"
+
+                            bindedProperty: "item_robotColor"
+                            bindTarget: widget
+                        }
+                    }
+
+                    RowLayout {
+                        Layout.fillWidth: true
+
+                        LabeledDoubleSpinBox {
+                            id: robotWField
+
+                            Layout.fillWidth: true
+                            from: 0
+
+                            label: "Robot Width (m)"
+
+                            bindedProperty: "item_robotWidthMeters"
+                            bindTarget: widget
+
+                            stepSize: 0.1
+                        }
+
+                        LabeledDoubleSpinBox {
+                            id: robotLField
+
+                            Layout.fillWidth: true
+                            from: 0
+
+                            label: "Robot Length (m)"
+
+                            bindedProperty: "item_robotLengthMeters"
+                            bindTarget: widget
+
+                            stepSize: 0.1
+                        }
+                    }
+
+                    SectionHeader {
+                        label: "Field Settings"
+                    }
+
+                    RowLayout {
+                        Layout.fillWidth: true
+
+                        LabeledCheckbox {
+                            id: vertField
+                            Layout.fillWidth: true
+
+                            label: "Use Vertical Field"
+
+                            bindedProperty: "item_useVerticalField"
+                            bindTarget: widget
+                        }
+
+                        LabeledCheckbox {
+                            id: mirrorRedField
+                            Layout.fillWidth: true
+
+                            label: "Mirror for Red"
+
+                            bindedProperty: "item_mirrorForRedAlliance"
+                            bindTarget: widget
+                        }
+                    }
+
+                    LabeledComboBox {
+                        id: fieldField // lol
+                        Layout.fillWidth: true
+
+                        label: "Field Type"
+                        model: fieldChoices
+
+                        bindedProperty: "item_field"
+                        bindTarget: widget
+                    }
+
+                    SectionHeader {
+                        label: "NT Settings"
+                    }
+
+                    LabeledTextField {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
+
+                        id: topicField
+
+                        label: "Topic"
+
+                        bindedProperty: "item_topic"
+                        bindTarget: widget
+                    }
                 }
-
-                ColorField {
-                    id: colorField
-
-                    Layout.fillWidth: true
-
-                    label: "Robot Color"
-
-                    bindedProperty: "item_robotColor"
-                    bindTarget: widget
-                }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                LabeledDoubleSpinBox {
-                    id: robotWField
-
-                    Layout.fillWidth: true
-                    from: 0
-
-                    label: "Robot Width (m)"
-
-                    bindedProperty: "item_robotWidthMeters"
-                    bindTarget: widget
-
-                    stepSize: 0.1
-                }
-
-                LabeledDoubleSpinBox {
-                    id: robotLField
-
-                    Layout.fillWidth: true
-                    from: 0
-
-                    label: "Robot Length (m)"
-
-                    bindedProperty: "item_robotLengthMeters"
-                    bindTarget: widget
-
-                    stepSize: 0.1
-                }
-            }
-
-            SectionHeader {
-                label: "Field Settings"
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                LabeledCheckbox {
-                    id: vertField
-                    Layout.fillWidth: true
-
-                    label: "Use Vertical Field"
-
-                    bindedProperty: "item_useVerticalField"
-                    bindTarget: widget
-                }
-
-                LabeledCheckbox {
-                    id: mirrorRedField
-                    Layout.fillWidth: true
-
-                    label: "Mirror for Red"
-
-                    bindedProperty: "item_mirrorForRedAlliance"
-                    bindTarget: widget
-                }
-            }
-
-            LabeledComboBox {
-                id: fieldField // lol
-                Layout.fillWidth: true
-
-                label: "Field Type"
-                model: fieldChoices
-
-                bindedProperty: "item_field"
-                bindTarget: widget
-            }
-
-            SectionHeader {
-                label: "NT Settings"
-            }
-
-            LabeledTextField {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
-
-                id: topicField
-
-                label: "Topic"
-
-                bindedProperty: "item_topic"
-                bindTarget: widget
             }
         }
     }
