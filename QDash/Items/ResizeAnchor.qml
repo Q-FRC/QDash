@@ -3,12 +3,14 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
-Rectangle {
+Item {
     id: resizeAnchor
-    property int margin
+
     property int divisor: 14
+    property int margin: Math.min(control.width, control.height) / divisor
 
     required property int direction
+    required property var control
 
     property alias mouseArea: mouseArea
 
@@ -21,7 +23,18 @@ Rectangle {
     property bool vert: hasTop || hasBottom
     z: 20
 
-    color: "transparent"
+    // only enable resize anchor if it's not at the edge of the grid,
+    // AND resizing isn't possible in that direction.
+    // TODO(crueter): Wtf is this formatting
+    readonly property bool isAtEdge: ((hasLeft && control.mcolumn === 0 && control.mcolumnSpan === 1)
+                                      || (hasTop && control.mrow === 0 && control.mrowSpan
+                                          === 1) || (hasRight
+                                                     && (control.mcolumn + control.mcolumnSpan) >= tab.cols && control.mcolumnSpan
+                                                     === 1) || (hasBottom
+                                                                && (control.mrow + control.mrowSpan) >= tab.rows && control.mrowSpan === 1))
+
+    enabled: !isAtEdge
+    mouseArea.enabled: !isAtEdge
 
     anchors {
         left: !hasRight ? parent.left : undefined
@@ -35,32 +48,16 @@ Rectangle {
         bottomMargin: vert ? 0 : margin
     }
 
-    function redoMargin() {
-        margin = Math.min(parent.width, parent.height) / divisor
-
-        anchors.leftMargin = horiz ? 0 : margin
-        anchors.rightMargin = horiz ? 0 : margin
-        anchors.topMargin = vert ? 0 : margin
-        anchors.bottomMargin = vert ? 0 : margin
-
-        if (vert)
-            height = margin
-        if (horiz)
-            width = margin
-    }
-
-    Component.onCompleted: {
-        redoMargin()
-        parent.onWidthChanged.connect(redoMargin)
-        parent.onHeightChanged.connect(redoMargin)
-    }
+    width: (hasLeft || hasRight) ? margin : parent.width - (margin * 2)
+    height: (hasTop || hasBottom) ? margin : parent.height - (margin * 2)
 
     MouseArea {
         id: mouseArea
-        z: 1
+        z: 26
 
         anchors.fill: parent
         propagateComposedEvents: true
+        hoverEnabled: true
 
         cursorShape: {
             if (horiz && vert) {
@@ -87,10 +84,18 @@ Rectangle {
             }
         }
 
+        onPressed: mouse => {
+                       // simple clicks that don't do anything get passed to the titleField
+                       if (hasTop && mouse.y > margin / 2) {
+                           mouse.accepted = false
+                       } else {
+                           mouse.accepted = true
+                       }
+                   }
         onMouseXChanged: {
             if (drag.active) {
-                let newWidth = parent.parent.width
-                let newX = parent.parent.x
+                let newWidth = control.width
+                let newX = control.x
 
                 if (hasRight) {
                     newWidth += mouseX
@@ -99,25 +104,25 @@ Rectangle {
                     newX += mouseX
                 }
 
-                if (newWidth >= parent.parent.minWidth) {
-                    parent.parent.width = newWidth
-                    parent.parent.x = newX
+                if (newWidth >= control.minWidth) {
+                    control.width = newWidth
+                    control.x = newX
                 } else {
                     if (hasLeft) {
-                        let diff = parent.parent.minWidth - parent.parent.width
+                        let diff = control.minWidth - control.width
                         if (Math.abs(diff) < 0.5)
                             diff = 0
-                        parent.parent.x -= diff
+                        control.x -= diff
                     }
-                    parent.parent.width = parent.parent.minWidth
+                    control.width = control.minWidth
                 }
             }
         }
 
         onMouseYChanged: {
             if (drag.active) {
-                let newHeight = parent.parent.height
-                let newY = parent.parent.y
+                let newHeight = control.height
+                let newY = control.y
 
                 if (hasBottom) {
                     newHeight += mouseY
@@ -126,17 +131,17 @@ Rectangle {
                     newY += mouseY
                 }
 
-                if (newHeight >= parent.parent.minHeight) {
-                    parent.parent.height = newHeight
-                    parent.parent.y = newY
+                if (newHeight >= control.minHeight) {
+                    control.height = newHeight
+                    control.y = newY
                 } else {
                     if (hasLeft) {
-                        let diff = parent.parent.minHeight - parent.parent.height
+                        let diff = control.minHeight - control.height
                         if (Math.abs(diff) < 0.5)
                             diff = 0
-                        parent.parent.y -= diff
+                        control.y -= diff
                     }
-                    parent.parent.height = parent.parent.minHeight
+                    control.height = control.minHeight
                 }
             }
         }

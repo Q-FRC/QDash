@@ -16,8 +16,8 @@ BaseWidget {
 
     // Define this in your widget
     function update(value) {
-        console.log("PrimitiveWidget's update function should NEVER be called. "
-                    + "If this is the case, you likely forgot to define the update function in your widget.")
+        console.error("PrimitiveWidget's update function should NEVER be called. "
+                      + "If this is the case, you likely forgot to define the update function in your widget.")
     }
 
     function setValue(value) {

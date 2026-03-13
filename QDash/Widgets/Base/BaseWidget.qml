@@ -288,6 +288,7 @@ Rectangle {
 
         acceptedButtons: Qt.AllButtons
         pressAndHoldInterval: 100
+        hoverEnabled: true
 
         onPressed: mouse => {
                        focus = true
@@ -307,11 +308,9 @@ Rectangle {
                         if (mouse.button === Qt.LeftButton) {
                             drag.target = null
 
-                            if (grid.validSpot(widget.x, widget.y, row, column,
-                                               rowSpan, colSpan, true)) {
+                            if (grid.validSpot(widget.x, widget.y, row, column, rowSpan, colSpan, true)) {
 
-                                let newPoint = grid.getPoint(widget.x,
-                                                             widget.y, true)
+                                let newPoint = grid.getPoint(widget.x, widget.y, true)
 
                                 model.row = newPoint.y
                                 model.column = newPoint.x
@@ -327,57 +326,20 @@ Rectangle {
                     }
     }
 
-    /* RESIZE ANCHORS */
-    Repeater {
-        model: [Qt.RightEdge, Qt.LeftEdge, Qt.TopEdge, Qt.BottomEdge, Qt.RightEdge
-            | Qt.TopEdge, Qt.RightEdge | Qt.BottomEdge, Qt.LeftEdge
-            | Qt.TopEdge, Qt.LeftEdge | Qt.BottomEdge]
+    /* RESIZE HANDLING */
+    HoverHandler {
+        id: hoverHandler
+    }
 
-        ResizeAnchor {
-            required property int modelData
-            enabled: !widget.tvOverlap && !(widget.dragForced
-                                            || widget.Drag.active)
-            direction: modelData
-            z: horiz && vert ? 26 : 24
+    Loader {
+        active: hoverHandler.hovered && !widget.tvOverlap && !(widget.dragForced || widget.Drag.active)
 
-            mouseArea.onPressed: mouse => {
-                                     if (mouse.button === Qt.RightButton) {
-                                         drag.target = null
-                                         widget.openContextMenu()
-                                     } else if (mouse.button === Qt.LeftButton) {
-                                         startResize()
-                                     }
-                                 }
-            mouseArea.onReleased: mouse => {
-                                      if (!tab.isCopying && !tab.dragForced
-                                          && mouse.button === Qt.LeftButton) {
-                                          if (grid.validResize(widget.width,
-                                                               widget.height,
-                                                               widget.x,
-                                                               widget.y, row,
-                                                               column, rowSpan,
-                                                               colSpan)) {
+        anchors.fill: parent
 
-                                              let newSize = grid.getRect(
-                                                  widget.x, widget.y,
-                                                  widget.width, widget.height)
+        z: 26
 
-                                              model.rowSpan = newSize.height
-                                              model.colSpan = newSize.width
-                                              model.row = newSize.y
-                                              model.column = newSize.x
-
-                                              fixSize()
-                                          } else {
-                                              animateBacksize()
-                                          }
-
-                                          resizeActive = false
-                                          grid.resetValid()
-
-                                          widget.z = 3
-                                      }
-                                  }
+        sourceComponent: Component {
+            ResizeComponent {}
         }
     }
 
