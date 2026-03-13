@@ -18,9 +18,6 @@ NativeDialog {
 
     standardButtons: Dialog.Ok | Dialog.Cancel
 
-    onClosed: if (configLoader)
-                  configLoader.active = false
-
     ScrollView {
         clip: true
 
@@ -72,5 +69,11 @@ NativeDialog {
                 }
             }
         }
+
+        if (configLoader)
+            configLoader.active = false
     }
+
+    onRejected: if (configLoader)
+                    configLoader.active = false
 }

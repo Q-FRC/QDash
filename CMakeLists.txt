@@ -51,28 +51,27 @@ set(QDASH_QT_LIBRARIES
     Carboxyl::Carboxyl
 
     Qt6::LabsQmlModels
-    Qt6::qmlshapesplugin
     Qt6::QuickDialogs2)
 
 if (QDASH_WEBVIEW)
     message(STATUS "[QDash] Building with web support")
-    set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} WebEngineQuick)
-    set(QDASH_QT_LIBRARIES ${QDASH_QT_LIBRARIES} Qt6::WebEngineQuick)
-    set(QDASH_DEFINES ${QDASH_DEFINES} QDASH_WEBVIEW)
+    list(APPEND QDASH_QT_COMPONENTS WebEngineQuick)
+    list(APPEND QDASH_QT_LIBRARIES Qt6::WebEngineQuick)
+    list(APPEND QDASH_DEFINES QDASH_WEBVIEW)
 endif()
 
 if (QDASH_CAMVIEW)
     message(STATUS "[QDash] Building with camera support")
-    set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} Multimedia MultimediaQuickPrivate)
-    set(QDASH_QT_LIBRARIES ${QDASH_QT_LIBRARIES} Qt6::Multimedia Qt6::MultimediaQuickPrivate)
-    set(QDASH_DEFINES ${QDASH_DEFINES} QDASH_CAMVIEW)
+    list(APPEND QDASH_QT_COMPONENTS Multimedia MultimediaQuickPrivate)
+    list(APPEND QDASH_QT_LIBRARIES Qt6::Multimedia Qt6::MultimediaQuickPrivate)
+    list(APPEND QDASH_DEFINES QDASH_CAMVIEW)
 endif()
 
 if (QDASH_NETWORK)
     message(STATUS "[QDash] Building with network support")
-    set(QDASH_QT_COMPONENTS ${QDASH_QT_COMPONENTS} Network)
-    set(QDASH_QT_LIBRARIES ${QDASH_QT_LIBRARIES} Qt6::Network)
-    set(QDASH_DEFINES ${QDASH_DEFINES} QDASH_NETWORK)
+    list(APPEND QDASH_QT_COMPONENTS Network)
+    list(APPEND QDASH_QT_LIBRARIES Qt6::Network)
+    list(APPEND QDASH_DEFINES QDASH_NETWORK)
 endif()
 
 if (QDASH_BUNDLE_QT)
@@ -87,14 +86,17 @@ if (QDASH_BUNDLE_QT)
     endif()
 endif()
 
-set(CMAKE_AUTORCC ON)
-
 if (QDASH_STATIC)
     include(StaticBuild)
+
+    # weird...
+    list(APPEND QDASH_QT_LIBRARIES Qt6::qmlshapesplugin)
 
     # static builds require explicitly provided zlib
     AddJsonPackage(zlib)
 endif()
+
+set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 6.4 REQUIRED
     COMPONENTS ${QDASH_QT_COMPONENTS}
