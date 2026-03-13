@@ -74,15 +74,15 @@ PrimitiveWidget {
         }
     }
 
-    function fixSize() {
+    function fixGaugeSize() {
         gauge.width = width
         gauge.height = height - titleField.height
-        gauge.fixSize()
+        gauge.fixGaugeSize()
     }
 
-    Component.onCompleted: fixSize()
-    onHeightChanged: fixSize()
-    onWidthChanged: fixSize()
+    Component.onCompleted: fixGaugeSize()
+    onHeightChanged: fixGaugeSize()
+    onWidthChanged: fixGaugeSize()
 
     function update(value) {
         widget.connected = true

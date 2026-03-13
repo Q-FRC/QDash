@@ -16,7 +16,8 @@ BaseWidget {
     // Define this in your widget
     // this takes in the suffix only
     function update(topic, value) {
-        console.log("SendableWidget's update function should NEVER be called. "
+        console.error(
+                    "SendableWidget's update function should NEVER be called. "
                     + "If this is the case, you likely forgot to define the update function in your widget.")
     }
 

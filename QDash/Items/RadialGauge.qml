@@ -36,7 +36,7 @@ Rectangle {
 
     color: "transparent"
 
-    function fixSize() {
+    function fixGaugeSize() {
         if (width < height && width !== 0) {
             height = width
         } else if (height < width && height !== 0) {

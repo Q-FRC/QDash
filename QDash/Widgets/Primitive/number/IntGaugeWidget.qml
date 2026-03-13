@@ -51,15 +51,15 @@ PrimitiveWidget {
         }
     }
 
-    function fixSize() {
+    function fixGaugeSize() {
         gauge.width = parent.width
         gauge.height = parent.height - titleField.height
-        gauge.fixSize()
+        gauge.fixGaugeSize()
     }
 
-    Component.onCompleted: fixSize()
-    onHeightChanged: fixSize()
-    onWidthChanged: fixSize()
+    Component.onCompleted: fixGaugeSize()
+    onHeightChanged: fixGaugeSize()
+    onWidthChanged: fixGaugeSize()
 
     function update(value) {
         // TODO: move connected handling elsewhere

@@ -308,9 +308,11 @@ Rectangle {
                         if (mouse.button === Qt.LeftButton) {
                             drag.target = null
 
-                            if (grid.validSpot(widget.x, widget.y, row, column, rowSpan, colSpan, true)) {
+                            if (grid.validSpot(widget.x, widget.y, row, column,
+                                               rowSpan, colSpan, true)) {
 
-                                let newPoint = grid.getPoint(widget.x, widget.y, true)
+                                let newPoint = grid.getPoint(widget.x,
+                                                             widget.y, true)
 
                                 model.row = newPoint.y
                                 model.column = newPoint.x
@@ -332,7 +334,8 @@ Rectangle {
     }
 
     Loader {
-        active: hoverHandler.hovered && !widget.tvOverlap && !(widget.dragForced || widget.Drag.active)
+        active: hoverHandler.hovered && !widget.tvOverlap
+                && !(widget.dragForced || widget.Drag.active)
 
         anchors.fill: parent
 
