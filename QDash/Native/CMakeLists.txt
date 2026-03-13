@@ -62,6 +62,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set_property(TARGET ${QDASH_NAME} PROPERTY WIN32_EXECUTABLE TRUE)
 endif()
 
+if (IOS AND Qt6_VERSION VERSION_GREATER_EQUAL 6.8)
+    qt_add_ios_ffmpeg_libraries(${QDASH_NAME})
+endif()
+
 if(UNIX AND APPLE)
     # Mac bundle settings
     set(MACOSX_BUNDLE_BUNDLE_NAME "${QDASH_NAME}")
@@ -78,4 +82,9 @@ if(UNIX AND APPLE)
 
     # install as bundle
     set(INSTALL_BUNDLE "full")
+
+    if (IOS)
+        set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED ON)
+        set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED ON)
+    endif()
 endif()
