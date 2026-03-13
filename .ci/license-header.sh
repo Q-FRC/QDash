@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # specify full path if dupes may exist
-EXCLUDE_FILES="tools/cpm lib"
+EXCLUDE_FILES="tools/cpm lib CMakeModules"
 
 # license header constants, please change when needed :))))
 YEAR=2026

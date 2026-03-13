@@ -1,9 +1,9 @@
 {
     "ntcore": {
         "repo": "wpilibsuite/allwpilib",
-        "hash": "11b5394efbc54e724a48a93d960d69befecf38fd22457074458283e7e42fa011865a80022ff18162e65074e0bf9f008d298471b6ec76636361ba4eadbfdb512c",
+        "hash": "7055b38800aa00cf7d44b2ed38367c3b6f1f8c6e5022b7ba34c7088a7710d187358ec2bdfea919524cdd5daba28c875cd8d18d3feec55295881afe79f909d0ad",
         "tag": "v%VERSION%",
-        "git_version": "2025.3.2",
+        "git_version": "2026.2.1",
         "version": "2025.1.1",
         "patches": [
             "0001-wpiutil-windows-7-compat.patch",

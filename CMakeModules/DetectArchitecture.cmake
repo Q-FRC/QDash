@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright 2025 crueter
+# SPDX-FileCopyrightText: Copyright 2026 crueter
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 ## DetectArchitecture ##
@@ -42,8 +42,14 @@ if (CMAKE_OSX_ARCHITECTURES)
     # hope and pray the architecture names match
     foreach(ARCH IN ${CMAKE_OSX_ARCHITECTURES})
         set(ARCHITECTURE_${ARCH} 1 PARENT_SCOPE)
-        add_definitions(-DARCHITECTURE_${ARCH}=1)
+        add_compile_definitions(ARCHITECTURE_${ARCH}=1)
     endforeach()
+
+    return()
+elseif (EMSCRIPTEN)
+    set(ARCHITECTURE_wasm ON)
+    add_compile_definitions(ARCHITECTURE_wasm=1)
+    set(ARCHITECTURE wasm)
 
     return()
 endif()
@@ -62,7 +68,7 @@ function(detect_architecture symbol arch)
         if (SYMBOL_EXISTS)
             set(ARCHITECTURE "${arch}" PARENT_SCOPE)
             set(ARCHITECTURE_${arch} 1 PARENT_SCOPE)
-            add_definitions(-DARCHITECTURE_${arch}=1)
+            add_compile_definitions(ARCHITECTURE_${arch}=1)
         endif()
     endif()
 endfunction()
