@@ -389,8 +389,6 @@ Rectangle {
         font.pixelSize: titleFontSize
         font.bold: true
 
-        clip: true
-
         text: model.title
         color: Clover.theme.text
 
@@ -432,7 +430,6 @@ Rectangle {
                     spacing: 12
                     anchors.fill: parent
                     anchors.leftMargin: 2
-                    clip: true
 
                     SectionHeader {
                         label: "Font Settings"

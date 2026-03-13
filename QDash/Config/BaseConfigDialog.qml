@@ -19,8 +19,6 @@ NativeDialog {
     standardButtons: Dialog.Ok | Dialog.Cancel
 
     ScrollView {
-        clip: true
-
         anchors {
             fill: parent
 
