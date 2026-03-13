@@ -23,72 +23,64 @@ PrimitiveWidget {
     property double item_min: 0
     property double item_max: 100
 
-    Menu {
-        id: switchMenu
-        title: "Switch Widget..."
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+            title: "Switch Widget..."
 
-        MenuItem {
-            text: "Dial"
-            onTriggered: {
-                model.type = "doubleDial"
+            MenuItem {
+                text: "Dial"
+                onTriggered: {
+                    model.type = "doubleDial"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Spin Box"
-            onTriggered: {
-                model.type = "double"
+            MenuItem {
+                text: "Spin Box"
+                onTriggered: {
+                    model.type = "double"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Progress Bar"
-            onTriggered: {
-                model.type = "doubleBar"
+            MenuItem {
+                text: "Progress Bar"
+                onTriggered: {
+                    model.type = "doubleBar"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Number Display"
-            onTriggered: {
-                model.type = "doubleDisplay"
+            MenuItem {
+                text: "Number Display"
+                onTriggered: {
+                    model.type = "doubleDisplay"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Match Time"
-            onTriggered: {
-                model.type = "matchTime"
+            MenuItem {
+                text: "Match Time"
+                onTriggered: {
+                    model.type = "matchTime"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Phase Display"
-            onTriggered: {
-                model.type = "phaseShift"
+            MenuItem {
+                text: "Phase Display"
+                onTriggered: {
+                    model.type = "phaseShift"
+                }
             }
         }
     }
 
-    Component.onCompleted: {
-        rcMenu.addMenu(switchMenu)
-
+    function fixSize() {
         gauge.width = width
         gauge.height = height - titleField.height
         gauge.fixSize()
     }
 
-    onHeightChanged: {
-        gauge.height = height - titleField.height
-        gauge.width = width
-        gauge.fixSize()
-    }
-
-    onWidthChanged: {
-        gauge.height = height - titleField.height
-        gauge.width = width
-        gauge.fixSize()
-    }
+    Component.onCompleted: fixSize()
+    onHeightChanged: fixSize()
+    onWidthChanged: fixSize()
 
     function update(value) {
         widget.connected = true

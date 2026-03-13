@@ -30,7 +30,11 @@ Rectangle {
 
     property alias dragArea: dragArea
     property alias titleField: titleField
-    property alias rcMenu: rcMenu
+
+    // right-click menu stuff, incl. extensions
+    property alias rcMenu: rcMenuLoader.item
+    property Component menuExtension: null
+    property var _extensionInstance: null
 
     property int minWidth: grid.colWidth - 16
     property int minHeight: grid.rowHeight - 16
@@ -231,29 +235,55 @@ Rectangle {
         y = grid.rowHeight * model.row + 8
     }
 
-    Menu {
-        id: rcMenu
+    /** RIGHT-CLICK MENU **/
+    Loader {
+        id: rcMenuLoader
+        active: false
+        asynchronous: true
+        sourceComponent: Menu {
+            Component.onCompleted: {
+                if (!_extensionInstance && menuExtension)
+                    _extensionInstance = menuExtension.createObject(widget)
 
-        MenuItem {
-            text: "Delete"
-            onTriggered: twm.remove(model.idx)
-        }
+                if (_extensionInstance) {
+                    if (_extensionInstance instanceof Menu)
+                        addMenu(_extensionInstance)
+                    // TODO(crueter): More extensibility?
+                    else
+                        addItem(_extensionInstance)
+                }
 
-        MenuItem {
-            text: "Configure"
-            onTriggered: {
-                if (configLoader) {
-                    configLoader.active = true
-                } else if (config) {
-                    config.open()
+                popup()
+            }
+
+            MenuItem {
+                text: "Delete"
+                onTriggered: twm.remove(model.idx)
+            }
+
+            MenuItem {
+                text: "Configure"
+                onTriggered: {
+                    if (configLoader) {
+                        configLoader.active = true
+                    } else if (config) {
+                        config.open()
+                    }
                 }
             }
-        }
 
-        MenuItem {
-            text: "Copy"
-            onTriggered: copy(idx)
+            MenuItem {
+                text: "Copy"
+                onTriggered: copy(idx)
+            }
+
+            onClosed: rcMenuLoader.active = false
         }
+    }
+
+    function openContextMenu() {
+        if (!rcMenuLoader.active)
+            rcMenuLoader.active = true
     }
 
     MouseArea {
@@ -269,7 +299,7 @@ Rectangle {
                        focus = true
                        if (mouse.button === Qt.RightButton) {
                            drag.target = null
-                           rcMenu.popup()
+                           widget.openContextMenu()
                        } else if (mouse.button === Qt.LeftButton) {
                            if (dragForced || widget.Drag.active) {
                                cancelDrag()
@@ -319,7 +349,7 @@ Rectangle {
             mouseArea.onPressed: mouse => {
                                      if (mouse.button === Qt.RightButton) {
                                          drag.target = null
-                                         rcMenu.popup()
+                                         widget.openContextMenu()
                                      } else if (mouse.button === Qt.LeftButton) {
                                          startResize()
                                      }

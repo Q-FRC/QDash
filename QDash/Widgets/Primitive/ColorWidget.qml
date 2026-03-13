@@ -25,14 +25,16 @@ PrimitiveWidget {
 
     property bool itemValue: false
 
-    Menu {
-        id: switchMenu
-        title: "Switch Widget..."
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+            title: "Switch Widget..."
 
-        MenuItem {
-            text: "Checkbox"
-            onTriggered: {
-                model.type = "bool"
+            MenuItem {
+                text: "Checkbox"
+                onTriggered: {
+                    model.type = "bool"
+                }
             }
         }
     }
@@ -49,7 +51,6 @@ PrimitiveWidget {
         setColor()
     }
 
-    Component.onCompleted: rcMenu.addMenu(switchMenu)
     onItem_falseColorChanged: setColor()
     onItem_trueColorChanged: setColor()
     onItem_shapeChanged: setColor()

@@ -22,21 +22,23 @@ PrimitiveWidget {
 
     property string itemValue
 
-    Menu {
-        id: switchMenu
-        title: "Switch Widget..."
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+            title: "Switch Widget..."
 
-        MenuItem {
-            text: "Text"
-            onTriggered: {
-                model.type = "string"
+            MenuItem {
+                text: "Text"
+                onTriggered: {
+                    model.type = "string"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Text Display"
-            onTriggered: {
-                model.type = "textDisplay"
+            MenuItem {
+                text: "Text Display"
+                onTriggered: {
+                    model.type = "textDisplay"
+                }
             }
         }
     }
@@ -51,10 +53,6 @@ PrimitiveWidget {
         widget.connected = true
         itemValue = value
         setColor()
-    }
-
-    Component.onCompleted: {
-        rcMenu.addMenu(switchMenu)
     }
 
     onItem_shapeChanged: setColor()

@@ -16,33 +16,33 @@ PrimitiveWidget {
     property int item_maxFontSize: 100
     property color item_color: Clover.theme.currentAccent
 
-    Menu {
-        id: switchMenu
-        title: "Switch Widget..."
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+            title: "Switch Widget..."
 
-        MenuItem {
-            text: "Spin Box"
-            onTriggered: {
-                model.type = "int"
+            MenuItem {
+                text: "Spin Box"
+                onTriggered: {
+                    model.type = "int"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Dial"
-            onTriggered: {
-                model.type = "dial"
+            MenuItem {
+                text: "Dial"
+                onTriggered: {
+                    model.type = "dial"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Radial Gauge"
-            onTriggered: {
-                model.type = "gauge"
+            MenuItem {
+                text: "Radial Gauge"
+                onTriggered: {
+                    model.type = "gauge"
+                }
             }
         }
     }
-
-    Component.onCompleted: rcMenu.addMenu(switchMenu)
 
     function update(value) {
         widget.connected = true

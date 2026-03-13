@@ -15,26 +15,26 @@ PrimitiveWidget {
 
     property int item_fontSize: 20
 
-    Menu {
-        id: switchMenu
-        title: "Switch Widget..."
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+            title: "Switch Widget..."
 
-        MenuItem {
-            text: "Color"
-            onTriggered: {
-                model.type = "colorText"
+            MenuItem {
+                text: "Color"
+                onTriggered: {
+                    model.type = "colorText"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Text Display"
-            onTriggered: {
-                model.type = "textDisplay"
+            MenuItem {
+                text: "Text Display"
+                onTriggered: {
+                    model.type = "textDisplay"
+                }
             }
         }
     }
-
-    Component.onCompleted: rcMenu.addMenu(switchMenu)
 
     function update(value) {
         widget.connected = true

@@ -36,10 +36,12 @@ PrimitiveWidget {
     onItem_resWChanged: player.resetSource()
     onItem_resHChanged: player.resetSource()
 
-    MenuItem {
-        id: reconnItem
-        text: "Reconnect"
-        onTriggered: player.reconnect()
+    menuExtension: Component {
+        MenuItem {
+            id: reconnItem
+            text: "Reconnect"
+            onTriggered: player.reconnect()
+        }
     }
 
     function fixUrls(value) {
@@ -61,13 +63,6 @@ PrimitiveWidget {
         player.resetSource()
 
         sourceTimer.start()
-    }
-
-    Component.onCompleted: {
-        rcMenu.addItem(reconnItem)
-
-        // lol
-        reconnItem.parent = rcMenu.parent
     }
 
     Rectangle {

@@ -24,55 +24,53 @@ PrimitiveWidget {
 
     property bool item_vertical: false
 
-    Menu {
-        id: switchMenu
-        title: "Switch Widget..."
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+            title: "Switch Widget..."
 
-        MenuItem {
-            text: "Spin Box"
-            onTriggered: {
-                model.type = "double"
+            MenuItem {
+                text: "Spin Box"
+                onTriggered: {
+                    model.type = "double"
+                }
+            }
+
+            MenuItem {
+                text: "Dial"
+                onTriggered: {
+                    model.type = "doubleDial"
+                }
+            }
+
+            MenuItem {
+                text: "Radial Gauge"
+                onTriggered: {
+                    model.type = "doubleGauge"
+                }
+            }
+
+            MenuItem {
+                text: "Number Display"
+                onTriggered: {
+                    model.type = "doubleDisplay"
+                }
+            }
+
+            MenuItem {
+                text: "Match Time"
+                onTriggered: {
+                    model.type = "matchTime"
+                }
+            }
+
+            MenuItem {
+                text: "Phase Display"
+                onTriggered: {
+                    model.type = "phaseShift"
+                }
             }
         }
-
-        MenuItem {
-            text: "Dial"
-            onTriggered: {
-                model.type = "doubleDial"
-            }
-        }
-
-        MenuItem {
-            text: "Radial Gauge"
-            onTriggered: {
-                model.type = "doubleGauge"
-            }
-        }
-
-        MenuItem {
-            text: "Number Display"
-            onTriggered: {
-                model.type = "doubleDisplay"
-            }
-        }
-
-        MenuItem {
-            text: "Match Time"
-            onTriggered: {
-                model.type = "matchTime"
-            }
-        }
-
-        MenuItem {
-            text: "Phase Display"
-            onTriggered: {
-                model.type = "phaseShift"
-            }
-        }
-    }
-
-    Component.onCompleted: {
-        rcMenu.addMenu(switchMenu)
     }
 
     function update(value) {

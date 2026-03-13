@@ -55,14 +55,8 @@ PrimitiveWidget {
         gauge.fixSize()
     }
 
-    Component.onCompleted: {
-        rcMenu.addMenu(switchMenu)
-
-        fixSize()
-    }
-
+    Component.onCompleted: fixSize()
     onHeightChanged: fixSize()
-
     onWidthChanged: fixSize()
 
     function update(value) {

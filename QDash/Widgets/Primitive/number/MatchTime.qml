@@ -16,47 +16,47 @@ PrimitiveWidget {
     property int item_fontSize: 100
     property color item_warningColor: "yellow"
 
-    Menu {
-        id: switchMenu
-        title: "Switch Widget..."
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+            title: "Switch Widget..."
 
-        MenuItem {
-            text: "Spin Box"
-            onTriggered: {
-                model.type = "double"
+            MenuItem {
+                text: "Spin Box"
+                onTriggered: {
+                    model.type = "double"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Dial"
-            onTriggered: {
-                model.type = "doubleDial"
+            MenuItem {
+                text: "Dial"
+                onTriggered: {
+                    model.type = "doubleDial"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Radial Gauge"
-            onTriggered: {
-                model.type = "doubleGauge"
+            MenuItem {
+                text: "Radial Gauge"
+                onTriggered: {
+                    model.type = "doubleGauge"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Progress Bar"
-            onTriggered: {
-                model.type = "doubleBar"
+            MenuItem {
+                text: "Progress Bar"
+                onTriggered: {
+                    model.type = "doubleBar"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Number Display"
-            onTriggered: {
-                model.type = "doubleDisplay"
+            MenuItem {
+                text: "Number Display"
+                onTriggered: {
+                    model.type = "doubleDisplay"
+                }
             }
         }
     }
-
-    Component.onCompleted: rcMenu.addMenu(switchMenu)
 
     function update(value) {
         txt.value = Math.ceil(value)

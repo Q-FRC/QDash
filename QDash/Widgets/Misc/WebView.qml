@@ -19,30 +19,34 @@ BaseWidget {
     property string item_url: ""
     connected: true
 
-    Menu {
-        id: webMenu
-        title: "Web Actions"
+    menuExtension: Component {
+        Menu {
+            id: webMenu
+            title: "Web Actions"
 
-        MenuItem {
-            text: "Back"
-            onTriggered: web.goBack()
-        }
+            MenuItem {
+                text: "Back"
+                onTriggered: web.goBack()
+            }
 
-        MenuItem {
-            text: "Forward"
-            onTriggered: web.goForward()
-        }
+            MenuItem {
+                text: "Forward"
+                onTriggered: web.goForward()
+            }
 
-        MenuItem {
-            text: "Reload"
-            onTriggered: web.reload()
-        }
+            MenuItem {
+                text: "Reload"
+                onTriggered: web.reload()
+            }
 
-        MenuItem {
-            text: "Sync URL"
-            onTriggered: item_url = web.url
+            MenuItem {
+                text: "Sync URL"
+                onTriggered: item_url = web.url
+            }
         }
     }
+
+    // TODO(crueter): Make this a common component too
     Loader {
         id: configLoader
         active: false
@@ -93,10 +97,6 @@ BaseWidget {
                 }
             }
         }
-    }
-
-    Component.onCompleted: {
-        rcMenu.addMenu(webMenu)
     }
 
     Item {

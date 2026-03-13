@@ -15,19 +15,19 @@ PrimitiveWidget {
 
     property int item_checkboxSize: 40
 
-    Menu {
-        id: switchMenu
-        title: "Switch Widget..."
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+            title: "Switch Widget..."
 
-        MenuItem {
-            text: "Color Display"
-            onTriggered: {
-                model.type = "color"
+            MenuItem {
+                text: "Color Display"
+                onTriggered: {
+                    model.type = "color"
+                }
             }
         }
     }
-
-    Component.onCompleted: rcMenu.addMenu(switchMenu)
 
     function update(value) {
         connected = true

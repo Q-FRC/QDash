@@ -20,33 +20,33 @@ PrimitiveWidget {
     property int item_upperBound: 100000
     property int item_lowerBound: -100000
 
-    Menu {
-        id: switchMenu
-        title: "Switch Widget..."
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+            title: "Switch Widget..."
 
-        MenuItem {
-            text: "Dial"
-            onTriggered: {
-                model.type = "dial"
+            MenuItem {
+                text: "Dial"
+                onTriggered: {
+                    model.type = "dial"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Radial Gauge"
-            onTriggered: {
-                model.type = "gauge"
+            MenuItem {
+                text: "Radial Gauge"
+                onTriggered: {
+                    model.type = "gauge"
+                }
             }
-        }
 
-        MenuItem {
-            text: "Number Display"
-            onTriggered: {
-                model.type = "intDisplay"
+            MenuItem {
+                text: "Number Display"
+                onTriggered: {
+                    model.type = "intDisplay"
+                }
             }
         }
     }
-
-    Component.onCompleted: rcMenu.addMenu(switchMenu)
 
     function update(value) {
         widget.connected = true

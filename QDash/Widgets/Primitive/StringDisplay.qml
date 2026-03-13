@@ -17,27 +17,25 @@ PrimitiveWidget {
     property color item_color: Clover.theme.currentAccent
     property bool item_wrap: true
 
-    Menu {
-        id: switchMenu
-        title: "Switch Widget..."
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+            title: "Switch Widget..."
 
-        MenuItem {
-            text: "Text Field"
-            onTriggered: {
-                model.type = "string"
+            MenuItem {
+                text: "Text Field"
+                onTriggered: {
+                    model.type = "string"
+                }
+            }
+
+            MenuItem {
+                text: "Color"
+                onTriggered: {
+                    model.type = "colorText"
+                }
             }
         }
-
-        MenuItem {
-            text: "Color"
-            onTriggered: {
-                model.type = "colorText"
-            }
-        }
-    }
-
-    Component.onCompleted: {
-        rcMenu.addMenu(switchMenu)
     }
 
     function update(value) {
