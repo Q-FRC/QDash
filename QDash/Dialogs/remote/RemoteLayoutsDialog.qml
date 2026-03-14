@@ -25,7 +25,7 @@ NativeDialog {
         selected = rlm.url(list.currentIndex)
         let filename = FileSelect.getSaveFileName(
                 qsTr("Save Layout"), StandardPaths.writableLocation(
-                    StandardPaths.AppLocalDataLocation),
+                    StandardPaths.AppLocalDataLocation) + "/" + filename,
                 "JSON files (*.json);;All files (*)")
         rlm.download(selected, filename)
     }

@@ -1,7 +1,17 @@
+# SPDX-FileCopyrightText: Copyright 2026 crueter
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 set(QRC_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/resources/fields.qrc
     ${CMAKE_CURRENT_SOURCE_DIR}/resources/accents.qrc
     ${CMAKE_CURRENT_SOURCE_DIR}/resources/icons.qrc)
+
+# Android and iOS can only use a single file.
+# TODO(crueter): WASM has to store stuff... somehow
+if (ANDROID OR IOS)
+    set(QDASH_SINGLEMODE ON)
+    add_compile_definitions(QDASH_SINGLEMODE)
+endif()
 
 # Fix QML imports
 set(QT_QML_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/qml" CACHE PATH "Install path for QML" FORCE)

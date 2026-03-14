@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright 2026 crueter
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # Config stuff
 if(UNIX AND NOT(APPLE))
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.Q-FRC.QDash.desktop DESTINATION "share/applications")
@@ -22,4 +25,4 @@ configure_file(QDash.manifest.in QDash.manifest @ONLY)
 configure_file(org.Q-FRC.QDash.desktop org.Q-FRC.QDash.desktop COPYONLY)
 configure_file(QDash.ico QDash.ico COPYONLY)
 configure_file(win_install.nsi.in win_install.nsi @ONLY)
-configure_file(QDash.icns QDash.icns COPYONLY)
+# configure_file(QDash.icns QDash.icns COPYONLY)

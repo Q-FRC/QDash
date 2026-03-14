@@ -89,11 +89,13 @@ endif()
 if (QDASH_STATIC)
     include(StaticBuild)
 
-    # weird...
-    list(APPEND QDASH_QT_LIBRARIES Qt6::qmlshapesplugin)
-
     # static builds require explicitly provided zlib
     AddJsonPackage(zlib)
+endif()
+
+if (QDASH_STATIC OR IOS)
+    # weird...
+    list(APPEND QDASH_QT_LIBRARIES Qt6::qmlshapesplugin)
 endif()
 
 set(CMAKE_AUTORCC ON)

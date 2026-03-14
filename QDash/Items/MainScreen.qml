@@ -234,13 +234,12 @@ Rectangle {
         }
     }
 
-    // TODO(crueter): Use font.pointSize for everything.
     CarboxylTabBar {
         id: tabs
         height: 40
         contentHeight: 40
 
-        font.pointSize: 12
+        font.pixelSize: 16
 
         anchors {
             top: parent.top

@@ -1,13 +1,10 @@
 # SPDX-FileCopyrightText: Copyright 2026 crueter
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-set(qdash_icon ${CMAKE_SOURCE_DIR}/dist/${QDASH_NAME}.icns)
-
 qt_add_executable(${QDASH_NAME}
     main.cpp
     ${QRC_FILES}
     ${RCS_FILE}
-    ${qdash_icon}
     QDashApplication.h QDashApplication.cpp)
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
@@ -77,14 +74,33 @@ if(UNIX AND APPLE)
     set(MACOSX_BUNDLE_ICON_FILE ${QDASH_NAME})
     set(MACOSX_BUNDLE_COPYRIGHT "Copyleft 2023-2026 ${QDASH_ORG}")
 
-    set_source_files_properties(${qdash_icon} PROPERTIES
-           MACOSX_PACKAGE_LOCATION "Resources")
+    # make assets.car myself because xcode sucks
+    if (IOS)
+        set(qdash_icon ${CMAKE_SOURCE_DIR}/dist/${QDASH_NAME}.icon)
+
+        set_source_files_properties(${qdash_icon} PROPERTIES
+            MACOSX_PACKAGE_LOCATION "Resources"
+            XCODE_FILE_ATTRIBUTES "CodeSignOnCopy")
+
+        target_sources(${QDASH_NAME} PRIVATE ${qdash_icon})
+    else()
+        set(qdash_assets ${CMAKE_SOURCE_DIR}/dist/Assets.car)
+        set(qdash_icns ${CMAKE_SOURCE_DIR}/dist/${QDASH_NAME}.icns)
+
+        set_source_files_properties(${qdash_icns} ${qdash_assets} PROPERTIES
+            MACOSX_PACKAGE_LOCATION "Resources"
+            XCODE_FILE_ATTRIBUTES "CodeSignOnCopy")
+
+        target_sources(${QDASH_NAME} PRIVATE ${qdash_assets} ${qdash_icns})
+    endif()
+
+    set_target_properties(${QDASH_NAME} PROPERTIES
+        XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "${QDASH_NAME}"
+        MACOSX_BUNDLE_ICON_FILE ${QDASH_NAME})
 
     # install as bundle
     set(INSTALL_BUNDLE "full")
 
-    if (IOS)
-        set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED ON)
-        set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED ON)
-    endif()
+    set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED ON)
+    set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED ON)
 endif()

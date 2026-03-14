@@ -9,6 +9,8 @@ import Carboxyl.Clover
 import QDash.Items
 import QDash.Config
 
+import QDash.Native.Helpers
+
 Rectangle {
     signal moved(real x, real y)
 
@@ -151,6 +153,24 @@ Rectangle {
         resizeBackAnim.start()
     }
 
+    function dragTapped() {
+        if (dragForced || widget.Drag.active) {
+            cancelDrag()
+        } else {
+            startDrag()
+        }
+    }
+
+    TapHandler {
+        gesturePolicy: TapHandler.ReleaseWithinBounds
+
+        onSingleTapped: dragTapped()
+        onDoubleTapped: openContextMenu()
+        onLongPressed: openContextMenu()
+
+        longPressThreshold: 250
+    }
+
     onXChanged: checkDrag()
     onYChanged: checkDrag()
 
@@ -234,44 +254,51 @@ Rectangle {
         id: rcMenuLoader
         active: false
         asynchronous: true
-        sourceComponent: Menu {
-            Component.onCompleted: {
-                if (!_extensionInstance && menuExtension)
-                    _extensionInstance = menuExtension.createObject(widget)
+        sourceComponent: Component {
+            Menu {
+                Component.onCompleted: {
+                    if (!_extensionInstance && menuExtension)
+                        _extensionInstance = menuExtension.createObject(widget)
 
-                if (_extensionInstance) {
-                    if (_extensionInstance instanceof Menu)
-                        addMenu(_extensionInstance)
-                    // TODO(crueter): More extensibility?
-                    else
-                        addItem(_extensionInstance)
-                }
+                    if (_extensionInstance) {
+                        if (_extensionInstance instanceof Menu)
+                            addMenu(_extensionInstance)
+                        // TODO(crueter): More extensibility?
+                        else
+                            addItem(_extensionInstance)
+                    }
 
-                popup()
-            }
-
-            MenuItem {
-                text: "Delete"
-                onTriggered: twm.remove(model.idx)
-            }
-
-            MenuItem {
-                text: "Configure"
-                onTriggered: {
-                    if (configLoader) {
-                        configLoader.active = true
-                    } else if (config) {
-                        config.open()
+                    // RIP iOS
+                    if (CompileDefinitions.brokenMenus) {
+                        open()
+                    } else {
+                        popup()
                     }
                 }
-            }
 
-            MenuItem {
-                text: "Copy"
-                onTriggered: copy(idx)
-            }
+                MenuItem {
+                    text: "Delete"
+                    onTriggered: twm.remove(model.idx)
+                }
 
-            onClosed: rcMenuLoader.active = false
+                MenuItem {
+                    text: "Configure"
+                    onTriggered: {
+                        if (configLoader) {
+                            configLoader.active = true
+                        } else if (config) {
+                            config.open()
+                        }
+                    }
+                }
+
+                MenuItem {
+                    text: "Copy"
+                    onTriggered: copy(idx)
+                }
+
+                onClosed: rcMenuLoader.active = false
+            }
         }
     }
 
@@ -296,16 +323,15 @@ Rectangle {
                            drag.target = null
                            widget.openContextMenu()
                        } else if (mouse.button === Qt.LeftButton) {
-                           if (dragForced || widget.Drag.active) {
-                               cancelDrag()
-                           } else {
-                               startDrag()
-                           }
+                           dragTapped()
                        }
                    }
 
         onReleased: mouse => {
                         if (mouse.button === Qt.LeftButton) {
+                            if (CompileDefinitions.tapOnly)
+                            mouse.accepted = false
+
                             drag.target = null
 
                             if (grid.validSpot(widget.x, widget.y, row, column,
@@ -326,6 +352,8 @@ Rectangle {
                             widget.z = 3
                         }
                     }
+
+        onDoubleClicked: openContextMenu()
     }
 
     /* RESIZE HANDLING */
@@ -334,8 +362,9 @@ Rectangle {
     }
 
     Loader {
-        active: hoverHandler.hovered && !widget.tvOverlap
-                && !(widget.dragForced || widget.Drag.active)
+        active: CompileDefinitions.tapOnly
+                || (hoverHandler.hovered && !widget.tvOverlap
+                    && !(widget.dragForced || widget.Drag.active))
 
         anchors.fill: parent
 

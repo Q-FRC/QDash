@@ -40,11 +40,11 @@ NativeDialog {
     }
 
     LabeledTextField {
-        anchors.fill: parent
-        anchors.topMargin: 10
-
         id: tabName
         font.pixelSize: Math.round(20)
+        implicitHeight: 40
+
+        anchors.centerIn: parent
 
         onAccepted: tabNameDialog.accept()
 

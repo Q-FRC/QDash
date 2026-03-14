@@ -239,7 +239,9 @@ ApplicationWindow {
         dsResize()
         QDashSettings.resizeToDSChanged.connect(dsResize)
 
-        if (QDashSettings.loadRecent && QDashSettings.recentFiles.length > 0) {
+        if (CompileDefinitions.singleFile) {
+            load()
+        } else if (QDashSettings.loadRecent && QDashSettings.recentFiles.length > 0) {
             filename = QDashSettings.recentFiles[0]
             if (filename === "" || filename === null)
                 return

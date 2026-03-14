@@ -123,10 +123,7 @@ void QDashApplication::reload() {
     qDebug() << "Reload called";
     QString program = QApplication::applicationFilePath();
 #if defined(TARGET_OS_IOS) || defined(__ANDROID__)
-    g_carboxylApp->interface()->showMessageBox(
-        CarboxylEnums::Warning, tr("Reloading Not Supported"),
-        tr("The platform you are on doesn't natively support application reloading. Please "
-           "manually restart the app to apply theme changes."), QPlatformDialogHelper::Ok);
+    qWarning() << "Platform does not support native reload, exiting instead";
 #else
     QProcess::startDetached(program, QApplication::arguments().mid(1));
 #endif

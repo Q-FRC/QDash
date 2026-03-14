@@ -89,7 +89,7 @@ Rectangle {
                         anchors.horizontalCenter: parent.horizontalCenter
 
                         rotation: -tickContainer.rotation
-                        font.pointSize: 8
+                        font.pixelSize: 11
                     }
                 }
             }

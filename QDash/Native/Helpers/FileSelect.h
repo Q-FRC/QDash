@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #pragma once
 
 #include <QMetaObject>
@@ -20,8 +23,12 @@ public:
                                         const QString& filter,
                                         QString* selectedFilter = nullptr,
                                         QFileDialog::Options options = QFileDialog::Options()) {
+#ifdef QDASH_SINGLEMODE
+        return dir;
+#else
         return QFileDialog::getOpenFileName(m_parent, title, dir, filter, selectedFilter,
                                             options);
+#endif
     }
 
     Q_INVOKABLE QString getSaveFileName(const QString& title,
@@ -29,8 +36,12 @@ public:
                                         const QString& filter,
                                         QString* selectedFilter = nullptr,
                                         QFileDialog::Options options = QFileDialog::Options()) {
+#ifdef QDASH_SINGLEMODE
+        return dir;
+#else
         return QFileDialog::getSaveFileName(m_parent, title, dir, filter, selectedFilter,
                                             options);
+#endif
     }
 
     Q_INVOKABLE QString getExistingDirectory(const QString& caption,
