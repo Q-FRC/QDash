@@ -41,8 +41,8 @@ PrimitiveWidget {
     }
 
     function setColor() {
-        shape.itemColor = itemValue ? trueColor : falseColor
-        // shape.itemShape = shape
+        shape.itemColor = widget.itemValue ? widget.trueColor : widget.falseColor
+        shape.itemShape = widget.shape
         shape.setColor()
     }
 
@@ -59,7 +59,8 @@ PrimitiveWidget {
     ShapeHandler {
         id: shape
 
-        itemShape: shape
+        itemShape: widget.shape
+        itemColor: widget.itemValue ? widget.trueColor : widget.falseColor
 
         anchors {
             top: titleField.bottom

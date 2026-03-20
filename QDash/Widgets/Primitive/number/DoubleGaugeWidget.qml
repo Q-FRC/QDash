@@ -122,8 +122,8 @@ PrimitiveWidget {
             minValue: min
             maxValue: max
 
-            startAngle: startAngle
-            endAngle: endAngle
+            startAngle: widget.startAngle
+            endAngle: widget.endAngle
         }
     }
 
