@@ -42,8 +42,8 @@ Rectangle {
     property Component menuExtension: null
     property var _extensionInstance: null
 
-    property int minWidth: grid.colWidth - 16
-    property int minHeight: grid.rowHeight - 16
+    property int minWidth: tab.colWidth - 16
+    property int minHeight: tab.rowHeight - 16
     property bool dragging: Drag.active || dragForced
 
     color: Clover.theme.dark
@@ -62,21 +62,21 @@ Rectangle {
     function checkDrag() {
         if (Drag.active || dragForced) {
             // only call this to get the green/red rectangle outline
-            grid.validSpot(x, y, row, column, rowSpan, colSpan, !dragForced)
+            tab.validSpot(x, y, model.row, model.column, model.rowSpan, model.colSpan, !dragForced)
         }
     }
 
     function checkResize() {
-        if (width < grid.colWidth - 16) {
-            width = grid.colWidth - 16
+        if (width < tab.colWidth - 16) {
+            width = tab.colWidth - 16
         }
 
-        if (height < grid.rowHeight - 16) {
-            height = grid.rowHeight - 16
+        if (height < tab.rowHeight - 16) {
+            height = tab.rowHeight - 16
         }
 
         if (resizeActive) {
-            grid.validResize(width, height, x, y, row, column, rowSpan, colSpan)
+            tab.validResize(width, height, x, y, model.row, model.column, model.rowSpan, model.colSpan)
         }
     }
 
@@ -84,7 +84,7 @@ Rectangle {
         dragForced = false
         resizeActive = false
         Drag.cancel()
-        grid.resetValid()
+        tab.resetValid()
     }
 
     function startDrag() {
@@ -100,7 +100,7 @@ Rectangle {
     }
 
     function getPoint() {
-        return grid.getPoint(x, y, false)
+        return tab.getPoint(x, y, false)
     }
 
     // Drag/Resize animations
@@ -224,11 +224,11 @@ Rectangle {
         }
     }
 
-    width: grid.colWidth * model.colSpan - 16
-    height: grid.rowHeight * model.rowSpan - 16
+    width: tab.colWidth * model.colSpan - 16
+    height: tab.rowHeight * model.rowSpan - 16
 
-    x: grid.colWidth * model.column + 8
-    y: grid.rowHeight * model.row + 8
+    x: tab.colWidth * model.column + 8
+    y: tab.rowHeight * model.row + 8
 
     Connections {
         target: tab
@@ -243,10 +243,10 @@ Rectangle {
     }
 
     function fixSize() {
-        width = grid.colWidth * model.colSpan - 16
-        height = grid.rowHeight * model.rowSpan - 16
-        x = grid.colWidth * model.column + 8
-        y = grid.rowHeight * model.row + 8
+        width = tab.colWidth * model.colSpan - 16
+        height = tab.rowHeight * model.rowSpan - 16
+        x = tab.colWidth * model.column + 8
+        y = tab.rowHeight * model.row + 8
     }
 
     /** RIGHT-CLICK MENU **/
@@ -334,10 +334,10 @@ Rectangle {
 
                             drag.target = null
 
-                            if (grid.validSpot(widget.x, widget.y, row, column,
-                                               rowSpan, colSpan, true)) {
+                            if (tab.validSpot(widget.x, widget.y, model.row, model.column,
+                                               model.rowSpan, model.colSpan, true)) {
 
-                                let newPoint = grid.getPoint(widget.x,
+                                let newPoint = tab.getPoint(widget.x,
                                                              widget.y, true)
 
                                 model.row = newPoint.y
@@ -347,7 +347,7 @@ Rectangle {
                             } else {
                                 animateBacksize()
                             }
-                            grid.resetValid()
+                            tab.resetValid()
 
                             widget.z = 3
                         }

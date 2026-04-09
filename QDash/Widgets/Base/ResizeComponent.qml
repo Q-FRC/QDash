@@ -32,13 +32,13 @@ Repeater {
         mouseArea.onReleased: mouse => {
                                   if (!tab.isCopying
                                       && mouse.button === Qt.LeftButton) {
-                                      if (grid.validResize(widget.width,
-                                                           widget.height,
-                                                           widget.x, widget.y,
-                                                           row, column,
-                                                           rowSpan, colSpan)) {
+                                      if (tab.validResize(widget.width,
+                                                          widget.height,
+                                                          widget.x, widget.y,
+                                                          widget.mrow, widget.mcolumn,
+                                                          widget.mrowSpan, widget.mcolumnSpan)) {
 
-                                          let newSize = grid.getRect(
+                                          let newSize = tab.getRect(
                                               widget.x, widget.y, widget.width,
                                               widget.height)
 
@@ -53,7 +53,7 @@ Repeater {
                                       }
 
                                       resizeActive = false
-                                      grid.resetValid()
+                                      tab.resetValid()
 
                                       widget.z = 3
                                   }
