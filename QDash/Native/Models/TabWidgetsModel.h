@@ -89,6 +89,8 @@ signals:
 
     void colsChanged();
 
+    void beforeSave();
+
 private:
     QList<Widget> m_data;
 

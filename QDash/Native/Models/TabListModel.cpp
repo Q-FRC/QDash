@@ -123,6 +123,9 @@ void TabListModel::save(const QString &filename)
         return;
     }
 
+    for (Tab &t : m_data)
+        emit t.model->beforeSave();
+
     QByteArray data = saveObject().toJson(QJsonDocument::Compact);
 
     if (file.write(data) == -1) {

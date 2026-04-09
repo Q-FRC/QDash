@@ -206,21 +206,24 @@ Rectangle {
 
         fixSize()
 
-        // TODO(crueter): Technically this could be made even better by construction properties OBJECT
-        // at save time...?
         propertyKeys.push("titleFontSize")
-        for (var property in propertyKeys) {
-            let p = propertyKeys[property]
-
+        for (var i = 0; i < propertyKeys.length; i++) {
+            let p = propertyKeys[i]
             let jsonProp = model.properties[p]
             if (typeof jsonProp !== "undefined")
                 this[p] = jsonProp
+        }
+    }
 
-            this[p + "Changed"].connect(() => {
-                                            let x = model.properties
-                                            x[p] = this[p]
-                                            model.properties = x
-                                        })
+    Connections {
+        target: tab.twm
+        function onBeforeSave() {
+            let props = {}
+            for (var i = 0; i < propertyKeys.length; i++) {
+                let p = propertyKeys[i]
+                props[p] = widget[p]
+            }
+            model.properties = props
         }
     }
 
