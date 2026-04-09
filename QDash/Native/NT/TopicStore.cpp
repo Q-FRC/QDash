@@ -7,8 +7,6 @@
 #include "networktables/NetworkTableEntry.h"
 
 #include <QGuiApplication>
-#include <QThread>
-#include <QTimer>
 #include <QVariant>
 
 TopicStore::TopicStore(QQmlEngine* engine, Logger* logs, QObject* parent)
@@ -67,29 +65,8 @@ void Listener::update(const QVariant& value) {
     if (value.isNull() || !value.isValid())
         return;
 
-    // Ensure the call is run in the QSG thread
-    // You can't use invokeMethod on a QJSValue so we just wrap it in a timer here.
-    QTimer* timer = new QTimer();
-    timer->moveToThread(qApp->thread());
-    timer->setSingleShot(true);
-
-    QMetaObject::Connection *conn = new QMetaObject::Connection;
-    *conn = connect(timer, &QTimer::timeout, this, [timer, this, value, conn]() {
-        for (const QJSValue& func : std::as_const(m_funcs)) {
-            func.call({m_engine->toScriptValue(value)});
-        }
-
-        timer->deleteLater();
-
-        disconnect(*conn);
-        delete conn;
-    });
-
-    bool ok = QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 0));
-    if (!ok) {
-        disconnect(*conn);
-        delete conn;
-        timer->deleteLater();
+    for (const QJSValue& func : std::as_const(m_funcs)) {
+        func.call({m_engine->toScriptValue(value)});
     }
 }
 
@@ -108,14 +85,21 @@ QVariant Listener::getValue() {
 
 void Listener::bindHandle() {
     m_callback = [this](const nt::Event& event) {
-        QMetaObject::invokeMethod(this, "updateEvent", Qt::DirectConnection,
-                                  Q_ARG(nt::Event, event));
+        // Extract the NT value on the callback thread, then dispatch a single
+        // queued hop to the Listener's own (main) thread so JS can be called safely.
+        QVariant value = event.Is(nt::EventFlags::kValueAll)
+            ? TopicStore::toVariant(event.GetValueEventData()->value)
+            : getValue();
+
+        QMetaObject::invokeMethod(this, [this, v = std::move(value)]() {
+            update(v);
+        }, Qt::QueuedConnection);
     };
 
     m_handle = Globals::inst.AddListener(m_entry, nt::EventFlags::kValueAll, m_callback);
 }
 
-void TopicStore::subscribe(QString topic, const QJSValue& func) {
+void TopicStore::subscribe(const QString& topic, const QJSValue& func) {
     if (topic == "")
         return;
 
@@ -126,7 +110,7 @@ void TopicStore::subscribe(QString topic, const QJSValue& func) {
         m_logs->debug("TopicStore", "Creating new listener for topic " + topic);
 
         listener = new Listener(m_engine, topic, this);
-        Listeners.append(listener);
+        m_listeners.insert(topic, listener);
     }
 
     listener->addListener(func);
@@ -134,7 +118,7 @@ void TopicStore::subscribe(QString topic, const QJSValue& func) {
     m_logs->info("TopicStore", "Subscribed to topic " + topic);
 }
 
-void TopicStore::unsubscribe(QString topic, const QJSValue& func) {
+void TopicStore::unsubscribe(const QString& topic, const QJSValue& func) {
     Listener *l = entry(topic);
     if (!l)
         return;
@@ -144,15 +128,16 @@ void TopicStore::unsubscribe(QString topic, const QJSValue& func) {
     if (l->empty()) {
         m_logs->debug("TopicStore", "Destructing listener for topic " + topic);
         l->unpublish();
-        Listeners.removeAll(l);
+        m_listeners.remove(topic);
         l->deleteLater();
     }
 
     m_logs->debug("TopicStore", "Unsubscribed from topic " + topic);
 }
 
-void TopicStore::subscribeOneShot(QString topic, std::function<void(QVariant)> callback) {
-    if (topic.isEmpty() || !callback) return;
+void TopicStore::subscribeOneShot(const QString& topic, std::function<void(QVariant)> callback) {
+    if (topic.isEmpty() || !callback)
+        return;
 
     nt::NetworkTableEntry entry = Globals::inst.GetEntry(topic.toStdString());
 
@@ -161,7 +146,7 @@ void TopicStore::subscribeOneShot(QString topic, std::function<void(QVariant)> c
     // and also we can't just delete an integer :(
     auto handle = std::make_shared<NT_Listener>(0);
 
-    auto ntCallback = [callback, handle, entry](const nt::Event &event) mutable {
+    auto ntCallback = [callback, handle, entry](const nt::Event& event) mutable {
         QVariant value = toVariant(event.GetValueEventData()->value);
         callback(value);
 
@@ -174,7 +159,7 @@ void TopicStore::subscribeOneShot(QString topic, std::function<void(QVariant)> c
     m_logs->debug("TopicStore", "One-shot subscription requested to topic " + topic);
 }
 
-QVariant TopicStore::getValue(QString topic) {
+QVariant TopicStore::getValue(const QString& topic) {
     Listener* l = entry(topic);
     if (l)
         return l->getValue();
@@ -182,7 +167,7 @@ QVariant TopicStore::getValue(QString topic) {
     return QVariant{};
 }
 
-void TopicStore::setValue(QString topic, const QVariant& value) {
+void TopicStore::setValue(const QString& topic, const QVariant& value) {
     Listener* l = entry(topic);
     if (l)
         l->setValue(value);
@@ -196,7 +181,7 @@ void TopicStore::forceUpdate(const QString& topic) {
         l->updateEvent();
 }
 
-QString TopicStore::typeString(QString topic) {
+QString TopicStore::typeString(const QString& topic) {
     nt::NetworkTableEntry entry = Globals::inst.GetEntry(topic.toStdString());
     nt::NetworkTableType type = entry.GetType();
 
@@ -240,6 +225,7 @@ QVariant TopicStore::toVariant(const nt::Value& value) {
     else if (value.IsBooleanArray()) {
         const std::span<const int> a = value.GetBooleanArray();
         QList<int> newList;
+        newList.reserve(a.size());
         for (const int i : a)
             newList << i;
 
@@ -247,6 +233,7 @@ QVariant TopicStore::toVariant(const nt::Value& value) {
     } else if (value.IsStringArray()) {
         const std::span<const std::string> a = value.GetStringArray();
         QStringList newList;
+        newList.reserve(a.size());
         for (const std::string& s : a)
             newList << QString::fromStdString(s);
 
@@ -254,6 +241,7 @@ QVariant TopicStore::toVariant(const nt::Value& value) {
     } else if (value.IsDoubleArray()) {
         const std::span<const double> a = value.GetDoubleArray();
         QList<double> newList;
+        newList.reserve(a.size());
         for (const double d : a)
             newList << d;
 
@@ -261,6 +249,7 @@ QVariant TopicStore::toVariant(const nt::Value& value) {
     } else if (value.IsIntegerArray()) {
         const std::span<const int64_t> a = value.GetIntegerArray();
         QList<int64_t> newList;
+        newList.reserve(a.size());
         for (const int64_t i : a)
             newList << i;
 
@@ -314,12 +303,6 @@ void TopicStore::connect(bool connected) {
     emit this->connected(connected);
 }
 
-Listener* TopicStore::entry(QString topic) {
-    for (Listener* listener : std::as_const(Listeners)) {
-        if (listener->topic() == topic) {
-            return listener;
-        }
-    }
-
-    return nullptr;
+Listener* TopicStore::entry(const QString& topic) {
+    return m_listeners.value(topic, nullptr);
 }

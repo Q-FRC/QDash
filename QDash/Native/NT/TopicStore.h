@@ -91,9 +91,9 @@ private:
 class TopicStore : public QObject {
     Q_OBJECT
 private:
-    Q_INVOKABLE Listener* entry(QString topic);
+    Q_INVOKABLE Listener* entry(const QString& topic);
 
-    QList<Listener *> Listeners;
+    QHash<QString, Listener *> m_listeners;
 
     Logger* m_logs;
     QQmlEngine *m_engine;
@@ -108,17 +108,18 @@ public:
 
     // The QJSValue is the function this subscription is connected to
     // So each subscription's unique ID is just the function itself.
-    Q_INVOKABLE void subscribe(QString ntTopic, const QJSValue& func);
-    Q_INVOKABLE void unsubscribe(QString ntTopic, const QJSValue& func);
+    Q_INVOKABLE void subscribe(const QString& ntTopic, const QJSValue& func);
+    Q_INVOKABLE void unsubscribe(const QString& ntTopic, const QJSValue& func);
 
-    Q_INVOKABLE void subscribeOneShot(QString ntTopic, std::function<void(QVariant)> callback);
+    Q_INVOKABLE void subscribeOneShot(const QString& ntTopic,
+                                      std::function<void(QVariant)> callback);
 
-    Q_INVOKABLE QVariant getValue(QString topic);
-    Q_INVOKABLE void setValue(QString topic, const QVariant& value);
+    Q_INVOKABLE QVariant getValue(const QString& topic);
+    Q_INVOKABLE void setValue(const QString& topic, const QVariant& value);
 
     Q_INVOKABLE void forceUpdate(const QString& topic);
 
-    QString typeString(QString topic);
+    QString typeString(const QString& topic);
 
     Q_INVOKABLE inline QFDFlags::ControlWord toWord(int val) {
         return QFDFlags::ControlWord(val);

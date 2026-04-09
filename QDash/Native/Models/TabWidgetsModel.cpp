@@ -262,6 +262,7 @@ TabWidgetsModel *TabWidgetsModel::loadObject(QObject *parent, const QJsonArray &
     TabWidgetsModel *model = new TabWidgetsModel(parent);
 
     QList<Widget> widgets;
+    widgets.reserve(arr.size());
     for (const QJsonValueConstRef ref : arr) {
         QJsonObject obj = ref.toObject();
 
