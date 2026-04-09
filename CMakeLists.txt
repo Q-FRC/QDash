@@ -132,3 +132,4 @@ find_package(Carboxyl)
 set(QT_QML_GENERATE_QMLLS_INI ON)
 
 add_subdirectory(QDash)
+add_subdirectory(tests)
