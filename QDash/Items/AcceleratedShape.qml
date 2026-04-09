@@ -1,6 +1,6 @@
+
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import QtQuick.Shapes
 import QtQuick
 
@@ -8,7 +8,7 @@ import QtQuick
 // so it's smooth
 Shape {
     layer.enabled: true
-    layer.samples: 8
+    layer.samples: 4
     layer.smooth: true
 
     vendorExtensionsEnabled: true

@@ -21,9 +21,9 @@ Rectangle {
 
     property int valueFontSize: 20
 
-    // 8x sampling, and antialiasing. to make things s m o o t h
+    // 4x sampling, and antialiasing.
     layer.enabled: true
-    layer.samples: 8
+    layer.samples: 4
     layer.smooth: true
     antialiasing: true
 
