@@ -28,8 +28,10 @@ NativeDialog {
 
     onAccepted: {
         server.accept()
-        appearance.accept()
-        misc.accept()
+        if (appearanceLoader.item)
+            appearanceLoader.item.accept()
+        if (miscLoader.item)
+            miscLoader.item.accept()
 
         QDashSettings.reconnect()
 
@@ -51,7 +53,14 @@ NativeDialog {
         show()
 
         server.open()
-        misc.open()
+
+        if (!appearanceLoader.active)
+            appearanceLoader.active = true
+
+        if (!miscLoader.active)
+            miscLoader.active = true
+        else if (miscLoader.item)
+            miscLoader.item.open()
     }
 
     SwipeView {
@@ -74,14 +83,23 @@ NativeDialog {
             clip: true
         }
 
-        AppearanceTab {
-            id: appearance
+        Loader {
+            id: appearanceLoader
+            active: false
             clip: true
+            sourceComponent: Component {
+                AppearanceTab {}
+            }
         }
 
-        MiscTab {
-            id: misc
+        Loader {
+            id: miscLoader
+            active: false
             clip: true
+            sourceComponent: Component {
+                MiscTab {}
+            }
+            onLoaded: item.open()
         }
     }
 

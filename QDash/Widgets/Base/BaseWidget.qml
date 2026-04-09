@@ -57,6 +57,14 @@ Rectangle {
             let tvRight = rc.x + rc.width
             widget.tvOverlap = tvRight >= x
         }
+
+        function onColWidthChanged() {
+            widget.fixSize()
+        }
+
+        function onRowHeightChanged() {
+            widget.fixSize()
+        }
     }
 
     function checkDrag() {
@@ -103,54 +111,48 @@ Rectangle {
         return grid.getPoint(x, y, false)
     }
 
-    // Drag/Resize animations
-    ParallelAnimation {
-        id: resizeBackAnim
-        SmoothedAnimation {
-            id: resizeBackAnimX
-            target: widget
-            property: "x"
-            duration: 250
-        }
-        SmoothedAnimation {
-            id: resizeBackAnimY
-            target: widget
-            property: "y"
-            duration: 250
-        }
-        SmoothedAnimation {
-            id: resizeBackAnimWidth
-            target: widget
-            property: "width"
-            duration: 250
-        }
-        SmoothedAnimation {
-            id: resizeBackAnimHeight
-            target: widget
-            property: "height"
-            duration: 250
-        }
+    // Drag/Resize animations – loaded lazily on first cancelled drag/resize
+    Loader {
+        id: resizeBackAnimLoader
+        active: false
+        sourceComponent: Component {
+            Item {
+                function startBackAnim(fromX, toX, fromY, toY, fromW, toW, fromH, toH) {
+                    animX.from = fromX; animX.to = toX
+                    animY.from = fromY; animY.to = toY
+                    animW.from = fromW; animW.to = toW
+                    animH.from = fromH; animH.to = toH
+                    anim.start()
+                }
 
-        onFinished: {
-            width = widget.originalRect.width
-            height = widget.originalRect.height
-            x = widget.originalRect.x
-            y = widget.originalRect.y
+                ParallelAnimation {
+                    id: anim
+                    SmoothedAnimation { id: animX; target: widget; property: "x"; duration: 250 }
+                    SmoothedAnimation { id: animY; target: widget; property: "y"; duration: 250 }
+                    SmoothedAnimation { id: animW; target: widget; property: "width"; duration: 250 }
+                    SmoothedAnimation { id: animH; target: widget; property: "height"; duration: 250 }
+
+                    onFinished: {
+                        widget.width = widget.originalRect.width
+                        widget.height = widget.originalRect.height
+                        widget.x = widget.originalRect.x
+                        widget.y = widget.originalRect.y
+                    }
+                }
+            }
         }
     }
 
     function animateBacksize() {
-        resizeBackAnimX.from = widget.x
-        resizeBackAnimX.to = originalRect.x
-        resizeBackAnimY.from = widget.y
-        resizeBackAnimY.to = originalRect.y
+        if (!resizeBackAnimLoader.active)
+            resizeBackAnimLoader.active = true
 
-        resizeBackAnimWidth.from = widget.width
-        resizeBackAnimWidth.to = originalRect.width
-        resizeBackAnimHeight.from = widget.height
-        resizeBackAnimHeight.to = originalRect.height
-
-        resizeBackAnim.start()
+        resizeBackAnimLoader.item.startBackAnim(
+            widget.x, originalRect.x,
+            widget.y, originalRect.y,
+            widget.width, originalRect.width,
+            widget.height, originalRect.height
+        )
     }
 
     function dragTapped() {
@@ -229,18 +231,6 @@ Rectangle {
 
     x: grid.colWidth * model.column + 8
     y: grid.rowHeight * model.row + 8
-
-    Connections {
-        target: tab
-
-        function onColWidthChanged() {
-            widget.fixSize()
-        }
-
-        function onRowHeightChanged() {
-            widget.fixSize()
-        }
-    }
 
     function fixSize() {
         width = grid.colWidth * model.colSpan - 16

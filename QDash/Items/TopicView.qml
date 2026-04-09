@@ -74,8 +74,12 @@ Row {
         }
 
         // modified from Qt's example TreeView
-        TreeView {
-            id: treeView
+        // Lazy-loaded on first open to avoid allocating the delegate pool at startup
+        Loader {
+            id: treeLoader
+            active: false
+            asynchronous: true
+
             anchors {
                 top: search.bottom
                 left: parent.left
@@ -85,125 +89,129 @@ Row {
                 margins: 10
             }
 
-            clip: true
+            sourceComponent: Component {
+                TreeView {
+                    clip: true
 
-            boundsBehavior: Flickable.StopAtBounds
+                    boundsBehavior: Flickable.StopAtBounds
 
-            selectionModel: ItemSelectionModel {}
+                    selectionModel: ItemSelectionModel {}
 
-            model: topicsSorted
+                    model: topicsSorted
 
-            delegate: Item {
-                DragHandler {
-                    id: dh
-                    target: null
-                    enabled: model.type !== ""
+                    delegate: Item {
+                        DragHandler {
+                            id: dh
+                            target: null
+                            enabled: model.type !== ""
 
-                    property bool ready: false
+                            property bool ready: false
 
-                    onActiveChanged: if (!active && ready) {
-                                         ready = false
-                                         dropped(centroid.position)
-                                     }
+                            onActiveChanged: if (!active && ready) {
+                                                 ready = false
+                                                 dropped(centroid.position)
+                                             }
 
-                    function drag() {
-                        let global = mapToItem(topicView, centroid.position)
-                        if (!topicView.contains(global)) {
-                            if (!ready) {
-                                widgetAdd(model.name, model.topic, model.type)
+                            function drag() {
+                                let global = mapToItem(topicView, centroid.position)
+                                if (!topicView.contains(global)) {
+                                    if (!ready) {
+                                        widgetAdd(model.name, model.topic, model.type)
 
-                                ready = true
+                                        ready = true
+                                    }
+
+                                    let p = mapToItem(tv, centroid.position)
+                                    p.x += tv.x
+                                    dragging(p)
+                                }
                             }
 
-                            let p = mapToItem(tv, centroid.position)
-                            p.x += tv.x
-                            dragging(p)
+                            yAxis.onActiveValueChanged: drag()
+                            xAxis.onActiveValueChanged: drag()
+                        }
+
+                        // implicitWidth: padding + label.x + label.implicitWidth + padding
+                        implicitHeight: label.implicitHeight * 1.5
+
+                        implicitWidth: topicView.width - 20
+
+                        readonly property real indentation: 20
+                        readonly property real padding: 5
+
+                        // Assigned to by TreeView:
+                        required property TreeView treeView
+                        required property bool isTreeNode
+                        required property bool expanded
+                        required property int hasChildren
+                        required property int depth
+                        required property int row
+                        required property int column
+                        required property bool current
+
+                        // Rotate indicator when expanded by the user
+                        // (requires TreeView to have a selectionModel)
+                        TableView.onPooled: {
+                            indicatorBehavior.enabled = false
+                            indicator.rotation = expanded ? 90 : 0
+                            indicatorBehavior.enabled = true
+                        }
+                        TableView.onReused: if (current)
+                                                indicator.rotation = expanded ? 90 : 0
+                        onExpandedChanged: indicator.rotation = expanded ? 90 : 0
+
+                        Rectangle {
+                            id: background
+                            anchors.fill: parent
+                            color: row === treeView.currentRow ? palette.highlight : (treeView.alternatingRows && row % 2 !== 0) ? palette.base : palette.alternateBase
+                        }
+
+                        Label {
+                            id: indicator
+                            x: padding + (depth * indentation)
+                            anchors.verticalCenter: parent.verticalCenter
+                            visible: isTreeNode && hasChildren
+                            text: "▶"
+
+                            Behavior on rotation {
+                                id: indicatorBehavior
+                                NumberAnimation { duration: 100; easing.type: Easing.OutQuart }
+                            }
+
+                            TapHandler {
+                                onSingleTapped: {
+                                    let index = treeView.index(row, column)
+                                    treeView.selectionModel.setCurrentIndex(
+                                                index, ItemSelectionModel.NoUpdate)
+                                    treeView.toggleExpanded(row)
+                                }
+                            }
+
+                            font.pixelSize: 16
+                        }
+
+                        Label {
+                            id: label
+                            x: padding + (isTreeNode ? (depth + 1) * indentation : 0)
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: parent.width - padding - x - typeLabel.width
+                            clip: true
+                            text: model.name
+
+                            font.pixelSize: 16
+                        }
+
+                        Label {
+                            id: typeLabel
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.right: parent.right
+                            anchors.rightMargin: 5
+                            clip: true
+                            text: model.type
+
+                            font.pixelSize: 16
                         }
                     }
-
-                    yAxis.onActiveValueChanged: drag()
-                    xAxis.onActiveValueChanged: drag()
-                }
-
-                // implicitWidth: padding + label.x + label.implicitWidth + padding
-                implicitHeight: label.implicitHeight * 1.5
-
-                implicitWidth: topicView.width - 20
-
-                readonly property real indentation: 20
-                readonly property real padding: 5
-
-                // Assigned to by TreeView:
-                required property TreeView treeView
-                required property bool isTreeNode
-                required property bool expanded
-                required property int hasChildren
-                required property int depth
-                required property int row
-                required property int column
-                required property bool current
-
-                // Rotate indicator when expanded by the user
-                // (requires TreeView to have a selectionModel)
-                TableView.onPooled: {
-                    indicatorBehavior.enabled = false
-                    indicator.rotation = expanded ? 90 : 0
-                    indicatorBehavior.enabled = true
-                }
-                TableView.onReused: if (current)
-                                        indicator.rotation = expanded ? 90 : 0
-                onExpandedChanged: indicator.rotation = expanded ? 90 : 0
-
-                Rectangle {
-                    id: background
-                    anchors.fill: parent
-                    color: row === treeView.currentRow ? palette.highlight : (treeView.alternatingRows && row % 2 !== 0) ? palette.base : palette.alternateBase
-                }
-
-                Label {
-                    id: indicator
-                    x: padding + (depth * indentation)
-                    anchors.verticalCenter: parent.verticalCenter
-                    visible: isTreeNode && hasChildren
-                    text: "▶"
-
-                    Behavior on rotation {
-                        id: indicatorBehavior
-                        NumberAnimation { duration: 100; easing.type: Easing.OutQuart }
-                    }
-
-                    TapHandler {
-                        onSingleTapped: {
-                            let index = treeView.index(row, column)
-                            treeView.selectionModel.setCurrentIndex(
-                                        index, ItemSelectionModel.NoUpdate)
-                            treeView.toggleExpanded(row)
-                        }
-                    }
-
-                    font.pixelSize: 16
-                }
-
-                Label {
-                    id: label
-                    x: padding + (isTreeNode ? (depth + 1) * indentation : 0)
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: parent.width - padding - x - typeLabel.width
-                    clip: true
-                    text: model.name
-
-                    font.pixelSize: 16
-                }
-
-                Label {
-                    id: typeLabel
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: 5
-                    clip: true
-                    text: model.type
-
-                    font.pixelSize: 16
                 }
             }
         }
@@ -220,6 +228,8 @@ Row {
 
         onClicked: {
             if (text === closedText) {
+                if (!treeLoader.active)
+                    treeLoader.active = true
                 opened = true
                 open()
                 text = openText

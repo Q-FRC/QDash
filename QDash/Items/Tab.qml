@@ -283,9 +283,9 @@ Rectangle {
                 // TODO: generify
                 delegate: Loader {
                     z: 3
+                    asynchronous: true
 
-                    sourceComponent: CompileDefinitions.useCameraView ? Qt.createComponent(
-                                                                            "../Widgets/Misc/CameraView.qml") : nullComponent
+                    source: CompileDefinitions.useCameraView ? "../Widgets/Misc/CameraView.qml" : ""
                 }
             }
 
@@ -293,9 +293,9 @@ Rectangle {
                 roleValue: "web"
                 delegate: Loader {
                     z: 3
+                    asynchronous: true
 
-                    sourceComponent: CompileDefinitions.useWebView ? Qt.createComponent(
-                                                                         "../Widgets/Misc/WebView.qml") : nullComponent
+                    source: CompileDefinitions.useWebView ? "../Widgets/Misc/WebView.qml" : ""
                 }
             }
 
@@ -353,11 +353,6 @@ Rectangle {
                 roleValue: "phaseShift"
                 PhaseShift {}
             }
-        }
-
-        Component {
-            id: nullComponent
-            Item {}
         }
     }
 
