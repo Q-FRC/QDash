@@ -3,8 +3,6 @@
 
 #include "FieldImageModel.h"
 
-#include <cmath>
-
 FieldImageModel::FieldImageModel(QObject *parent) : QObject(parent) {}
 
 // ── Public invokable ─────────────────────────────────────────────────────────
@@ -82,7 +80,7 @@ double FieldImageModel::robotRotation() const { return m_robotRotation; }
 
 void FieldImageModel::setXMeters(double v)
 {
-    if (qFuzzyCompare(m_xMeters, v))
+    if (m_xMeters == v)
         return;
     m_xMeters = v;
     emit xMetersChanged();
@@ -91,7 +89,7 @@ void FieldImageModel::setXMeters(double v)
 
 void FieldImageModel::setYMeters(double v)
 {
-    if (qFuzzyCompare(m_yMeters, v))
+    if (m_yMeters == v)
         return;
     m_yMeters = v;
     emit yMetersChanged();
@@ -100,7 +98,7 @@ void FieldImageModel::setYMeters(double v)
 
 void FieldImageModel::setAngleDeg(double v)
 {
-    if (qFuzzyCompare(m_angleDeg, v))
+    if (m_angleDeg == v)
         return;
     m_angleDeg = v;
     emit angleDegChanged();
@@ -109,7 +107,7 @@ void FieldImageModel::setAngleDeg(double v)
 
 void FieldImageModel::setRobotWidthMeters(double v)
 {
-    if (qFuzzyCompare(m_robotWidthMeters, v))
+    if (m_robotWidthMeters == v)
         return;
     m_robotWidthMeters = v;
     emit robotWidthMetersChanged();
@@ -118,7 +116,7 @@ void FieldImageModel::setRobotWidthMeters(double v)
 
 void FieldImageModel::setRobotLengthMeters(double v)
 {
-    if (qFuzzyCompare(m_robotLengthMeters, v))
+    if (m_robotLengthMeters == v)
         return;
     m_robotLengthMeters = v;
     emit robotLengthMetersChanged();
@@ -127,7 +125,7 @@ void FieldImageModel::setRobotLengthMeters(double v)
 
 void FieldImageModel::setFieldWidth(double v)
 {
-    if (qFuzzyCompare(m_fieldWidth, v))
+    if (m_fieldWidth == v)
         return;
     m_fieldWidth = v;
     emit fieldWidthChanged();
@@ -145,7 +143,7 @@ void FieldImageModel::setUseVerticalField(bool v)
 
 void FieldImageModel::setPaintedFieldWidth(double v)
 {
-    if (qFuzzyCompare(m_paintedFieldWidth, v))
+    if (m_paintedFieldWidth == v)
         return;
     m_paintedFieldWidth = v;
     emit paintedFieldWidthChanged();
@@ -154,7 +152,7 @@ void FieldImageModel::setPaintedFieldWidth(double v)
 
 void FieldImageModel::setPaintedFieldHeight(double v)
 {
-    if (qFuzzyCompare(m_paintedFieldHeight, v))
+    if (m_paintedFieldHeight == v)
         return;
     m_paintedFieldHeight = v;
     emit paintedFieldHeightChanged();
@@ -163,7 +161,7 @@ void FieldImageModel::setPaintedFieldHeight(double v)
 
 void FieldImageModel::setFieldImgX(double v)
 {
-    if (qFuzzyCompare(m_fieldImgX, v))
+    if (m_fieldImgX == v)
         return;
     m_fieldImgX = v;
     emit fieldImgXChanged();
@@ -172,7 +170,7 @@ void FieldImageModel::setFieldImgX(double v)
 
 void FieldImageModel::setFieldImgY(double v)
 {
-    if (qFuzzyCompare(m_fieldImgY, v))
+    if (m_fieldImgY == v)
         return;
     m_fieldImgY = v;
     emit fieldImgYChanged();
@@ -181,7 +179,7 @@ void FieldImageModel::setFieldImgY(double v)
 
 void FieldImageModel::setFieldImgWidth(double v)
 {
-    if (qFuzzyCompare(m_fieldImgWidth, v))
+    if (m_fieldImgWidth == v)
         return;
     m_fieldImgWidth = v;
     emit fieldImgWidthChanged();
@@ -190,7 +188,7 @@ void FieldImageModel::setFieldImgWidth(double v)
 
 void FieldImageModel::setFieldImgHeight(double v)
 {
-    if (qFuzzyCompare(m_fieldImgHeight, v))
+    if (m_fieldImgHeight == v)
         return;
     m_fieldImgHeight = v;
     emit fieldImgHeightChanged();
