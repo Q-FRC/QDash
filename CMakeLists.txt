@@ -45,7 +45,7 @@ cmake_dependent_option(QDASH_NETWORK "Enable remote layout feature (Requires QtN
 set(QT_NO_PRIVATE_MODULE_WARNING ON)
 set(QDASH_QT_COMPONENTS Core Quick QuickControls2 Widgets QmlCore LabsQmlModels QuickDialogs2
     QuickLayouts QuickEffects QuickControls2Basic QuickControls2Material QuickControls2Fusion QuickControls2Universal)
-set(QDASH_QT_OPTIONAL GuiPrivate QuickTemplates2Private QuickPrivate)
+set(QDASH_QT_OPTIONAL GuiPrivate QuickTemplates2Private QuickPrivate QuickTest)
 set(QDASH_QT_LIBRARIES
     Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Widgets Qt6::Qml
     Carboxyl::Carboxyl
