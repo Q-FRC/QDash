@@ -47,7 +47,7 @@ ApplicationWindow {
         }
     }
 
-    // Dialogs
+    /* DIALOGS */
     Loader {
         id: remoteLayouts
 
@@ -56,8 +56,30 @@ ApplicationWindow {
                                       "../Dialogs/remote/RemoteLayoutsDialog.qml") : null
     }
 
-    AboutDialog {
+    Loader {
         id: about
+        active: false
+        asynchronous: true
+        onLoaded: item.open()
+
+        sourceComponent: Component {
+            AboutDialog {
+                onClosed: settingsDialog.active = false
+            }
+        }
+    }
+
+    Loader {
+        id: settingsDialog
+        active: false
+        asynchronous: true
+        onLoaded: item.open()
+
+        sourceComponent: Component {
+            SettingsDialog {
+                onClosed: settingsDialog.active = false
+            }
+        }
     }
 
     NotificationPopup {
@@ -100,11 +122,6 @@ ApplicationWindow {
             logs.info("IO", "Loading file " + filename)
             tlm.load(filename)
         }
-    }
-
-    /** SERVER SETTINGS */
-    SettingsDialog {
-        id: settingsDialog
     }
 
     /** MENU BAR */
@@ -171,7 +188,7 @@ ApplicationWindow {
             Action {
                 text: qsTr("&Settings")
                 shortcut: "Ctrl+,"
-                onTriggered: settingsDialog.open()
+                onTriggered: settingsDialog.active = true
             }
 
             Menu {
@@ -221,7 +238,7 @@ ApplicationWindow {
             title: qsTr("&About")
             Action {
                 text: qsTr("&About QDash")
-                onTriggered: about.open()
+                onTriggered: about.active = true
             }
 
             Action {
@@ -241,7 +258,8 @@ ApplicationWindow {
 
         if (CompileDefinitions.singleFile) {
             load()
-        } else if (QDashSettings.loadRecent && QDashSettings.recentFiles.length > 0) {
+        } else if (QDashSettings.loadRecent
+                   && QDashSettings.recentFiles.length > 0) {
             filename = QDashSettings.recentFiles[0]
             if (filename === "" || filename === null)
                 return

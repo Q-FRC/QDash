@@ -375,6 +375,12 @@ Rectangle {
 
         renderStrategy: Canvas.Cooperative
 
+        visible: parent.visible
+        enabled: parent.visible
+
+        onVisibleChanged: if (visible)
+                              requestPaint()
+
         onPaint: {
             let ctx = getContext("2d")
             ctx.clearRect(0, 0, width, height)

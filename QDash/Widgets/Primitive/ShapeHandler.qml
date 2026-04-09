@@ -8,120 +8,119 @@ import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
-import Carboxyl.Clover
 
 AcceleratedShape {
     id: shape
 
-    function setColor() {
-        circle.setColor()
-        rect.setColor()
-        tri.setColor()
-    }
-
     property color itemColor
     property string itemShape
+
+    readonly property real radius: Math.min(width, height) / 2
 
     anchors {
         top: titleField.bottom
         left: parent.left
         right: parent.right
         bottom: parent.bottom
-
         margins: 10
     }
 
-    ShapePath {
-        id: tri
-        strokeWidth: 1
-
-        function setColor() {
-            strokeColor = itemShape === "Triangle" ? (shape.itemColor) : "transparent"
-            fillColor = itemShape === "Triangle" ? (shape.itemColor) : "transparent"
-            update()
-        }
-
-        startX: 0
-        startY: shape.height
-
-        PathLine {
-            x: shape.width / 2
-            y: 0
-        }
-
-        PathLine {
-            x: shape.width
-            y: shape.height
-        }
-        PathLine {
-            x: 0
-            y: shape.height
+    // shape selector
+    Loader {
+        id: shapeLoader
+        sourceComponent: {
+            if (itemShape === "Triangle")
+                return triangleComp
+            if (itemShape === "Rectangle")
+                return rectangleComp
+            if (itemShape === "Circle")
+                return circleComp
+            return null
         }
     }
 
-    ShapePath {
-        id: rect
-        strokeWidth: 1
+    // inject path into shape data
+    data: [shapeLoader.item]
 
-        function setColor() {
-            strokeColor = itemShape === "Rectangle" ? (shape.itemColor) : "transparent"
-            fillColor = itemShape === "Rectangle" ? (shape.itemColor) : "transparent"
-            update()
-        }
+    Component {
+        id: triangleComp
+        ShapePath {
+            strokeWidth: 1
+            strokeColor: shape.itemColor
+            fillColor: shape.itemColor
 
-        startX: 0
-        startY: 0
+            startX: 0
+            startY: shape.height
 
-        PathLine {
-            x: shape.width
-            y: 0
-        }
-
-        PathLine {
-            x: shape.width
-            y: shape.height
-        }
-        PathLine {
-            x: 0
-            y: shape.height
-        }
-        PathLine {
-            x: 0
-            y: 0
+            PathLine {
+                x: shape.width / 2
+                y: 0
+            }
+            PathLine {
+                x: shape.width
+                y: shape.height
+            }
+            PathLine {
+                x: 0
+                y: shape.height
+            }
         }
     }
 
-    ShapePath {
-        id: circle
-        strokeWidth: 1
+    Component {
+        id: rectangleComp
+        ShapePath {
+            strokeWidth: 1
+            strokeColor: shape.itemColor
+            fillColor: shape.itemColor
 
-        function setColor() {
-            strokeColor = itemShape === "Circle" ? (shape.itemColor) : "transparent"
-            fillColor = itemShape === "Circle" ? (shape.itemColor) : "transparent"
-            update()
+            startX: 0
+            startY: 0
+
+            PathLine {
+                x: shape.width
+                y: 0
+            }
+            PathLine {
+                x: shape.width
+                y: shape.height
+            }
+            PathLine {
+                x: 0
+                y: shape.height
+            }
+            PathLine {
+                x: 0
+                y: 0
+            }
         }
+    }
 
-        startX: shape.width / 2
-        startY: 0
+    Component {
+        id: circleComp
+        ShapePath {
+            strokeWidth: 1
+            strokeColor: shape.itemColor
+            fillColor: shape.itemColor
 
-        PathArc {
-            x: shape.width / 2
-            y: shape.width < shape.height ? shape.width : shape.height
+            startX: shape.width / 2
+            startY: 0
 
-            radiusX: Math.min(shape.width, shape.height) / 2
-            radiusY: Math.min(shape.width, shape.height) / 2
+            PathArc {
+                x: shape.width / 2
+                y: shape.width < shape.height ? shape.width : shape.height
+                radiusX: shape.radius
+                radiusY: shape.radius
+                useLargeArc: true
+            }
 
-            useLargeArc: true
-        }
-
-        PathArc {
-            x: shape.width / 2
-            y: 0
-
-            radiusX: Math.min(shape.width, shape.height) / 2
-            radiusY: Math.min(shape.width, shape.height) / 2
-
-            useLargeArc: true
+            PathArc {
+                x: shape.width / 2
+                y: 0
+                radiusX: shape.radius
+                radiusY: shape.radius
+                useLargeArc: true
+            }
         }
     }
 }

@@ -16,8 +16,29 @@ BaseWidget {
 
     // Define this in your widget
     function update(value) {
-        console.error("PrimitiveWidget's update function should NEVER be called. "
-                      + "If this is the case, you likely forgot to define the update function in your widget.")
+        console.error(
+                    "PrimitiveWidget's update function should NEVER be called. "
+                    + "If this is the case, you likely forgot to define the update function in your widget.")
+    }
+
+    function _subscribe() {
+        if (enabled && trueTopic) {
+            TopicStore.subscribe(trueTopic, update)
+            TopicStore.forceUpdate(trueTopic)
+        }
+    }
+
+    function _unsubscribe() {
+        if (oldTopic) {
+            TopicStore.unsubscribe(oldTopic, update)
+        }
+    }
+
+    onEnabledChanged: {
+        if (enabled)
+            _subscribe()
+        else
+            _unsubscribe()
     }
 
     function setValue(value) {
@@ -44,21 +65,25 @@ BaseWidget {
     Component.onCompleted: {
         item_topic = model.topic
         oldTopic = trueTopic
-        TopicStore.subscribe(trueTopic, update)
+
+        if (enabled)
+            _subscribe()
 
         item_topicChanged.connect(() => {
                                       model.topic = item_topic
 
-                                      TopicStore.unsubscribe(oldTopic, update)
-                                      TopicStore.subscribe(trueTopic, update)
+                                      if (enabled)
+                                      _unsubscribe()
 
                                       oldTopic = trueTopic
+
+                                      if (enabled)
+                                      _subscribe()
                                   })
     }
 
     Component.onDestruction: {
-        if (TopicStore !== null) {
-            TopicStore.unsubscribe(trueTopic, update)
-        }
+        if (TopicStore !== null)
+            _unsubscribe()
     }
 }

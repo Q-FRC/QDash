@@ -44,19 +44,10 @@ PrimitiveWidget {
         }
     }
 
-    function setColor() {
-        shape.itemColor = itemValue
-        shape.itemShape = shape
-        shape.setColor()
-    }
-
     function update(value) {
         widget.connected = true
         itemValue = value
-        setColor()
     }
-
-    onShapeChanged: setColor()
 
     ShapeHandler {
         id: shape

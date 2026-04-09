@@ -14,7 +14,7 @@ RowLayout {
     required property string bindedProperty
 
     /** the target to bind the property to */
-    required property var bindTarget
+    property var bindTarget: widget
 
     function open() {
         textField.open()

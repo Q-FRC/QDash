@@ -62,13 +62,13 @@ PrimitiveWidget {
     SpinBox {
         id: spin
 
-        font.pixelSize: fontSize
+        font.pixelSize: widget.fontSize
 
         value: 0
 
-        from: lowerBound
-        to: upperBound
-        stepSize: stepSize
+        from: widget.lowerBound
+        to: widget.upperBound
+        stepSize: widget.stepSize
 
         enabled: widget.connected
         editable: true
@@ -101,19 +101,19 @@ PrimitiveWidget {
 
         inputMode: Dial.Circular
 
-        font.pixelSize: fontSize
+        font.pixelSize: widget.fontSize
 
         value: 0
-        stepSize: stepSize
+        stepSize: widget.stepSize
 
         width: Math.min(parent.width, spin.y - titleField.height - 40)
         height: width
 
-        from: lowerBound
-        to: upperBound
+        from: widget.lowerBound
+        to: widget.upperBound
 
-        startAngle: startAngle
-        endAngle: endAngle
+        startAngle: widget.startAngle
+        endAngle: widget.endAngle
 
         enabled: widget.connected
 

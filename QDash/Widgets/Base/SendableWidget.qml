@@ -21,6 +21,29 @@ BaseWidget {
                     + "If this is the case, you likely forgot to define the update function in your widget.")
     }
 
+    function _subscribe() {
+        if (!enabled)
+            return
+        for (var i = 0; i < topics.length; ++i) {
+            let fullTopic = item_topic + "/" + topics[i]
+            TopicStore.subscribe(fullTopic, funcs[i])
+            TopicStore.forceUpdate(fullTopic)
+        }
+    }
+
+    function _unsubscribe() {
+        for (var i = 0; i < topics.length; ++i) {
+            TopicStore.unsubscribe(oldTopic + "/" + topics[i], funcs[i])
+        }
+    }
+
+    onEnabledChanged: {
+        if (enabled)
+            _subscribe()
+        else
+            _unsubscribe()
+    }
+
     function setValue(topic, value) {
         valid = false
         TopicStore.setValue(item_topic + "/" + topic, value)
@@ -46,36 +69,33 @@ BaseWidget {
 
     Component.onCompleted: {
         item_topic = model.topic
+        oldTopic = model.topic
 
         for (var i = 0; i < topics.length; ++i) {
             let topic = topics[i]
             funcs[i] = value => update(topic, value)
-            TopicStore.subscribe(item_topic + "/" + topic, funcs[i])
         }
 
-        oldTopic = model.topic
+        if (enabled)
+            _subscribe()
 
         item_topicChanged.connect(() => {
                                       model.topic = item_topic
 
-                                      for (var i = 0; i < topics.length; ++i) {
-                                          let suffix = "/" + topics[i]
-                                          let f = funcs[i]
-                                          TopicStore.unsubscribe(
-                                              oldTopic + suffix, f)
-                                          TopicStore.subscribe(
-                                              item_topic + suffix, f)
-                                      }
+                                      if (enabled)
+                                      _unsubscribe()
 
                                       oldTopic = item_topic
+
+                                      if (enabled)
+                                      _subscribe()
                                   })
     }
 
     Component.onDestruction: {
         if (TopicStore !== null) {
-            for (var i = 0; i < topics.length; ++i) {
-                TopicStore.unsubscribe(item_topic + "/" + topics[i], funcs[i])
-            }
+            if (enabled)
+                _unsubscribe()
         }
     }
 }

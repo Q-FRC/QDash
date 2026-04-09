@@ -127,38 +127,69 @@ Rectangle {
         onDropped: pos => drop(pos, true)
     }
 
-    TabNameDialog {
+    Loader {
         id: tabNameDialog
-        onAccepted: addTab()
+        active: false
+        asynchronous: true
+        onLoaded: item.open()
+
+        sourceComponent: Component {
+            TabNameDialog {
+                onAccepted: {
+                    tlm.add(tabNameDialog.item.text)
+                    swipe.setCurrentIndex(swipe.count - 1)
+                }
+
+                onClosed: tabNameDialog.active = false
+            }
+        }
     }
 
-    TabDialog {
+    Loader {
         id: tabConfigDialog
-        onAccepted: setTabConfig()
+        active: false
+        asynchronous: true
+        onLoaded: {
+            item.open()
+
+            item.columns = columns
+            item.rows = rows
+            item.name = name
+        }
+
+        property int columns
+        property int rows
+        property string name
+
+        sourceComponent: Component {
+            TabDialog {
+                onAccepted: {
+                    let tab = mainScreen.currentTab()
+                    if (!tab)
+                        return
+                    tab.setSize(rows, columns)
+                    tab.setName(name)
+                }
+
+                onClosed: tabConfigDialog.active = false
+            }
+        }
     }
 
     /** TAB SETTINGS */
-    function addTab() {
-        tlm.add(tabNameDialog.text)
-        swipe.setCurrentIndex(swipe.count - 1)
-    }
-
     function newTab() {
-        tabNameDialog.open()
-    }
-
-    function setTabConfig() {
-        if (!currentTab())
-            return
-        currentTab().setSize(tabConfigDialog.rows, tabConfigDialog.columns)
-        currentTab().setName(tabConfigDialog.name)
+        tabNameDialog.active = true
     }
 
     function configTab() {
-        if (!currentTab())
+        let tab = currentTab()
+        if (!tab)
             return
-        tabConfigDialog.openUp(currentTab().rows, currentTab().cols,
-                               currentTab().name())
+
+        tabConfigDialog.rows = tab.rows
+        tabConfigDialog.columns = tab.cols
+        tabConfigDialog.name = tab.name()
+        tabConfigDialog.active = true
     }
 
     function currentTab() {
@@ -166,16 +197,25 @@ Rectangle {
     }
 
     /** CLOSE TAB */
-    TabCloseDialog {
+    Loader {
         id: tabClose
+        active: false
+        asynchronous: true
+        onLoaded: item.open()
 
-        onAccepted: tlm.remove(swipe.currentIndex)
+        sourceComponent: Component {
+            TabNameDialog {
+                onAccepted: tlm.remove(swipe.currentIndex)
+
+                onClosed: tabClose.active = false
+            }
+        }
     }
 
     function closeTab() {
         if (!currentTab())
             return
-        tabClose.open()
+        tabClose.active = true
     }
 
     /** PASTE */
@@ -224,6 +264,7 @@ Rectangle {
                 id: tab
                 width: swipe.width
                 height: swipe.height
+                enabled: SwipeView.isCurrentItem
 
                 onCopying: pos => drag(pos, false)
                 onDropped: pos => drop(pos, false)

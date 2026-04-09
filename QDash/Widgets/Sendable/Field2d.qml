@@ -17,14 +17,15 @@ PrimitiveWidget {
     suffix: "/Robot"
 
     antialiasing: true
+    propertyKeys: ["robotShape", "robotColor", "robotWidthMeters", "robotLengthMeters", "useVerticalField", "mirrorForRedAlliance", "fieldType"]
 
-    property bool item_useVerticalField: false
-    property bool item_mirrorForRedAlliance: false
+    property bool useVerticalField: false
+    property bool mirrorForRedAlliance: false
 
-    property double item_robotWidthMeters: 0.5
-    property double item_robotLengthMeters: 0.5
+    property double robotWidthMeters: 0.5
+    property double robotLengthMeters: 0.5
 
-    property string item_field: "2026"
+    property string fieldType: "2026"
 
     property list<string> fieldChoices: ["2026", "2025", "2024", "2023"]
 
@@ -33,18 +34,18 @@ PrimitiveWidget {
 
     property bool mirrorField: false
 
-    property string item_robotShape: "Robot"
+    property string robotShape: "Robot"
 
     property list<string> robotShapeChoices: ["Robot", "Circle", "Rectangle"]
 
-    property color item_robotColor: "#FF0000"
+    property color robotColor: "#FF0000"
 
     function redraw() {
         robot.redraw()
     }
 
-    onItem_robotLengthMetersChanged: redraw()
-    onItem_robotWidthMetersChanged: redraw()
+    onRobotLengthMetersChanged: redraw()
+    onRobotWidthMetersChanged: redraw()
 
     function update(value) {
         robot.xMeters = value[0]
@@ -66,8 +67,8 @@ PrimitiveWidget {
         }
     }
 
-    onItem_mirrorForRedAllianceChanged: {
-        if (item_mirrorForRedAlliance) {
+    onMirrorForRedAllianceChanged: {
+        if (mirrorForRedAlliance) {
             TopicStore.subscribe("/FMSInfo/IsRedAlliance", updateMirror)
         } else {
             unsubscribeMirror()
@@ -78,7 +79,7 @@ PrimitiveWidget {
     Component.onDestruction: unsubscribeMirror()
 
     Image {
-        id: field
+        id: fieldImage
 
         y: titleField.height + 10
         x: 8
@@ -87,54 +88,54 @@ PrimitiveWidget {
         height: parent.height - titleField.height - 16
 
         fillMode: Image.PreserveAspectFit
-        source: "qrc:/" + item_field + "Field" + (item_useVerticalField ? "Vertical" : "") + ".png"
+        source: "qrc:/" + fieldType + "Field" + (useVerticalField ? "Vertical" : "") + ".png"
         onSourceChanged: robot.redraw()
 
         onPaintedGeometryChanged: robot.redraw()
 
-        mirrorVertically: item_useVerticalField ? mirrorField : false
-        mirror: item_useVerticalField ? false : mirrorField
+        mirrorVertically: useVerticalField ? mirrorField : false
+        mirror: useVerticalField ? false : mirrorField
     }
 
     Rectangle {
         id: robot
 
-        color: item_robotShape === "Robot" ? "transparent" : item_robotColor
+        color: robotShape === "Robot" ? "transparent" : robotColor
         border {
-            color: item_robotColor
+            color: robotColor
             width: 3
         }
 
-        radius: item_robotShape === "Circle" ? Math.max(width, height) / 2 : 0
+        radius: robotShape === "Circle" ? Math.max(width, height) / 2 : 0
 
         property double xMeters: 0
         property double yMeters: 0
         property double angleDeg: 0
 
         function redraw() {
-            let meterRatio = (item_useVerticalField ? field.paintedWidth : field.paintedHeight)
+            let meterRatio = (useVerticalField ? fieldImage.paintedWidth : fieldImage.paintedHeight)
                 / fieldWidth
 
-            height = item_robotWidthMeters * meterRatio
-            width = item_robotLengthMeters * meterRatio
+            height = robotWidthMeters * meterRatio
+            width = robotLengthMeters * meterRatio
 
-            let xPixels = (item_useVerticalField ? -yMeters : xMeters) * meterRatio
-            let yPixels = (item_useVerticalField ? xMeters : yMeters) * meterRatio
+            let xPixels = (useVerticalField ? -yMeters : xMeters) * meterRatio
+            let yPixels = (useVerticalField ? xMeters : yMeters) * meterRatio
 
-            let realFieldX = field.x + (field.width - field.paintedWidth) / 2
-            let realFieldY = field.y + (field.height - field.paintedHeight) / 2
+            let realFieldX = fieldImage.x + (fieldImage.width - fieldImage.paintedWidth) / 2
+            let realFieldY = fieldImage.y + (fieldImage.height - fieldImage.paintedHeight) / 2
 
-            let startPoint = item_useVerticalField ? Qt.point(
-                                                         realFieldX + field.paintedWidth - width,
-                                                         realFieldY
-                                                         + field.paintedHeight) : Qt.point(
-                                                         realFieldX,
-                                                         realFieldY + field.paintedHeight)
+            let startPoint = useVerticalField ? Qt.point(
+                                                    realFieldX + fieldImage.paintedWidth - width,
+                                                    realFieldY
+                                                    + fieldImage.paintedHeight) : Qt.point(
+                                                    realFieldX,
+                                                    realFieldY + fieldImage.paintedHeight)
 
-            x = startPoint.x + xPixels - (item_useVerticalField ? -height : width) / 2
-            y = startPoint.y - yPixels - (item_useVerticalField ? width : height) / 2
+            x = startPoint.x + xPixels - (useVerticalField ? -height : width) / 2
+            y = startPoint.y - yPixels - (useVerticalField ? width : height) / 2
 
-            rotation = -angleDeg + (item_useVerticalField ? 270 : 0)
+            rotation = -angleDeg + (useVerticalField ? 270 : 0)
 
             path.redraw(x, y, height, width, angleDeg)
         }
@@ -147,7 +148,7 @@ PrimitiveWidget {
         ShapePath {
             id: path
             strokeWidth: 4
-            strokeColor: item_robotShape === "Robot" ? "light green" : "transparent"
+            strokeColor: robotShape === "Robot" ? "light green" : "transparent"
             fillColor: "transparent"
 
             PathLine {
@@ -176,7 +177,7 @@ PrimitiveWidget {
                 end.x = 2
                 end.y = 0
 
-                shape.rotation = -rot + (item_useVerticalField ? 270 : 0)
+                shape.rotation = -rot + (useVerticalField ? 270 : 0)
             }
         }
     }
@@ -212,7 +213,6 @@ PrimitiveWidget {
                         label: "Title Font Size"
 
                         bindedProperty: "titleFontSize"
-                        bindTarget: widget
                     }
 
                     SectionHeader {
@@ -229,8 +229,7 @@ PrimitiveWidget {
 
                             label: "Robot Shape"
 
-                            bindedProperty: "item_robotShape"
-                            bindTarget: widget
+                            bindedProperty: "robotShape"
 
                             model: robotShapeChoices
                         }
@@ -242,8 +241,7 @@ PrimitiveWidget {
 
                             label: "Robot Color"
 
-                            bindedProperty: "item_robotColor"
-                            bindTarget: widget
+                            bindedProperty: "robotColor"
                         }
                     }
 
@@ -258,8 +256,7 @@ PrimitiveWidget {
 
                             label: "Robot Width (m)"
 
-                            bindedProperty: "item_robotWidthMeters"
-                            bindTarget: widget
+                            bindedProperty: "robotWidthMeters"
 
                             stepSize: 0.1
                         }
@@ -272,8 +269,7 @@ PrimitiveWidget {
 
                             label: "Robot Length (m)"
 
-                            bindedProperty: "item_robotLengthMeters"
-                            bindTarget: widget
+                            bindedProperty: "robotLengthMeters"
 
                             stepSize: 0.1
                         }
@@ -292,8 +288,7 @@ PrimitiveWidget {
 
                             label: "Use Vertical Field"
 
-                            bindedProperty: "item_useVerticalField"
-                            bindTarget: widget
+                            bindedProperty: "useVerticalField"
                         }
 
                         LabeledCheckbox {
@@ -302,8 +297,7 @@ PrimitiveWidget {
 
                             label: "Mirror for Red"
 
-                            bindedProperty: "item_mirrorForRedAlliance"
-                            bindTarget: widget
+                            bindedProperty: "mirrorForRedAlliance"
                         }
                     }
 
@@ -314,8 +308,7 @@ PrimitiveWidget {
                         label: "Field Type"
                         model: fieldChoices
 
-                        bindedProperty: "item_field"
-                        bindTarget: widget
+                        bindedProperty: "fieldType"
                     }
 
                     SectionHeader {
@@ -331,7 +324,6 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
                     }
                 }
             }

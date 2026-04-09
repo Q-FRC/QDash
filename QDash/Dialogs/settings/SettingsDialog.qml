@@ -100,6 +100,8 @@ NativeDialog {
             right: parent.right
         }
 
+        Component.onCompleted: currentIndex = 0
+
         contentHeight: 80
 
         Repeater {

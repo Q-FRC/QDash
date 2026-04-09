@@ -20,12 +20,7 @@ NativeDialog {
     property int rows
     property string name
 
-    function openUp(rows, cols, name) {
-        open()
-        this.columns = cols
-        this.rows = rows
-        this.name = name
-
+    onOpened: {
         columnValue.open()
         rowValue.open()
         nameValue.open()

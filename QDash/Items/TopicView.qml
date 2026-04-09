@@ -97,6 +97,7 @@ Row {
                 DragHandler {
                     id: dh
                     target: null
+                    enabled: model.type !== ""
 
                     property bool ready: false
 
@@ -106,10 +107,6 @@ Row {
                                      }
 
                     function drag() {
-                        if (model.type === "") {
-                            return
-                        }
-
                         let global = mapToItem(topicView, centroid.position)
                         if (!topicView.contains(global)) {
                             if (!ready) {

@@ -169,6 +169,7 @@ Rectangle {
         onLongPressed: openContextMenu()
 
         longPressThreshold: 250
+        enabled: !widget.tvOverlap
     }
 
     onXChanged: checkDrag()

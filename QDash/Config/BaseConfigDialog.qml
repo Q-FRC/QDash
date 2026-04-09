@@ -72,6 +72,6 @@ NativeDialog {
             configLoader.active = false
     }
 
-    onRejected: if (configLoader)
-                    configLoader.active = false
+    onClosed: if (configLoader)
+                  configLoader.active = false
 }
