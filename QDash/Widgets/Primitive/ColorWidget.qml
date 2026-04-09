@@ -26,19 +26,8 @@ PrimitiveWidget {
 
     property bool itemValue: false
 
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Checkbox"
-                onTriggered: {
-                    model.type = "bool"
-                }
-            }
-        }
-    }
+    dataType: "bool"
+    widgetType: "color"
 
     function setColor() {
         shape.itemColor = widget.itemValue ? widget.trueColor : widget.falseColor

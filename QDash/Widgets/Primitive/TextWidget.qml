@@ -17,26 +17,8 @@ PrimitiveWidget {
 
     propertyKeys: ["fontSize"]
 
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Color"
-                onTriggered: {
-                    model.type = "colorText"
-                }
-            }
-
-            MenuItem {
-                text: "Text Display"
-                onTriggered: {
-                    model.type = "textDisplay"
-                }
-            }
-        }
-    }
+    dataType: "string"
+    widgetType: "string"
 
     function update(value) {
         widget.connected = true

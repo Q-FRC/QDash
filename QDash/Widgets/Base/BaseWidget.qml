@@ -42,6 +42,14 @@ Rectangle {
     property Component menuExtension: null
     property var _extensionInstance: null
 
+    // Widget type identification.
+    // dataType  – the NT data type this widget displays, e.g. "double", "int", "bool", "string".
+    //             Widgets that do not correspond to a primitive NT type leave this empty.
+    // widgetType – the internal widget type name used as the DelegateChoice roleValue,
+    //              e.g. "double", "doubleDial", "doubleGauge".
+    property string dataType: ""
+    property string widgetType: ""
+
     property int minWidth: grid.colWidth - 16
     property int minHeight: grid.rowHeight - 16
     property bool dragging: Drag.active || dragForced
@@ -256,7 +264,20 @@ Rectangle {
         asynchronous: true
         sourceComponent: Component {
             Menu {
+                // Capture the widget model so it remains accessible inside Repeater delegates,
+                // where the "model" identifier is shadowed by the Repeater's own model.
+                readonly property var widgetModel: model
+
                 Component.onCompleted: {
+                    // Build the "Switch Widget…" sub-menu from WidgetTypeMap when dataType is set.
+                    if (widget.dataType !== "") {
+                        let options = WidgetTypeMap.widgetsForType(widget.dataType, widget.widgetType)
+                        if (options.length > 0) {
+                            let switchMenu = switchMenuComponent.createObject(this)
+                            insertMenu(0, switchMenu)
+                        }
+                    }
+
                     if (!_extensionInstance && menuExtension)
                         _extensionInstance = menuExtension.createObject(widget)
 
@@ -298,6 +319,30 @@ Rectangle {
                 }
 
                 onClosed: rcMenuLoader.active = false
+            }
+        }
+    }
+
+    // Template for the dynamically-created "Switch Widget…" sub-menu.
+    Component {
+        id: switchMenuComponent
+        Menu {
+            title: "Switch Widget..."
+
+            // Capture the outer widget model before the Repeater shadows "model".
+            readonly property var widgetModel: rcMenuLoader.item ? rcMenuLoader.item.widgetModel : null
+
+            Repeater {
+                model: WidgetTypeMap.widgetsForType(widget.dataType, widget.widgetType)
+                delegate: MenuItem {
+                    required property var modelData
+                    text: modelData.name
+                    onTriggered: {
+                        let t = modelData.type
+                        if (widgetModel)
+                            widgetModel.type = t
+                    }
+                }
             }
         }
     }

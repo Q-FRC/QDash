@@ -18,33 +18,8 @@ PrimitiveWidget {
 
     propertyKeys: ["maxFontSize", "fontColor"]
 
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Spin Box"
-                onTriggered: {
-                    model.type = "int"
-                }
-            }
-
-            MenuItem {
-                text: "Dial"
-                onTriggered: {
-                    model.type = "dial"
-                }
-            }
-
-            MenuItem {
-                text: "Radial Gauge"
-                onTriggered: {
-                    model.type = "gauge"
-                }
-            }
-        }
-    }
+    dataType: "int"
+    widgetType: "intDisplay"
 
     function update(value) {
         widget.connected = true

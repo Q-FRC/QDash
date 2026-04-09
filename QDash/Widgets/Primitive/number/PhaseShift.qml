@@ -21,6 +21,9 @@ PrimitiveWidget {
 
     readOnly: true
 
+    dataType: "double"
+    widgetType: "phaseShift"
+
     readonly property color warningColor: "yellow"
     readonly property color activeColor: "#00c500"
     readonly property color inactiveColor: "red"
@@ -124,55 +127,6 @@ PrimitiveWidget {
         if (TopicStore !== null) {
             TopicStore.subscribe("/FMSInfo/IsRedAlliance", updateRedAlliance)
             TopicStore.subscribe("/FMSInfo/GameSpecificMessage", updateGSM)
-        }
-    }
-
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Spin Box"
-                onTriggered: {
-                    model.type = "double"
-                }
-            }
-
-            MenuItem {
-                text: "Dial"
-                onTriggered: {
-                    model.type = "doubleDial"
-                }
-            }
-
-            MenuItem {
-                text: "Radial Gauge"
-                onTriggered: {
-                    model.type = "doubleGauge"
-                }
-            }
-
-            MenuItem {
-                text: "Progress Bar"
-                onTriggered: {
-                    model.type = "doubleBar"
-                }
-            }
-
-            MenuItem {
-                text: "Number Display"
-                onTriggered: {
-                    model.type = "doubleDisplay"
-                }
-            }
-
-            MenuItem {
-                text: "Match Time"
-                onTriggered: {
-                    model.type = "matchTime"
-                }
-            }
         }
     }
 

@@ -17,19 +17,8 @@ PrimitiveWidget {
 
     propertyKeys: ["checkboxSize"]
 
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Color Display"
-                onTriggered: {
-                    model.type = "color"
-                }
-            }
-        }
-    }
+    dataType: "bool"
+    widgetType: "bool"
 
     function update(value) {
         connected = true

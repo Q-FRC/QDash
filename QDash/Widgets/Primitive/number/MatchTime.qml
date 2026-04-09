@@ -18,47 +18,8 @@ PrimitiveWidget {
 
     propertyKeys: ["fontSize", "warningColor"]
 
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Spin Box"
-                onTriggered: {
-                    model.type = "double"
-                }
-            }
-
-            MenuItem {
-                text: "Dial"
-                onTriggered: {
-                    model.type = "doubleDial"
-                }
-            }
-
-            MenuItem {
-                text: "Radial Gauge"
-                onTriggered: {
-                    model.type = "doubleGauge"
-                }
-            }
-
-            MenuItem {
-                text: "Progress Bar"
-                onTriggered: {
-                    model.type = "doubleBar"
-                }
-            }
-
-            MenuItem {
-                text: "Number Display"
-                onTriggered: {
-                    model.type = "doubleDisplay"
-                }
-            }
-        }
-    }
+    dataType: "double"
+    widgetType: "matchTime"
 
     function update(value) {
         txt.value = Math.ceil(value)

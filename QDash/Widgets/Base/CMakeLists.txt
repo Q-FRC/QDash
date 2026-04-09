@@ -11,6 +11,7 @@ qt6_add_qml_module(QDashQmlWidgetsBase
     BaseWidget.qml
     PrimitiveWidget.qml
     SendableWidget.qml
-    ResizeComponent.qml)
+    ResizeComponent.qml
+    WidgetTypeMap.qml)
 
 QDashModule(QDashQmlWidgetsBase)

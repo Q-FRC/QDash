@@ -25,54 +25,8 @@ PrimitiveWidget {
 
     propertyKeys: ["fontSize", "ticks", "startAngle", "endAngle", "min", "max"]
 
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Dial"
-                onTriggered: {
-                    model.type = "doubleDial"
-                }
-            }
-
-            MenuItem {
-                text: "Spin Box"
-                onTriggered: {
-                    model.type = "double"
-                }
-            }
-
-            MenuItem {
-                text: "Progress Bar"
-                onTriggered: {
-                    model.type = "doubleBar"
-                }
-            }
-
-            MenuItem {
-                text: "Number Display"
-                onTriggered: {
-                    model.type = "doubleDisplay"
-                }
-            }
-
-            MenuItem {
-                text: "Match Time"
-                onTriggered: {
-                    model.type = "matchTime"
-                }
-            }
-
-            MenuItem {
-                text: "Phase Display"
-                onTriggered: {
-                    model.type = "phaseShift"
-                }
-            }
-        }
-    }
+    dataType: "double"
+    widgetType: "doubleGauge"
 
     function fixGaugeSize() {
         gauge.width = width

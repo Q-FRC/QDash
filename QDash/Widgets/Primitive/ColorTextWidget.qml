@@ -23,26 +23,8 @@ PrimitiveWidget {
 
     property string itemValue
 
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Text"
-                onTriggered: {
-                    model.type = "string"
-                }
-            }
-
-            MenuItem {
-                text: "Text Display"
-                onTriggered: {
-                    model.type = "textDisplay"
-                }
-            }
-        }
-    }
+    dataType: "string"
+    widgetType: "colorText"
 
     function setColor() {
         shape.itemColor = itemValue

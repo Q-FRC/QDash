@@ -25,31 +25,8 @@ PrimitiveWidget {
 
     propertyKeys: ["fontSize", "ticks", "startAngle", "endAngle", "min", "max"]
 
-    Menu {
-        id: switchMenu
-        title: "Switch Widget..."
-
-        MenuItem {
-            text: "Dial"
-            onTriggered: {
-                model.type = "dial"
-            }
-        }
-
-        MenuItem {
-            text: "Spin Box"
-            onTriggered: {
-                model.type = "int"
-            }
-        }
-
-        MenuItem {
-            text: "Number Display"
-            onTriggered: {
-                model.type = "intDisplay"
-            }
-        }
-    }
+    dataType: "int"
+    widgetType: "gauge"
 
     function fixGaugeSize() {
         gauge.width = parent.width

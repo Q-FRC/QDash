@@ -19,57 +19,8 @@ PrimitiveWidget {
 
     propertyKeys: ["maxFontSize", "decimals", "fontColor"]
 
-    // TODO(crueter): There should be some kind of interface that maps names to model types
-    // That way we can just use Repeater or whatever, or define all the widget types for a specific
-    // type???
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Spin Box"
-                onTriggered: {
-                    model.type = "double"
-                }
-            }
-
-            MenuItem {
-                text: "Dial"
-                onTriggered: {
-                    model.type = "doubleDial"
-                }
-            }
-
-            MenuItem {
-                text: "Radial Gauge"
-                onTriggered: {
-                    model.type = "doubleGauge"
-                }
-            }
-
-            MenuItem {
-                text: "Progress Bar"
-                onTriggered: {
-                    model.type = "doubleBar"
-                }
-            }
-
-            MenuItem {
-                text: "Match Time"
-                onTriggered: {
-                    model.type = "matchTime"
-                }
-            }
-
-            MenuItem {
-                text: "Phase Display"
-                onTriggered: {
-                    model.type = "phaseShift"
-                }
-            }
-        }
-    }
+    dataType: "double"
+    widgetType: "doubleDisplay"
 
     function update(value) {
         widget.connected = true
