@@ -43,7 +43,26 @@ QDashTest(TestSettingsManager TestSettingsManager.cpp)
 # Qt Quick (QML) tests
 # ---------------------------------------------------------------------------
 if(Qt6QuickTest_FOUND)
+    # Base set of libraries that every Qt Quick test executable needs.
+    set(QDASH_QUICK_BASE_LIBS
+        Qt6::QuickTest
+        Qt6::Quick
+        Qt6::Qml
+        Qt6::Core
+        Qt6::Widgets
+        BuildConfig
+        # QML backing libs + plugin counterparts (needed for static builds)
+        QDashQmlItemsplugin   QDashQmlItems
+        QDashQmlConfigplugin  QDashQmlConfig
+        Carboxyl::Carboxyl
+        ntcore)
+
+    # QDashQuickTest(name [EXTRA_LIBS lib1 lib2 ...])
+    # Builds a QuickTest executable that scans tests/quick/ for tst_*.qml files.
+    # Optional EXTRA_LIBS are appended to the link list.
     function(QDashQuickTest name)
+        cmake_parse_arguments(QQT "" "" "EXTRA_LIBS" ${ARGN})
+
         qt_add_executable(${name} ${name}.cpp)
 
         target_include_directories(${name} PRIVATE "${QDASH_NATIVE_INCLUDE}")
@@ -54,17 +73,8 @@ if(Qt6QuickTest_FOUND)
             "QDASH_QML_PATH=\"${CMAKE_BINARY_DIR}/qml\"")
 
         target_link_libraries(${name} PRIVATE
-            Qt6::QuickTest
-            Qt6::Quick
-            Qt6::Qml
-            Qt6::Core
-            Qt6::Widgets
-            BuildConfig
-            # QML backing libs + their plugin counterparts (required for static builds)
-            QDashQmlItemsplugin   QDashQmlItems
-            QDashQmlConfigplugin  QDashQmlConfig
-            Carboxyl::Carboxyl
-            ntcore)
+            ${QDASH_QUICK_BASE_LIBS}
+            ${QQT_EXTRA_LIBS})
 
         add_test(NAME ${name}
             COMMAND ${name} -input "${CMAKE_CURRENT_SOURCE_DIR}/quick")
@@ -73,7 +83,40 @@ if(Qt6QuickTest_FOUND)
             ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
     endfunction()
 
+    # QDashWidgetTest(name)
+    # Builds a QuickTest executable that scans tests/quick/widgets/ for tst_*.qml
+    # files.  Adds all widget-module libraries on top of the base set.
+    function(QDashWidgetTest name)
+        qt_add_executable(${name} ${name}.cpp)
+
+        target_include_directories(${name} PRIVATE "${QDASH_NATIVE_INCLUDE}")
+
+        target_compile_definitions(${name} PRIVATE
+            "QDASH_QML_PATH=\"${CMAKE_BINARY_DIR}/qml\"")
+
+        target_link_libraries(${name} PRIVATE
+            ${QDASH_QUICK_BASE_LIBS}
+            # Widget QML modules (Base → Primitive hierarchy)
+            QDashQmlWidgetsBaseplugin     QDashQmlWidgetsBase
+            QDashQmlWidgetsPrimitiveplugin QDashQmlWidgetsPrimitive
+            # Support modules used by the widgets
+            QDashQmlFieldsplugin          QDashQmlFields
+            QDashHelpersplugin            QDashHelpers
+            QDashNtplugin                 QDashNt
+            QDashLogging
+            QDashManagers
+            QDashMisc
+            QDashModels)
+
+        add_test(NAME ${name}
+            COMMAND ${name} -input "${CMAKE_CURRENT_SOURCE_DIR}/quick/widgets")
+
+        set_tests_properties(${name} PROPERTIES
+            ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+    endfunction()
+
     QDashQuickTest(tst_QmlComponents)
+    QDashWidgetTest(tst_Widgets)
 else()
     message(STATUS "[QDash tests] Qt6::QuickTest not found – skipping QML tests")
 endif()
