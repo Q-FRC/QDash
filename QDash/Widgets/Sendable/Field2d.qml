@@ -9,6 +9,7 @@ import QDash.Fields
 import QDash.Items
 import QDash.Config
 import QDash.Widgets.Base
+import QDash.Native.Models
 import Carboxyl.Clover
 
 PrimitiveWidget {
@@ -39,19 +40,8 @@ PrimitiveWidget {
 
     property color item_robotColor: "#FF0000"
 
-    function redraw() {
-        robot.redraw()
-    }
-
-    onItem_robotLengthMetersChanged: redraw()
-    onItem_robotWidthMetersChanged: redraw()
-
     function update(value) {
-        robot.xMeters = value[0]
-        robot.yMeters = value[1]
-        robot.angleDeg = value[2]
-
-        redraw()
+        fieldModel.updatePose(value[0], value[1], value[2])
     }
 
     // TODO: This is kinda weird
@@ -77,6 +67,22 @@ PrimitiveWidget {
 
     Component.onDestruction: unsubscribeMirror()
 
+    FieldImageModel {
+        id: fieldModel
+
+        robotWidthMeters: item_robotWidthMeters
+        robotLengthMeters: item_robotLengthMeters
+        fieldWidth: widget.fieldWidth
+        useVerticalField: item_useVerticalField
+
+        paintedFieldWidth: field.paintedWidth
+        paintedFieldHeight: field.paintedHeight
+        fieldImgX: field.x
+        fieldImgY: field.y
+        fieldImgWidth: field.width
+        fieldImgHeight: field.height
+    }
+
     Image {
         id: field
 
@@ -88,9 +94,6 @@ PrimitiveWidget {
 
         fillMode: Image.PreserveAspectFit
         source: "qrc:/" + item_field + "Field" + (item_useVerticalField ? "Vertical" : "") + ".png"
-        onSourceChanged: robot.redraw()
-
-        onPaintedGeometryChanged: robot.redraw()
 
         mirrorVertically: item_useVerticalField ? mirrorField : false
         mirror: item_useVerticalField ? false : mirrorField
@@ -107,42 +110,22 @@ PrimitiveWidget {
 
         radius: item_robotShape === "Circle" ? Math.max(width, height) / 2 : 0
 
-        property double xMeters: 0
-        property double yMeters: 0
-        property double angleDeg: 0
-
-        function redraw() {
-            let meterRatio = (item_useVerticalField ? field.paintedWidth : field.paintedHeight)
-                / fieldWidth
-
-            height = item_robotWidthMeters * meterRatio
-            width = item_robotLengthMeters * meterRatio
-
-            let xPixels = (item_useVerticalField ? -yMeters : xMeters) * meterRatio
-            let yPixels = (item_useVerticalField ? xMeters : yMeters) * meterRatio
-
-            let realFieldX = field.x + (field.width - field.paintedWidth) / 2
-            let realFieldY = field.y + (field.height - field.paintedHeight) / 2
-
-            let startPoint = item_useVerticalField ? Qt.point(
-                                                         realFieldX + field.paintedWidth - width,
-                                                         realFieldY
-                                                         + field.paintedHeight) : Qt.point(
-                                                         realFieldX,
-                                                         realFieldY + field.paintedHeight)
-
-            x = startPoint.x + xPixels - (item_useVerticalField ? -height : width) / 2
-            y = startPoint.y - yPixels - (item_useVerticalField ? width : height) / 2
-
-            rotation = -angleDeg + (item_useVerticalField ? 270 : 0)
-
-            path.redraw(x, y, height, width, angleDeg)
-        }
+        x: fieldModel.robotX
+        y: fieldModel.robotY
+        width: fieldModel.robotW
+        height: fieldModel.robotH
+        rotation: fieldModel.robotRotation
     }
 
     AcceleratedShape {
         id: shape
         z: 2
+
+        x: fieldModel.robotX
+        y: fieldModel.robotY
+        width: fieldModel.robotW
+        height: fieldModel.robotH
+        rotation: fieldModel.robotRotation
 
         ShapePath {
             id: path
@@ -152,31 +135,18 @@ PrimitiveWidget {
 
             PathLine {
                 id: start
+                x: fieldModel.robotW
+                y: fieldModel.robotH / 2
             }
             PathLine {
                 id: middle
+                x: 2
+                y: fieldModel.robotH - 2
             }
             PathLine {
                 id: end
-            }
-
-            function redraw(x, y, h, w, rot) {
-                shape.x = x
-                shape.y = y
-
-                shape.width = w
-                shape.height = h
-
-                start.x = w
-                start.y = h / 2
-
-                middle.x = 2
-                middle.y = h - 2
-
-                end.x = 2
-                end.y = 0
-
-                shape.rotation = -rot + (item_useVerticalField ? 270 : 0)
+                x: 2
+                y: 0
             }
         }
     }

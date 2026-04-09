@@ -10,6 +10,8 @@ qt6_add_qml_module(QDashModels
     SOURCES
 
 
+    FieldImageModel.cpp
+    FieldImageModel.h
     RemoteLayoutModel.cpp
     RemoteLayoutModel.h
     TabListModel.cpp
