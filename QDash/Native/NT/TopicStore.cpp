@@ -38,7 +38,7 @@ void Listener::addListener(const QJSValue& func) {
 
 bool Listener::rmListener(const QJSValue& func) {
     // QJSValue lacks an operator== :(
-    for (size_t i = 0; i < m_funcs.size(); ++i) {
+    for (qsizetype i = 0; i < m_funcs.size(); ++i) {
         const QJSValue& f = m_funcs.at(i);
         if (f.strictlyEquals(func)) {
             m_funcs.removeAt(i);
@@ -85,7 +85,12 @@ void Listener::update(const QVariant& value) {
         delete conn;
     });
 
-    QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 0));
+    bool ok = QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 0));
+    if (!ok) {
+        disconnect(*conn);
+        delete conn;
+        timer->deleteLater();
+    }
 }
 
 void Listener::unpublish() {
@@ -156,7 +161,7 @@ void TopicStore::subscribeOneShot(QString topic, std::function<void(QVariant)> c
     // and also we can't just delete an integer :(
     auto handle = std::make_shared<NT_Listener>(0);
 
-    auto ntCallback = [this, callback, handle, entry](const nt::Event &event) mutable {
+    auto ntCallback = [callback, handle, entry](const nt::Event &event) mutable {
         QVariant value = toVariant(event.GetValueEventData()->value);
         callback(value);
 
@@ -256,7 +261,7 @@ QVariant TopicStore::toVariant(const nt::Value& value) {
     } else if (value.IsIntegerArray()) {
         const std::span<const int64_t> a = value.GetIntegerArray();
         QList<int64_t> newList;
-        for (const size_t i : a)
+        for (const int64_t i : a)
             newList << i;
 
         v = QVariant::fromValue(newList);
@@ -307,10 +312,6 @@ end:
 
 void TopicStore::connect(bool connected) {
     emit this->connected(connected);
-}
-
-bool TopicStore::hasEntry(QString topic) {
-    return !entry(topic);
 }
 
 Listener* TopicStore::entry(QString topic) {

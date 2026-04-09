@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>accents.json</file>
-    </qresource>
-</RCC>

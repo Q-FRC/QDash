@@ -202,6 +202,12 @@ void TabListModel::load(const QString &filename)
         t.rows = obj.value("rows").toInt();
         t.cols = obj.value("cols").toInt();
         t.model = TabWidgetsModel::loadObject(this, obj.value("widgets").toArray());
+
+        if (!t.model) {
+            m_logs->critical("Layout", "Failed to create widget model for tab " + t.title);
+            continue;
+        }
+
         t.model->setCols(t.cols);
         t.model->setRows(t.rows);
 

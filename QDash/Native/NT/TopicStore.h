@@ -91,8 +91,6 @@ private:
 class TopicStore : public QObject {
     Q_OBJECT
 private:
-    bool hasEntry(QString topic);
-
     Q_INVOKABLE Listener* entry(QString topic);
 
     QList<Listener *> Listeners;

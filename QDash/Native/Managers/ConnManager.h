@@ -27,7 +27,7 @@ private:
     QString m_status = "Not Connected";
     QString m_title = BuildConfig.APPLICATION_NAME + " - " + m_status;
     QString m_address = "0.0.0.0";
-    bool m_connected;
+    bool m_connected = false;
 
     Q_PROPERTY(QString title READ title NOTIFY titleChanged FINAL)
     Q_PROPERTY(bool connected READ connected WRITE setConnected NOTIFY connectedChanged FINAL)

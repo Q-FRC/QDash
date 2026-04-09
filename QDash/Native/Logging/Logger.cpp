@@ -27,7 +27,7 @@ void Logger::log(const QString &level, const QString &subsystem, const QString &
 {
     if (!m_logFile.isOpen()) {
         if (!m_logFile.open(QIODevice::Append | QIODevice::WriteOnly)) {
-            qCritical() << "Failed to open log file for reading.";
+            qCritical() << "Failed to open log file for writing.";
             return;
         }
     }

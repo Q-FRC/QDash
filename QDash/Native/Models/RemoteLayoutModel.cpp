@@ -5,10 +5,11 @@
 #include "RemoteLayoutModel.h"
 
 #include <QNetworkReply>
+#include <qnetworkreply.h>
 
 RemoteLayoutModel::RemoteLayoutModel(QObject *parent) : QAbstractListModel(parent) {}
 
-int RemoteLayoutModel::rowCount(const QModelIndex &parent) const
+int RemoteLayoutModel::rowCount(const QModelIndex &_) const
 {
     return m_data.count();
 }
@@ -60,14 +61,20 @@ bool RemoteLayoutModel::load()
     nt::ConnectionInfo info = conns.at(0);
     QString ip = QString::fromStdString(info.remote_ip);
 
-    // assume port 5800
-    QUrl url = "http://" + ip + ":5800/?format=json";
+    // assume port 5800 (TODO)
+    QUrl url = QStringLiteral("http://%1:5800/?format=json").arg(ip);
 
     QNetworkRequest req(url);
     QNetworkReply *reply = m_manager.get(req);
 
     connect(reply, &QNetworkReply::finished, this, [this, reply, ip] {
         QByteArray response = reply->readAll();
+
+        if (reply->error() != QNetworkReply::NoError) {
+            emit failed();
+            reply->deleteLater();
+            return;
+        }
 
         QJsonDocument doc = QJsonDocument::fromJson(response);
 
@@ -87,6 +94,8 @@ bool RemoteLayoutModel::load()
         }
 
         emit listReady();
+
+        reply->deleteLater();
     });
 
     return true;
@@ -130,12 +139,18 @@ void RemoteLayoutModel::download(const QUrl &url, const QString &filename)
 
 QString RemoteLayoutModel::name(int index)
 {
-    return m_data[index].name;
+    if (index < 0 || index >= m_data.count())
+        return {};
+    const auto rl = m_data[index];
+    return rl.name;
 }
 
 QUrl RemoteLayoutModel::url(int index)
 {
-    return m_data[index].url;
+    if (index < 0 || index >= m_data.count())
+        return {};
+    const auto rl = m_data[index];
+    return rl.url;
 }
 
 QHash<int, QByteArray> RemoteLayoutModel::roleNames() const

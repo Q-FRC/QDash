@@ -281,8 +281,8 @@ TabWidgetsModel *TabWidgetsModel::loadObject(QObject *parent, const QJsonArray &
         w.type = type;
         w.col = obj.value("column").toInt(0);
         w.row = obj.value("row").toInt(0);
-        w.rowSpan = obj.value("rowSpan").toInt(0);
-        w.colSpan = obj.value("colSpan").toInt(0);
+        w.rowSpan = obj.value("rowSpan").toInt(1);
+        w.colSpan = obj.value("colSpan").toInt(1);
         w.properties = obj.value("properties").toObject().toVariantMap();
 
         widgets << w;
