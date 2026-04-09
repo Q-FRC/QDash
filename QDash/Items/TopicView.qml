@@ -97,6 +97,7 @@ Row {
                 DragHandler {
                     id: dh
                     target: null
+                    enabled: model.type !== ""
 
                     property bool ready: false
 
@@ -106,10 +107,6 @@ Row {
                                      }
 
                     function drag() {
-                        if (model.type === "") {
-                            return
-                        }
-
                         let global = mapToItem(topicView, centroid.position)
                         if (!topicView.contains(global)) {
                             if (!ready) {
@@ -148,17 +145,13 @@ Row {
 
                 // Rotate indicator when expanded by the user
                 // (requires TreeView to have a selectionModel)
-                property Animation indicatorAnimation: NumberAnimation {
-                    target: indicator
-                    property: "rotation"
-                    from: expanded ? 0 : 90
-                    to: expanded ? 90 : 0
-                    duration: 100
-                    easing.type: Easing.OutQuart
+                TableView.onPooled: {
+                    indicatorBehavior.enabled = false
+                    indicator.rotation = expanded ? 90 : 0
+                    indicatorBehavior.enabled = true
                 }
-                TableView.onPooled: indicatorAnimation.complete()
                 TableView.onReused: if (current)
-                                        indicatorAnimation.start()
+                                        indicator.rotation = expanded ? 90 : 0
                 onExpandedChanged: indicator.rotation = expanded ? 90 : 0
 
                 Rectangle {
@@ -173,6 +166,11 @@ Row {
                     anchors.verticalCenter: parent.verticalCenter
                     visible: isTreeNode && hasChildren
                     text: "▶"
+
+                    Behavior on rotation {
+                        id: indicatorBehavior
+                        NumberAnimation { duration: 100; easing.type: Easing.OutQuart }
+                    }
 
                     TapHandler {
                         onSingleTapped: {

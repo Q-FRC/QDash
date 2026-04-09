@@ -127,38 +127,52 @@ Rectangle {
         onDropped: pos => drop(pos, true)
     }
 
-    TabNameDialog {
-        id: tabNameDialog
-        onAccepted: addTab()
+    Loader {
+        id: tabNameDialogLoader
+        active: false
+        sourceComponent: Component {
+            TabNameDialog {
+                onAccepted: mainScreen.addTab()
+            }
+        }
     }
 
-    TabDialog {
-        id: tabConfigDialog
-        onAccepted: setTabConfig()
+    Loader {
+        id: tabConfigDialogLoader
+        active: false
+        sourceComponent: Component {
+            TabDialog {
+                onAccepted: mainScreen.setTabConfig()
+            }
+        }
     }
 
     /** TAB SETTINGS */
     function addTab() {
-        tlm.add(tabNameDialog.text)
+        tlm.add(tabNameDialogLoader.item.text)
         swipe.setCurrentIndex(swipe.count - 1)
     }
 
     function newTab() {
-        tabNameDialog.open()
+        if (!tabNameDialogLoader.active)
+            tabNameDialogLoader.active = true
+        tabNameDialogLoader.item.open()
     }
 
     function setTabConfig() {
         if (!currentTab())
             return
-        currentTab().setSize(tabConfigDialog.rows, tabConfigDialog.columns)
-        currentTab().setName(tabConfigDialog.name)
+        currentTab().setSize(tabConfigDialogLoader.item.rows, tabConfigDialogLoader.item.columns)
+        currentTab().setName(tabConfigDialogLoader.item.name)
     }
 
     function configTab() {
         if (!currentTab())
             return
-        tabConfigDialog.openUp(currentTab().rows, currentTab().cols,
-                               currentTab().name())
+        if (!tabConfigDialogLoader.active)
+            tabConfigDialogLoader.active = true
+        tabConfigDialogLoader.item.openUp(currentTab().rows, currentTab().cols,
+                                          currentTab().name())
     }
 
     function currentTab() {
@@ -166,16 +180,22 @@ Rectangle {
     }
 
     /** CLOSE TAB */
-    TabCloseDialog {
-        id: tabClose
-
-        onAccepted: tlm.remove(swipe.currentIndex)
+    Loader {
+        id: tabCloseDialogLoader
+        active: false
+        sourceComponent: Component {
+            TabCloseDialog {
+                onAccepted: tlm.remove(swipe.currentIndex)
+            }
+        }
     }
 
     function closeTab() {
         if (!currentTab())
             return
-        tabClose.open()
+        if (!tabCloseDialogLoader.active)
+            tabCloseDialogLoader.active = true
+        tabCloseDialogLoader.item.open()
     }
 
     /** PASTE */

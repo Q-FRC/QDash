@@ -56,8 +56,16 @@ ApplicationWindow {
                                       "../Dialogs/remote/RemoteLayoutsDialog.qml") : null
     }
 
-    AboutDialog {
+    Loader {
         id: about
+        active: false
+        sourceComponent: Component { AboutDialog {} }
+    }
+
+    Loader {
+        id: settingsDialogLoader
+        active: false
+        sourceComponent: Component { SettingsDialog {} }
     }
 
     NotificationPopup {
@@ -103,9 +111,6 @@ ApplicationWindow {
     }
 
     /** SERVER SETTINGS */
-    SettingsDialog {
-        id: settingsDialog
-    }
 
     /** MENU BAR */
     menuBar: MenuBar {
@@ -171,7 +176,11 @@ ApplicationWindow {
             Action {
                 text: qsTr("&Settings")
                 shortcut: "Ctrl+,"
-                onTriggered: settingsDialog.open()
+                onTriggered: {
+                    if (!settingsDialogLoader.active)
+                        settingsDialogLoader.active = true
+                    settingsDialogLoader.item.open()
+                }
             }
 
             Menu {
@@ -221,7 +230,11 @@ ApplicationWindow {
             title: qsTr("&About")
             Action {
                 text: qsTr("&About QDash")
-                onTriggered: about.open()
+                onTriggered: {
+                    if (!about.active)
+                        about.active = true
+                    about.item.open()
+                }
             }
 
             Action {
