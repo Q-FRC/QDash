@@ -156,7 +156,8 @@ Rectangle {
     function newTab() {
         if (!tabNameDialogLoader.active)
             tabNameDialogLoader.active = true
-        tabNameDialogLoader.item.open()
+        if (tabNameDialogLoader.item)
+            tabNameDialogLoader.item.open()
     }
 
     function setTabConfig() {
@@ -171,8 +172,9 @@ Rectangle {
             return
         if (!tabConfigDialogLoader.active)
             tabConfigDialogLoader.active = true
-        tabConfigDialogLoader.item.openUp(currentTab().rows, currentTab().cols,
-                                          currentTab().name())
+        if (tabConfigDialogLoader.item)
+            tabConfigDialogLoader.item.openUp(currentTab().rows, currentTab().cols,
+                                              currentTab().name())
     }
 
     function currentTab() {
@@ -195,7 +197,8 @@ Rectangle {
             return
         if (!tabCloseDialogLoader.active)
             tabCloseDialogLoader.active = true
-        tabCloseDialogLoader.item.open()
+        if (tabCloseDialogLoader.item)
+            tabCloseDialogLoader.item.open()
     }
 
     /** PASTE */

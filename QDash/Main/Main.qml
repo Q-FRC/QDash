@@ -179,7 +179,8 @@ ApplicationWindow {
                 onTriggered: {
                     if (!settingsDialogLoader.active)
                         settingsDialogLoader.active = true
-                    settingsDialogLoader.item.open()
+                    if (settingsDialogLoader.item)
+                        settingsDialogLoader.item.open()
                 }
             }
 
@@ -233,7 +234,8 @@ ApplicationWindow {
                 onTriggered: {
                     if (!about.active)
                         about.active = true
-                    about.item.open()
+                    if (about.item)
+                        about.item.open()
                 }
             }
 
