@@ -144,11 +144,12 @@ PrimitiveWidget {
     AcceleratedShape {
         id: shape
         z: 2
+        visible: robotShape === "Robot"
 
         ShapePath {
             id: path
             strokeWidth: 4
-            strokeColor: robotShape === "Robot" ? "light green" : "transparent"
+            strokeColor: "light green"
             fillColor: "transparent"
 
             PathLine {

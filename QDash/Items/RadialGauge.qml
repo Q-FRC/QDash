@@ -21,12 +21,6 @@ Rectangle {
 
     property int valueFontSize: 20
 
-    // 4x sampling, and antialiasing.
-    layer.enabled: true
-    layer.samples: 4
-    layer.smooth: true
-    antialiasing: true
-
     onValueChanged: {
         if (value <= minValue)
             value = minValue

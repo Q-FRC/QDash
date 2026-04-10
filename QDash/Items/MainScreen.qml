@@ -232,6 +232,7 @@ Rectangle {
     /** CONTENT */
     Label {
         font.pixelSize: 20
+        visible: swipe.count === 0
 
         horizontalAlignment: Text.AlignHCenter
 
