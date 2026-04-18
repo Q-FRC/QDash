@@ -204,7 +204,7 @@ Rectangle {
         onLoaded: item.open()
 
         sourceComponent: Component {
-            TabNameDialog {
+            TabCloseDialog {
                 onAccepted: tlm.remove(swipe.currentIndex)
 
                 onClosed: tabClose.active = false

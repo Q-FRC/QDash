@@ -31,6 +31,11 @@ public:
 #ifdef QDASH_WEBVIEW
         model->add("Web View", "web");
 #endif
+
+#ifdef QDASH_CAMVIEW
+        model->add("URL Camera View", "urlCamera");
+#endif
+
         return model;
     }
 

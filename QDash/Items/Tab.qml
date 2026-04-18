@@ -300,6 +300,16 @@ Rectangle {
             }
 
             DelegateChoice {
+                roleValue: "urlCamera"
+                delegate: Loader {
+                    z: 3
+
+                    sourceComponent: CompileDefinitions.useCameraView ? Qt.createComponent(
+                                                                            "../Widgets/Misc/UrlCameraView.qml") : nullComponent
+                }
+            }
+
+            DelegateChoice {
                 roleValue: "colorText"
                 ColorTextWidget {}
             }

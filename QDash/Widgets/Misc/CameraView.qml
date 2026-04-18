@@ -30,6 +30,9 @@ PrimitiveWidget {
     property int item_resW: 0
     property int item_resH: 0
 
+    // TODO(crueter): Fix
+    propertyKeys: ["item_url", "item_fps", "item_quality", "item_resW", "item_resH"]
+
     // onItem_urlChanged: player.resetSource()
     onItem_fpsChanged: player.resetSource()
     onItem_qualityChanged: player.resetSource()
