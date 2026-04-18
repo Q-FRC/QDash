@@ -245,6 +245,11 @@ ApplicationWindow {
                 text: qsTr("About &Qt")
                 onTriggered: QDashApplication.aboutQt()
             }
+
+            Action {
+                text: qsTr("About &Carboxyl")
+                onTriggered: CarboxylApplication.aboutCarboxyl()
+            }
         }
     }
 

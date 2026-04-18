@@ -63,7 +63,7 @@ QDashApplication::QDashApplication(int& argc, char* argv[]) : QApplication(argc,
 
     // carboxyl setup
     CarboxylApplication* carboxylApp =
-        new CarboxylApplication(*this, m_engine, settings->style(), QStringLiteral("Graphide"));
+        new CarboxylApplication(*this, m_engine, settings->style(), QStringLiteral("Graphide"), true);
     carboxylApp->setParent(this);
 
     /// CONTEXT
