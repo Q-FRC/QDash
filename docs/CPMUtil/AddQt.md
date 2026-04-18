@@ -25,4 +25,4 @@ The following versions have available builds:
 
 - 6.9.3
 
-See [here](https://github.com/crueter-ci/Qt) for an updated list at any time.
+See [`crueter-ci/Qt`](https://github.com/crueter-ci/Qt) for an updated list at any time.
