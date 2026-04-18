@@ -14,8 +14,8 @@ NativeDialog {
 
     title: "New Tab"
 
-    height: tabName.implicitHeight + footer.height + 10
-    width: 200
+    height: tabName.implicitHeight + footer.height + 40
+    width: 300
 
     property string text
 
@@ -41,10 +41,16 @@ NativeDialog {
 
     LabeledTextField {
         id: tabName
-        font.pixelSize: Math.round(20)
-        implicitHeight: 40
+        font.pixelSize: 24
+        implicitHeight: 48
 
-        anchors.centerIn: parent
+        anchors {
+            left: parent.left
+            right: parent.right
+
+            verticalCenter: parent.verticalCenter
+            margins: 10
+        }
 
         onAccepted: tabNameDialog.accept()
 

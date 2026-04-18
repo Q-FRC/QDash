@@ -6,19 +6,12 @@ import QtQuick.Controls
 import Carboxyl.Clover
 import Carboxyl.Contour
 
-NativeDialog {
+MessageDialog {
     title: "Close Tab?"
 
-    width: 175
-    height: 100
-
-    Label {
-        font.pixelSize: 15
-        text: "Are you sure you want to close this tab?"
-
-        wrapMode: Text.WordWrap
-        anchors.fill: parent
-    }
+    text: "Are you sure you want to close this tab?"
+    icon: CarboxylEnums.Question
+    textFont.pixelSize: 16
 
     standardButtons: Dialog.Yes | Dialog.No
 }

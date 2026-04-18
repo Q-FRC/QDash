@@ -18,5 +18,5 @@ MessageDialog {
           + "Driver Station resources.</p>" + buildConfig.buildInfo(
               ) + "Copyleft 2023-2026 crueter"
 
-    standardButtons: Dialog.Close
+    standardButtons: Dialog.Ok
 }
