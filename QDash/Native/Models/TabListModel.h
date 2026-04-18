@@ -26,6 +26,7 @@ class TabListModel : public QAbstractListModel {
     Q_OBJECT
 
     Q_PROPERTY(int selectedTab READ selectedTab NOTIFY selectedTabChanged FINAL)
+    Q_PROPERTY(bool modified READ modified WRITE setModified NOTIFY modifiedChanged FINAL)
 public:
     enum TLMRoleTypes { TITLE = Qt::UserRole, ROWS, COLS, WIDGETS };
 
@@ -55,11 +56,15 @@ public:
 
     Q_INVOKABLE void clear();
 
+    bool modified();
+    void setModified(const bool modified);
+
     int selectedTab() const;
     void selectTab(const QString &tab);
 
 signals:
     void selectedTabChanged();
+    void modifiedChanged();
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
@@ -70,5 +75,6 @@ private:
     SettingsManager *m_settings;
     Logger *m_logs;
     int m_selectedTab = 0;
+    bool m_modified = false;
 };
 #endif // TABLISTMODEL_H

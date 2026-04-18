@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "ConnManager.h"
 
 ConnManager::ConnManager(QObject *parent) : QObject{parent} {}
@@ -18,9 +21,13 @@ void ConnManager::setConnected(bool newConnected)
         return;
     m_connected = newConnected;
 
-    m_status = QString(newConnected ? "" : "Not ") + "Connected" +
-               (newConnected ? " (" + m_address + ")" : "");
-    m_title = BuildConfig.APPLICATION_NAME + " - " + m_status;
+    const auto connectedStr = QStringLiteral("Connected (%1)").arg(m_address);
+    const auto notConnectedStr = QStringLiteral("Not Connected");
+
+    m_status = m_connected ? connectedStr : notConnectedStr;
+
+    m_title = QStringLiteral("%1 - %2 %3")
+                  .arg(BuildConfig.APPLICATION_NAME, m_status, m_modified ? "*" : "");
 
     emit titleChanged();
     emit statusChanged();
@@ -38,6 +45,23 @@ void ConnManager::setAddress(const QString &newAddress)
         return;
     m_address = newAddress;
     emit addressChanged();
+}
+
+bool ConnManager::modified() const {
+    return m_modified;
+}
+
+void ConnManager::setModified(bool newModified) {
+    if (m_modified == newModified)
+        return;
+    m_modified = newModified;
+    emit modifiedChanged(m_modified);
+
+    m_title = QStringLiteral("%1 - %2 %3")
+                  .arg(BuildConfig.APPLICATION_NAME, m_status, m_modified ? "*" : "");
+
+    emit titleChanged();
+
 }
 
 QString ConnManager::status() const

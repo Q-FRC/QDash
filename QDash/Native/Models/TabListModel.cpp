@@ -2,16 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "TabListModel.h"
+#include "TabWidgetsModel.h"
 
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QSaveFile>
 
-TabListModel::TabListModel(Logger *logs, SettingsManager *settings, QObject *parent)
-    : QAbstractListModel(parent), m_settings(settings), m_logs(logs)
-{
-}
+TabListModel::TabListModel(Logger* logs, SettingsManager* settings, QObject* parent)
+    : QAbstractListModel(parent), m_settings(settings), m_logs(logs) {}
 
 int TabListModel::rowCount(const QModelIndex &_) const
 {
@@ -79,6 +78,8 @@ void TabListModel::add(Tab t) {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_data << t;
     endInsertRows();
+
+    connect(t.model, &TabWidgetsModel::modifiedChanged, this, &TabListModel::modifiedChanged);
 }
 
 void TabListModel::add(QString title)
@@ -179,8 +180,12 @@ void TabListModel::load(const QString &filename)
 
     QFile file(name);
 
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qCritical() << "Could not open file" << name.toStdString().c_str() << file.errorString();
+        m_logs->critical("Layout", QStringLiteral("Failed to open file %1: %2").arg(name, file.errorString()));
+
         return;
+    }
 
     m_settings->addRecentFile(file);
 
@@ -190,13 +195,12 @@ void TabListModel::load(const QString &filename)
     file.close();
 
     QJsonObject ob = doc.object();
-
     QJsonArray arr = ob.value("tabs").toArray();
 
     QList<Tab> tabs;
     tabs.reserve(arr.size());
 
-    for (const QJsonValueRef ref : arr) {
+    for (const QJsonValueConstRef &ref : std::as_const(arr)) {
         QJsonObject obj = ref.toObject();
 
         Tab t;
@@ -214,6 +218,8 @@ void TabListModel::load(const QString &filename)
         t.model->setCols(t.cols);
         t.model->setRows(t.rows);
 
+        connect(t.model, &TabWidgetsModel::modifiedChanged, this, &TabListModel::modifiedChanged);
+
         tabs << t;
     }
 
@@ -221,6 +227,8 @@ void TabListModel::load(const QString &filename)
     beginResetModel();
     m_data = tabs;
     endResetModel();
+
+    setModified(false);
 }
 
 void TabListModel::clear()
@@ -228,6 +236,23 @@ void TabListModel::clear()
     beginResetModel();
     m_data.clear();
     endResetModel();
+}
+
+bool TabListModel::modified() {
+    if (m_modified) return true;
+
+    bool modified = m_modified;
+    for (const Tab &tab : std::as_const(m_data)) {
+        modified = modified || tab.model->modified();
+    }
+    return modified;
+}
+
+void TabListModel::setModified(const bool modified) {
+    if (m_modified == modified)
+        return;
+    m_modified = modified;
+    emit modifiedChanged();
 }
 
 int TabListModel::selectedTab() const

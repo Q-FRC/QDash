@@ -73,7 +73,7 @@ QDashApplication::QDashApplication(int& argc, char* argv[]) : QApplication(argc,
     ctx->setContextProperty("topicsSorted", topicsSorted);
     ctx->setContextProperty("QDashSettings", settings);
     ctx->setContextProperty("TopicStore", store);
-    ctx->setContextProperty("tlm", tlm);
+    ctx->setContextProperty("TabListModel", tlm);
     ctx->setContextProperty("conn", conn);
     ctx->setContextProperty("PlatformHelper", platform);
     ctx->setContextProperty("NotificationHelper", notification);

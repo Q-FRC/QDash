@@ -55,7 +55,7 @@ NativeDialog {
 
         onFileOpened: filename => {
                           window.filename = filename
-                          tlm.load(filename)
+                          TabListModel.load(filename)
                           remote.close()
                       }
 

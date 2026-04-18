@@ -79,6 +79,8 @@ bool TabWidgetsModel::setData(const QModelIndex &index, const QVariant &value, i
             break;
         }
 
+        setModified(true);
+
         emit dataChanged(index, index, {role});
         return true;
     }
@@ -109,12 +111,16 @@ void TabWidgetsModel::reset(const QList<Widget>& w) {
     beginResetModel();
     m_data = w;
     endResetModel();
+
+    setModified(false);
 }
 
 void TabWidgetsModel::add(const Widget &w) {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_data << w;
     endInsertRows();
+
+    setModified(true);
 }
 
 void TabWidgetsModel::add(QString title, QString topic, QString type)
@@ -157,16 +163,14 @@ bool TabWidgetsModel::remove(int idx)
     m_data.remove(idx);
     endRemoveRows();
 
+    setModified(true);
+
     return true;
 }
 
 bool TabWidgetsModel::removeLatest()
 {
-    beginRemoveRows(QModelIndex(), rowCount() - 1, rowCount() - 1);
-    m_data.removeLast();
-    endRemoveRows();
-
-    return true;
+    return remove(rowCount() - 1);
 }
 
 int TabWidgetsModel::rows() const
@@ -235,11 +239,22 @@ QHash<int, QByteArray> TabWidgetsModel::roleNames() const
     return rez;
 }
 
-QJsonArray TabWidgetsModel::saveObject() const
+bool TabWidgetsModel::modified() const {
+    return m_modified;
+}
+
+void TabWidgetsModel::setModified(bool newModified) {
+    if (m_modified == newModified)
+        return;
+    m_modified = newModified;
+    emit modifiedChanged(m_modified);
+}
+
+QJsonArray TabWidgetsModel::saveObject()
 {
     QJsonArray arr;
 
-    for (const Widget &w : m_data) {
+    for (const Widget &w : std::as_const(m_data)) {
         QJsonObject obj;
         obj.insert("title", w.title);
         obj.insert("topic", w.topic);
@@ -253,6 +268,8 @@ QJsonArray TabWidgetsModel::saveObject() const
 
         arr.append(obj);
     }
+
+    setModified(false);
 
     return arr;
 }

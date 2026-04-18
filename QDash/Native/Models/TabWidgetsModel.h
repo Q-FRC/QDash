@@ -78,8 +78,11 @@ public:
     Q_INVOKABLE bool cellOccupied(int row, int col, int rowSpan = 1, int colSpan = 1,
                                   QRectF ignore = QRectF(-1, -1, -1, -1));
 
-    QJsonArray saveObject() const;
+    QJsonArray saveObject();
     static TabWidgetsModel *loadObject(QObject *parent, const QJsonArray &arr);
+
+    bool modified() const;
+    void setModified(bool newModified);
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
@@ -91,14 +94,19 @@ signals:
 
     void beforeSave();
 
+    void modifiedChanged(bool modified);
+
 private:
     QList<Widget> m_data;
 
     int m_rows;
     int m_cols;
 
+    bool m_modified = false;
+
     Q_PROPERTY(int rows READ rows WRITE setRows NOTIFY rowsChanged FINAL)
     Q_PROPERTY(int cols READ cols WRITE setCols NOTIFY colsChanged FINAL)
+    Q_PROPERTY(bool modified READ modified WRITE setModified NOTIFY modifiedChanged FINAL)
 };
 
 Q_DECLARE_METATYPE(TabWidgetsModel)

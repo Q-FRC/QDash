@@ -36,11 +36,11 @@ Rectangle {
     }
 
     function setTab() {
-        swipe.setCurrentIndex(tlm.selectedTab)
+        swipe.setCurrentIndex(TabListModel.selectedTab)
     }
 
     Component.onCompleted: {
-        tlm.onSelectedTabChanged.connect(setTab)
+        TabListModel.onSelectedTabChanged.connect(setTab)
     }
 
     // This function is called for copying and dragging from the TopicView
@@ -89,6 +89,7 @@ Rectangle {
                 w.cancelDrag()
 
                 w.fixSize()
+                TabListModel.modified = true
             }
         }
     }
@@ -136,8 +137,9 @@ Rectangle {
         sourceComponent: Component {
             TabNameDialog {
                 onAccepted: {
-                    tlm.add(tabNameDialog.item.text)
+                    TabListModel.add(tabNameDialog.item.text)
                     swipe.setCurrentIndex(swipe.count - 1)
+                    TabListModel.modified = true
                 }
 
                 onClosed: tabNameDialog.active = false
@@ -150,11 +152,11 @@ Rectangle {
         active: false
         asynchronous: true
         onLoaded: {
-            item.open()
-
             item.columns = columns
             item.rows = rows
             item.name = name
+
+            item.open()
         }
 
         property int columns
@@ -169,6 +171,8 @@ Rectangle {
                         return
                     tab.setSize(rows, columns)
                     tab.setName(name)
+
+                    TabListModel.modified = true
                 }
 
                 onClosed: tabConfigDialog.active = false
@@ -205,9 +209,12 @@ Rectangle {
 
         sourceComponent: Component {
             TabCloseDialog {
-                onAccepted: tlm.remove(swipe.currentIndex)
+                onAccepted: TabListModel.remove(swipe.currentIndex)
 
-                onClosed: tabClose.active = false
+                onClosed: {
+                    tabClose.active = false
+                    TabListModel.modified = true
+                }
             }
         }
     }
@@ -259,7 +266,7 @@ Rectangle {
         currentIndex: tabs.currentIndex
         Repeater {
             id: swRep
-            model: tlm
+            model: TabListModel
 
             Tab {
                 id: tab
@@ -298,7 +305,7 @@ Rectangle {
 
         Repeater {
             id: tabRep
-            model: tlm
+            model: TabListModel
 
             CarboxylTabButton {
                 text: model.title

@@ -4,8 +4,10 @@ import QtCore
 import QtQuick
 import QtQuick.Controls
 
-import QDash.Dialogs
 import Carboxyl.Clover
+import Carboxyl.Contour
+
+import QDash.Dialogs
 import QDash.Items
 
 import QDash.Native.Logging
@@ -47,13 +49,23 @@ ApplicationWindow {
         }
     }
 
+    Connections {
+        target: TabListModel
+
+        function onModifiedChanged() {
+            conn.modified = TabListModel.modified
+        }
+    }
+
     /* DIALOGS */
     Loader {
         id: remoteLayouts
 
-        active: CompileDefinitions.useNetwork
+        active: false
         sourceComponent: active ? Qt.createComponent(
                                       "../Dialogs/remote/RemoteLayoutsDialog.qml") : null
+
+        onLoaded: item.open()
     }
 
     Loader {
@@ -82,6 +94,27 @@ ApplicationWindow {
         }
     }
 
+    // Warn the user if they close before saving.
+    onClosing: close => {
+                   if (TabListModel.modified) {
+                       let button = CarboxylQuickInterface.showMessageBox(
+                           CarboxylEnums.Warning, "Save Changes?",
+                           "Your changes will be lost if you don't save.",
+                           Dialog.Yes | Dialog.No | Dialog.Cancel)
+
+                       switch (button) {
+                           case Dialog.Yes:
+                           save()
+                           break
+                           case Dialog.No:
+                           break
+                           case Dialog.Cancel:
+                           close.accepted = false
+                           break
+                       }
+                   }
+               }
+
     NotificationPopup {
         id: notif
 
@@ -94,7 +127,7 @@ ApplicationWindow {
         if (filename === "")
             return saveAs()
 
-        tlm.save(filename)
+        TabListModel.save(filename)
     }
 
     function saveAs() {
@@ -106,7 +139,7 @@ ApplicationWindow {
         if (newName !== "") {
             filename = newName
             logs.info("IO", "Saving to " + filename)
-            tlm.save(filename)
+            TabListModel.save(filename)
         }
     }
 
@@ -120,7 +153,7 @@ ApplicationWindow {
         if (newName !== "") {
             filename = newName
             logs.info("IO", "Loading file " + filename)
-            tlm.load(filename)
+            TabListModel.load(filename)
         }
     }
 
@@ -159,9 +192,9 @@ ApplicationWindow {
                         onTriggered: {
                             if (modelData === "" || modelData === null)
                                 return
-                            tlm.clear()
+                            TabListModel.clear()
                             filename = modelData
-                            tlm.load(modelData)
+                            TabListModel.load(modelData)
                         }
                     }
                 }
@@ -169,7 +202,7 @@ ApplicationWindow {
             Action {
                 enabled: CompileDefinitions.useNetwork
                 text: qsTr("Remote &Layouts...")
-                onTriggered: remoteLayouts.item.open()
+                onTriggered: remoteLayouts.active = true
 
                 shortcut: "Ctrl+L"
             }
@@ -268,7 +301,7 @@ ApplicationWindow {
             filename = QDashSettings.recentFiles[0]
             if (filename === "" || filename === null)
                 return
-            tlm.load(filename)
+            TabListModel.load(filename)
         }
     }
 

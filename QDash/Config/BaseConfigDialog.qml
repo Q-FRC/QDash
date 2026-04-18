@@ -70,6 +70,8 @@ NativeDialog {
 
         if (configLoader)
             configLoader.active = false
+
+        twm.modified = true
     }
 
     onClosed: if (configLoader)
