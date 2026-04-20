@@ -13,11 +13,11 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int fontSize: 100
-    property int warningThreshold: 3
+    property int maxFontSize: QDashSettings.defaultDisplayFontSize
+    property int warningThreshold: 5
     property int flashInterval: 500
 
-    propertyKeys: ["fontSize", "warningThreshold", "flashInterval"]
+    propertyKeys: ["maxFontSize", "warningThreshold", "flashInterval"]
 
     readOnly: true
 
@@ -182,12 +182,12 @@ PrimitiveWidget {
     Text {
         id: txt
 
-        font.pixelSize: fontSize
+        font.pixelSize: maxFontSize
 
         property color currentColor: hubActive ? activeColor : inactiveColor
         text: remainingTime
 
-        // 3 seconds before each shift, alternate yellow and current color
+        // before each shift, alternate yellow and current color
         Timer {
             id: warningTimer
             interval: flashInterval
@@ -219,7 +219,7 @@ PrimitiveWidget {
             left: parent.left
             bottom: parent.bottom
 
-            margins: 10
+            margins: 6
         }
     }
 
@@ -257,7 +257,7 @@ PrimitiveWidget {
                             Layout.fillWidth: true
 
                             label: qsTr("Maximum Font Size")
-                            bindedProperty: "fontSize"
+                            bindedProperty: "maxFontSize"
                         }
                     }
 

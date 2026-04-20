@@ -140,6 +140,8 @@ void TabListModel::save(const QString &filename)
         return;
     }
 
+    setModified(false);
+
     m_settings->addRecentFile(file.fileName());
 
 }

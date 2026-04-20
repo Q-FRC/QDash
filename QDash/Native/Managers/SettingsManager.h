@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QQmlEngine>
 
+// clang-format off
 #define property(type, name, Name) Q_PROPERTY(type name READ name WRITE set##Name NOTIFY name##Changed FINAL) \
     Q_SIGNALS: void name##Changed(); \
     public Q_SLOTS: void set##Name(const type new##Name) {\
@@ -20,38 +21,43 @@
     public: type name() const { \
         return Settings::Name; \
     }
+// clang-format on
 
 class SettingsManager : public QObject {
     Q_OBJECT
 
-    Logger *m_logs;
+    Logger* m_logs;
 
-    property(bool,        loadRecent,  LoadRecent);
+    property(bool, loadRecent, LoadRecent);
     property(QStringList, recentFiles, RecentFiles);
 
-    property(int,     theme,  Theme);
-    property(int,     accent, Accent);
-    property(QString, style,  Style);
+    property(int, theme, Theme);
+    property(int, accent, Accent);
+    property(QString, style, Style);
 
-    property(int, windowWidth,  WindowWidth);
+    property(int, windowWidth, WindowWidth);
     property(int, windowHeight, WindowHeight);
-    property(int, windowX,      WindowX);
-    property(int, windowY,      WindowY);
+    property(int, windowX, WindowX);
+    property(int, windowY, WindowY);
 
-    property(int,     teamNumber, TeamNumber);
-    property(int,     connMode,   ConnMode);
-    property(QString, ip,         IP);
+    property(int, defaultFontSize, DefaultFontSize);
+    property(int, defaultDisplayFontSize, DefaultDisplayFontSize);
+    property(int, defaultTitleFontSize, DefaultTitleFontSize);
 
-    property(double, scale,          Scale);
-    property(bool,   resizeToDS,     ResizeToDS);
-    property(int,    logLevel,       LogLevel);
-    property(bool,   disableWidgets, DisableWidgets);
+    property(int, teamNumber, TeamNumber);
+    property(int, connMode, ConnMode);
+    property(QString, ip, IP);
+
+    property(double, scale, Scale);
+    property(bool, resizeToDS, ResizeToDS);
+    property(int, logLevel, LogLevel);
+    property(bool, disableWidgets, DisableWidgets);
 
 public:
-    explicit SettingsManager(Logger *logs, QObject *parent = nullptr);
+    explicit SettingsManager(Logger* logs, QObject* parent = nullptr);
 
-    void addRecentFile(QFile &file);
-    void addRecentFile(const QString &file);
+    void addRecentFile(QFile& file);
+    void addRecentFile(const QString& file);
 
     Q_INVOKABLE void reconnect();
 };

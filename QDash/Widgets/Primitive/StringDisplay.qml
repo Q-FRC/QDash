@@ -13,11 +13,11 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int fontSize: 100
+    property int maxFontSize: QDashSettings.defaultDisplayFontSize
     property color fontColor: Clover.theme.currentAccent
     property bool wrap: true
 
-    propertyKeys: ["fontSize", "fontColor", "wrap"]
+    propertyKeys: ["maxFontSize", "fontColor", "wrap"]
 
     menuExtension: Component {
         Menu {
@@ -48,7 +48,7 @@ PrimitiveWidget {
     Text {
         id: txt
 
-        font.pixelSize: fontSize
+        font.pixelSize: maxFontSize
 
         property string value
 
@@ -103,7 +103,7 @@ PrimitiveWidget {
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            bindTarget: widget
+
                         }
 
                         LabeledSpinBox {
@@ -113,8 +113,8 @@ PrimitiveWidget {
 
                             label: "Maximum Font Size"
 
-                            bindedProperty: "fontSize"
-                            bindTarget: widget
+                            bindedProperty: "maxFontSize"
+
                         }
                     }
 
@@ -131,7 +131,7 @@ PrimitiveWidget {
                             label: "Text Color"
 
                             bindedProperty: "color"
-                            bindTarget: widget
+
                         }
 
                         LabeledCheckbox {
@@ -142,7 +142,7 @@ PrimitiveWidget {
                             label: "Wrap Text?"
 
                             bindedProperty: "wrap"
-                            bindTarget: widget
+
                         }
                     }
 
@@ -159,7 +159,7 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
+
                     }
                 }
             }

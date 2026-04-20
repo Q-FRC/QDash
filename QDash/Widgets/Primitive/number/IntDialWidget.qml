@@ -13,7 +13,7 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int fontSize: 20
+    property int fontSize: QDashSettings.defaultFontSize
 
     property double startAngle: 180
     property double endAngle: 540
@@ -160,7 +160,7 @@ PrimitiveWidget {
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            bindTarget: widget
+                            
                         }
 
                         LabeledSpinBox {
@@ -171,7 +171,7 @@ PrimitiveWidget {
                             label: "Font Size"
 
                             bindedProperty: "fontSize"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -189,7 +189,7 @@ PrimitiveWidget {
                             label: "Lower Bound"
 
                             bindedProperty: "lowerBound"
-                            bindTarget: widget
+                            
                         }
 
                         LabeledSpinBox {
@@ -200,7 +200,7 @@ PrimitiveWidget {
                             label: "Upper Bound"
 
                             bindedProperty: "upperBound"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -212,7 +212,7 @@ PrimitiveWidget {
                         label: "Step Size"
 
                         bindedProperty: "stepSize"
-                        bindTarget: widget
+                        
 
                         from: 0
                     }
@@ -231,7 +231,7 @@ PrimitiveWidget {
                             label: "Start Angle"
 
                             bindedProperty: "startAngle"
-                            bindTarget: widget
+                            
                         }
 
                         LabeledDoubleSpinBox {
@@ -242,7 +242,7 @@ PrimitiveWidget {
                             label: "End Angle"
 
                             bindedProperty: "endAngle"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -259,7 +259,7 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
+                        
                     }
                 }
             }

@@ -97,7 +97,7 @@ PrimitiveWidget {
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            bindTarget: widget
+                            
                         }
 
                         LabeledSpinBox {
@@ -108,7 +108,7 @@ PrimitiveWidget {
                             label: "Checkbox Size"
 
                             bindedProperty: "checkboxSize"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -125,7 +125,7 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
+                        
                     }
                 }
             }

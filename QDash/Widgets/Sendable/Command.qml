@@ -102,7 +102,7 @@ SendableWidget {
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            bindTarget: widget
+                            
                         }
 
                         LabeledSpinBox {
@@ -113,7 +113,7 @@ SendableWidget {
                             label: "Font Size"
 
                             bindedProperty: "item_fontSize"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -130,7 +130,7 @@ SendableWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
+                        
                     }
                 }
             }

@@ -43,6 +43,10 @@ extern const Setting WindowHeight;
 extern const Setting WindowX;
 extern const Setting WindowY;
 
+extern const Setting DefaultFontSize;
+extern const Setting DefaultDisplayFontSize;
+extern const Setting DefaultTitleFontSize;
+
 extern const Setting Scale;
 extern const Setting ResizeToDS;
 extern const Setting LogLevel;

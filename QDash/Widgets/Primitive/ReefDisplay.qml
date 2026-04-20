@@ -149,7 +149,7 @@ PrimitiveWidget {
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -166,7 +166,7 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
+                        
                     }
                 }
             }

@@ -13,10 +13,10 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int fontSize: 100
+    property int maxFontSize: QDashSettings.defaultDisplayFontSize
     property color warningColor: "yellow"
 
-    propertyKeys: ["fontSize", "warningColor"]
+    propertyKeys: ["maxFontSize", "warningColor"]
 
     menuExtension: Component {
         Menu {
@@ -67,7 +67,7 @@ PrimitiveWidget {
     Text {
         id: txt
 
-        font.pixelSize: fontSize
+        font.pixelSize: maxFontSize
 
         property double value
 
@@ -113,27 +113,20 @@ PrimitiveWidget {
                     }
 
                     RowLayout {
-
                         LabeledSpinBox {
                             Layout.fillWidth: true
-
-                            id: titleFontField
 
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            bindTarget: widget
                         }
 
                         LabeledSpinBox {
                             Layout.fillWidth: true
 
-                            id: fontField
-
                             label: "Maximum Font Size"
 
-                            bindedProperty: "fontSize"
-                            bindTarget: widget
+                            bindedProperty: "maxFontSize"
                         }
                     }
 
@@ -144,12 +137,9 @@ PrimitiveWidget {
                     ColorField {
                         Layout.fillWidth: true
 
-                        id: warnField
-
                         label: "Warning Color"
 
                         bindedProperty: "warningColor"
-                        bindTarget: widget
                     }
 
                     SectionHeader {
@@ -160,12 +150,9 @@ PrimitiveWidget {
                         Layout.fillWidth: true
                         Layout.alignment: Qt.AlignTop
 
-                        id: topicField
-
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
                     }
                 }
             }

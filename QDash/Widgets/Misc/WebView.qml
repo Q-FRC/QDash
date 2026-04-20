@@ -78,7 +78,7 @@ BaseWidget {
                         label: "Title Font Size"
 
                         bindedProperty: "titleFontSize"
-                        bindTarget: widget
+                        
                     }
 
                     SectionHeader {
@@ -94,7 +94,7 @@ BaseWidget {
                         label: "URL"
 
                         bindedProperty: "item_url"
-                        bindTarget: widget
+                        
                     }
                 }
             }

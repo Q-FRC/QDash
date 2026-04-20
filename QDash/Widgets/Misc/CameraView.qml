@@ -183,7 +183,7 @@ PrimitiveWidget {
                         label: "Title Font Size"
 
                         bindedProperty: "titleFontSize"
-                        bindTarget: widget
+                        
                     }
 
                     SectionHeader {
@@ -198,7 +198,7 @@ PrimitiveWidget {
                         label: "FPS"
 
                         bindedProperty: "item_fps"
-                        bindTarget: widget
+                        
                     }
 
                     RowLayout {
@@ -217,7 +217,7 @@ PrimitiveWidget {
                             label: "Width"
 
                             bindedProperty: "item_resW"
-                            bindTarget: widget
+                            
                         }
 
                         Label {
@@ -232,7 +232,7 @@ PrimitiveWidget {
                             label: "Height"
 
                             bindedProperty: "item_resH"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -276,7 +276,7 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
+                        
                     }
                 }
             }

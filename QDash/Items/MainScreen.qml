@@ -244,8 +244,8 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
 
         text: "Welcome to QDash!\n" + "To get started, connect to your robot WiFi\n"
-              + "and go to QDashSettings (Ctrl+Comma).\n"
-              + "Add a tab with Ctrl+T, and add a widget\n" + "through the arrow menu on the left."
+              + "and go to Settings (Ctrl+Comma).\nAdd a tab with Ctrl+T, and add a widget\n"
+              + "through the arrow menu on the left."
 
         anchors.centerIn: parent
         z: 0

@@ -92,7 +92,7 @@ PrimitiveWidget {
                         label: "Title Font Size"
 
                         bindedProperty: "titleFontSize"
-                        bindTarget: widget
+                        
                     }
 
                     SectionHeader {
@@ -108,7 +108,7 @@ PrimitiveWidget {
                         label: "Shape"
 
                         bindedProperty: "shape"
-                        bindTarget: widget
+                        
                     }
 
                     RowLayout {
@@ -122,7 +122,7 @@ PrimitiveWidget {
                             label: "True Color"
 
                             bindedProperty: "trueColor"
-                            bindTarget: widget
+                            
                         }
 
                         ColorField {
@@ -133,7 +133,7 @@ PrimitiveWidget {
                             label: "False Color"
 
                             bindedProperty: "falseColor"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -150,7 +150,7 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
+                        
                     }
                 }
             }

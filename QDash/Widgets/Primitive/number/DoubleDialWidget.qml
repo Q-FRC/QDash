@@ -15,7 +15,7 @@ PrimitiveWidget {
 
     property double stepSize: 0.1
 
-    property int fontSize: 20
+    property int fontSize: QDashSettings.defaultFontSize
 
     property double startAngle: -180
     property double endAngle: 180

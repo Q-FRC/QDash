@@ -60,6 +60,10 @@ const Setting Settings::WindowHeight{"windowHeight", 640};
 const Setting Settings::WindowX{"windowX", -1};
 const Setting Settings::WindowY{"windowY", -1};
 
+const Setting Settings::DefaultFontSize{"defaultFontSize", 20};
+const Setting Settings::DefaultDisplayFontSize{"defaultDisplayFontSize", 100};
+const Setting Settings::DefaultTitleFontSize{"defaultTitleFontSize", 16};
+
 const Setting Settings::Scale{"scale", "1.0"};
 const Setting Settings::ResizeToDS{"resizeToDS", "false"};
 const Setting Settings::LogLevel{"logLevel", 2};

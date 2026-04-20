@@ -96,7 +96,7 @@ PrimitiveWidget {
                         label: "Title Font Size"
 
                         bindedProperty: "titleFontSize"
-                        bindTarget: widget
+                        
                     }
 
                     SectionHeader {
@@ -112,7 +112,7 @@ PrimitiveWidget {
                         label: "Shape"
 
                         bindedProperty: "shape"
-                        bindTarget: widget
+                        
                     }
 
                     SectionHeader {
@@ -128,7 +128,7 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
+                        
                     }
                 }
             }

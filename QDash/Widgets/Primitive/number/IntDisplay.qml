@@ -13,7 +13,7 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int maxFontSize: 100
+    property int maxFontSize: QDashSettings.defaultDisplayFontSize
     property color fontColor: Clover.theme.currentAccent
 
     propertyKeys: ["maxFontSize", "fontColor"]
@@ -105,7 +105,7 @@ PrimitiveWidget {
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            bindTarget: widget
+                            
                         }
 
                         LabeledSpinBox {
@@ -116,7 +116,7 @@ PrimitiveWidget {
                             label: "Maximum Font Size"
 
                             bindedProperty: "maxFontSize"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -132,7 +132,7 @@ PrimitiveWidget {
                         label: "Text Color"
 
                         bindedProperty: "color"
-                        bindTarget: widget
+                        
                     }
 
                     SectionHeader {
@@ -148,7 +148,7 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
+                        
                     }
                 }
             }

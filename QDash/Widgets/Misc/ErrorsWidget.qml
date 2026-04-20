@@ -100,7 +100,7 @@ PrimitiveWidget {
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            bindTarget: widget
+                            
                         }
 
                         LabeledDoubleSpinBox {
@@ -111,7 +111,7 @@ PrimitiveWidget {
                             label: "Font Size"
 
                             bindedProperty: "item_fontSize"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -128,7 +128,7 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
+                        
                     }
                 }
             }

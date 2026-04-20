@@ -13,7 +13,7 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int fontSize: 20
+    property int fontSize: QDashSettings.defaultFontSize
 
     propertyKeys: ["fontSize"]
 
@@ -106,7 +106,7 @@ PrimitiveWidget {
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            bindTarget: widget
+
                         }
 
                         LabeledSpinBox {
@@ -117,7 +117,7 @@ PrimitiveWidget {
                             label: "Font Size"
 
                             bindedProperty: "fontSize"
-                            bindTarget: widget
+
                         }
                     }
 
@@ -134,7 +134,7 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
+
                     }
                 }
             }

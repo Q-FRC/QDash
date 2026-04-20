@@ -13,7 +13,7 @@ import Carboxyl.Clover
 PrimitiveWidget {
     id: widget
 
-    property int fontSize: 20
+    property int fontSize: QDashSettings.defaultFontSize
 
     property int stepSize: 1
 
@@ -126,7 +126,7 @@ PrimitiveWidget {
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            bindTarget: widget
+                            
                         }
 
                         LabeledSpinBox {
@@ -137,7 +137,7 @@ PrimitiveWidget {
                             label: "Font Size"
 
                             bindedProperty: "fontSize"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -155,7 +155,7 @@ PrimitiveWidget {
                             label: "Lower Bound"
 
                             bindedProperty: "lowerBound"
-                            bindTarget: widget
+                            
                         }
 
                         LabeledSpinBox {
@@ -166,7 +166,7 @@ PrimitiveWidget {
                             label: "Upper Bound"
 
                             bindedProperty: "upperBound"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -178,7 +178,7 @@ PrimitiveWidget {
                         label: "Step Size"
 
                         bindedProperty: "stepSize"
-                        bindTarget: widget
+                        
 
                         from: 0
                     }
@@ -196,7 +196,7 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
+                        
                     }
                 }
             }

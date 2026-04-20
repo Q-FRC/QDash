@@ -9,10 +9,8 @@ import QDash.Config
 
 import Carboxyl.Contour
 
-ColumnLayout {
-    spacing: 15
-
-    readonly property int controlWidth: Math.min(width, 350)
+RowLayout {
+    spacing: 20
 
     function accept() {
         if (QDashSettings.style !== style.currentText) {
@@ -23,55 +21,113 @@ ColumnLayout {
         QDashSettings.theme = theme.currentIndex
         QDashSettings.accent = accent.currentIndex
 
+        fontSize.accept()
+        displayFontSize.accept()
+        titleFontSize.accept()
+
         Clover.accent = Clover.accents[accent.currentIndex]
         Clover.theme = Clover.themes[theme.currentIndex]
     }
 
-    CarboxylLabeledComboBox {
-        id: style
+    ColumnLayout {
+        spacing: 20
+        CarboxylLabeledComboBox {
+            id: style
 
-        model: CarboxylConfig.styles
+            model: CarboxylConfig.styles
 
-        implicitHeight: 45
-        implicitWidth: controlWidth
-        Layout.alignment: Qt.AlignCenter
-        font.pixelSize: 20
+            implicitHeight: 45
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignCenter
+            font.pixelSize: 20
 
-        label: qsTr("Style")
+            label: qsTr("Style")
 
-        Component.onCompleted: currentIndex = model.indexOf(
-                                   CarboxylApplication.styleName)
+            Component.onCompleted: currentIndex = model.indexOf(
+                                       CarboxylApplication.styleName)
+        }
+
+        CarboxylLabeledComboBox {
+            id: accent
+
+            model: Clover.accents
+            textRole: "name"
+
+            label: qsTr("Accent")
+
+            implicitHeight: 45
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignCenter
+            font.pixelSize: 20
+
+            Component.onCompleted: currentIndex = QDashSettings.accent
+        }
+
+        CarboxylLabeledComboBox {
+            id: theme
+
+            model: Clover.themes
+            textRole: "name"
+
+            label: qsTr("Theme")
+
+            implicitHeight: 45
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignCenter
+            font.pixelSize: 20
+
+            Component.onCompleted: currentIndex = QDashSettings.theme
+        }
     }
 
-    CarboxylLabeledComboBox {
-        id: accent
+    ColumnLayout {
+        spacing: 20
+        LabeledSpinBox {
+            id: fontSize
 
-        model: Clover.accents
-        textRole: "name"
+            label: "Default Field Font Size"
+            bindTarget: QDashSettings
+            bindedProperty: "defaultFontSize"
 
-        label: qsTr("Accent")
+            implicitHeight: 45
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignCenter
+            font.pixelSize: 20
 
-        implicitHeight: 45
-        implicitWidth: controlWidth
-        Layout.alignment: Qt.AlignCenter
-        font.pixelSize: 20
+            // TODO(crueter): This can probably be moved to the ConfigSpinBox because of loaders
+            Component.onCompleted: open()
+        }
 
-        Component.onCompleted: currentIndex = QDashSettings.accent
-    }
+        LabeledSpinBox {
+            id: displayFontSize
 
-    CarboxylLabeledComboBox {
-        id: theme
+            label: "Default Display Font Size"
+            bindTarget: QDashSettings
+            bindedProperty: "defaultDisplayFontSize"
 
-        model: Clover.themes
-        textRole: "name"
+            implicitHeight: 45
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignCenter
+            font.pixelSize: 20
 
-        label: qsTr("Theme")
+            // TODO(crueter): This can probably be moved to the ConfigSpinBox because of loaders
+            Component.onCompleted: open()
+        }
 
-        implicitHeight: 45
-        implicitWidth: controlWidth
-        Layout.alignment: Qt.AlignCenter
-        font.pixelSize: 20
+        LabeledSpinBox {
+            id: titleFontSize
 
-        Component.onCompleted: currentIndex = QDashSettings.theme
+            label: "Default Title Font Size"
+            bindTarget: QDashSettings
+            bindedProperty: "defaultTitleFontSize"
+
+            implicitHeight: 45
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignCenter
+            font.pixelSize: 20
+
+            // TODO(crueter): This can probably be moved to the ConfigSpinBox because of loaders
+            Component.onCompleted: open()
+        }
     }
 }

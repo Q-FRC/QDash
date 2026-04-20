@@ -32,7 +32,7 @@ Rectangle {
     z: 3
 
     radius: 12
-    property int titleFontSize: 16
+    property int titleFontSize: QDashSettings.defaultTitleFontSize
 
     property alias dragArea: dragArea
     property alias titleField: titleField
@@ -208,9 +208,14 @@ Rectangle {
         fixSize()
 
         propertyKeys.push("titleFontSize")
+
+        // TODO(crueter): Properties should have some way to define a default.
+        // This way if a property is at default and it changes in an update or a setting, it will change in
+        // dependent widgets.
         for (var i = 0; i < propertyKeys.length; i++) {
             let p = propertyKeys[i]
             let jsonProp = model.properties[p]
+
             if (typeof jsonProp !== "undefined")
                 this[p] = jsonProp
         }
@@ -440,7 +445,6 @@ Rectangle {
                         label: "Title Font Size"
 
                         bindedProperty: "titleFontSize"
-                        bindTarget: widget
                     }
 
                     SectionHeader {
@@ -454,7 +458,6 @@ Rectangle {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
                     }
                 }
             }

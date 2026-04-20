@@ -14,7 +14,7 @@ PrimitiveWidget {
     id: widget
 
     property double stepSize: 0.1
-    property int fontSize: 20
+    property int fontSize: QDashSettings.defaultFontSize
 
     property double lowerBound: -100000.0
     property double upperBound: 100000.0
@@ -142,7 +142,7 @@ PrimitiveWidget {
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            bindTarget: widget
+                            
                         }
 
                         LabeledSpinBox {
@@ -153,7 +153,7 @@ PrimitiveWidget {
                             label: "Font Size"
 
                             bindedProperty: "fontSize"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -171,7 +171,7 @@ PrimitiveWidget {
                             label: "Lower Bound"
 
                             bindedProperty: "lowerBound"
-                            bindTarget: widget
+                            
                         }
 
                         LabeledDoubleSpinBox {
@@ -182,7 +182,7 @@ PrimitiveWidget {
                             label: "Upper Bound"
 
                             bindedProperty: "upperBound"
-                            bindTarget: widget
+                            
                         }
                     }
 
@@ -194,7 +194,7 @@ PrimitiveWidget {
                         label: "Step Size"
 
                         bindedProperty: "stepSize"
-                        bindTarget: widget
+                        
 
                         from: 0
                         stepSize: 0.1
@@ -213,7 +213,7 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        bindTarget: widget
+                        
                     }
                 }
             }
