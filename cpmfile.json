@@ -14,8 +14,8 @@
         "package": "Carboxyl",
         "repo": "crueter/Carboxyl",
         "git_host": "git.crueter.xyz",
-        "sha": "2145fa7424",
-        "hash": "9c42b21541d3a2655d3c2830daf4001c9eba67f4a0c7e1169fc69d980e5e69064d41410c1bf15440bdfb3ab7496071099330f9cc2ce95b8e02abca07811e9353",
+        "sha": "e21952a89a",
+        "hash": "a1a3828dbd1321a4c97b156d47689dadf54f5d101f8bf5c5bf0fd4722619fe1c1a47fbdd2c0ffc7c0a31b6c372ffcf53e68222554eb89209038b7f24c9ac492b",
         "bundled": "true"
     },
     "zlib": {

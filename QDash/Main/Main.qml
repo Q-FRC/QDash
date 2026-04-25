@@ -18,6 +18,10 @@ ApplicationWindow {
     visible: true
     title: conn.title
 
+    CustomThemes {
+        id: customThemes
+    }
+
     palette: Clover.theme
 
     width: QDashSettings.windowWidth
@@ -288,6 +292,8 @@ ApplicationWindow {
 
     /** THE REST */
     Component.onCompleted: {
+        Clover.registerTheme(customThemes.hannahDark)
+
         Clover.accent = Clover.accents[QDashSettings.accent]
         Clover.theme = Clover.themes[QDashSettings.theme]
 
