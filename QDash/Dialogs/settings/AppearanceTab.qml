@@ -5,9 +5,10 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.4
 
 import Carboxyl.Clover
-import QDash.Config
-
 import Carboxyl.Contour
+
+import QDash.Config
+import QDash.Items
 
 RowLayout {
     spacing: 20
@@ -27,6 +28,15 @@ RowLayout {
 
         Clover.accent = Clover.accents[accent.currentIndex]
         Clover.theme = Clover.themes[theme.currentIndex]
+
+        // TODO(crueter): Better handling of background images and such
+        // This is just bespoke for hannah montana right now
+        if (Clover.theme === CustomThemes.hannahDark) {
+            QDashSettings.hannahMontanaMode = true
+            console.log("HANNAH MONTANAAAAAAA")
+
+            // FIXME(crueter): Automatically set violet accent? Needs Carboxyl option perhaps
+        }
     }
 
     ColumnLayout {

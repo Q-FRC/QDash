@@ -16,7 +16,7 @@ import QDash.Native.Helpers
 
 Rectangle {
     id: tab
-    color: Clover.theme.base
+    color: "transparent"
 
     signal copying(point mousePos)
     signal dropped(point mousePos)
@@ -34,6 +34,23 @@ Rectangle {
     property double colWidth: tab.width / tab.cols
     property double rowHeight: tab.height / tab.rows
     property rect topicViewRect
+
+    Loader {
+        asynchronous: true
+        active: QDashSettings.hannahMontanaMode
+        sourceComponent: Component {
+            Image {
+                width: tab.width - 2
+                height: tab.height - 2
+
+                x: 1
+                y: 1
+
+                source: "qrc:/qt/qml/QDash/Main/hannahmontana.jpg"
+                fillMode: Image.PreserveAspectCrop
+            }
+        }
+    }
 
     MouseArea {
         id: mouseArea
@@ -372,7 +389,11 @@ Rectangle {
     }
 
     Canvas {
-        anchors.fill: parent
+        anchors {
+            fill: parent
+            margins: 1
+        }
+
         z: 2
 
         property real colW: tab.colWidth

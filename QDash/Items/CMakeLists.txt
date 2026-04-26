@@ -3,6 +3,9 @@
 
 set(CMAKE_AUTOMOC ON)
 
+set_source_files_properties(CustomThemes.qml
+    PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+
 qt_add_library(QDashQmlItems STATIC)
 qt6_add_qml_module(QDashQmlItems
     URI QDash.Items
@@ -15,6 +18,7 @@ qt6_add_qml_module(QDashQmlItems
     TopicView.qml
     ResizeAnchor.qml
     DoubleSpinBox.qml
-    QML_FILES AcceleratedShape.qml)
+    AcceleratedShape.qml
+    CustomThemes.qml)
 
 QDashModule(QDashQmlItems)

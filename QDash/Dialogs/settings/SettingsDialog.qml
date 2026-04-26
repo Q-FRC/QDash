@@ -16,16 +16,6 @@ NativeDialog {
     height: 475
     title: "Settings"
 
-    MessageDialog {
-        id: warn
-        text: qsTr("To apply the new style, QDash will now close and re-open.")
-        icon: CarboxylEnums.Warning
-        title: qsTr("Reloading")
-        standardButtons: DialogButtonBox.Ok
-
-        onClosed: QDashApplication.reload()
-    }
-
     onAccepted: {
         server.accept()
         appearance.accept()
@@ -36,7 +26,7 @@ NativeDialog {
         if (QDashApplication.shouldReload) {
             QDashApplication.shouldReload = false
 
-            warn.show()
+            styleWarnDialog.open()
         }
     }
 
