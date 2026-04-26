@@ -33,9 +33,11 @@ RowLayout {
         // This is just bespoke for hannah montana right now
         if (Clover.theme === CustomThemes.hannahDark) {
             QDashSettings.hannahMontanaMode = true
-            console.log("HANNAH MONTANAAAAAAA")
+            logs.info("HANNAH MONTANAAAAAAA")
 
             // FIXME(crueter): Automatically set violet accent? Needs Carboxyl option perhaps
+        } else {
+            QDashSettings.hannahMontanaMode = false
         }
     }
 
