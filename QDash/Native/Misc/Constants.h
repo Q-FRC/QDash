@@ -43,6 +43,8 @@ extern const Setting WindowHeight;
 extern const Setting WindowX;
 extern const Setting WindowY;
 
+extern const Setting HannahMontanaMode;
+
 extern const Setting DefaultFontSize;
 extern const Setting DefaultDisplayFontSize;
 extern const Setting DefaultTitleFontSize;

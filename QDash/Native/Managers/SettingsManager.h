@@ -40,6 +40,8 @@ class SettingsManager : public QObject {
     property(int, windowX, WindowX);
     property(int, windowY, WindowY);
 
+    property(bool, hannahMontanaMode, HannahMontanaMode)
+
     property(int, defaultFontSize, DefaultFontSize);
     property(int, defaultDisplayFontSize, DefaultDisplayFontSize);
     property(int, defaultTitleFontSize, DefaultTitleFontSize);

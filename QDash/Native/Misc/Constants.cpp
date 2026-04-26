@@ -60,6 +60,8 @@ const Setting Settings::WindowHeight{"windowHeight", 640};
 const Setting Settings::WindowX{"windowX", -1};
 const Setting Settings::WindowY{"windowY", -1};
 
+const Setting Settings::HannahMontanaMode{"hannahMontanaMode", false};
+
 const Setting Settings::DefaultFontSize{"defaultFontSize", 20};
 const Setting Settings::DefaultDisplayFontSize{"defaultDisplayFontSize", 100};
 const Setting Settings::DefaultTitleFontSize{"defaultTitleFontSize", 16};

@@ -82,6 +82,29 @@ ApplicationWindow {
     }
 
     Loader {
+        id: styleWarnDialog
+        active: false
+        asynchronous: true
+        onLoaded: item.open()
+
+        function open() {
+            active = true
+        }
+
+        sourceComponent: Component {
+            MessageDialog {
+                text: qsTr("To apply the new style, QDash will now close and re-open.")
+                icon: CarboxylEnums.Warning
+                title: qsTr("Reloading")
+                standardButtons: DialogButtonBox.Ok
+
+                onClosed: QDashApplication.reload()
+            }
+        }
+    }
+
+    // TODO(crueter): Seems like making a LazyLoadDialog in Carboxyl land could be possible.
+    Loader {
         id: settingsDialog
         active: false
         asynchronous: true
@@ -199,6 +222,7 @@ ApplicationWindow {
                     }
                 }
             }
+
             Action {
                 enabled: CompileDefinitions.useNetwork
                 text: qsTr("Remote &Layouts...")
@@ -288,6 +312,8 @@ ApplicationWindow {
 
     /** THE REST */
     Component.onCompleted: {
+        Clover.registerTheme(CustomThemes.hannahDark)
+
         Clover.accent = Clover.accents[QDashSettings.accent]
         Clover.theme = Clover.themes[QDashSettings.theme]
 
