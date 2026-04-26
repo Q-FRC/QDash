@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright 2026 crueter
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 set(CMAKE_AUTOMOC ON)
 
 qt_add_library(QDashQmlMain STATIC)
