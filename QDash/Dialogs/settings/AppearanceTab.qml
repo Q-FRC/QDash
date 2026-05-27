@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import QtQuick.Layouts 6.4
+import QtQuick.Layouts 6.8
 
 import Carboxyl.Clover
 import Carboxyl.Contour
@@ -33,8 +33,6 @@ RowLayout {
         // This is just bespoke for hannah montana right now
         if (Clover.theme === CustomThemes.hannahDark) {
             QDashSettings.hannahMontanaMode = true
-            logs.info("HANNAH MONTANAAAAAAA")
-
             // FIXME(crueter): Automatically set violet accent? Needs Carboxyl option perhaps
         } else {
             QDashSettings.hannahMontanaMode = false

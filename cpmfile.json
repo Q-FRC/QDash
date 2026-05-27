@@ -4,11 +4,7 @@
         "hash": "7055b38800aa00cf7d44b2ed38367c3b6f1f8c6e5022b7ba34c7088a7710d187358ec2bdfea919524cdd5daba28c875cd8d18d3feec55295881afe79f909d0ad",
         "tag": "v%VERSION%",
         "git_version": "2026.2.1",
-        "version": "2025.1.1",
-        "patches": [
-            "0001-wpiutil-windows-7-compat.patch",
-            "0002-libuv-remove-precise-time-call.patch"
-        ]
+        "version": "2025.1.1"
     },
     "carboxyl": {
         "package": "Carboxyl",
@@ -30,5 +26,14 @@
         ],
         "git_version": "1.3.1",
         "tag": "v%VERSION%"
+    },
+    "ffmpeg": {
+        "repo": "crueter-ci/FFmpeg-Qt",
+        "package": "FFmpeg",
+        "hash": "96b502a1450fe943a243738d48b2794cffccf25880ac88a6b8a64b4b87ac888a23c16355236665cc646e1511878edfbf4091c02db8c4c4bb1bce98f8a8d9499c",
+        "git_version": "8.2-f16c3cc5aa",
+        "tag": "v%VERSION%",
+        "artifact": "ffmpeg-macos-universal-%VERSION%.tar.zst",
+        "bundled": true
     }
 }

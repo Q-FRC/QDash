@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import QtQuick.Layouts 6.4
+import QtQuick.Layouts 6.8
 
 import Carboxyl.Clover
 import Carboxyl.Contour

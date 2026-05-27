@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright 2026 crueter
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.31)
 
 set(QDASH_NAME QDash)
 set(QDASH_ORG "QFRC")
@@ -28,11 +28,6 @@ include(FasterLinker)
 include(GetSCMRev)
 include(CPMUtil)
 include(QDashModule)
-
-# Target Windows 7 ABI
-if (WIN32)
-    add_compile_definitions(_WIN32_WINNT=0x0601 NTDDI_VERSION=0x06010000 WINVER=0x0601)
-endif()
 
 ## Options ##
 
@@ -75,7 +70,12 @@ if (QDASH_NETWORK)
 endif()
 
 if (QDASH_BUNDLE_QT)
-    AddQt(6.9.3)
+    if (APPLE AND NOT IOS AND QDASH_CAMVIEW)
+        AddJsonPackage(NAME ffmpeg MODULE)
+        set(FFMPEG_DIR "${FFmpeg_SOURCE_DIR}")
+    endif()
+
+    AddQt(QDash-CI/Qt 6.11.1)
 
     if (APPLE OR NOT UNIX)
         set(QDASH_STATIC ON)
@@ -94,13 +94,13 @@ if (QDASH_STATIC)
 endif()
 
 if (QDASH_STATIC OR IOS)
-    # weird...
+    # weirdness
     list(APPEND QDASH_QT_LIBRARIES Qt6::qmlshapesplugin)
 endif()
 
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 6.4 REQUIRED
+find_package(Qt6 6.8 REQUIRED
     COMPONENTS ${QDASH_QT_COMPONENTS}
     OPTIONAL_COMPONENTS ${QDASH_QT_OPTIONAL})
 
@@ -112,7 +112,7 @@ if(QT_KNOWN_POLICY_QTP0001)
     qt_policy(SET QTP0001 NEW)
 endif()
 
-qt_standard_project_setup(REQUIRES 6.4)
+qt_standard_project_setup(REQUIRES 6.8)
 
 if(WIN32)
     set(RCS_FILE ${CMAKE_CURRENT_BINARY_DIR}/dist/${QDASH_NAME}.rc)

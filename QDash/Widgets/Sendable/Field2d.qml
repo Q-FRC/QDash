@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick 6.2
 import QtQuick.Controls 2.15
-import QtQuick.Layouts 6.4
+import QtQuick.Layouts 6.8
 import QtQuick.Shapes 2.15
 
 import QDash.Fields

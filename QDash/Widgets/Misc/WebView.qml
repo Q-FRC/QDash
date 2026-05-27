@@ -3,7 +3,7 @@
 import QtCore
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import QtQuick.Layouts 6.4
+import QtQuick.Layouts 6.8
 
 import QDash.Fields
 import QDash.Items
