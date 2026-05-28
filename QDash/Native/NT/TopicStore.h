@@ -5,15 +5,13 @@
 #define TopicStore_H
 
 #include "Logging/Logger.h"
-#include "Misc/Flags.h"
 
 #include "networktables/NetworkTableEntry.h"
 
 #include <QHash>
 #include <QMultiHash>
 #include <QObject>
-#include <qjsvalue.h>
-#include <qqmlintegration.h>
+#include <QJSValue>
 
 class Listener : public QObject {
     Q_OBJECT
@@ -120,10 +118,6 @@ public:
     Q_INVOKABLE void forceUpdate(const QString& topic);
 
     QString typeString(const QString &topic);
-
-    Q_INVOKABLE inline QFDFlags::ControlWord toWord(int val) {
-        return QFDFlags::ControlWord(val);
-    }
 signals:
     void connected(bool connected);
 };

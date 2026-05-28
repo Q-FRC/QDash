@@ -8,7 +8,7 @@
 #include "Logging/Logger.h"
 #include "Managers/ConnManager.h"
 #include "Managers/SettingsManager.h"
-#include "Misc/Globals.h"
+#include "Globals.h"
 #include "Models/TabListModel.h"
 #include "Models/TopicListModel.h"
 #include "NT/TopicStore.h"
@@ -38,11 +38,13 @@ QDashApplication::QDashApplication(int& argc, char* argv[]) : QApplication(argc,
     m_engine = new QQmlApplicationEngine(this);
     m_widget = new QWidget;
 
-    conn = new ConnManager(this);
+    connManager = new ConnManager(this);
     platform = new PlatformHelper(this);
     logs = new Logger(this);
     defs = new CompileDefinitions(this);
     fileSelect = new FileSelect(m_widget);
+
+    // TODO: Move logging to singletons, and expose simple log functions to QML
 
     store = new TopicStore(m_engine, logs, this);
     settings = new SettingsManager(logs, this);
@@ -74,17 +76,12 @@ QDashApplication::QDashApplication(int& argc, char* argv[]) : QApplication(argc,
     ctx->setContextProperty("QDashSettings", settings);
     ctx->setContextProperty("TopicStore", store);
     ctx->setContextProperty("TabListModel", tlm);
-    ctx->setContextProperty("conn", conn);
+    ctx->setContextProperty("ConnManager", connManager);
     ctx->setContextProperty("PlatformHelper", platform);
     ctx->setContextProperty("NotificationHelper", notification);
     ctx->setContextProperty("buildConfig", &BuildConfig);
     ctx->setContextProperty("logs", logs);
     ctx->setContextProperty("FileSelect", fileSelect);
-
-    // Enums
-    qmlRegisterUncreatableMetaObject(
-        QFDFlags::staticMetaObject, "QFDFlags", 1, 0, "QFDFlags",
-        "Attempt to create uninstantiable object \"QFDFlags\" ignored");
 
     // :)
     ctx->setContextProperty(QStringLiteral("QDashApplication"), this);
@@ -119,6 +116,30 @@ QString QDashApplication::dataLocation() {
     return dir.absolutePath();
 }
 
+QString QDashApplication::wordToState(int val) {
+    auto word = ControlWord(val);
+
+    QString mode, state;
+
+    if (word & Auto) {
+        mode = "Autonomous";
+    } else if (word & Test) {
+        mode = "Testing";
+    } else {
+        mode = "Teleop";
+    }
+
+    if (word & Enabled) {
+        state = "Enabled";
+    } else if (word & EStop) {
+        state = "E-Stopped";
+    } else {
+        state = "Disabled";
+    }
+
+    return QStringLiteral("%1 %2").arg(mode, state);
+}
+
 void QDashApplication::reload() {
     qDebug() << "Reload called";
     QString program = QApplication::applicationFilePath();
@@ -135,6 +156,7 @@ void QDashApplication::setupNetworkTables() {
     Globals::inst.StartClient4(BuildConfig.APPLICATION_NAME.toStdString());
     Globals::inst.StartDSClient(NT_DEFAULT_PORT4);
 
+    // TODO: This should move to TLM... right?
     Globals::inst.AddConnectionListener(true, [this](const nt::Event& event) {
         bool connected = event.Is(nt::EventFlags::kConnected);
 
@@ -149,10 +171,10 @@ void QDashApplication::setupNetworkTables() {
             if (!connected) {
                 topics->clear();
             } else {
-                conn->setAddress(remoteIP);
+                connManager->setAddress(remoteIP);
                 logs->info("NT", "Client connected to " + remoteIP);
             }
-            conn->setConnected(connected);
+            connManager->setConnected(connected);
         });
     });
 
@@ -172,6 +194,7 @@ void QDashApplication::setupNetworkTables() {
         }
     });
 
+    // TODO: Just use TopicStore in QML (somehow lmao)
     nt::NetworkTableEntry tabEntry = Globals::inst.GetEntry("/QDash/Tab");
     Globals::inst.AddListener(tabEntry, nt::EventFlags::kValueAll, [this](const nt::Event& event) {
         std::string_view value = event.GetValueEventData()->value.GetString();

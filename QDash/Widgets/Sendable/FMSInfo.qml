@@ -10,8 +10,6 @@ import QDash.Config
 import QDash.Widgets.Base
 import Carboxyl.Clover
 
-import QFDFlags
-
 SendableWidget {
     id: widget
 
@@ -49,26 +47,7 @@ SendableWidget {
         }
         case "FMSControlData":
         {
-            let word = TopicStore.toWord(value)
-
-            let state = ""
-
-            if (word & QFDFlags.Auto) {
-                state += "Autonomous"
-            } else if (word & QFDFlags.Test) {
-                state += "Testing"
-            } else {
-                state += "Teleop"
-            }
-
-            if (word & QFDFlags.Enabled) {
-                state += " Enabled"
-            } else if (word & QFDFlags.EStop) {
-                state += " E-Stopped"
-            } else {
-                state += " Disabled"
-            }
-
+            let state = QDashApplication.wordToState(value)
             stateText.state = state
             break
         }
@@ -184,7 +163,6 @@ SendableWidget {
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            
                         }
 
                         LabeledSpinBox {
@@ -195,7 +173,6 @@ SendableWidget {
                             label: "Font Size"
 
                             bindedProperty: "item_fontSize"
-                            
                         }
                     }
 
@@ -212,7 +189,6 @@ SendableWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        
                     }
                 }
             }

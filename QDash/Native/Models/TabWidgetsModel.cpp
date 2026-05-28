@@ -291,6 +291,20 @@ TabWidgetsModel *TabWidgetsModel::loadObject(QObject *parent, const QJsonArray &
         if (type == "web") continue;
 #endif
 
+        // Old or obsolete widgets. //
+
+        // reef display (2025)
+        if (type == "reef") continue;
+
+        // phase shift (2026)
+        if (type == "phaseShift") continue;
+
+        // errors (legacy)
+        if (type == "errors") continue;
+
+        // int gauge (not useful)
+        if (type == "gauge") continue;
+
         Widget w;
 
         w.title = obj.value("title").toString("");

@@ -1,11 +1,10 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "Misc/Globals.h"
+#include "main/Globals.h"
 #include "RemoteLayoutModel.h"
 
 #include <QNetworkReply>
-#include <qnetworkreply.h>
 
 RemoteLayoutModel::RemoteLayoutModel(QObject *parent) : QAbstractListModel(parent) {}
 

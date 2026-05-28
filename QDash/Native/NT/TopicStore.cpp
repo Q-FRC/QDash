@@ -3,10 +3,11 @@
 
 #include "NT/TopicStore.h"
 
-#include "Misc/Globals.h"
+// TODO: Store the NetworkTableInstance within TopicStore, or some other NT interface
+// Expose methods such as GetEntry etc. for others to consume
+#include "main/Globals.h"
 #include "networktables/NetworkTableEntry.h"
 
-#include <QGuiApplication>
 #include <QVariant>
 
 TopicStore::TopicStore(QQmlEngine* engine, Logger* logs, QObject* parent)
@@ -67,7 +68,8 @@ void Listener::update(const QVariant& value) {
 
     for (const QJSValue& func : std::as_const(m_funcs)) {
         func.call({m_engine->toScriptValue(value)});
-    }}
+    }
+}
 
 void Listener::unpublish() {
     m_entry.Unpublish();
@@ -194,10 +196,10 @@ QString TopicStore::typeString(const QString& topic) {
         return "string";
     case nt::NetworkTableType::kInteger:
         return "int";
-    case nt::NetworkTableType::kBooleanArray:
-        return "reef";
-    case nt::NetworkTableType::kStringArray:
-        return "errors";
+    // case nt::NetworkTableType::kBooleanArray:
+    //     return "reef";
+    // case nt::NetworkTableType::kStringArray:
+    //     return "errors";
     default:
         return "";
     }

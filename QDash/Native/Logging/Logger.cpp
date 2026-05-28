@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "Logger.h"
-#include "Misc/Constants.h"
+#include "Managers/SettingsManager.h"
 
 #include <QStandardPaths>
 #include <QDesktopServices>

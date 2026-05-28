@@ -36,13 +36,6 @@ PrimitiveWidget {
                     model.type = "dial"
                 }
             }
-
-            MenuItem {
-                text: "Radial Gauge"
-                onTriggered: {
-                    model.type = "gauge"
-                }
-            }
         }
     }
 
@@ -105,7 +98,6 @@ PrimitiveWidget {
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            
                         }
 
                         LabeledSpinBox {
@@ -116,7 +108,6 @@ PrimitiveWidget {
                             label: "Maximum Font Size"
 
                             bindedProperty: "maxFontSize"
-                            
                         }
                     }
 
@@ -132,7 +123,6 @@ PrimitiveWidget {
                         label: "Text Color"
 
                         bindedProperty: "color"
-                        
                     }
 
                     SectionHeader {
@@ -148,7 +138,6 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        
                     }
                 }
             }

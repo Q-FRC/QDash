@@ -1,12 +1,8 @@
-set(CMAKE_AUTOMOC ON)
+# SPDX-FileCopyrightText: Copyright 2026 crueter
+# SPDX-License-Identifier: GPL-3.0-or-later
 
-qt_add_library(QDashNt STATIC)
-qt6_add_qml_module(QDashNt
-    URI QDash.Native.NT
-    VERSION 1.0
-    SOURCES
+qt_add_library(QDashNt STATIC
     TopicStore.cpp
     TopicStore.h)
 
-QDashModule(QDashNt)
-target_link_libraries(QDashNt PRIVATE ntcore)
+target_link_libraries(QDashNt PRIVATE ntcore Qt6::Core Qt6::Qml)

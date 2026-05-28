@@ -332,23 +332,8 @@ Rectangle {
             }
 
             DelegateChoice {
-                roleValue: "errors"
-                ErrorsWidget {}
-            }
-
-            DelegateChoice {
-                roleValue: "reef"
-                ReefDisplay {}
-            }
-
-            DelegateChoice {
                 roleValue: "doubleGauge"
                 DoubleGaugeWidget {}
-            }
-
-            DelegateChoice {
-                roleValue: "gauge"
-                IntGaugeWidget {}
             }
 
             DelegateChoice {
@@ -360,7 +345,6 @@ Rectangle {
                 roleValue: "doubleDisplay"
                 DoubleDisplay {}
             }
-
             DelegateChoice {
                 roleValue: "intDisplay"
                 IntDisplay {}
@@ -374,11 +358,6 @@ Rectangle {
             DelegateChoice {
                 roleValue: "textDisplay"
                 StringDisplay {}
-            }
-
-            DelegateChoice {
-                roleValue: "phaseShift"
-                PhaseShift {}
             }
         }
 

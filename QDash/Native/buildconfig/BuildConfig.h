@@ -1,12 +1,13 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #pragma once
 #include <QObject>
-#include <QQmlEngine>
 #include <QString>
 
 // TODO(crueter): Make this all constexpr if possible?
 class Config : public QObject {
     Q_OBJECT
-    QML_ELEMENT
 public:
     Config();
     QString APPLICATION_NAME;

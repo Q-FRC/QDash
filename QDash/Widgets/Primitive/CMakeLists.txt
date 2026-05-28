@@ -11,7 +11,7 @@ qt6_add_qml_module(QDashQmlWidgetsPrimitive
     BoolWidget.qml
     ColorTextWidget.qml
     ColorWidget.qml
-    ReefDisplay.qml
+
     ShapeHandler.qml
     StringDisplay.qml
     TextWidget.qml
@@ -23,9 +23,9 @@ qt6_add_qml_module(QDashQmlWidgetsPrimitive
     number/DoubleWidget.qml
     number/IntDialWidget.qml
     number/IntDisplay.qml
-    number/IntGaugeWidget.qml
+
     number/IntWidget.qml
     number/MatchTime.qml
-    number/PhaseShift.qml)
+)
 
 QDashModule(QDashQmlWidgetsPrimitive)

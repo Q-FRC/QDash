@@ -3,7 +3,7 @@
 
 #include "TopicListModel.h"
 
-#include "Misc/Globals.h"
+#include "main/Globals.h"
 
 QList<QStandardItem *> recursiveSearch(QStandardItem *item, const QString &topic)
 {

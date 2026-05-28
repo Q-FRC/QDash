@@ -16,7 +16,7 @@ import QDash.Native.Helpers
 ApplicationWindow {
     id: window
     visible: true
-    title: conn.title
+    title: ConnManager.title
 
     palette: Clover.theme
 
@@ -53,7 +53,7 @@ ApplicationWindow {
         target: TabListModel
 
         function onModifiedChanged() {
-            conn.modified = TabListModel.modified
+            ConnManager.modified = TabListModel.modified
         }
     }
 
@@ -372,7 +372,7 @@ ApplicationWindow {
                 leftMargin: 20
             }
 
-            text: conn.status
+            text: ConnManager.status
 
             font.pixelSize: 16
         }

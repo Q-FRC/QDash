@@ -29,6 +29,8 @@ public:
 
     QString dataLocation();
 
+    Q_INVOKABLE QString wordToState(int val);
+
 public slots:
     void reload();
 
@@ -36,6 +38,16 @@ public slots:
 
 private:
     void setupNetworkTables();
+
+    enum ControlWord {
+        Invalid = 0x0,
+        Enabled = 0x1,
+        Auto = 0x2,
+        Test = 0x4,
+        EStop = 0x8,
+        FMSAttached = 0x10,
+        DSAttached = 0x20
+    };
 
     QQmlApplicationEngine *m_engine;
     QWidget *m_widget;
@@ -48,7 +60,7 @@ private:
     CompileDefinitions *defs;
 
     TabListModel *tlm;
-    ConnManager *conn;
+    ConnManager *connManager;
     PlatformHelper *platform;
     NotificationHelper *notification;
     FileSelect *fileSelect;

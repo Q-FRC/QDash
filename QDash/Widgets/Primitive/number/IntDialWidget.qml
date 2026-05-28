@@ -38,13 +38,6 @@ PrimitiveWidget {
             }
 
             MenuItem {
-                text: "Radial Gauge"
-                onTriggered: {
-                    model.type = "gauge"
-                }
-            }
-
-            MenuItem {
                 text: "Number Display"
                 onTriggered: {
                     model.type = "intDisplay"
@@ -160,7 +153,6 @@ PrimitiveWidget {
                             label: "Title Font Size"
 
                             bindedProperty: "titleFontSize"
-                            
                         }
 
                         LabeledSpinBox {
@@ -171,7 +163,6 @@ PrimitiveWidget {
                             label: "Font Size"
 
                             bindedProperty: "fontSize"
-                            
                         }
                     }
 
@@ -189,7 +180,6 @@ PrimitiveWidget {
                             label: "Lower Bound"
 
                             bindedProperty: "lowerBound"
-                            
                         }
 
                         LabeledSpinBox {
@@ -200,7 +190,6 @@ PrimitiveWidget {
                             label: "Upper Bound"
 
                             bindedProperty: "upperBound"
-                            
                         }
                     }
 
@@ -212,7 +201,6 @@ PrimitiveWidget {
                         label: "Step Size"
 
                         bindedProperty: "stepSize"
-                        
 
                         from: 0
                     }
@@ -231,7 +219,6 @@ PrimitiveWidget {
                             label: "Start Angle"
 
                             bindedProperty: "startAngle"
-                            
                         }
 
                         LabeledDoubleSpinBox {
@@ -242,7 +229,6 @@ PrimitiveWidget {
                             label: "End Angle"
 
                             bindedProperty: "endAngle"
-                            
                         }
                     }
 
@@ -259,7 +245,6 @@ PrimitiveWidget {
                         label: "Topic"
 
                         bindedProperty: "item_topic"
-                        
                     }
                 }
             }

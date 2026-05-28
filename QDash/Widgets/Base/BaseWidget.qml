@@ -312,7 +312,7 @@ Rectangle {
     }
 
     function openContextMenu() {
-        if (!rcMenuLoader.active)
+        if (!rcMenuLoader.active && !(Drag.active || dragForced))
             rcMenuLoader.active = true
     }
 
