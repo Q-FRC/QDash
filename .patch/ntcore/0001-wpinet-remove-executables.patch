@@ -1,0 +1,44 @@
+diff --git a/wpinet/CMakeLists.txt b/wpinet/CMakeLists.txt
+index c463757..d902220 100644
+--- a/wpinet/CMakeLists.txt
++++ b/wpinet/CMakeLists.txt
+@@ -190,39 +190,3 @@ export(TARGETS wpinet FILE wpinet.cmake NAMESPACE wpinet::)
+ configure_file(wpinet-config.cmake.in ${WPILIB_BINARY_DIR}/wpinet-config.cmake)
+ install(FILES ${WPILIB_BINARY_DIR}/wpinet-config.cmake DESTINATION share/wpinet)
+ install(EXPORT wpinet DESTINATION share/wpinet)
+-
+-subdir_list(wpinet_examples "${CMAKE_CURRENT_SOURCE_DIR}/examples")
+-foreach(example ${wpinet_examples})
+-    file(GLOB wpinet_example_src examples/${example}/*.cpp)
+-    if(wpinet_example_src)
+-        add_executable(wpinet_${example} ${wpinet_example_src})
+-        wpilib_target_warnings(wpinet_${example})
+-        target_link_libraries(wpinet_${example} wpinet)
+-        set_property(TARGET wpinet_${example} PROPERTY FOLDER "examples")
+-    endif()
+-endforeach()
+-
+-if(UNIX AND NOT APPLE AND NOT ANDROID)
+-    set(LIBUTIL -lutil)
+-else()
+-    set(LIBUTIL)
+-endif()
+-
+-file(GLOB netconsoleServer_src src/netconsoleServer/native/cpp/*.cpp)
+-add_executable(netconsoleServer ${netconsoleServer_src})
+-wpilib_target_warnings(netconsoleServer)
+-target_link_libraries(netconsoleServer wpinet ${LIBUTIL})
+-
+-file(GLOB netconsoleTee_src src/netconsoleTee/native/cpp/*.cpp)
+-add_executable(netconsoleTee ${netconsoleTee_src})
+-wpilib_target_warnings(netconsoleTee)
+-target_link_libraries(netconsoleTee wpinet)
+-
+-set_property(TARGET netconsoleServer PROPERTY FOLDER "examples")
+-set_property(TARGET netconsoleTee PROPERTY FOLDER "examples")
+-
+-if(WITH_TESTS)
+-    wpilib_add_test(wpinet src/test/native/cpp)
+-    target_include_directories(wpinet_test PRIVATE src/test/native/include src/main/native/cpp)
+-    target_link_libraries(wpinet_test wpinet ${LIBUTIL} googletest wpiutil_testlib)
+-endif()

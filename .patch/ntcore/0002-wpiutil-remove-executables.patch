@@ -1,0 +1,38 @@
+diff --git a/wpiutil/CMakeLists.txt b/wpiutil/CMakeLists.txt
+index 05359d9..0906dee 100644
+--- a/wpiutil/CMakeLists.txt
++++ b/wpiutil/CMakeLists.txt
+@@ -228,33 +228,3 @@ export(TARGETS wpiutil FILE wpiutil.cmake NAMESPACE wpiutil::)
+ configure_file(wpiutil-config.cmake.in ${WPILIB_BINARY_DIR}/wpiutil-config.cmake)
+ install(FILES ${WPILIB_BINARY_DIR}/wpiutil-config.cmake DESTINATION share/wpiutil)
+ install(EXPORT wpiutil DESTINATION share/wpiutil)
+-
+-add_executable(wpiutildev src/dev/native/cpp/main.cpp)
+-wpilib_target_warnings(wpiutildev)
+-target_link_libraries(wpiutildev wpiutil)
+-
+-subdir_list(wpiutil_examples "${CMAKE_CURRENT_SOURCE_DIR}/examples")
+-foreach(example ${wpiutil_examples})
+-    file(GLOB wpiutil_example_src examples/${example}/*.cpp)
+-    if(wpiutil_example_src)
+-        add_executable(wpiutil_${example} ${wpiutil_example_src})
+-        wpilib_target_warnings(wpiutil_${example})
+-        target_link_libraries(wpiutil_${example} wpiutil)
+-        set_property(TARGET wpiutil_${example} PROPERTY FOLDER "examples")
+-    endif()
+-endforeach()
+-
+-if(WITH_TESTS)
+-    file(GLOB_RECURSE wpiutil_testlib_src src/test/native/include/*.h)
+-    add_library(wpiutil_testlib INTERFACE ${wpiutil_test_src})
+-    target_include_directories(wpiutil_testlib INTERFACE src/test/native/include)
+-
+-    wpilib_add_test(wpiutil src/test/native/cpp)
+-    target_include_directories(wpiutil_test PRIVATE src/generated/test/native/cpp)
+-    file(GLOB_RECURSE wpiutil_nanopb_test_src src/generated/test/native/cpp/*.cpp)
+-    target_sources(wpiutil_test PRIVATE ${wpiutil_nanopb_test_src})
+-    target_link_libraries(wpiutil_test wpiutil googletest wpiutil_testlib)
+-    if(MSVC)
+-        target_compile_options(wpiutil_test PRIVATE /utf-8)
+-    endif()
+-endif()

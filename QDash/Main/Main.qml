@@ -8,10 +8,7 @@ import Carboxyl.Clover
 import Carboxyl.Contour
 
 import QDash.Dialogs
-import QDash.Items
-
-import QDash.Native.Logging
-import QDash.Native.Helpers
+import QDash.Components
 
 ApplicationWindow {
     id: window
@@ -58,63 +55,22 @@ ApplicationWindow {
     }
 
     /* DIALOGS */
-    Loader {
+    RemoteLayoutsDialog {
         id: remoteLayouts
-
-        active: false
-        sourceComponent: active ? Qt.createComponent(
-                                      "../Dialogs/remote/RemoteLayoutsDialog.qml") : null
-
-        onLoaded: item.open()
     }
 
-    Loader {
+    // TODO(crueter): Investigate additional RAM stuck in memory after Loaders are freed
+    AboutDialog {
         id: about
-        active: false
-        asynchronous: true
-        onLoaded: item.open()
-
-        sourceComponent: Component {
-            AboutDialog {
-                onClosed: settingsDialog.active = false
-            }
-        }
     }
 
-    Loader {
+    StyleWarnDialog {
         id: styleWarnDialog
-        active: false
-        asynchronous: true
-        onLoaded: item.open()
-
-        function open() {
-            active = true
-        }
-
-        sourceComponent: Component {
-            MessageDialog {
-                text: qsTr("To apply the new style, QDash will now close and re-open.")
-                icon: CarboxylEnums.Warning
-                title: qsTr("Reloading")
-                standardButtons: DialogButtonBox.Ok
-
-                onClosed: QDashApplication.reload()
-            }
-        }
     }
 
     // TODO(crueter): Seems like making a LazyLoadDialog in Carboxyl land could be possible.
-    Loader {
+    SettingsDialog {
         id: settingsDialog
-        active: false
-        asynchronous: true
-        onLoaded: item.open()
-
-        sourceComponent: Component {
-            SettingsDialog {
-                onClosed: settingsDialog.active = false
-            }
-        }
     }
 
     // Warn the user if they close before saving.
@@ -226,7 +182,7 @@ ApplicationWindow {
             Action {
                 enabled: CompileDefinitions.useNetwork
                 text: qsTr("Remote &Layouts...")
-                onTriggered: remoteLayouts.active = true
+                onTriggered: remoteLayouts.open()
 
                 shortcut: "Ctrl+L"
             }
@@ -245,7 +201,7 @@ ApplicationWindow {
             Action {
                 text: qsTr("&Settings")
                 shortcut: "Ctrl+,"
-                onTriggered: settingsDialog.active = true
+                onTriggered: settingsDialog.open()
             }
 
             Menu {

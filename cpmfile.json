@@ -4,7 +4,12 @@
         "hash": "7055b38800aa00cf7d44b2ed38367c3b6f1f8c6e5022b7ba34c7088a7710d187358ec2bdfea919524cdd5daba28c875cd8d18d3feec55295881afe79f909d0ad",
         "tag": "v%VERSION%",
         "git_version": "2026.2.1",
-        "version": "2025.1.1"
+        "version": "2025.1.1",
+        "patches": [
+            "0001-wpinet-remove-executables.patch",
+            "0002-wpiutil-remove-executables.patch",
+            "0003-ntcore-remove-executables.patch"
+        ]
     },
     "carboxyl": {
         "package": "Carboxyl",

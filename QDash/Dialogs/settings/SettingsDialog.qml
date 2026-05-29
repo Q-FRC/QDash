@@ -9,108 +9,123 @@ import QDash.Dialogs
 
 import Carboxyl.Contour
 
-NativeDialog {
-    id: serverDialog
+Loader {
+    id: loader
+    active: false
+    asynchronous: true
+    onLoaded: item.open()
 
-    width: 575
-    height: 475
-    title: "Settings"
-
-    onAccepted: {
-        server.accept()
-        appearance.accept()
-        misc.accept()
-
-        QDashSettings.reconnect()
-
-        if (QDashApplication.shouldReload) {
-            QDashApplication.shouldReload = false
-
-            styleWarnDialog.open()
-        }
-    }
-
-    standardButtons: Dialog.Ok | Dialog.Cancel
-
-    Shortcut {
-        onActivated: reject()
-        sequence: Qt.Key_Escape
-    }
+    sourceComponent: active ? src : undefined
 
     function open() {
-        show()
-
-        server.open()
-        misc.open()
+        active = true
     }
 
-    SwipeView {
-        id: swipe
-        currentIndex: tabBar.currentIndex
-        clip: true
+    property Component src: NativeDialog {
+        id: serverDialog
 
-        anchors {
-            top: tabBar.bottom
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
+        width: 575
+        height: 475
+        title: "Settings"
 
-            // topMargin: 10
-            margins: 15
+        onClosed: loader.active = false
+
+        onAccepted: {
+            server.accept()
+            appearance.accept()
+            misc.accept()
+
+            QDashSettings.reconnect()
+
+            if (QDashApplication.shouldReload) {
+                QDashApplication.shouldReload = false
+
+                styleWarnDialog.open()
+            }
         }
 
-        ServerTab {
-            id: server
+        standardButtons: Dialog.Ok | Dialog.Cancel
+
+        Shortcut {
+            onActivated: reject()
+            sequence: Qt.Key_Escape
+        }
+
+        function open() {
+            show()
+
+            server.open()
+            misc.open()
+        }
+
+        SwipeView {
+            id: swipe
+            currentIndex: tabBar.currentIndex
             clip: true
+
+            anchors {
+                top: tabBar.bottom
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+
+                // topMargin: 10
+                margins: 15
+            }
+
+            ServerTab {
+                id: server
+                clip: true
+            }
+
+            AppearanceTab {
+                id: appearance
+                clip: true
+            }
+
+            MiscTab {
+                id: misc
+                clip: true
+            }
         }
 
-        AppearanceTab {
-            id: appearance
-            clip: true
-        }
+        CarboxylTabBar {
+            id: tabBar
+            currentIndex: swipe.currentIndex
+            position: TabBar.Header
 
-        MiscTab {
-            id: misc
-            clip: true
-        }
-    }
+            background: Rectangle {
+                color: "transparent"
+            }
 
-    CarboxylTabBar {
-        id: tabBar
-        currentIndex: swipe.currentIndex
-        position: TabBar.Header
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+            }
 
-        background: Rectangle {
-            color: "transparent"
-        }
+            Component.onCompleted: currentIndex = 0
 
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-        }
+            contentHeight: 80
 
-        Component.onCompleted: currentIndex = 0
+            Repeater {
+                model: ["Network", "Appearance", "Miscellaneous"]
 
-        contentHeight: 80
+                CarboxylTabButton {
+                    required property string modelData
+                    required property int index
 
-        Repeater {
-            model: ["Network", "Appearance", "Miscellaneous"]
+                    id: btn
 
-            CarboxylTabButton {
-                required property string modelData
-                required property int index
+                    text: modelData
 
-                id: btn
+                    icon.height: 40
+                    icon.width: 40
+                    icon.source: "qrc:/" + modelData
 
-                text: modelData
-
-                icon.height: 40
-                icon.width: 40
-                icon.source: "qrc:/" + modelData
-
-                coloredIcon: true
-                inlineIcon: false
+                    coloredIcon: true
+                    inlineIcon: false
+                }
             }
         }
     }

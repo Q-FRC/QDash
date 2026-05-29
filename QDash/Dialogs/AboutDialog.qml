@@ -5,18 +5,33 @@ import QtQuick.Controls
 
 import Carboxyl.Contour
 
-MessageDialog {
-    title: "About QDash"
+Loader {
+    id: loader
+    active: false
+    asynchronous: true
+    onLoaded: item.open()
 
-    textFormat: Text.RichText
+    sourceComponent: active ? src : undefined
 
-    width: 400
-    height: 275
+    function open() {
+        active = true
+    }
 
-    text: "<p>QDash is a reliable, high-performance FRC dashboard with "
-          + "a low resource cost, suited for low-end computers and for maximizing "
-          + "Driver Station resources.</p>" + buildConfig.buildInfo(
-              ) + "Copyleft 2023-2026 crueter"
+    property Component src: MessageDialog {
+        title: "About QDash"
 
-    standardButtons: Dialog.Ok
+        textFormat: Text.RichText
+
+        width: 400
+        height: 275
+
+        text: "<p>QDash is a reliable, high-performance FRC dashboard with "
+              + "a low resource cost, suited for low-end computers and for maximizing "
+              + "Driver Station resources.</p>" + buildConfig.buildInfo(
+                  ) + "Copyleft 2023-2026 crueter"
+
+        standardButtons: Dialog.Ok
+
+        onClosed: loader.active = false
+    }
 }

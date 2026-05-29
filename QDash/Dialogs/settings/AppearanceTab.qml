@@ -7,8 +7,8 @@ import QtQuick.Layouts 6.8
 import Carboxyl.Clover
 import Carboxyl.Contour
 
-import QDash.Config
-import QDash.Items
+import QDash.Controls
+import QDash.Main
 
 RowLayout {
     spacing: 20

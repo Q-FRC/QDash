@@ -1,0 +1,18 @@
+diff --git a/ntcore/CMakeLists.txt b/ntcore/CMakeLists.txt
+index f108a91..3472c64 100644
+--- a/ntcore/CMakeLists.txt
++++ b/ntcore/CMakeLists.txt
+@@ -91,13 +91,3 @@ if(WITH_JAVA_SOURCE)
+
+     install_jar(ntcore_src_jar DESTINATION ${java_lib_dest})
+ endif()
+-
+-add_executable(ntcoredev src/dev/native/cpp/main.cpp)
+-wpilib_target_warnings(ntcoredev)
+-target_link_libraries(ntcoredev ntcore)
+-
+-if(WITH_TESTS)
+-    wpilib_add_test(ntcore src/test/native/cpp)
+-    target_include_directories(ntcore_test PRIVATE src/main/native/cpp)
+-    target_link_libraries(ntcore_test ntcore googletest wpiutil_testlib)
+-endif()

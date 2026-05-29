@@ -1,0 +1,52 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+#ifndef CONNMANAGER_H
+#define CONNMANAGER_H
+
+#include <QObject>
+#include <QQmlEngine>
+#include "BuildConfig/BuildConfig.h"
+
+class TopicStore;
+class ConnManager : public QObject {
+    Q_OBJECT
+
+    Q_PROPERTY(QString title READ title NOTIFY titleChanged FINAL)
+    Q_PROPERTY(bool connected READ connected WRITE setConnected NOTIFY connectedChanged FINAL)
+    Q_PROPERTY(QString status READ status NOTIFY statusChanged FINAL)
+    Q_PROPERTY(QString address READ address WRITE setAddress NOTIFY addressChanged FINAL)
+    Q_PROPERTY(bool modified READ modified WRITE setModified NOTIFY modifiedChanged FINAL)
+public:
+    explicit ConnManager(TopicStore *store, QObject *parent = nullptr);
+
+    QString title() const;
+    QString status() const;
+
+    bool connected() const;
+    void setConnected(bool newConnected);
+
+    QString address() const;
+    void setAddress(const QString &newAddress);
+
+    bool modified() const;
+    void setModified(bool newModified);
+
+private:
+    QString m_status = "Not Connected";
+    QString m_title = BuildConfig.APPLICATION_NAME + " - " + m_status;
+    QString m_address = "0.0.0.0";
+    bool m_connected = false;
+    bool m_modified = false;
+
+    TopicStore *m_store;
+
+signals:
+    void titleChanged();
+    void connectedChanged();
+    void statusChanged();
+    void addressChanged();
+    void modifiedChanged(bool modified);
+};
+
+#endif // CONNMANAGER_H

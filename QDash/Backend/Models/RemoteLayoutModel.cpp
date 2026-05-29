@@ -1,0 +1,170 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+#include "RemoteLayoutModel.h"
+
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+
+#include <QNetworkReply>
+#include <QTimer>
+
+#include "Services/TopicStore.h"
+
+RemoteLayoutModel::RemoteLayoutModel(TopicStore* store, QObject* parent)
+    : QAbstractListModel(parent), m_store{store} {}
+
+int RemoteLayoutModel::rowCount(const QModelIndex &_) const
+{
+    return m_data.count();
+}
+
+QVariant RemoteLayoutModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    RemoteLayout rl = m_data[index.row()];
+
+    switch (role) {
+    case URL:
+        return rl.url;
+    case NAME:
+        return rl.name;
+    case IDX:
+        return index.row();
+    default:
+        break;
+    }
+
+    return QVariant();
+}
+
+void RemoteLayoutModel::add(const QUrl &url, const QString &name)
+{
+    beginInsertRows(QModelIndex(), rowCount(), rowCount());
+
+    RemoteLayout rl;
+    rl.url = url;
+    rl.name = name;
+
+    m_data << rl;
+
+    endInsertRows();
+}
+
+bool RemoteLayoutModel::load()
+{
+    clear();
+    auto conns = m_store->getConnections();
+    if (conns.empty()) {
+        // slight delay because uhhhhhh i forget
+        QTimer::singleShot(100, [this]() { emit failed(); });
+        return false;
+    }
+
+    nt::ConnectionInfo info = conns.at(0);
+    QString ip = QString::fromStdString(info.remote_ip);
+
+    // assume port 5800 (TODO)
+    QUrl url = QStringLiteral("http://%1:5800/?format=json").arg(ip);
+
+    QNetworkRequest req(url);
+    QNetworkReply *reply = m_manager.get(req);
+
+    connect(reply, &QNetworkReply::finished, this, [this, reply, ip] {
+        QByteArray response = reply->readAll();
+
+        if (reply->error() != QNetworkReply::NoError) {
+            emit failed();
+            reply->deleteLater();
+            return;
+        }
+
+        QJsonDocument doc = QJsonDocument::fromJson(response);
+
+        QJsonObject obj = doc.object();
+        QJsonArray files = obj.value("files").toArray();
+
+        for (QJsonValueConstRef ref : std::as_const(files)) {
+            QJsonObject obj = ref.toObject();
+
+            QString name = obj.value("name").toString();
+
+            if (name.endsWith(".json")) {
+                QUrl url = "http://" + ip + ":5800/" + name;
+
+                add(url, name);
+            }
+        }
+
+        emit listReady();
+
+        reply->deleteLater();
+    });
+
+    return true;
+}
+
+void RemoteLayoutModel::clear()
+{
+    beginResetModel();
+    m_data.clear();
+    endResetModel();
+}
+
+void RemoteLayoutModel::download(const QUrl &url, const QString &filename)
+{
+    QNetworkRequest req(url);
+    QNetworkReply *reply = m_manager.get(req);
+    QString name = filename;
+
+#ifdef Q_OS_WINDOWS
+    name.replace("file:///", "");
+#else
+    name.replace("file://", "");
+#endif
+
+    connect(reply, &QNetworkReply::finished, this, [this, reply, name] {
+        QFile file(name);
+
+        QByteArray content = reply->readAll();
+
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+            return;
+        }
+
+        file.write(content);
+
+        file.close();
+
+        emit fileOpened(name);
+    });
+}
+
+QString RemoteLayoutModel::name(int index)
+{
+    if (index < 0 || index >= m_data.count())
+        return {};
+    const auto rl = m_data[index];
+    return rl.name;
+}
+
+QUrl RemoteLayoutModel::url(int index)
+{
+    if (index < 0 || index >= m_data.count())
+        return {};
+    const auto rl = m_data[index];
+    return rl.url;
+}
+
+QHash<int, QByteArray> RemoteLayoutModel::roleNames() const
+{
+    QHash<int, QByteArray> rez;
+    rez[URL] = "url";
+    rez[NAME] = "name";
+    rez[IDX] = "idx";
+
+    return rez;
+}

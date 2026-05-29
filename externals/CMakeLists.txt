@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 crueter
+# SPDX-FileCopyrightText: Copyright 2026 crueter
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 cmake_minimum_required(VERSION 3.22)
@@ -21,6 +21,7 @@ set(WITH_WPIMATH OFF)
 set(WITH_WPILIB OFF)
 set(WITH_TESTS OFF)
 set(WITH_GUI OFF)
+set(WITH_BENCHMARK OFF)
 
 set(WITH_PROTOBUF OFF)
 set(WITH_SIMULATION_MODULES OFF)

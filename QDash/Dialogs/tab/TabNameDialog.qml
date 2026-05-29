@@ -7,7 +7,7 @@ import QtQuick.Layouts 6.8
 import Carboxyl.Clover
 import Carboxyl.Contour
 
-import QDash.Config
+import QDash.Controls
 
 NativeDialog {
     id: tabNameDialog

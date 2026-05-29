@@ -5,7 +5,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.8
 
 import Carboxyl.Clover
-import QDash.Config
+import QDash.Controls
 
 ColumnLayout {
     spacing: 15
