@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "BuildConfig.h"
-#include "Helpers/FileSelect.h"
 #include "Helpers/NotificationHelper.h"
 #include "Helpers/PlatformHelper.h"
 #include "Models/RemoteLayoutModel.h"
@@ -22,12 +21,11 @@
 #include <QQmlContext>
 #include <QSortFilterProxyModel>
 #include <QStandardPaths>
-#include <QWidget>
 #include "Helpers/CompileDefinitions.h"
 
 static constexpr const int EXIT_RELOAD = -2;
 
-QDashApplication::QDashApplication(int& argc, char* argv[]) : QApplication(argc, argv) {
+QDashApplication::QDashApplication(int& argc, char* argv[]) : QGuiApplication(argc, argv) {
     QGuiApplication::setOrganizationName(BuildConfig.ORGANIZATION_NAME);
     QGuiApplication::setApplicationName(BuildConfig.APPLICATION_NAME);
     QGuiApplication::setApplicationVersion(BuildConfig.GIT_TAG);
@@ -36,12 +34,10 @@ QDashApplication::QDashApplication(int& argc, char* argv[]) : QApplication(argc,
     QGuiApplication::setDesktopFileName("" + BuildConfig.APPLICATION_NAME);
 
     m_engine = new QQmlApplicationEngine(this);
-    m_widget = new QWidget;
 
     platform = new PlatformHelper(this);
     logs = new Logger(this);
     defs = new CompileDefinitions(this);
-    fileSelect = new FileSelect(m_widget);
 
     // TODO: Move logging to singletons, and expose simple log functions to QML
 
@@ -81,7 +77,6 @@ QDashApplication::QDashApplication(int& argc, char* argv[]) : QApplication(argc,
     ctx->setContextProperty("CompileDefinitions", defs);
     ctx->setContextProperty("buildConfig", &BuildConfig);
     ctx->setContextProperty("logs", logs);
-    ctx->setContextProperty("FileSelect", fileSelect);
 
     // :)
     ctx->setContextProperty(QStringLiteral("QDashApplication"), this);
@@ -106,7 +101,6 @@ QString QDashApplication::toLocalPath(const QString& path) {
 int QDashApplication::run() {
     m_engine->loadFromModule("QDash.Main", "Main");
     int ret = exec();
-    m_widget->deleteLater();
     return ret;
 }
 
@@ -142,11 +136,11 @@ QString QDashApplication::wordToState(int val) {
 
 void QDashApplication::reload() {
     qDebug() << "Reload called";
-    QString program = QApplication::applicationFilePath();
+    QString program = QGuiApplication::applicationFilePath();
 #if defined(TARGET_OS_IOS) || defined(__ANDROID__)
     qWarning() << "Platform does not support native reload, exiting instead";
 #else
-    QProcess::startDetached(program, QApplication::arguments().mid(1));
+    QProcess::startDetached(program, QGuiApplication::arguments().mid(1));
 #endif
     exit(0);
 }

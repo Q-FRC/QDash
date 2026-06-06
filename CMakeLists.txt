@@ -38,14 +38,14 @@ option(QDASH_CAMVIEW "Enable camera view widget (Requires QtMultimedia)" ON)
 cmake_dependent_option(QDASH_NETWORK "Enable remote layout feature (Requires QtNetwork)" ON "NOT QDASH_WEBVIEW" ON)
 
 set(QT_NO_PRIVATE_MODULE_WARNING ON)
-set(QDASH_QT_COMPONENTS Core Quick QuickControls2 Widgets QmlCore LabsQmlModels QuickDialogs2
+set(QDASH_QT_COMPONENTS Core Quick QuickControls2 QmlCore  QuickDialogs2
     QuickLayouts QuickEffects QuickControls2Basic QuickControls2Material QuickControls2Fusion QuickControls2Universal)
 set(QDASH_QT_OPTIONAL GuiPrivate QuickTemplates2Private QuickPrivate)
 set(QDASH_QT_LIBRARIES
-    Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Widgets Qt6::Qml
+    Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Qml
     Carboxyl::Carboxyl
 
-    Qt6::LabsQmlModels
+
     Qt6::QuickDialogs2)
 
 if (QDASH_WEBVIEW)
@@ -100,7 +100,17 @@ endif()
 
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 6.8 REQUIRED
+find_package(Qt6 6.8 REQUIRED)
+
+if (Qt6_VERSION VERSION_GREATER_EQUAL 6.9)
+    list(APPEND QDASH_QT_COMPONENTS QmlModels)
+    list(APPEND QDASH_QT_LIBRARIES Qt6::QmlModels)
+else()
+    list(APPEND QDASH_QT_COMPONENTS LabsQmlModels)
+    list(APPEND QDASH_QT_LIBRARIES Qt6::LabsQmlModels)
+endif()
+
+find_package(Qt6 REQUIRED
     COMPONENTS ${QDASH_QT_COMPONENTS}
     OPTIONAL_COMPONENTS ${QDASH_QT_OPTIONAL})
 

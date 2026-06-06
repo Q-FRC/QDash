@@ -22,13 +22,15 @@ Loader {
     sourceComponent: active ? src : undefined
 
     property Component src: Component {
-        NativeDialog {
+        CarboxylDialog {
             property url selected
 
             id: remote
 
-            width: 350
-            height: 350
+            implicitWidth: 350
+            implicitHeight: 350
+
+            popupType: Popup.Window
 
             title: "Remote Layouts"
 
@@ -40,7 +42,7 @@ Loader {
                 selected = RemoteLayoutModel.url(list.currentIndex)
                 let defaultPath = StandardPaths.writableLocation(
                         StandardPaths.AppLocalDataLocation) + "/layout.json"
-                let filename = FileSelect.getSaveFileName(
+                let filename = CarboxylQuickInterface.getSaveFileName(
                         qsTr("Save Layout"), defaultPath,
                         "JSON files (*.json);;All files (*)")
                 RemoteLayoutModel.download(selected, filename)
@@ -53,7 +55,7 @@ Loader {
                     busy.running = true
             }
 
-            MessageDialog {
+            CarboxylMessageDialog {
                 width: 350
                 height: 350
 

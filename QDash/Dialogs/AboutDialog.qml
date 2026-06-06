@@ -17,7 +17,7 @@ Loader {
         active = true
     }
 
-    property Component src: MessageDialog {
+    property Component src: CarboxylMessageDialog {
         title: "About QDash"
 
         textFormat: Text.RichText

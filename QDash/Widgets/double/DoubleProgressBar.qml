@@ -9,6 +9,7 @@ import QDash.Widgets
 
 import Carboxyl.Clover
 
+// TODO: Make vertical automatically based on height/width
 PrimitiveWidget {
     id: widget
 

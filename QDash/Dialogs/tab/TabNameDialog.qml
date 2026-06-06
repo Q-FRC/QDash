@@ -1,62 +1,81 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 6.8
+import QtQuick
+import QtQuick.Controls
 
 import Carboxyl.Clover
 import Carboxyl.Contour
 
 import QDash.Controls
 
-NativeDialog {
-    id: tabNameDialog
+Loader {
+    id: loader
+    active: false
+    asynchronous: true
+    onLoaded: item.open()
 
-    title: "New Tab"
-
-    height: tabName.implicitHeight + footer.height + 40
-    width: 300
+    sourceComponent: active ? src : undefined
 
     property string text
 
+    signal accepted
+
     function open() {
-        show()
-        tabName.focus = true
-        tabName.text = ""
+        active = true
     }
 
-    onAccepted: text = tabName.text
+    property Component src: CarboxylDialog {
+        id: tabNameDialog
 
-    standardButtons: Dialog.Ok | Dialog.Cancel
+        title: "New Tab"
 
-    Shortcut {
-        onActivated: reject()
-        sequence: Qt.Key_Escape
-    }
+        implicitWidth: 300
 
-    Shortcut {
-        onActivated: accept()
-        sequence: Qt.Key_Return
-    }
+        popupType: Popup.Window
 
-    LabeledTextField {
-        id: tabName
-        font.pixelSize: 24
-        implicitHeight: 48
-
-        anchors {
-            left: parent.left
-            right: parent.right
-
-            verticalCenter: parent.verticalCenter
-            margins: 10
+        onAboutToShow: {
+            tabName.focus = true
+            tabName.text = ""
         }
 
-        onAccepted: tabNameDialog.accept()
+        onAccepted: {
+            loader.text = tabName.text
+            loader.accepted()
+        }
 
-        label: "Tab Name"
+        standardButtons: Dialog.Ok | Dialog.Cancel
 
-        bindTarget: parent
-        bindedProperty: "text"
+        Shortcut {
+            onActivated: reject()
+            sequence: Qt.Key_Escape
+        }
+
+        Shortcut {
+            onActivated: accept()
+            sequence: Qt.Key_Return
+        }
+
+        LabeledTextField {
+            id: tabName
+            font.pixelSize: 24
+            implicitHeight: 48
+
+            anchors {
+                left: parent.left
+                right: parent.right
+
+                verticalCenter: parent.verticalCenter
+                margins: 10
+            }
+
+            onAccepted: tabNameDialog.accept()
+
+            label: "Tab Name"
+
+            bindTarget: parent
+            bindedProperty: "text"
+        }
+
+        onClosed: loader.active = false
     }
 }

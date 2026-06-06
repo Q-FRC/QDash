@@ -7,12 +7,13 @@ import Carboxyl.Clover
 
 import Carboxyl.Contour
 
-NativeDialog {
+CarboxylDialog {
     required property Item content
     id: config
 
-    height: content.implicitHeight + footer.height + 10
-    width: 550
+    popupType: Popup.Window
+
+    implicitWidth: 550
 
     title: "Configure Widget"
 
@@ -21,15 +22,13 @@ NativeDialog {
     ScrollView {
         anchors {
             fill: parent
-
-            margins: 5
         }
 
         onWidthChanged: contentWidth = width - effectiveScrollBarWidth
         contentChildren: [content]
     }
 
-    function open() {
+    onAboutToShow: {
         // TODO: This should be recursive but also idc
         for (var i = 0; i < layout.children.length; ++i) {
             var child = layout.children[i]
@@ -46,8 +45,6 @@ NativeDialog {
                 }
             }
         }
-
-        show()
     }
 
     onAccepted: {
@@ -67,9 +64,6 @@ NativeDialog {
                 }
             }
         }
-
-        if (configLoader)
-            configLoader.active = false
 
         twm.modified = true
     }

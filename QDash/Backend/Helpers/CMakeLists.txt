@@ -7,7 +7,7 @@ qt_add_library(QDashHelpers STATIC
     CompileDefinitions.h
     NotificationHelper.cpp NotificationHelper.h
     PlatformHelper.cpp PlatformHelper.h
-    FileSelect.h)
+)
 
 target_link_libraries(QDashHelpers PRIVATE
-    Qt6::Core Qt6::Gui Qt6::Quick Qt6::Qml Qt6::Widgets)
+    Qt6::Core Qt6::Gui Qt6::Quick Qt6::Qml)

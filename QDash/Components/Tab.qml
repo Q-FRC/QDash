@@ -291,7 +291,6 @@ Rectangle {
                 StringChooser {}
             }
 
-            // TODO: Physically remove it from the model if not present.
             DelegateChoice {
                 roleValue: "camera"
 
@@ -300,7 +299,7 @@ Rectangle {
                     z: 3
 
                     sourceComponent: CompileDefinitions.useCameraView ? Qt.createComponent(
-                                                                            "../Widgets/Misc/CameraView.qml") : nullComponent
+                                                                            "../Widgets/Misc/CameraView.qml") : null
                 }
             }
 
@@ -310,7 +309,7 @@ Rectangle {
                     z: 3
 
                     sourceComponent: CompileDefinitions.useWebView ? Qt.createComponent(
-                                                                         "../Widgets/Misc/WebView.qml") : nullComponent
+                                                                         "../Widgets/Misc/WebView.qml") : null
                 }
             }
 
@@ -320,7 +319,7 @@ Rectangle {
                     z: 3
 
                     sourceComponent: CompileDefinitions.useCameraView ? Qt.createComponent(
-                                                                            "../Widgets/Misc/UrlCameraView.qml") : nullComponent
+                                                                            "../Widgets/Misc/UrlCameraView.qml") : null
                 }
             }
 

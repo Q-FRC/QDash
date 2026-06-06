@@ -110,7 +110,7 @@ ApplicationWindow {
     }
 
     function saveAs() {
-        let newName = FileSelect.getSaveFileName(
+        let newName = CarboxylQuickInterface.getSaveFileName(
                 qsTr("Save Layout"),
                 QDashApplication.dataLocation + "/layout.json",
                 "JSON files (*.json);;All files (*)")
@@ -124,7 +124,7 @@ ApplicationWindow {
 
     /** LOAD */
     function load() {
-        let newName = FileSelect.getOpenFileName(
+        let newName = CarboxylQuickInterface.getOpenFileName(
                 qsTr("Open Layout"),
                 QDashApplication.dataLocation + "/layout.json",
                 "JSON files (*.json);;All files (*)")
@@ -256,7 +256,7 @@ ApplicationWindow {
 
             Action {
                 text: qsTr("About &Qt")
-                onTriggered: QDashApplication.aboutQt()
+                onTriggered: CarboxylApplication.aboutQt()
             }
 
             Action {

@@ -1,4 +1,3 @@
-
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtCore
@@ -24,7 +23,7 @@ Loader {
     sourceComponent: active ? src : undefined
 
     property Component src: Component {
-        MessageDialog {
+        CarboxylMessageDialog {
             text: qsTr("To apply the new style, QDash will now close and re-open.")
             icon: CarboxylEnums.Warning
             title: qsTr("Reloading")

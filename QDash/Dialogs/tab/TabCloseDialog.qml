@@ -6,12 +6,33 @@ import QtQuick.Controls
 import Carboxyl.Clover
 import Carboxyl.Contour
 
-MessageDialog {
-    title: "Close Tab?"
+Loader {
+    id: loader
+    active: false
+    asynchronous: true
+    onLoaded: item.open()
 
-    text: "Are you sure you want to close this tab?"
-    icon: CarboxylEnums.Question
-    textFont.pixelSize: 16
+    sourceComponent: active ? src : undefined
 
-    standardButtons: Dialog.Yes | Dialog.No
+    signal accepted
+
+    function open() {
+        active = true
+    }
+
+    property Component src: CarboxylMessageDialog {
+        title: "Close Tab?"
+
+        text: "Are you sure you want to close this tab?"
+        icon: CarboxylEnums.Question
+        textFont.pixelSize: 16
+
+        standardButtons: Dialog.Yes | Dialog.No
+
+        onAccepted: loader.accepted()
+
+        onClosed: {
+            loader.active = false
+        }
+    }
 }

@@ -21,12 +21,14 @@ Loader {
         active = true
     }
 
-    property Component src: NativeDialog {
+    property Component src: CarboxylDialog {
         id: serverDialog
 
-        width: 575
-        height: 475
+        implicitWidth: 575
+        implicitHeight: 475
         title: "Settings"
+
+        popupType: Popup.Window
 
         onClosed: loader.active = false
 
@@ -51,9 +53,7 @@ Loader {
             sequence: Qt.Key_Escape
         }
 
-        function open() {
-            show()
-
+        onAboutToShow: {
             server.open()
             misc.open()
         }
@@ -69,7 +69,6 @@ Loader {
                 left: parent.left
                 right: parent.right
 
-                // topMargin: 10
                 margins: 15
             }
 
@@ -104,8 +103,6 @@ Loader {
                 right: parent.right
             }
 
-            Component.onCompleted: currentIndex = 0
-
             contentHeight: 80
 
             Repeater {
@@ -114,6 +111,9 @@ Loader {
                 CarboxylTabButton {
                     required property string modelData
                     required property int index
+
+                    // TODO(crueter): Why
+                    Component.onCompleted: tabBar.setCurrentIndex(0)
 
                     id: btn
 

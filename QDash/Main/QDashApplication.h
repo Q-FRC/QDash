@@ -3,10 +3,10 @@
 
 #pragma once
 
-#include <QApplication>
+#include <QGuiApplication>
 
 class QQmlApplicationEngine;
-class FileSelect;
+class CarboxylQuickInterface;
 class NotificationHelper;
 class PlatformHelper;
 class ConnManager;
@@ -19,7 +19,7 @@ class CompileDefinitions;
 class Logger;
 class RemoteLayoutModel;
 
-class QDashApplication : public QApplication {
+class QDashApplication : public QGuiApplication {
     Q_OBJECT
     Q_PROPERTY(bool shouldReload MEMBER m_shouldReload)
     Q_PROPERTY(QString dataLocation READ dataLocation CONSTANT FINAL)
@@ -65,7 +65,6 @@ private:
     TabListModel *tlm;
     PlatformHelper *platform;
     NotificationHelper *notification;
-    FileSelect *fileSelect;
 
     bool m_shouldReload = false;
 };

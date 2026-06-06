@@ -147,55 +147,27 @@ void TabListModel::selectTab(const QString &tab)
         onDropped: pos => drop(pos, true)
     }
 
-    Loader {
+    TabNameDialog {
         id: tabNameDialog
-        active: false
-        asynchronous: true
-        onLoaded: item.open()
 
-        sourceComponent: Component {
-            TabNameDialog {
-                onAccepted: {
-                    TabListModel.add(tabNameDialog.item.text)
-                    swipe.setCurrentIndex(swipe.count - 1)
-                    TabListModel.modified = true
-                }
-
-                onClosed: tabNameDialog.active = false
-            }
+        onAccepted: {
+            TabListModel.add(text)
+            swipe.setCurrentIndex(swipe.count - 1)
+            TabListModel.modified = true
         }
     }
 
-    Loader {
+    TabDialog {
         id: tabConfigDialog
-        active: false
-        asynchronous: true
-        onLoaded: {
-            item.columns = columns
-            item.rows = rows
-            item.name = name
 
-            item.open()
-        }
+        onAccepted: {
+            let tab = mainScreen.currentTab()
+            if (!tab)
+                return
+            tab.setSize(rows, columns)
+            tab.setName(name)
 
-        property int columns
-        property int rows
-        property string name
-
-        sourceComponent: Component {
-            TabDialog {
-                onAccepted: {
-                    let tab = mainScreen.currentTab()
-                    if (!tab)
-                        return
-                    tab.setSize(rows, columns)
-                    tab.setName(name)
-
-                    TabListModel.modified = true
-                }
-
-                onClosed: tabConfigDialog.active = false
-            }
+            TabListModel.modified = true
         }
     }
 
@@ -220,21 +192,11 @@ void TabListModel::selectTab(const QString &tab)
     }
 
     /** CLOSE TAB */
-    Loader {
+    TabCloseDialog {
         id: tabClose
-        active: false
-        asynchronous: true
-        onLoaded: item.open()
-
-        sourceComponent: Component {
-            TabCloseDialog {
-                onAccepted: TabListModel.remove(swipe.currentIndex)
-
-                onClosed: {
-                    tabClose.active = false
-                    TabListModel.modified = true
-                }
-            }
+        onAccepted: {
+            TabListModel.modified = true
+            TabListModel.remove(swipe.currentIndex)
         }
     }
 
