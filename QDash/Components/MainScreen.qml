@@ -35,22 +35,6 @@ Rectangle {
                      }
     }
 
-
-    /*
-void TabListModel::selectTab(const QString &tab)
-{
-    for (int i = 0; i < rowCount(); ++i) {
-        Tab t = m_data.at(i);
-        if (t.title == tab) {
-            m_selectedTab = i;
-            emit selectedTabChanged();
-            return;
-        }
-    }
-
-    m_logs->warn("Layout", "Failed to select nonexistent " + tab + ".");
-}
-*/
     function setTab(value) {
         let idx = TabListModel.tabNamed(value)
         if (idx !== -1) {
