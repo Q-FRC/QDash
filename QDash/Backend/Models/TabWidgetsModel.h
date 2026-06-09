@@ -92,8 +92,6 @@ signals:
 
     void colsChanged();
 
-    void beforeSave();
-
     void modifiedChanged(bool modified);
 
 private:

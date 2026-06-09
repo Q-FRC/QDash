@@ -215,18 +215,12 @@ Rectangle {
 
             if (typeof jsonProp !== "undefined")
                 this[p] = jsonProp
-        }
-    }
 
-    Connections {
-        target: tab.twm
-        function onBeforeSave() {
-            let props = {}
-            for (var i = 0; i < propertyKeys.length; i++) {
-                let p = propertyKeys[i]
-                props[p] = widget[p]
-            }
-            model.properties = props
+            this[p + "Changed"].connect(() => {
+                                            let x = model.properties
+                                            x[p] = this[p]
+                                            model.properties = x
+                                        })
         }
     }
 
