@@ -12,6 +12,31 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    propertyKeys: ["fontSize"]
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Color"
+
+                onTriggered: {
+                    model.type = "colorText"
+                }
+            }
+
+            MenuItem {
+                text: "Text Display"
+
+                onTriggered: {
+                    model.type = "textDisplay"
+                }
+            }
+        }
+    }
+
     property int fontSize: QDashSettings.defaultFontSize
 
     function update(value) {
@@ -19,11 +44,35 @@ PrimitiveWidget {
         textField.text = value
     }
 
-    propertyKeys: ["fontSize"]
+    Item {
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            leftMargin: 10
+            right: parent.right
+            rightMargin: 10
+            top: titleField.bottom
+        }
+
+        TextField {
+            id: textField
+
+            enabled: widget.connected
+            font.pixelSize: fontSize
+
+            onTextEdited: {
+                widget.setValue(text)
+            }
+
+            anchors {
+                left: parent.left
+                right: parent.right
+                verticalCenter: parent.verticalCenter
+            }
+        }
+    }
 
     configContent: ColumnLayout {
-        id: layout
-
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
@@ -52,57 +101,6 @@ PrimitiveWidget {
         LabeledTextField {
             bindedProperty: "item_topic"
             label: "Topic"
-        }
-    }
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Color"
-
-                onTriggered: {
-                    model.type = "colorText"
-                }
-            }
-
-            MenuItem {
-                text: "Text Display"
-
-                onTriggered: {
-                    model.type = "textDisplay"
-                }
-            }
-        }
-    }
-
-    Item {
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            leftMargin: 10
-            right: parent.right
-            rightMargin: 10
-            top: titleField.bottom
-        }
-
-        TextField {
-            id: textField
-
-            enabled: widget.connected
-            font.pixelSize: fontSize
-
-            onTextEdited: {
-                widget.setValue(text)
-            }
-
-            anchors {
-                left: parent.left
-                right: parent.right
-                verticalCenter: parent.verticalCenter
-            }
         }
     }
 }

@@ -11,57 +11,7 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
-    property int maxFontSize: QDashSettings.defaultDisplayFontSize
-    property color warningColor: "yellow"
-
-    function update(value) {
-        txt.value = Math.ceil(value)
-    }
-
     propertyKeys: ["maxFontSize", "warningColor"]
-
-    configContent: ColumnLayout {
-        id: layout
-
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
-
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "titleFontSize"
-                label: "Title Font Size"
-            }
-
-            LabeledSpinBox {
-                bindedProperty: "maxFontSize"
-                label: "Maximum Font Size"
-            }
-        }
-
-        SectionHeader {
-            label: "Display Settings"
-        }
-
-        ColorField {
-            bindedProperty: "warningColor"
-            label: "Warning Color"
-        }
-
-        SectionHeader {
-            label: "NT Settings"
-        }
-
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
-        }
-    }
     menuExtension: Component {
         Menu {
             id: switchMenu
@@ -110,6 +60,13 @@ PrimitiveWidget {
         }
     }
 
+    property int maxFontSize: QDashSettings.defaultDisplayFontSize
+    property color warningColor: "yellow"
+
+    function update(value) {
+        txt.value = Math.ceil(value)
+    }
+
     Text {
         id: txt
 
@@ -118,9 +75,11 @@ PrimitiveWidget {
         color: value < 30 ? warningColor : Clover.theme.currentAccent
         font.pixelSize: maxFontSize
         fontSizeMode: Text.Fit
+
         horizontalAlignment: Text.AlignHCenter
-        text: Math.floor(value / 60) + ":" + String((value % 60).toFixed(0)).padStart(2, '0')
         verticalAlignment: Text.AlignVCenter
+
+        text: Math.floor(value / 60) + ":" + String((value % 60).toFixed(0)).padStart(2, '0')
 
         anchors {
             bottom: parent.bottom
@@ -128,6 +87,47 @@ PrimitiveWidget {
             margins: 10
             right: parent.right
             top: titleField.bottom
+        }
+    }
+
+    configContent: ColumnLayout {
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
+        spacing: 12
+
+        SectionHeader {
+            label: "Font Settings"
+        }
+
+        RowLayout {
+            LabeledSpinBox {
+                bindedProperty: "titleFontSize"
+                label: "Title Font Size"
+            }
+
+            LabeledSpinBox {
+                bindedProperty: "maxFontSize"
+                label: "Maximum Font Size"
+            }
+        }
+
+        SectionHeader {
+            label: "Display Settings"
+        }
+
+        ColorField {
+            bindedProperty: "warningColor"
+            label: "Warning Color"
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            bindedProperty: "item_topic"
+            label: "Topic"
         }
     }
 }

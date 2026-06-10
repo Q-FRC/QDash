@@ -13,6 +13,9 @@ import QtQuick.Layouts
 SendableWidget {
     id: widget
 
+    propertyKeys: ["fontSize"]
+    topics: ["options", "active", "selected"]
+
     property int fontSize: 14
     property bool readyToUpdate: true
 
@@ -37,45 +40,6 @@ SendableWidget {
 
                 break
             }
-        }
-    }
-
-    propertyKeys: ["fontSize"]
-    topics: ["options", "active", "selected"]
-
-    // TODO(crueter): Alongside deduping the loader stuff, most of this is just
-    // type-label-property, with maybe a few extras... possible schema candidate?
-    configContent: ColumnLayout {
-        id: layout
-
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
-
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "titleFontSize"
-                label: "Title Font Size"
-            }
-
-            LabeledSpinBox {
-                bindedProperty: "fontSize"
-                label: "Font Size"
-            }
-        }
-
-        SectionHeader {
-            label: "NT Settings"
-        }
-
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
         }
     }
 
@@ -147,6 +111,40 @@ SendableWidget {
                 right: parent.right
                 verticalCenter: combo.verticalCenter
             }
+        }
+    }
+
+    // TODO(crueter): Alongside deduping the loader stuff, most of this is just
+    // type-label-property, with maybe a few extras... possible schema candidate?
+    configContent: ColumnLayout {
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
+        spacing: 12
+
+        SectionHeader {
+            label: "Font Settings"
+        }
+
+        RowLayout {
+            LabeledSpinBox {
+                bindedProperty: "titleFontSize"
+                label: "Title Font Size"
+            }
+
+            LabeledSpinBox {
+                bindedProperty: "fontSize"
+                label: "Font Size"
+            }
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            bindedProperty: "item_topic"
+            label: "Topic"
         }
     }
 }

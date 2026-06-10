@@ -13,6 +13,63 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    propertyKeys: ["stepSize", "fontSize", "startAngle", "endAngle", "lowerBound", "upperBound"]
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Spin Box"
+
+                onTriggered: {
+                    model.type = "double"
+                }
+            }
+
+            MenuItem {
+                text: "Radial Gauge"
+
+                onTriggered: {
+                    model.type = "doubleGauge"
+                }
+            }
+
+            MenuItem {
+                text: "Progress Bar"
+
+                onTriggered: {
+                    model.type = "doubleBar"
+                }
+            }
+
+            MenuItem {
+                text: "Number Display"
+
+                onTriggered: {
+                    model.type = "doubleDisplay"
+                }
+            }
+
+            MenuItem {
+                text: "Match Time"
+
+                onTriggered: {
+                    model.type = "matchTime"
+                }
+            }
+
+            MenuItem {
+                text: "Phase Display"
+
+                onTriggered: {
+                    model.type = "phaseShift"
+                }
+            }
+        }
+    }
+
     property double endAngle: 180
     property int fontSize: QDashSettings.defaultFontSize
     property double lowerBound: -100000.0
@@ -26,11 +83,73 @@ PrimitiveWidget {
         dial.value = value
     }
 
-    propertyKeys: ["stepSize", "fontSize", "startAngle", "endAngle", "lowerBound", "upperBound"]
+    DoubleSpinBox {
+        id: spin
+
+        function move(val) {
+            let previousValue = value
+
+            value = val
+            widget.setValue(value)
+
+            widget.valid = Math.abs(previousValue - value) < 0.01
+        }
+
+        editable: true
+        enabled: widget.connected
+
+        font.pixelSize: widget.fontSize
+
+        from: widget.lowerBound
+        to: widget.upperBound
+        stepSize: widget.stepSize
+
+        value: 0
+
+        onValueModified: {
+            dial.value = value
+            widget.setValue(value)
+        }
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+
+            margins: 10
+        }
+    }
+
+    Dial {
+        id: dial
+
+        width: Math.min(parent.width, spin.y - titleField.height - 40)
+        height: width
+
+        enabled: widget.connected
+
+        endAngle: widget.endAngle
+        startAngle: widget.startAngle
+
+        from: widget.lowerBound
+        to: widget.upperBound
+        stepSize: widget.stepSize
+
+        inputMode: Dial.Circular
+        value: 0
+
+        onMoved: {
+            spin.move(value)
+        }
+
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            margins: 20
+            top: titleField.bottom
+        }
+    }
 
     configContent: ColumnLayout {
-        id: layout
-
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
@@ -99,120 +218,6 @@ PrimitiveWidget {
         LabeledTextField {
             bindedProperty: "item_topic"
             label: "Topic"
-        }
-    }
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Spin Box"
-
-                onTriggered: {
-                    model.type = "double"
-                }
-            }
-
-            MenuItem {
-                text: "Radial Gauge"
-
-                onTriggered: {
-                    model.type = "doubleGauge"
-                }
-            }
-
-            MenuItem {
-                text: "Progress Bar"
-
-                onTriggered: {
-                    model.type = "doubleBar"
-                }
-            }
-
-            MenuItem {
-                text: "Number Display"
-
-                onTriggered: {
-                    model.type = "doubleDisplay"
-                }
-            }
-
-            MenuItem {
-                text: "Match Time"
-
-                onTriggered: {
-                    model.type = "matchTime"
-                }
-            }
-
-            MenuItem {
-                text: "Phase Display"
-
-                onTriggered: {
-                    model.type = "phaseShift"
-                }
-            }
-        }
-    }
-
-    DoubleSpinBox {
-        id: spin
-
-        function move(val) {
-            let previousValue = value
-
-            value = val
-            widget.setValue(value)
-
-            widget.valid = Math.abs(previousValue - value) < 0.01
-        }
-
-        editable: true
-        enabled: widget.connected
-        font.pixelSize: widget.fontSize
-        from: widget.lowerBound
-        stepSize: widget.stepSize
-        to: widget.upperBound
-        value: 0
-
-        onValueModified: {
-            dial.value = value
-            widget.setValue(value)
-        }
-
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            margins: 10
-            right: parent.right
-        }
-    }
-
-    Dial {
-        id: dial
-
-        enabled: widget.connected
-        endAngle: widget.endAngle
-        font.pixelSize: widget.fontSize
-        from: widget.lowerBound
-        height: width
-        inputMode: Dial.Circular
-        startAngle: widget.startAngle
-        stepSize: widget.stepSize
-        to: widget.upperBound
-        value: 0
-        width: Math.min(parent.width, spin.y - titleField.height - 40)
-
-        onMoved: {
-            spin.move(value)
-        }
-
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            margins: 20
-            top: titleField.bottom
         }
     }
 }

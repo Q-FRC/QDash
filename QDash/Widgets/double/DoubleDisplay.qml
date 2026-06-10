@@ -12,71 +12,7 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
-    property int decimals: 2
-    property color fontColor: Clover.theme.currentAccent
-    property int maxFontSize: QDashSettings.defaultDisplayFontSize
-
-    function update(value) {
-        widget.connected = true
-        txt.value = value
-    }
-
     propertyKeys: ["maxFontSize", "decimals", "fontColor"]
-
-    configContent: ColumnLayout {
-        id: layout
-
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
-
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "titleFontSize"
-                label: "Title Font Size"
-            }
-
-            LabeledSpinBox {
-                bindedProperty: "maxFontSize"
-                label: "Maximum Font Size"
-            }
-        }
-
-        SectionHeader {
-            label: "Display Settings"
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "decimals"
-                from: 0
-                label: "Number of Decimals"
-            }
-
-            ColorField {
-                bindedProperty: "color"
-                label: "Text Color"
-            }
-        }
-
-        SectionHeader {
-            label: "NT Settings"
-        }
-
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
-        }
-    }
-
-    // TODO(crueter): There should be some kind of interface that maps names to model types
-    // That way we can just use Repeater or whatever, or define all the widget types for a specific
-    // type???
     menuExtension: Component {
         Menu {
             id: switchMenu
@@ -133,25 +69,86 @@ PrimitiveWidget {
         }
     }
 
+    property int decimals: 2
+    property color fontColor: Clover.theme.currentAccent
+    property int maxFontSize: QDashSettings.defaultDisplayFontSize
+
+    function update(value) {
+        widget.connected = true
+        txt.value = value
+    }
+
     Text {
         id: txt
 
         property double value
 
-        color: widget.fontColor
-        enabled: widget.connected
         font.pixelSize: maxFontSize
         fontSizeMode: Text.Fit
-        horizontalAlignment: Text.AlignHCenter
+        enabled: widget.connected
+
+        color: widget.fontColor
         text: value.toFixed(decimals)
+
+        horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
         anchors {
-            bottom: parent.bottom
             left: parent.left
-            margins: 10
             right: parent.right
+            bottom: parent.bottom
             top: titleField.bottom
+
+            margins: 10
+        }
+    }
+
+    configContent: ColumnLayout {
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
+        spacing: 12
+
+        SectionHeader {
+            label: "Font Settings"
+        }
+
+        RowLayout {
+            LabeledSpinBox {
+                bindedProperty: "titleFontSize"
+                label: "Title Font Size"
+            }
+
+            LabeledSpinBox {
+                bindedProperty: "maxFontSize"
+                label: "Maximum Font Size"
+            }
+        }
+
+        SectionHeader {
+            label: "Display Settings"
+        }
+
+        RowLayout {
+            LabeledSpinBox {
+                bindedProperty: "decimals"
+                from: 0
+                label: "Number of Decimals"
+            }
+
+            ColorField {
+                bindedProperty: "color"
+                label: "Text Color"
+            }
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            bindedProperty: "item_topic"
+            label: "Topic"
         }
     }
 }

@@ -12,6 +12,9 @@ import QtQuick.Layouts
 SendableWidget {
     id: widget
 
+    propertyKeys: ["fontSize"]
+    topics: [".name", "running"]
+
     property int fontSize: 18
 
     function update(topic, value) {
@@ -28,43 +31,6 @@ SendableWidget {
                 cmdButton.running = value
                 break
             }
-        }
-    }
-
-    propertyKeys: ["fontSize"]
-    topics: [".name", "running"]
-
-    configContent: ColumnLayout {
-        id: layout
-
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
-
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "titleFontSize"
-                label: "Title Font Size"
-            }
-
-            LabeledSpinBox {
-                bindedProperty: "fontSize"
-                label: "Font Size"
-            }
-        }
-
-        SectionHeader {
-            label: "NT Settings"
-        }
-
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
         }
     }
 
@@ -98,6 +64,38 @@ SendableWidget {
                 right: parent.right
                 verticalCenter: parent.verticalCenter
             }
+        }
+    }
+
+    configContent: ColumnLayout {
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
+        spacing: 12
+
+        SectionHeader {
+            label: "Font Settings"
+        }
+
+        RowLayout {
+            LabeledSpinBox {
+                bindedProperty: "titleFontSize"
+                label: "Title Font Size"
+            }
+
+            LabeledSpinBox {
+                bindedProperty: "fontSize"
+                label: "Font Size"
+            }
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            bindedProperty: "item_topic"
+            label: "Topic"
         }
     }
 }

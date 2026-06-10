@@ -14,13 +14,17 @@ Rectangle {
     id: tab
 
     property double colWidth: tab.width / tab.cols
+    property double rowHeight: tab.height / tab.rows
+
     property int cols: model.cols
+    property int rows: model.rows
+
     property bool isCopying: false
     property alias lastOpSuccessful: grid.currentOpValid
+
     property var latestWidget
-    property double rowHeight: tab.height / tab.rows
-    property int rows: model.rows
     property rect topicViewRect
+
     readonly property TabWidgetsModel twm: model.widgets
 
     signal copying(point mousePos)

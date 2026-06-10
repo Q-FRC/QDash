@@ -15,36 +15,9 @@ import QtQuick.Layouts 6.8
 BaseWidget {
     id: widget
 
+    propertyKeys: ["url"]
     property string url: ""
 
-    propertyKeys: ["url"]
-
-    configContent: ColumnLayout {
-        id: layout
-
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
-
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        LabeledSpinBox {
-            bindedProperty: "titleFontSize"
-            label: "Title Font Size"
-        }
-
-        SectionHeader {
-            label: "Stream Settings"
-        }
-
-        LabeledTextField {
-            bindedProperty: "url"
-            label: "URL"
-        }
-    }
     menuExtension: Component {
         MenuItem {
             id: reconnItem
@@ -98,6 +71,31 @@ BaseWidget {
             id: video
 
             anchors.fill: parent
+        }
+    }
+
+    configContent: ColumnLayout {
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
+        spacing: 12
+
+        SectionHeader {
+            label: "Font Settings"
+        }
+
+        LabeledSpinBox {
+            bindedProperty: "titleFontSize"
+            label: "Title Font Size"
+        }
+
+        SectionHeader {
+            label: "Stream Settings"
+        }
+
+        LabeledTextField {
+            bindedProperty: "url"
+            label: "URL"
         }
     }
 }

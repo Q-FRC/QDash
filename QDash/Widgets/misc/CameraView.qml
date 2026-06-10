@@ -15,6 +15,20 @@ import QtQuick.Layouts 6.8
 PrimitiveWidget {
     id: widget
 
+    // TODO(crueter): Fix
+    propertyKeys: ["item_url", "item_fps", "item_quality", "item_resW", "item_resH"]
+    suffix: "/streams"
+
+    menuExtension: Component {
+        MenuItem {
+            id: reconnItem
+
+            text: "Reconnect"
+
+            onTriggered: player.reconnect()
+        }
+    }
+
     property int item_fps: 0
     property int item_quality: 0
     property int item_resH: 0
@@ -45,13 +59,115 @@ PrimitiveWidget {
         sourceTimer.start()
     }
 
-    // TODO(crueter): Fix
-    propertyKeys: ["item_url", "item_fps", "item_quality", "item_resW", "item_resH"]
-    suffix: "/streams"
+    // onItem_urlChanged: player.resetSource()
+    onItem_fpsChanged: player.resetSource()
+    onItem_qualityChanged: player.resetSource()
+    onItem_resHChanged: player.resetSource()
+    onItem_resWChanged: player.resetSource()
+
+    Rectangle {
+        id: rct
+
+        color: "transparent"
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            margins: 8
+            right: parent.right
+            top: titleField.bottom
+        }
+
+        Timer {
+            id: connectTimer
+
+            interval: 100
+            repeat: false
+
+            onTriggered: player.restartVideo()
+        }
+
+        Timer {
+            id: sourceTimer
+
+            interval: 200
+            repeat: false
+
+            onTriggered: {
+                player.source = ""
+                player.resetSource()
+            }
+        }
+
+        MediaPlayer {
+            id: player
+
+            function reconnect() {
+                player.stop()
+
+                connectTimer.start()
+            }
+
+            function resetSource() {
+                let query = []
+
+                if (item_quality !== 0) {
+                    query.push(`compression=${item_quality}`)
+                }
+
+                if (item_fps !== 0) {
+                    query.push(`fps=${item_fps}`)
+                }
+
+                if (item_resH !== 0 && item_resW !== 0) {
+                    query.push(`resolution=${item_resW}x${item_resH}`)
+                }
+
+                const queryStr = query.join("&")
+                const separator = item_url.includes("?") ? "&" : "?"
+
+                let finalUrl = item_url
+                if (queryStr.length > 0) {
+                    finalUrl += separator + queryStr
+                }
+
+                source = Qt.url(finalUrl)
+            }
+
+            function restartVideo() {
+                player.play()
+            }
+
+            source: ""
+            videoOutput: video
+
+            onErrorOccurred: (error, errorString) => {
+                logs.warn("CameraView", "Qt reported error " + errorString)
+
+                urlIndex++
+                if (urlIndex >= urlChoices.length) {
+                    urlIndex = 0
+                }
+
+                item_url = urlChoices[urlIndex]
+
+                sourceTimer.start()
+
+                logs.debug("CameraView", "Cycling to index " + urlIndex + " URL " + item_url)
+            }
+            onSourceChanged: {
+                reconnect()
+            }
+        }
+
+        VideoOutput {
+            id: video
+
+            anchors.fill: parent
+        }
+    }
 
     configContent: ColumnLayout {
-        id: layout
-
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
@@ -130,101 +246,6 @@ PrimitiveWidget {
         LabeledTextField {
             bindedProperty: "item_topic"
             label: "Topic"
-        }
-    }
-    menuExtension: Component {
-        MenuItem {
-            id: reconnItem
-
-            text: "Reconnect"
-
-            onTriggered: player.reconnect()
-        }
-    }
-
-    // onItem_urlChanged: player.resetSource()
-    onItem_fpsChanged: player.resetSource()
-    onItem_qualityChanged: player.resetSource()
-    onItem_resHChanged: player.resetSource()
-    onItem_resWChanged: player.resetSource()
-
-    Rectangle {
-        id: rct
-
-        color: "transparent"
-
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            margins: 8
-            right: parent.right
-            top: titleField.bottom
-        }
-
-        Timer {
-            id: connectTimer
-
-            interval: 100
-            repeat: false
-
-            onTriggered: player.restartVideo()
-        }
-
-        Timer {
-            id: sourceTimer
-
-            interval: 200
-            repeat: false
-
-            onTriggered: {
-                player.source = ""
-                player.resetSource()
-            }
-        }
-
-        MediaPlayer {
-            id: player
-
-            function reconnect() {
-                player.stop()
-
-                connectTimer.start()
-            }
-
-            function resetSource() {
-                source = Qt.url(item_url + (item_url.includes("?") ? "&" : "?") + (item_quality !== 0 ? "compression=" + item_quality + "&" : "") + (item_fps !== 0 ? "fps=" + item_fps + "&" : "") + (item_resH !== 0 && item_resW !== 0 ? "resolution=" + item_resW + "x" + item_resH : ""))
-            }
-
-            function restartVideo() {
-                player.play()
-            }
-
-            source: ""
-            videoOutput: video
-
-            onErrorOccurred: (error, errorString) => {
-                logs.warn("CameraView", "Qt reported error " + errorString)
-
-                urlIndex++
-                if (urlIndex >= urlChoices.length) {
-                    urlIndex = 0
-                }
-
-                item_url = urlChoices[urlIndex]
-
-                sourceTimer.start()
-
-                logs.debug("CameraView", "Cycling to index " + urlIndex + " URL " + item_url)
-            }
-            onSourceChanged: {
-                reconnect()
-            }
-        }
-
-        VideoOutput {
-            id: video
-
-            anchors.fill: parent
         }
     }
 }

@@ -18,8 +18,6 @@ BaseWidget {
     connected: true
 
     configContent: ColumnLayout {
-        id: layout
-
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true

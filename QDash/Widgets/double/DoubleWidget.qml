@@ -13,74 +13,7 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
-    property int fontSize: QDashSettings.defaultFontSize
-    property double lowerBound: -100000.0
-    property double stepSize: 0.1
-    property double upperBound: 100000.0
-
-    function update(value) {
-        widget.connected = true
-        spin.value = value
-    }
-
     propertyKeys: ["stepSize", "fontSize", "lowerBound", "upperBound"]
-
-    configContent: ColumnLayout {
-        id: layout
-
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
-
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "titleFontSize"
-                label: "Title Font Size"
-            }
-
-            LabeledSpinBox {
-                bindedProperty: "fontSize"
-                label: "Font Size"
-            }
-        }
-
-        SectionHeader {
-            label: "Spin Box Settings"
-        }
-
-        RowLayout {
-            LabeledDoubleSpinBox {
-                bindedProperty: "lowerBound"
-                label: "Lower Bound"
-            }
-
-            LabeledDoubleSpinBox {
-                bindedProperty: "upperBound"
-                label: "Upper Bound"
-            }
-        }
-
-        LabeledDoubleSpinBox {
-            bindedProperty: "stepSize"
-            from: 0
-            label: "Step Size"
-            stepSize: 0.1
-        }
-
-        SectionHeader {
-            label: "NT Settings"
-        }
-
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
-        }
-    }
     menuExtension: Component {
         Menu {
             id: switchMenu
@@ -137,14 +70,25 @@ PrimitiveWidget {
         }
     }
 
+    property int fontSize: QDashSettings.defaultFontSize
+    property double lowerBound: -100000.0
+    property double stepSize: 0.1
+    property double upperBound: 100000.0
+
+    function update(value) {
+        widget.connected = true
+        spin.value = value
+    }
+
     Item {
         anchors {
-            bottom: parent.bottom
             left: parent.left
-            leftMargin: 10
             right: parent.right
-            rightMargin: 10
+            bottom: parent.bottom
             top: titleField.bottom
+
+            leftMargin: 10
+            rightMargin: 10
         }
 
         DoubleSpinBox {
@@ -152,10 +96,13 @@ PrimitiveWidget {
 
             editable: true
             enabled: widget.connected
+
             font.pixelSize: fontSize
+
             from: lowerBound
-            stepSize: stepSize
             to: upperBound
+            stepSize: stepSize
+
             value: 0
 
             onValueModified: widget.setValue(value)
@@ -165,6 +112,61 @@ PrimitiveWidget {
                 right: parent.right
                 verticalCenter: parent.verticalCenter
             }
+        }
+    }
+
+    configContent: ColumnLayout {
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
+        spacing: 12
+
+        SectionHeader {
+            label: "Font Settings"
+        }
+
+        RowLayout {
+            LabeledSpinBox {
+                bindedProperty: "titleFontSize"
+                label: "Title Font Size"
+            }
+
+            LabeledSpinBox {
+                bindedProperty: "fontSize"
+                label: "Font Size"
+            }
+        }
+
+        SectionHeader {
+            label: "Spin Box Settings"
+        }
+
+        RowLayout {
+            LabeledDoubleSpinBox {
+                bindedProperty: "lowerBound"
+                label: "Lower Bound"
+            }
+
+            LabeledDoubleSpinBox {
+                bindedProperty: "upperBound"
+                label: "Upper Bound"
+            }
+        }
+
+        LabeledDoubleSpinBox {
+            bindedProperty: "stepSize"
+            from: 0
+            label: "Step Size"
+            stepSize: 0.1
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            bindedProperty: "item_topic"
+            label: "Topic"
         }
     }
 }

@@ -59,10 +59,12 @@ BaseWidget {
                 _subscribe()
         })
     }
+
     Component.onDestruction: {
         if (TopicStore !== null)
             _unsubscribe()
     }
+
     onEnabledChanged: {
         if (enabled)
             _subscribe()

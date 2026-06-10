@@ -11,11 +11,13 @@ Rectangle {
 
     property real angle: (value - minValue) / (maxValue - minValue) * (endAngle - startAngle) + startAngle
     property real endAngle: 135
+    property real startAngle: -135
+
     property real maxValue: 99.4
     property real minValue: 0
-    property int numTicks: 15
-    property real startAngle: -135
     property real value: 1.80
+
+    property int numTicks: 15
     property int valueFontSize: 20
 
     function fixGaugeSize() {

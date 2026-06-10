@@ -12,6 +12,31 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    propertyKeys: ["maxFontSize", "fontColor", "wrap"]
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Text Field"
+
+                onTriggered: {
+                    model.type = "string"
+                }
+            }
+
+            MenuItem {
+                text: "Color"
+
+                onTriggered: {
+                    model.type = "colorText"
+                }
+            }
+        }
+    }
+
     property color fontColor: Clover.theme.currentAccent
     property int maxFontSize: QDashSettings.defaultDisplayFontSize
     property bool wrap: true
@@ -21,11 +46,29 @@ PrimitiveWidget {
         txt.text = value
     }
 
-    propertyKeys: ["maxFontSize", "fontColor", "wrap"]
+    Text {
+        id: txt
+
+        property string value
+
+        color: widget.fontColor
+        enabled: widget.connected
+        font.pixelSize: maxFontSize
+        fontSizeMode: Text.Fit
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        wrapMode: wrap ? Text.WrapAtWordBoundaryOrAnywhere : Text.NoWrap
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            margins: 10
+            right: parent.right
+            top: titleField.bottom
+        }
+    }
 
     configContent: ColumnLayout {
-        id: layout
-
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
@@ -70,51 +113,6 @@ PrimitiveWidget {
         LabeledTextField {
             bindedProperty: "item_topic"
             label: "Topic"
-        }
-    }
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Text Field"
-
-                onTriggered: {
-                    model.type = "string"
-                }
-            }
-
-            MenuItem {
-                text: "Color"
-
-                onTriggered: {
-                    model.type = "colorText"
-                }
-            }
-        }
-    }
-
-    Text {
-        id: txt
-
-        property string value
-
-        color: widget.fontColor
-        enabled: widget.connected
-        font.pixelSize: maxFontSize
-        fontSizeMode: Text.Fit
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        wrapMode: wrap ? Text.WrapAtWordBoundaryOrAnywhere : Text.NoWrap
-
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            margins: 10
-            right: parent.right
-            top: titleField.bottom
         }
     }
 }

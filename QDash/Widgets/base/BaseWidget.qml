@@ -14,24 +14,30 @@ import QtQuick.Layouts 2.15
 Rectangle {
     id: widget
 
+    property string item_topic
+
+    // Menu extension (TODO: Doc)
     property var _extensionInstance: null
+    property Component menuExtension: null
 
     // The content passed to BaseConfigDialog.
     property Item configContent
 
     // default to disconnected and invalid
     property bool connected: false
+
     property alias dragArea: dragArea
     property bool dragForced: false
     property bool dragging: Drag.active || dragForced
-    property string item_topic
+
     property int mcolumn
     property int mcolumnSpan
-    property Component menuExtension: null
-    property int minHeight: grid.rowHeight - 16
-    property int minWidth: grid.colWidth - 16
     property int mrow
     property int mrowSpan
+
+    property int minHeight: grid.rowHeight - 16
+    property int minWidth: grid.colWidth - 16
+
     property rect originalRect: Qt.rect(0, 0, 0, 0)
 
     // *all* widgets must define their properties in this list.
@@ -42,8 +48,10 @@ Rectangle {
     // right-click menu stuff, incl. extensions
     property alias rcMenu: rcMenuLoader.item
     property bool resizeActive: false
+
     property alias titleField: titleField
     property int titleFontSize: QDashSettings.defaultTitleFontSize
+
     property bool tvOverlap: false
     property bool valid: false
 
@@ -132,10 +140,13 @@ Rectangle {
     }
 
     Drag.active: dragArea.drag.active
-    color: Clover.theme.dark
-    height: grid.rowHeight * model.rowSpan - 16
-    radius: 12
+
     width: grid.colWidth * model.colSpan - 16
+    height: grid.rowHeight * model.rowSpan - 16
+
+    color: Clover.theme.dark
+    radius: 12
+
     x: grid.colWidth * model.column + 8
     y: grid.rowHeight * model.row + 8
     z: 3
@@ -169,12 +180,15 @@ Rectangle {
             })
         }
     }
+
+    onWidthChanged: checkResize()
     onHeightChanged: checkResize()
+
     onMcolumnChanged: model.column = mcolumn
     onMcolumnSpanChanged: model.colSpan = mcolumnSpan
     onMrowChanged: model.row = mrow
     onMrowSpanChanged: model.rowSpan = mrowSpan
-    onWidthChanged: checkResize()
+
     onXChanged: checkDrag()
     onYChanged: checkDrag()
 

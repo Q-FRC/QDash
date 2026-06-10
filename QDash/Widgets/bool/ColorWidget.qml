@@ -26,8 +26,6 @@ PrimitiveWidget {
     propertyKeys: ["falseColor", "trueColor", "shape"]
 
     configContent: ColumnLayout {
-        id: layout
-
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true

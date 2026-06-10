@@ -12,6 +12,23 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    propertyKeys: ["checkboxSize"]
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Color Display"
+
+                onTriggered: {
+                    model.type = "color"
+                }
+            }
+        }
+    }
+
     property int checkboxSize: 40
 
     function update(value) {
@@ -19,11 +36,35 @@ PrimitiveWidget {
         control.checked = value
     }
 
-    propertyKeys: ["checkboxSize"]
+    Item {
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            top: titleField.bottom
+
+            leftMargin: 10
+            rightMargin: 10
+        }
+
+        CheckBox {
+            id: control
+
+            checked: false
+            enabled: widget.connected
+
+            indicator.implicitHeight: checkboxSize
+            indicator.implicitWidth: checkboxSize
+
+            onToggled: widget.setValue(checked)
+
+            anchors {
+                centerIn: parent
+            }
+        }
+    }
 
     configContent: ColumnLayout {
-        id: layout
-
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
@@ -52,47 +93,6 @@ PrimitiveWidget {
         LabeledTextField {
             bindedProperty: "item_topic"
             label: "Topic"
-        }
-    }
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Color Display"
-
-                onTriggered: {
-                    model.type = "color"
-                }
-            }
-        }
-    }
-
-    Item {
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            leftMargin: 10
-            right: parent.right
-            rightMargin: 10
-            top: titleField.bottom
-        }
-
-        CheckBox {
-            id: control
-
-            checked: false
-            enabled: widget.connected
-            indicator.implicitHeight: checkboxSize
-            indicator.implicitWidth: checkboxSize
-
-            onToggled: widget.setValue(checked)
-
-            anchors {
-                centerIn: parent
-            }
         }
     }
 }

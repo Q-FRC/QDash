@@ -17,11 +17,12 @@ AcceleratedShape {
     data: [shapeLoader.item]
 
     anchors {
-        bottom: parent.bottom
         left: parent.left
-        margins: 10
         right: parent.right
+        bottom: parent.bottom
         top: titleField.bottom
+
+        margins: 10
     }
 
     // shape selector

@@ -12,6 +12,31 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    propertyKeys: ["shape"]
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Text"
+
+                onTriggered: {
+                    model.type = "string"
+                }
+            }
+
+            MenuItem {
+                text: "Text Display"
+
+                onTriggered: {
+                    model.type = "textDisplay"
+                }
+            }
+        }
+    }
+
     property string itemValue
     property string shape: "Rectangle"
     property list<string> shapeChoices: ["Rectangle", "Circle", "Triangle"]
@@ -21,11 +46,22 @@ PrimitiveWidget {
         itemValue = value
     }
 
-    propertyKeys: ["shape"]
+    ShapeHandler {
+        id: shape
+
+        itemColor: widget.itemValue
+        itemShape: widget.shape
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            margins: 10
+            right: parent.right
+            top: titleField.bottom
+        }
+    }
 
     configContent: ColumnLayout {
-        id: layout
-
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
@@ -57,44 +93,6 @@ PrimitiveWidget {
         LabeledTextField {
             bindedProperty: "item_topic"
             label: "Topic"
-        }
-    }
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Text"
-
-                onTriggered: {
-                    model.type = "string"
-                }
-            }
-
-            MenuItem {
-                text: "Text Display"
-
-                onTriggered: {
-                    model.type = "textDisplay"
-                }
-            }
-        }
-    }
-
-    ShapeHandler {
-        id: shape
-
-        itemColor: widget.itemValue
-        itemShape: widget.shape
-
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            margins: 10
-            right: parent.right
-            top: titleField.bottom
         }
     }
 }

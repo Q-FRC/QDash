@@ -14,6 +14,11 @@ import QtQuick.Shapes 2.15
 PrimitiveWidget {
     id: widget
 
+    antialiasing: true
+    propertyKeys: ["robotShape", "robotColor", "robotWidthMeters", "robotLengthMeters" //
+        , "useVerticalField", "mirrorForRedAlliance", "fieldType"]
+    suffix: "/Robot"
+
     property list<string> fieldChoices: ["2026", "2025", "2024", "2023"]
     property double fieldLength: 16.5411912
     property string fieldType: "2026"
@@ -51,13 +56,127 @@ PrimitiveWidget {
         mirrorField = value
     }
 
-    antialiasing: true
-    propertyKeys: ["robotShape", "robotColor", "robotWidthMeters", "robotLengthMeters", "useVerticalField", "mirrorForRedAlliance", "fieldType"]
-    suffix: "/Robot"
+    Component.onDestruction: unsubscribeMirror()
+
+    onMirrorForRedAllianceChanged: {
+        if (mirrorForRedAlliance) {
+            TopicStore.subscribe("/FMSInfo/IsRedAlliance", updateMirror)
+        } else {
+            unsubscribeMirror()
+            mirrorField = false
+        }
+    }
+
+    onRobotLengthMetersChanged: redraw()
+    onRobotWidthMetersChanged: redraw()
+
+    Image {
+        id: fieldImage
+
+        x: 8
+        y: titleField.height + 10
+
+        width: parent.width - 16
+        height: parent.height - titleField.height - 16
+
+        mirror: useVerticalField ? false : mirrorField
+        mirrorVertically: useVerticalField ? mirrorField : false
+
+        fillMode: Image.PreserveAspectFit
+        source: "qrc:/" + fieldType + "Field" + (useVerticalField ? "Vertical" : "") + ".png"
+
+        onPaintedGeometryChanged: robot.redraw()
+        onSourceChanged: robot.redraw()
+    }
+
+    Rectangle {
+        id: robot
+
+        property double angleDeg: 0
+        property double xMeters: 0
+        property double yMeters: 0
+
+        function redraw() {
+            const meterRatio = (useVerticalField ? fieldImage.paintedWidth : fieldImage.paintedHeight) / fieldWidth
+
+            height = robotWidthMeters * meterRatio
+            width = robotLengthMeters * meterRatio
+
+            const xPixels = (useVerticalField ? -yMeters : xMeters) * meterRatio
+            const yPixels = (useVerticalField ? xMeters : yMeters) * meterRatio
+
+            const realFieldX = fieldImage.x + (fieldImage.width - fieldImage.paintedWidth) / 2
+            const realFieldY = fieldImage.y + (fieldImage.height - fieldImage.paintedHeight) / 2
+
+            const verticalStart = Qt.point(realFieldX + fieldImage.paintedWidth - width, realFieldY + fieldImage.paintedHeight)
+            const horizontalStart = Qt.point(realFieldX, realFieldY + fieldImage.paintedHeight)
+
+            let startPoint = useVerticalField ? verticalStart : horizontalStart
+
+            x = startPoint.x + xPixels - (useVerticalField ? -height : width) / 2
+            y = startPoint.y - yPixels - (useVerticalField ? width : height) / 2
+
+            rotation = -angleDeg + (useVerticalField ? 270 : 0)
+
+            path.redraw(x, y, height, width, angleDeg)
+        }
+
+        color: robotShape === "Robot" ? "transparent" : robotColor
+        radius: robotShape === "Circle" ? Math.max(width, height) / 2 : 0
+
+        border {
+            color: robotColor
+            width: 3
+        }
+    }
+
+    AcceleratedShape {
+        id: shape
+
+        visible: robotShape === "Robot"
+        z: 2
+
+        ShapePath {
+            id: path
+
+            function redraw(x, y, h, w, rot) {
+                shape.x = x
+                shape.y = y
+
+                shape.width = w
+                shape.height = h
+
+                start.x = w
+                start.y = h / 2
+
+                middle.x = 2
+                middle.y = h - 2
+
+                end.x = 2
+                end.y = 0
+
+                shape.rotation = -rot + (useVerticalField ? 270 : 0)
+            }
+
+            fillColor: "transparent"
+            strokeColor: "light green"
+            strokeWidth: 4
+
+            PathLine {
+                id: start
+            }
+
+            PathLine {
+                id: middle
+            }
+
+            PathLine {
+                id: end
+            }
+        }
+    }
 
     configContent: ColumnLayout {
-        id: layout
-
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
@@ -140,118 +259,6 @@ PrimitiveWidget {
         LabeledTextField {
             bindedProperty: "item_topic"
             label: "Topic"
-        }
-    }
-
-    Component.onDestruction: unsubscribeMirror()
-    onMirrorForRedAllianceChanged: {
-        if (mirrorForRedAlliance) {
-            TopicStore.subscribe("/FMSInfo/IsRedAlliance", updateMirror)
-        } else {
-            unsubscribeMirror()
-            mirrorField = false
-        }
-    }
-    onRobotLengthMetersChanged: redraw()
-    onRobotWidthMetersChanged: redraw()
-
-    Image {
-        id: fieldImage
-
-        fillMode: Image.PreserveAspectFit
-        height: parent.height - titleField.height - 16
-        mirror: useVerticalField ? false : mirrorField
-        mirrorVertically: useVerticalField ? mirrorField : false
-        source: "qrc:/" + fieldType + "Field" + (useVerticalField ? "Vertical" : "") + ".png"
-        width: parent.width - 16
-        x: 8
-        y: titleField.height + 10
-
-        onPaintedGeometryChanged: robot.redraw()
-        onSourceChanged: robot.redraw()
-    }
-
-    Rectangle {
-        id: robot
-
-        property double angleDeg: 0
-        property double xMeters: 0
-        property double yMeters: 0
-
-        function redraw() {
-            let meterRatio = (useVerticalField ? fieldImage.paintedWidth : fieldImage.paintedHeight) / fieldWidth
-
-            height = robotWidthMeters * meterRatio
-            width = robotLengthMeters * meterRatio
-
-            let xPixels = (useVerticalField ? -yMeters : xMeters) * meterRatio
-            let yPixels = (useVerticalField ? xMeters : yMeters) * meterRatio
-
-            let realFieldX = fieldImage.x + (fieldImage.width - fieldImage.paintedWidth) / 2
-            let realFieldY = fieldImage.y + (fieldImage.height - fieldImage.paintedHeight) / 2
-
-            let startPoint = useVerticalField ? Qt.point(realFieldX + fieldImage.paintedWidth - width, realFieldY + fieldImage.paintedHeight) : Qt.point(realFieldX, realFieldY + fieldImage.paintedHeight)
-
-            x = startPoint.x + xPixels - (useVerticalField ? -height : width) / 2
-            y = startPoint.y - yPixels - (useVerticalField ? width : height) / 2
-
-            rotation = -angleDeg + (useVerticalField ? 270 : 0)
-
-            path.redraw(x, y, height, width, angleDeg)
-        }
-
-        color: robotShape === "Robot" ? "transparent" : robotColor
-        radius: robotShape === "Circle" ? Math.max(width, height) / 2 : 0
-
-        border {
-            color: robotColor
-            width: 3
-        }
-    }
-
-    AcceleratedShape {
-        id: shape
-
-        visible: robotShape === "Robot"
-        z: 2
-
-        ShapePath {
-            id: path
-
-            function redraw(x, y, h, w, rot) {
-                shape.x = x
-                shape.y = y
-
-                shape.width = w
-                shape.height = h
-
-                start.x = w
-                start.y = h / 2
-
-                middle.x = 2
-                middle.y = h - 2
-
-                end.x = 2
-                end.y = 0
-
-                shape.rotation = -rot + (useVerticalField ? 270 : 0)
-            }
-
-            fillColor: "transparent"
-            strokeColor: "light green"
-            strokeWidth: 4
-
-            PathLine {
-                id: start
-            }
-
-            PathLine {
-                id: middle
-            }
-
-            PathLine {
-                id: end
-            }
         }
     }
 }

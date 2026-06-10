@@ -12,6 +12,31 @@ import QtQuick.Layouts 6.8
 PrimitiveWidget {
     id: widget
 
+    propertyKeys: ["stepSize", "fontSize", "startAngle", "endAngle", "lowerBound", "upperBound"]
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Spin Box"
+
+                onTriggered: {
+                    model.type = "int"
+                }
+            }
+
+            MenuItem {
+                text: "Number Display"
+
+                onTriggered: {
+                    model.type = "intDisplay"
+                }
+            }
+        }
+    }
+
     property double endAngle: 540
     property int fontSize: QDashSettings.defaultFontSize
     property int lowerBound: -1000
@@ -25,12 +50,73 @@ PrimitiveWidget {
         dial.value = value
     }
 
-    propertyKeys: ["stepSize", "fontSize", "startAngle", "endAngle", "lowerBound", "upperBound"]
+    SpinBox {
+        id: spin
 
-    // TODO: Remove these IDs. We don't need them anymore (besides config)
+        function move(val) {
+            let previousValue = value
+
+            value = val
+            widget.setValue(value)
+
+            widget.valid = Math.abs(previousValue - value) < 0.01
+        }
+
+        font.pixelSize: widget.fontSize
+
+        editable: true
+        enabled: widget.connected
+
+        from: widget.lowerBound
+        to: widget.upperBound
+        stepSize: widget.stepSize
+
+        value: 0
+
+        onValueModified: {
+            dial.value = value
+            widget.setValue(value)
+        }
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+
+            margins: 10
+        }
+    }
+
+    Dial {
+        id: dial
+
+        width: Math.min(parent.width, spin.y - titleField.height - 40)
+        height: width
+
+        enabled: widget.connected
+        font.pixelSize: widget.fontSize
+
+        endAngle: widget.endAngle
+        startAngle: widget.startAngle
+
+        from: widget.lowerBound
+        to: widget.upperBound
+        stepSize: widget.stepSize
+
+        inputMode: Dial.Circular
+        value: 0
+
+        onMoved: spin.move(parseInt(value))
+
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: titleField.bottom
+
+            margins: 20
+        }
+    }
+
     configContent: ColumnLayout {
-        id: layout
-
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
@@ -97,86 +183,6 @@ PrimitiveWidget {
         LabeledTextField {
             bindedProperty: "item_topic"
             label: "Topic"
-        }
-    }
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Spin Box"
-
-                onTriggered: {
-                    model.type = "int"
-                }
-            }
-
-            MenuItem {
-                text: "Number Display"
-
-                onTriggered: {
-                    model.type = "intDisplay"
-                }
-            }
-        }
-    }
-
-    SpinBox {
-        id: spin
-
-        function move(val) {
-            let previousValue = value
-
-            value = val
-            widget.setValue(value)
-
-            widget.valid = Math.abs(previousValue - value) < 0.01
-        }
-
-        editable: true
-        enabled: widget.connected
-        font.pixelSize: widget.fontSize
-        from: widget.lowerBound
-        stepSize: widget.stepSize
-        to: widget.upperBound
-        value: 0
-
-        onValueModified: {
-            dial.value = value
-            widget.setValue(value)
-        }
-
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            margins: 10
-            right: parent.right
-        }
-    }
-
-    Dial {
-        id: dial
-
-        enabled: widget.connected
-        endAngle: widget.endAngle
-        font.pixelSize: widget.fontSize
-        from: widget.lowerBound
-        height: width
-        inputMode: Dial.Circular
-        startAngle: widget.startAngle
-        stepSize: widget.stepSize
-        to: widget.upperBound
-        value: 0
-        width: Math.min(parent.width, spin.y - titleField.height - 40)
-
-        onMoved: spin.move(parseInt(value))
-
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            margins: 20
-            top: titleField.bottom
         }
     }
 }

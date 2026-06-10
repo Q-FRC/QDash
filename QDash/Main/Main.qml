@@ -66,12 +66,14 @@ ApplicationWindow {
     }
 
     height: QDashSettings.windowHeight
+    width: QDashSettings.windowWidth
+
+    x: QDashSettings.windowX === -1 ? 0 : QDashSettings.windowX
+    y: QDashSettings.windowY === -1 ? 0 : QDashSettings.windowY
+
     palette: Clover.theme
     title: ConnManager.title
     visible: true
-    width: QDashSettings.windowWidth
-    x: QDashSettings.windowX === -1 ? 0 : QDashSettings.windowX
-    y: QDashSettings.windowY === -1 ? 0 : QDashSettings.windowY
 
     /** MENU BAR */
     menuBar: MenuBar {
@@ -237,6 +239,7 @@ ApplicationWindow {
             TabListModel.load(filename)
         }
     }
+
     Component.onDestruction: {
         QDashSettings.windowWidth = width
         QDashSettings.windowHeight = height

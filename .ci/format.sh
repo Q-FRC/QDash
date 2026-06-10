@@ -6,5 +6,5 @@
 find QDash -name '*.cpp' -o -name '*.h' | xargs clang-format -i -style=file:QDash/.clang-format
 
 find QDash -name '*.qml' | xargs /usr/lib64/qt6/bin/qmlformat -i --ignore-settings \
-	-n --objects-spacing --functions-spacing --semicolon-rule essential -S \
-	--single-line-empty-objects --group-attributes-together
+	--objects-spacing --functions-spacing --semicolon-rule essential -S \
+	--single-line-empty-objects

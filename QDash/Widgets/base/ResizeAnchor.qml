@@ -9,34 +9,49 @@ Item {
     required property var control
     required property int direction
     property int divisor: 14
+
+    // Edges
     property bool hasBottom: direction & Qt.BottomEdge
     property bool hasLeft: direction & Qt.LeftEdge
     property bool hasRight: direction & Qt.RightEdge
     property bool hasTop: direction & Qt.TopEdge
+
     property bool horiz: hasLeft || hasRight
+    property bool vert: hasTop || hasBottom
 
     // only enable resize anchor if it's not at the edge of the grid,
     // AND resizing isn't possible in that direction.
-    // TODO(crueter): Wtf is this formatting
-    readonly property bool isAtEdge: ((hasLeft && control.mcolumn === 0 && control.mcolumnSpan === 1) || (hasTop && control.mrow === 0 && control.mrowSpan === 1) || (hasRight && (control.mcolumn + control.mcolumnSpan) >= tab.cols && control.mcolumnSpan === 1) || (hasBottom && (control.mrow + control.mrowSpan) >= tab.rows && control.mrowSpan === 1))
+    readonly property bool _singleColumn: control.mcolumnSpan === 1
+    readonly property bool _leftEdge: hasLeft && control.mcolumn === 0 && _singleColumn
+    readonly property bool _rightEdge: hasRight && (control.mcolumn + control.mcolumnSpan) >= tab.cols && _singleColumn
+
+    readonly property bool _singleRow: control.mrowSpan === 1
+    readonly property bool _topEdge: hasTop && control.mrow === 0 && _singleRow
+    readonly property bool _bottomEdge: hasBottom && (control.mrow + control.mrowSpan) >= tab.rows && _singleRow
+
+    readonly property bool isAtEdge: _leftEdge || _rightEdge || _topEdge || _bottomEdge
+
+    // etc
     property int margin: Math.min(control.width, control.height) / divisor
     property alias mouseArea: mouseArea
-    property bool vert: hasTop || hasBottom
+
+    width: (hasLeft || hasRight) ? margin : parent.width - (margin * 2)
+    height: (hasTop || hasBottom) ? margin : parent.height - (margin * 2)
 
     enabled: !isAtEdge
-    height: (hasTop || hasBottom) ? margin : parent.height - (margin * 2)
     mouseArea.enabled: !isAtEdge
-    width: (hasLeft || hasRight) ? margin : parent.width - (margin * 2)
+
     z: 20
 
     anchors {
-        bottom: !hasTop ? parent.bottom : undefined
-        bottomMargin: vert ? 0 : margin
         left: !hasRight ? parent.left : undefined
-        leftMargin: horiz ? 0 : margin
         right: !hasLeft ? parent.right : undefined
-        rightMargin: horiz ? 0 : margin
+        bottom: !hasTop ? parent.bottom : undefined
         top: !hasBottom ? parent.top : undefined
+
+        leftMargin: horiz ? 0 : margin
+        rightMargin: horiz ? 0 : margin
+        bottomMargin: vert ? 0 : margin
         topMargin: vert ? 0 : margin
     }
 
@@ -57,6 +72,7 @@ Item {
                 return Qt.SizeVerCursor
             }
         }
+
         drag.axis: {
             if (horiz && vert) {
                 return Drag.XAndYAxis
@@ -66,6 +82,7 @@ Item {
                 return Drag.YAxis
             }
         }
+
         drag.target: parent
         hoverEnabled: true
         propagateComposedEvents: true
@@ -97,6 +114,7 @@ Item {
                 }
             }
         }
+
         onMouseYChanged: {
             if (drag.active) {
                 let newHeight = control.height
@@ -123,6 +141,7 @@ Item {
                 }
             }
         }
+
         onPressed: mouse => {
             // simple clicks that don't do anything get passed to the titleField
             if (hasTop && mouse.y > margin / 2) {

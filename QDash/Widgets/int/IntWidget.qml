@@ -12,6 +12,32 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    propertyKeys: ["fontSize", "stepSize", "upperBound", "lowerBound"]
+
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Dial"
+
+                onTriggered: {
+                    model.type = "dial"
+                }
+            }
+
+            MenuItem {
+                text: "Number Display"
+
+                onTriggered: {
+                    model.type = "intDisplay"
+                }
+            }
+        }
+    }
+
     property int fontSize: QDashSettings.defaultFontSize
     property int lowerBound: -100000
     property int stepSize: 1
@@ -22,11 +48,45 @@ PrimitiveWidget {
         spin.value = value
     }
 
-    propertyKeys: ["fontSize", "stepSize", "upperBound", "lowerBound"]
+    Item {
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            top: titleField.bottom
+
+            leftMargin: 10
+            rightMargin: 10
+        }
+
+        SpinBox {
+            id: spin
+
+            font.pixelSize: fontSize
+            editable: true
+            enabled: widget.connected
+
+            from: lowerBound
+            to: upperBound
+            stepSize: stepSize
+
+            value: 0
+
+            onValueModified: {
+                widget.setValue(value)
+            }
+
+            // TODO: Bring back validity handling
+            // valid: widget.valid
+            anchors {
+                left: parent.left
+                right: parent.right
+                verticalCenter: parent.verticalCenter
+            }
+        }
+    }
 
     configContent: ColumnLayout {
-        id: layout
-
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
@@ -77,64 +137,6 @@ PrimitiveWidget {
         LabeledTextField {
             bindedProperty: "item_topic"
             label: "Topic"
-        }
-    }
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Dial"
-
-                onTriggered: {
-                    model.type = "dial"
-                }
-            }
-
-            MenuItem {
-                text: "Number Display"
-
-                onTriggered: {
-                    model.type = "intDisplay"
-                }
-            }
-        }
-    }
-
-    Item {
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            leftMargin: 10
-            right: parent.right
-            rightMargin: 10
-            top: titleField.bottom
-        }
-
-        SpinBox {
-            id: spin
-
-            editable: true
-            enabled: widget.connected
-            font.pixelSize: fontSize
-            from: lowerBound
-            stepSize: stepSize
-            to: upperBound
-            value: 0
-
-            onValueModified: {
-                widget.setValue(value)
-            }
-
-            // TODO: Bring back validity handling
-            // valid: widget.valid
-            anchors {
-                left: parent.left
-                right: parent.right
-                verticalCenter: parent.verticalCenter
-            }
         }
     }
 }

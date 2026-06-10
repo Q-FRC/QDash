@@ -13,6 +13,63 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    propertyKeys: ["fontSize", "ticks", "startAngle", "endAngle", "min", "max"]
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Dial"
+
+                onTriggered: {
+                    model.type = "doubleDial"
+                }
+            }
+
+            MenuItem {
+                text: "Spin Box"
+
+                onTriggered: {
+                    model.type = "double"
+                }
+            }
+
+            MenuItem {
+                text: "Progress Bar"
+
+                onTriggered: {
+                    model.type = "doubleBar"
+                }
+            }
+
+            MenuItem {
+                text: "Number Display"
+
+                onTriggered: {
+                    model.type = "doubleDisplay"
+                }
+            }
+
+            MenuItem {
+                text: "Match Time"
+
+                onTriggered: {
+                    model.type = "matchTime"
+                }
+            }
+
+            MenuItem {
+                text: "Phase Display"
+
+                onTriggered: {
+                    model.type = "phaseShift"
+                }
+            }
+        }
+    }
+
     property double endAngle: 135
     property int fontSize: QDashSettings.defaultFontSize
     property double max: 100
@@ -31,11 +88,43 @@ PrimitiveWidget {
         gauge.value = value
     }
 
-    propertyKeys: ["fontSize", "ticks", "startAngle", "endAngle", "min", "max"]
+    Component.onCompleted: fixGaugeSize()
+    onHeightChanged: fixGaugeSize()
+    onWidthChanged: fixGaugeSize()
+
+    Item {
+        enabled: widget.connected
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            leftMargin: 10
+            right: parent.right
+            rightMargin: 10
+            top: titleField.bottom
+            topMargin: 4
+        }
+
+        // TODO: Fix clipping
+        RadialGauge {
+            id: gauge
+
+            endAngle: widget.endAngle
+            maxValue: max
+            minValue: min
+            numTicks: ticks
+            startAngle: widget.startAngle
+            value: 0
+            valueFontSize: fontSize
+
+            anchors {
+                bottom: parent.bottom
+                horizontalCenter: parent.horizontalCenter
+            }
+        }
+    }
 
     configContent: ColumnLayout {
-        id: layout
-
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
@@ -97,97 +186,6 @@ PrimitiveWidget {
         LabeledTextField {
             bindedProperty: "item_topic"
             label: "Topic"
-        }
-    }
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Dial"
-
-                onTriggered: {
-                    model.type = "doubleDial"
-                }
-            }
-
-            MenuItem {
-                text: "Spin Box"
-
-                onTriggered: {
-                    model.type = "double"
-                }
-            }
-
-            MenuItem {
-                text: "Progress Bar"
-
-                onTriggered: {
-                    model.type = "doubleBar"
-                }
-            }
-
-            MenuItem {
-                text: "Number Display"
-
-                onTriggered: {
-                    model.type = "doubleDisplay"
-                }
-            }
-
-            MenuItem {
-                text: "Match Time"
-
-                onTriggered: {
-                    model.type = "matchTime"
-                }
-            }
-
-            MenuItem {
-                text: "Phase Display"
-
-                onTriggered: {
-                    model.type = "phaseShift"
-                }
-            }
-        }
-    }
-
-    Component.onCompleted: fixGaugeSize()
-    onHeightChanged: fixGaugeSize()
-    onWidthChanged: fixGaugeSize()
-
-    Item {
-        enabled: widget.connected
-
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            leftMargin: 10
-            right: parent.right
-            rightMargin: 10
-            top: titleField.bottom
-            topMargin: 4
-        }
-
-        // TODO: Fix clipping
-        RadialGauge {
-            id: gauge
-
-            endAngle: widget.endAngle
-            maxValue: max
-            minValue: min
-            numTicks: ticks
-            startAngle: widget.startAngle
-            value: 0
-            valueFontSize: fontSize
-
-            anchors {
-                bottom: parent.bottom
-                horizontalCenter: parent.horizontalCenter
-            }
         }
     }
 }

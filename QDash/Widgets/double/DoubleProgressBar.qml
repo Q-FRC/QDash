@@ -13,6 +13,63 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    propertyKeys: ["fontSize", "numTicks", "suffix", "lowerBound", "upperBound", "vertical"]
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Spin Box"
+
+                onTriggered: {
+                    model.type = "double"
+                }
+            }
+
+            MenuItem {
+                text: "Dial"
+
+                onTriggered: {
+                    model.type = "doubleDial"
+                }
+            }
+
+            MenuItem {
+                text: "Radial Gauge"
+
+                onTriggered: {
+                    model.type = "doubleGauge"
+                }
+            }
+
+            MenuItem {
+                text: "Number Display"
+
+                onTriggered: {
+                    model.type = "doubleDisplay"
+                }
+            }
+
+            MenuItem {
+                text: "Match Time"
+
+                onTriggered: {
+                    model.type = "matchTime"
+                }
+            }
+
+            MenuItem {
+                text: "Phase Display"
+
+                onTriggered: {
+                    model.type = "phaseShift"
+                }
+            }
+        }
+    }
+
     property int fontSize: QDashSettings.defaultFontSize
     property double lowerBound: 0.0
     property int numTicks: 5
@@ -25,11 +82,76 @@ PrimitiveWidget {
         bar.value = value
     }
 
-    propertyKeys: ["fontSize", "numTicks", "suffix", "lowerBound", "upperBound", "vertical"]
+    ProgressBar {
+        id: bar
+
+        enabled: widget.connected
+
+        width: vertical ? (parent.height - titleField.height - 50) : (parent.width - 50)
+        rotation: vertical ? -90 : 0
+
+        font.pixelSize: fontSize
+
+        from: lowerBound
+        to: upperBound
+
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            verticalCenter: parent.verticalCenter
+            verticalCenterOffset: titleField.height / 2
+        }
+
+        Repeater {
+            model: numTicks + 1
+
+            Item {
+                x: (bar.width * index) / numTicks
+
+                anchors {
+                    top: bar.bottom
+                }
+
+                Rectangle {
+                    id: tick
+
+                    color: Clover.theme.text
+                    height: 10
+                    width: 2
+                }
+
+                Text {
+                    color: Clover.theme.text
+                    font.pixelSize: 15
+                    rotation: vertical ? 90 : 0
+                    text: (bar.from + index * (bar.to - bar.from) / numTicks).toFixed(1) + suffix
+
+                    anchors {
+                        horizontalCenter: tick.horizontalCenter
+                        top: tick.bottom
+                        topMargin: 15
+                    }
+                }
+            }
+        }
+
+        Text {
+            id: txt
+
+            color: Clover.theme.text
+            font.pixelSize: fontSize
+
+            rotation: vertical ? 90 : 0
+            text: parent.value + suffix
+
+            anchors {
+                bottom: bar.top
+                bottomMargin: 25
+                horizontalCenter: parent.horizontalCenter
+            }
+        }
+    }
 
     configContent: ColumnLayout {
-        id: layout
-
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
@@ -93,126 +215,6 @@ PrimitiveWidget {
         LabeledTextField {
             bindedProperty: "item_topic"
             label: "Topic"
-        }
-    }
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Spin Box"
-
-                onTriggered: {
-                    model.type = "double"
-                }
-            }
-
-            MenuItem {
-                text: "Dial"
-
-                onTriggered: {
-                    model.type = "doubleDial"
-                }
-            }
-
-            MenuItem {
-                text: "Radial Gauge"
-
-                onTriggered: {
-                    model.type = "doubleGauge"
-                }
-            }
-
-            MenuItem {
-                text: "Number Display"
-
-                onTriggered: {
-                    model.type = "doubleDisplay"
-                }
-            }
-
-            MenuItem {
-                text: "Match Time"
-
-                onTriggered: {
-                    model.type = "matchTime"
-                }
-            }
-
-            MenuItem {
-                text: "Phase Display"
-
-                onTriggered: {
-                    model.type = "phaseShift"
-                }
-            }
-        }
-    }
-
-    ProgressBar {
-        id: bar
-
-        enabled: widget.connected
-        font.pixelSize: fontSize
-        from: lowerBound
-        rotation: vertical ? -90 : 0
-        to: upperBound
-        width: vertical ? (parent.height - titleField.height - 50) : (parent.width - 50)
-
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            verticalCenter: parent.verticalCenter
-            verticalCenterOffset: titleField.height / 2
-        }
-
-        Repeater {
-            model: numTicks + 1
-
-            Item {
-                x: (bar.width * index) / numTicks
-
-                anchors {
-                    top: bar.bottom
-                }
-
-                Rectangle {
-                    id: tick
-
-                    color: Clover.theme.text
-                    height: 10
-                    width: 2
-                }
-
-                Text {
-                    color: Clover.theme.text
-                    font.pixelSize: 15
-                    rotation: vertical ? 90 : 0
-                    text: (bar.from + index * (bar.to - bar.from) / numTicks).toFixed(1) + suffix
-
-                    anchors {
-                        horizontalCenter: tick.horizontalCenter
-                        top: tick.bottom
-                        topMargin: 15
-                    }
-                }
-            }
-        }
-
-        Text {
-            id: txt
-
-            color: Clover.theme.text
-            font.pixelSize: fontSize
-            rotation: vertical ? 90 : 0
-            text: parent.value + suffix
-
-            anchors {
-                bottom: bar.top
-                bottomMargin: 25
-                horizontalCenter: parent.horizontalCenter
-            }
         }
     }
 }

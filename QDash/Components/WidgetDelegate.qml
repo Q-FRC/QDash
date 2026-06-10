@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 crueter
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import QDash.Widgets
 import Qt.labs.qmlmodels
 import QtQml.Models
