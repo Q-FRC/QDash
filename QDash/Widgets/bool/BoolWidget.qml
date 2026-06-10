@@ -24,15 +24,15 @@ PrimitiveWidget {
             MenuItem {
                 text: "Color Display"
                 onTriggered: {
-                    model.type = "color"
+                    model.type = "color";
                 }
             }
         }
     }
 
     function update(value) {
-        connected = true
-        control.checked = value
+        connected = true;
+        control.checked = value;
     }
 
     Item {
@@ -64,51 +64,36 @@ PrimitiveWidget {
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
-
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
-
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
-
-                    RowLayout {
-
-                        LabeledSpinBox {
-                            label: "Title Font Size"
-                            bindedProperty: "titleFontSize"
-                        }
-
-                        LabeledSpinBox {
-                            label: "Checkbox Size"
-                            bindedProperty: "checkboxSize"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+        RowLayout {
+            LabeledSpinBox {
+                label: "Title Font Size"
+                bindedProperty: "titleFontSize"
             }
+
+            LabeledSpinBox {
+                label: "Checkbox Size"
+                bindedProperty: "checkboxSize"
+            }
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

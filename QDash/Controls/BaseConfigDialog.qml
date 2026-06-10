@@ -8,8 +8,8 @@ import Carboxyl.Clover
 import Carboxyl.Contour
 
 CarboxylDialog {
-    required property Item content
     id: config
+    required property Item content
 
     popupType: Popup.Window
 
@@ -31,16 +31,15 @@ CarboxylDialog {
     onAboutToShow: {
         // TODO: This should be recursive but also idc
         for (var i = 0; i < layout.children.length; ++i) {
-            var child = layout.children[i]
+            var child = layout.children[i];
             if (typeof child !== "undefined" && "open" in child) {
-                child.open()
+                child.open();
             } else {
                 for (var j = 0; j < child.children.length; ++j) {
-                    let grandchild = child.children[j]
+                    let grandchild = child.children[j];
 
-                    if (typeof grandchild !== "undefined"
-                            && "open" in grandchild) {
-                        grandchild.open()
+                    if (typeof grandchild !== "undefined" && "open" in grandchild) {
+                        grandchild.open();
                     }
                 }
             }
@@ -50,24 +49,23 @@ CarboxylDialog {
     onAccepted: {
         // TODO: This should be recursive but also idc
         for (var i = 0; i < layout.children.length; ++i) {
-            var child = layout.children[i]
+            var child = layout.children[i];
             if (typeof child !== "undefined" && "accept" in child) {
-                child.accept()
+                child.accept();
             } else {
                 for (var j = 0; j < child.children.length; ++j) {
-                    let grandchild = child.children[j]
+                    let grandchild = child.children[j];
 
-                    if (typeof grandchild !== "undefined"
-                            && "accept" in grandchild) {
-                        grandchild.accept()
+                    if (typeof grandchild !== "undefined" && "accept" in grandchild) {
+                        grandchild.accept();
                     }
                 }
             }
         }
 
-        twm.modified = true
+        twm.modified = true;
     }
 
     onClosed: if (configLoader)
-                  configLoader.active = false
+        configLoader.active = false
 }

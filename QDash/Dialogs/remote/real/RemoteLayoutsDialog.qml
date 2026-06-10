@@ -16,16 +16,15 @@ Loader {
     onLoaded: item.open()
 
     function open() {
-        active = true
+        active = true;
     }
 
     sourceComponent: active ? src : undefined
 
     property Component src: Component {
         CarboxylDialog {
-            property url selected
-
             id: remote
+            property url selected
 
             implicitWidth: 350
             implicitHeight: 350
@@ -39,27 +38,23 @@ Loader {
             onClosed: loader.active = false
 
             onAccepted: {
-                selected = RemoteLayoutModel.url(list.currentIndex)
-                let defaultPath = StandardPaths.writableLocation(
-                        StandardPaths.AppLocalDataLocation) + "/layout.json"
-                let filename = CarboxylQuickInterface.getSaveFileName(
-                        qsTr("Save Layout"), defaultPath,
-                        "JSON files (*.json);;All files (*)")
-                RemoteLayoutModel.download(selected, filename)
+                selected = RemoteLayoutModel.url(list.currentIndex);
+                let defaultPath = StandardPaths.writableLocation(StandardPaths.AppLocalDataLocation) + "/layout.json";
+                let filename = CarboxylQuickInterface.getSaveFileName(qsTr("Save Layout"), defaultPath, "JSON files (*.json);;All files (*)");
+                RemoteLayoutModel.download(selected, filename);
             }
 
             onOpened: {
-                busy.running = true
+                busy.running = true;
 
                 if (RemoteLayoutModel.load())
-                    busy.running = true
+                    busy.running = true;
             }
 
             CarboxylMessageDialog {
+                id: fail
                 width: 350
                 height: 350
-
-                id: fail
                 standardButtons: Dialog.Ok
                 title: "Error"
                 text: "You must be connected to a robot with a web server to download remote layouts."
@@ -70,17 +65,17 @@ Loader {
             Connections {
                 target: RemoteLayoutModel
                 function onFileOpened(filename) {
-                    window.filename = filename
-                    TabListModel.load(filename)
-                    remote.close()
+                    window.filename = filename;
+                    TabListModel.load(filename);
+                    remote.close();
                 }
 
                 function onListReady() {
-                    busy.running = false
+                    busy.running = false;
                 }
 
                 function onFailed() {
-                    fail.open()
+                    fail.open();
                 }
             }
 

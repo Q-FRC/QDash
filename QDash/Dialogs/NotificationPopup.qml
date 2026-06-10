@@ -54,11 +54,11 @@ Popup {
     onOpened: progClose.start()
     Component.onCompleted: {
         NotificationHelper.onReady.connect(() => {
-                                               progClose.stop()
-                                               prog.value = 1.0
-                                               open()
-                                               progClose.start()
-                                           })
+            progClose.stop();
+            prog.value = 1.0;
+            open();
+            progClose.start();
+        });
     }
 
     background: Rectangle {

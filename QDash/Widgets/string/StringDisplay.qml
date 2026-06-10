@@ -26,22 +26,22 @@ PrimitiveWidget {
             MenuItem {
                 text: "Text Field"
                 onTriggered: {
-                    model.type = "string"
+                    model.type = "string";
                 }
             }
 
             MenuItem {
                 text: "Color"
                 onTriggered: {
-                    model.type = "colorText"
+                    model.type = "colorText";
                 }
             }
         }
     }
 
     function update(value) {
-        widget.connected = true
-        txt.text = value
+        widget.connected = true;
+        txt.text = value;
     }
 
     Text {
@@ -70,67 +70,51 @@ PrimitiveWidget {
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
-
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
-
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
-
-                    RowLayout {
-
-                        LabeledSpinBox {
-                            label: "Title Font Size"
-                            bindedProperty: "titleFontSize"
-                        }
-
-                        LabeledSpinBox {
-                            label: "Maximum Font Size"
-                            bindedProperty: "maxFontSize"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "Display Settings"
-                    }
-                    RowLayout {
-
-                        ColorField {
-                            label: "Text Color"
-                            bindedProperty: "color"
-                        }
-
-                        LabeledCheckbox {
-                            label: "Wrap Text?"
-                            bindedProperty: "wrap"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+        RowLayout {
+            LabeledSpinBox {
+                label: "Title Font Size"
+                bindedProperty: "titleFontSize"
             }
+
+            LabeledSpinBox {
+                label: "Maximum Font Size"
+                bindedProperty: "maxFontSize"
+            }
+        }
+
+        SectionHeader {
+            label: "Display Settings"
+        }
+        RowLayout {
+            ColorField {
+                label: "Text Color"
+                bindedProperty: "color"
+            }
+
+            LabeledCheckbox {
+                label: "Wrap Text?"
+                bindedProperty: "wrap"
+            }
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

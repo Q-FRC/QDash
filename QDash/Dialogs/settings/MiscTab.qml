@@ -15,17 +15,17 @@ ColumnLayout {
 
     // anchors
     function accept() {
-        load.accept()
-        level.accept()
-        disable.accept()
-        resize.accept()
+        load.accept();
+        level.accept();
+        disable.accept();
+        resize.accept();
     }
 
     function open() {
-        load.open()
-        level.open()
-        disable.open()
-        resize.open()
+        load.open();
+        level.open();
+        disable.open();
+        resize.open();
     }
 
     LabeledCheckbox {
@@ -70,14 +70,12 @@ ColumnLayout {
         implicitWidth: Math.min(450, parent.width)
 
         LabeledIndexComboBox {
+            id: level
             font.pixelSize: 20
             implicitHeight: 45
-
-            id: level
             label: "Log Level"
 
-            model: [qsTr("Critical"), qsTr("Warning"), qsTr(
-                    "Info"), qsTr("Debug")]
+            model: [qsTr("Critical"), qsTr("Warning"), qsTr("Info"), qsTr("Debug")]
 
             hoverEnabled: true
 

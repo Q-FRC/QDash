@@ -19,19 +19,19 @@ SendableWidget {
     property int fontSize: 18
 
     function update(topic, value) {
-        widget.connected = true
+        widget.connected = true;
 
         switch (topic) {
         case ".name":
-        {
-            cmdButton.name = value
-            break
-        }
+            {
+                cmdButton.name = value;
+                break;
+            }
         case "running":
-        {
-            cmdButton.running = value
-            break
-        }
+            {
+                cmdButton.running = value;
+                break;
+            }
         }
     }
 
@@ -63,59 +63,44 @@ SendableWidget {
             property string name: "Command"
 
             onClicked: {
-                running = !running
-                widget.setValue("running", running)
+                running = !running;
+                widget.setValue("running", running);
             }
 
             text: name
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
-
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
-
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
-
-                    RowLayout {
-
-                        LabeledSpinBox {
-                            label: "Title Font Size"
-                            bindedProperty: "titleFontSize"
-                        }
-
-                        LabeledSpinBox {
-                            label: "Font Size"
-                            bindedProperty: "fontSize"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+        RowLayout {
+            LabeledSpinBox {
+                label: "Title Font Size"
+                bindedProperty: "titleFontSize"
             }
+
+            LabeledSpinBox {
+                label: "Font Size"
+                bindedProperty: "fontSize"
+            }
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

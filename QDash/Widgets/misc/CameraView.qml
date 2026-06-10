@@ -49,22 +49,22 @@ PrimitiveWidget {
     function fixUrls(value) {
         for (var i = 0; i < value.length; ++i) {
             if (value[i].startsWith("mjpg:"))
-                value[i] = value[i].substring(5)
+                value[i] = value[i].substring(5);
         }
     }
 
     function update(value) {
-        urlChoices = value
-        fixUrls(urlChoices)
+        urlChoices = value;
+        fixUrls(urlChoices);
 
-        urlIndex = 0
+        urlIndex = 0;
 
         if (urlChoices.length > 0)
-            item_url = urlChoices[0]
+            item_url = urlChoices[0];
 
-        player.resetSource()
+        player.resetSource();
 
-        sourceTimer.start()
+        sourceTimer.start();
     }
 
     Rectangle {
@@ -92,8 +92,8 @@ PrimitiveWidget {
             interval: 200
             repeat: false
             onTriggered: {
-                player.source = ""
-                player.resetSource()
+                player.source = "";
+                player.resetSource();
             }
         }
 
@@ -103,46 +103,38 @@ PrimitiveWidget {
             source: ""
 
             function restartVideo() {
-                player.play()
+                player.play();
             }
 
             function resetSource() {
-                source = Qt.url(item_url + (item_url.includes("?") ? "&" : "?")
-                                + (item_quality !== 0 ? "compression=" + item_quality + "&" : "")
-                                + (item_fps !== 0 ? "fps=" + item_fps + "&" : "")
-                                + (item_resH !== 0
-                                   && item_resW !== 0 ? "resolution=" + item_resW + "x"
-                                                        + item_resH : ""))
+                source = Qt.url(item_url + (item_url.includes("?") ? "&" : "?") + (item_quality !== 0 ? "compression=" + item_quality + "&" : "") + (item_fps !== 0 ? "fps=" + item_fps + "&" : "") + (item_resH !== 0 && item_resW !== 0 ? "resolution=" + item_resW + "x" + item_resH : ""));
             }
 
             function reconnect() {
-                player.stop()
+                player.stop();
 
-                connectTimer.start()
+                connectTimer.start();
             }
 
             onSourceChanged: {
-                reconnect()
+                reconnect();
             }
 
             videoOutput: video
             onErrorOccurred: (error, errorString) => {
-                                 logs.warn("CameraView",
-                                           "Qt reported error " + errorString)
+                logs.warn("CameraView", "Qt reported error " + errorString);
 
-                                 urlIndex++
-                                 if (urlIndex >= urlChoices.length) {
-                                     urlIndex = 0
-                                 }
+                urlIndex++;
+                if (urlIndex >= urlChoices.length) {
+                    urlIndex = 0;
+                }
 
-                                 item_url = urlChoices[urlIndex]
+                item_url = urlChoices[urlIndex];
 
-                                 sourceTimer.start()
+                sourceTimer.start();
 
-                                 logs.debug(
-                                     "CameraView",
-                                     "Cycling to index " + urlIndex + " URL " + item_url)
-                             }
+                logs.debug("CameraView", "Cycling to index " + urlIndex + " URL " + item_url);
+            }
         }
 
         VideoOutput {
@@ -151,100 +143,86 @@ PrimitiveWidget {
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
+        LabeledSpinBox {
+            label: "Title Font Size"
+            bindedProperty: "titleFontSize"
+        }
 
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
+        SectionHeader {
+            label: "Stream Settings"
+        }
 
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
+        LabeledSpinBox {
+            label: "FPS"
+            bindedProperty: "item_fps"
+        }
 
-                    LabeledSpinBox {
-                        label: "Title Font Size"
-                        bindedProperty: "titleFontSize"
-                    }
+        RowLayout {
+            Layout.fillWidth: true
 
-                    SectionHeader {
-                        label: "Stream Settings"
-                    }
+            Label {
+                font.pixelSize: 16
+                text: "Resolution"
+            }
 
-                    LabeledSpinBox {
-                        label: "FPS"
-                        bindedProperty: "item_fps"
-                    }
+            LabeledSpinBox {
+                label: "Width"
+                bindedProperty: "item_resW"
+            }
 
-                    RowLayout {
-                        Layout.fillWidth: true
+            Label {
+                font.pixelSize: 18
+                text: "x"
+            }
 
-                        Label {
-                            font.pixelSize: 16
-                            text: "Resolution"
-                        }
+            LabeledSpinBox {
+                label: "Height"
+                bindedProperty: "item_resH"
+            }
+        }
 
-                        LabeledSpinBox {
-                            label: "Width"
-                            bindedProperty: "item_resW"
-                        }
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignTop
 
-                        Label {
-                            font.pixelSize: 18
-                            text: "x"
-                        }
+            Label {
+                font.pixelSize: 16
+                text: "Quality"
+            }
 
-                        LabeledSpinBox {
-                            label: "Height"
-                            bindedProperty: "item_resH"
-                        }
-                    }
+            Slider {
+                from: 0
+                to: 100
+                stepSize: 10
 
-                    RowLayout {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
+                function open() {
+                    value = widget.item_quality;
+                }
 
-                        Label {
-                            font.pixelSize: 16
-                            text: "Quality"
-                        }
-
-                        Slider {
-                            from: 0
-                            to: 100
-                            stepSize: 10
-
-                            function open() {
-                                value = widget.item_quality
-                            }
-
-                            function accept() {
-                                widget.item_quality = value
-                            }
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
+                function accept() {
+                    widget.item_quality = value;
                 }
             }
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

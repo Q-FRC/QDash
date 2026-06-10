@@ -9,13 +9,12 @@ import Carboxyl.Clover
 import Carboxyl.Contour
 
 CarboxylLabeledTextField {
+    id: textField
     /** what property to bind to */
     required property string bindedProperty
 
     /** the target to bind the property to */
     property var bindTarget: widget
-
-    id: textField
     font.pixelSize: 18
 
     horizontalAlignment: Text.AlignHCenter
@@ -23,10 +22,10 @@ CarboxylLabeledTextField {
     Layout.fillWidth: true
 
     function open() {
-        text = bindTarget[bindedProperty]
+        text = bindTarget[bindedProperty];
     }
 
     function accept() {
-        bindTarget[bindedProperty] = text
+        bindTarget[bindedProperty] = text;
     }
 }

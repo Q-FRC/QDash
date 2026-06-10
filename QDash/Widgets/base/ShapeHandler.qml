@@ -27,12 +27,12 @@ AcceleratedShape {
         id: shapeLoader
         sourceComponent: {
             if (itemShape === "Triangle")
-                return triangleComp
+                return triangleComp;
             if (itemShape === "Rectangle")
-                return rectangleComp
+                return rectangleComp;
             if (itemShape === "Circle")
-                return circleComp
-            return null
+                return circleComp;
+            return null;
         }
     }
 

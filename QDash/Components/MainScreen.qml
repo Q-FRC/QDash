@@ -20,79 +20,78 @@ Rectangle {
     Shortcut {
         sequences: ["Ctrl+Tab"]
         onActivated: if (swipe.currentIndex < swipe.count - 1) {
-                         swipe.incrementCurrentIndex()
-                     } else {
-                         swipe.setCurrentIndex(0)
-                     }
+            swipe.incrementCurrentIndex();
+        } else {
+            swipe.setCurrentIndex(0);
+        }
     }
 
     Shortcut {
         sequences: ["Ctrl+Shift+Tab"]
         onActivated: if (swipe.currentIndex > 0) {
-                         swipe.decrementCurrentIndex()
-                     } else {
-                         swipe.setCurrentIndex(swipe.count - 1)
-                     }
+            swipe.decrementCurrentIndex();
+        } else {
+            swipe.setCurrentIndex(swipe.count - 1);
+        }
     }
 
     function setTab(value) {
-        let idx = TabListModel.tabNamed(value)
+        let idx = TabListModel.tabNamed(value);
         if (idx !== -1) {
-            swipe.setCurrentIndex(idx)
+            swipe.setCurrentIndex(idx);
         }
     }
 
     Component.onCompleted: {
-        TopicStore.subscribe("/QDash/Tab", setTab)
+        TopicStore.subscribe("/QDash/Tab", setTab);
     }
 
     // This function is called for copying and dragging from the TopicView
     // In-widget drags are done via the Drag object
     function drag(pos, fromList) {
         if (currentTab() !== null) {
-            let w = currentTab().latestWidget
+            let w = currentTab().latestWidget;
 
-            w.x = pos.x
-            w.y = pos.y - (fromList ? tabs.height + 5 : 0) - w.titleField.height
+            w.x = pos.x;
+            w.y = pos.y - (fromList ? tabs.height + 5 : 0) - w.titleField.height;
 
-            w.width = currentTab().colWidth - 16
-            w.height = currentTab().rowWidth - 16
+            w.width = currentTab().colWidth - 16;
+            w.height = currentTab().rowWidth - 16;
 
-            w.mrowSpan = 1
-            w.mcolumnSpan = 1
+            w.mrowSpan = 1;
+            w.mcolumnSpan = 1;
 
             if (!readyDragging) {
-                readyDragging = true
-                w.dragForced = true
+                readyDragging = true;
+                w.dragForced = true;
 
-                mainScreen.z = 3
-                w.startDrag()
+                mainScreen.z = 3;
+                w.startDrag();
             }
         }
     }
 
     function drop(pos, fromList) {
         if (currentTab() !== null) {
-            readyDragging = false
-            let w = currentTab().latestWidget
+            readyDragging = false;
+            let w = currentTab().latestWidget;
             if (typeof w === 'undefined' || w === null)
-                return
-
+                return;
             if (!currentTab().lastOpSuccessful) {
-                w.cancelDrag()
-                currentTab().removeLatest()
+                w.cancelDrag();
+                currentTab().removeLatest();
             } else {
-                let point = w.getPoint()
+                let point = w.getPoint();
 
-                w.mrow = point.y
-                w.mcolumn = point.x
+                w.mrow = point.y;
+                w.mcolumn = point.x;
 
-                w.z = 3
-                w.visible = true
-                w.cancelDrag()
+                w.z = 3;
+                w.visible = true;
+                w.cancelDrag();
 
-                w.fixSize()
-                TabListModel.modified = true
+                w.fixSize();
+                TabListModel.modified = true;
             }
         }
     }
@@ -103,8 +102,8 @@ Rectangle {
         z: 25
 
         onAddWidget: (title, topic, type) => {
-                         currentTab().add(title, topic, type)
-                     }
+            currentTab().add(title, topic, type);
+        }
 
         anchors {
             left: parent.left
@@ -115,15 +114,15 @@ Rectangle {
         }
 
         onOpen: {
-            menuAnim.from = -(parent.width / 3)
-            menuAnim.to = 0
-            menuAnim.start()
+            menuAnim.from = -(parent.width / 3);
+            menuAnim.to = 0;
+            menuAnim.start();
         }
 
         onClose: {
-            menuAnim.to = -(parent.width / 3)
-            menuAnim.from = 0
-            menuAnim.start()
+            menuAnim.to = -(parent.width / 3);
+            menuAnim.from = 0;
+            menuAnim.start();
         }
 
         onDragging: pos => drag(pos, true)
@@ -135,9 +134,9 @@ Rectangle {
         id: tabNameDialog
 
         onAccepted: {
-            TabListModel.add(text)
-            swipe.setCurrentIndex(swipe.count - 1)
-            TabListModel.modified = true
+            TabListModel.add(text);
+            swipe.setCurrentIndex(swipe.count - 1);
+            TabListModel.modified = true;
         }
     }
 
@@ -145,60 +144,59 @@ Rectangle {
         id: tabConfigDialog
 
         onAccepted: {
-            let tab = mainScreen.currentTab()
+            let tab = mainScreen.currentTab();
             if (!tab)
-                return
-            tab.setSize(rows, columns)
-            tab.setName(name)
+                return;
+            tab.setSize(rows, columns);
+            tab.setName(name);
 
-            TabListModel.modified = true
+            TabListModel.modified = true;
         }
     }
 
     /** TAB SETTINGS */
     function newTab() {
-        tabNameDialog.active = true
+        tabNameDialog.active = true;
     }
 
     function configTab() {
-        let tab = currentTab()
+        let tab = currentTab();
         if (!tab)
-            return
-
-        tabConfigDialog.rows = tab.rows
-        tabConfigDialog.columns = tab.cols
-        tabConfigDialog.name = tab.name()
-        tabConfigDialog.active = true
+            return;
+        tabConfigDialog.rows = tab.rows;
+        tabConfigDialog.columns = tab.cols;
+        tabConfigDialog.name = tab.name();
+        tabConfigDialog.active = true;
     }
 
     function currentTab() {
-        return swipe.currentItem
+        return swipe.currentItem;
     }
 
     /** CLOSE TAB */
     TabCloseDialog {
         id: tabClose
         onAccepted: {
-            TabListModel.modified = true
-            TabListModel.remove(swipe.currentIndex)
+            TabListModel.modified = true;
+            TabListModel.remove(swipe.currentIndex);
         }
     }
 
     function closeTab() {
         if (!currentTab())
-            return
-        tabClose.active = true
+            return;
+        tabClose.active = true;
     }
 
     /** PASTE */
     function paste() {
         if (clipboard != null) {
-            currentTab().paste(clipboard)
+            currentTab().paste(clipboard);
         }
     }
 
     function addWidget(title, topic, type) {
-        currentTab().fakeAdd(title, topic, type)
+        currentTab().fakeAdd(title, topic, type);
     }
 
     /** CONTENT */
@@ -208,9 +206,7 @@ Rectangle {
 
         horizontalAlignment: Text.AlignHCenter
 
-        text: "Welcome to QDash!\n" + "To get started, connect to your robot WiFi\n"
-              + "and go to Settings (Ctrl+Comma).\nAdd a tab with Ctrl+T, and add a widget\n"
-              + "through the arrow menu on the left."
+        text: "Welcome to QDash!\n" + "To get started, connect to your robot WiFi\n" + "and go to Settings (Ctrl+Comma).\nAdd a tab with Ctrl+T, and add a widget\n" + "through the arrow menu on the left."
 
         anchors.centerIn: parent
         z: 0

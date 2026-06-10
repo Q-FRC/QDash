@@ -14,10 +14,10 @@ Loader {
     active: false
     asynchronous: true
     onLoaded: {
-        item.columns = columns
-        item.rows = rows
-        item.name = name
-        item.open()
+        item.columns = columns;
+        item.rows = rows;
+        item.name = name;
+        item.open();
     }
 
     property int columns
@@ -29,7 +29,7 @@ Loader {
     signal accepted
 
     function open() {
-        active = true
+        active = true;
     }
 
     property Component src: CarboxylDialog {
@@ -44,17 +44,17 @@ Loader {
         property string name
 
         onOpened: {
-            columnValue.open()
-            rowValue.open()
-            nameValue.open()
+            columnValue.open();
+            rowValue.open();
+            nameValue.open();
         }
 
         onAccepted: {
-            columnValue.accept()
-            rowValue.accept()
-            nameValue.accept()
+            columnValue.accept();
+            rowValue.accept();
+            nameValue.accept();
 
-            loader.accepted()
+            loader.accepted();
         }
 
         onClosed: loader.active = false
@@ -76,8 +76,8 @@ Loader {
                 Layout.fillWidth: true
 
                 LabeledSpinBox {
-                    Layout.fillWidth: true
                     id: columnValue
+                    Layout.fillWidth: true
                     from: 1
                     to: 99
 
@@ -88,8 +88,8 @@ Loader {
                 }
 
                 LabeledSpinBox {
-                    Layout.fillWidth: true
                     id: rowValue
+                    Layout.fillWidth: true
                     from: 1
                     to: 99
 

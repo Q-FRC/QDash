@@ -30,20 +30,19 @@ ApplicationWindow {
 
     function dsResize() {
         if (QDashSettings.resizeToDS) {
-            logs.debug("UI", "DS Resize")
+            logs.debug("UI", "DS Resize");
 
-            QDashSettings.windowHeight = PlatformHelper.screenHeight(
-                        ) - 200 - PlatformHelper.titlebarHeight(this)
-            QDashSettings.windowWidth = PlatformHelper.screenWidth()
+            QDashSettings.windowHeight = PlatformHelper.screenHeight() - 200 - PlatformHelper.titlebarHeight(this);
+            QDashSettings.windowWidth = PlatformHelper.screenWidth();
 
             // Explicitly disallow resizing, because the user probably doesn't want to
             // accidentally overwrite the height. Note that some Linux window managers (and Wayland)
             // will just straight up ignore this.
-            maximumHeight = height
-            minimumHeight = height
+            maximumHeight = height;
+            minimumHeight = height;
 
-            QDashSettings.windowX = 0
-            QDashSettings.windowY = PlatformHelper.titlebarHeight(this)
+            QDashSettings.windowX = 0;
+            QDashSettings.windowY = PlatformHelper.titlebarHeight(this);
         }
     }
 
@@ -51,7 +50,7 @@ ApplicationWindow {
         target: TabListModel
 
         function onModifiedChanged() {
-            ConnManager.modified = TabListModel.modified
+            ConnManager.modified = TabListModel.modified;
         }
     }
 
@@ -76,24 +75,21 @@ ApplicationWindow {
 
     // Warn the user if they close before saving.
     onClosing: close => {
-                   if (TabListModel.modified) {
-                       let button = CarboxylQuickInterface.showMessageBox(
-                           CarboxylEnums.Warning, "Save Changes?",
-                           "Your changes will be lost if you don't save.",
-                           Dialog.Yes | Dialog.No | Dialog.Cancel)
+        if (TabListModel.modified) {
+            let button = CarboxylQuickInterface.showMessageBox(CarboxylEnums.Warning, "Save Changes?", "Your changes will be lost if you don't save.", Dialog.Yes | Dialog.No | Dialog.Cancel);
 
-                       switch (button) {
-                           case Dialog.Yes:
-                           save()
-                           break
-                           case Dialog.No:
-                           break
-                           case Dialog.Cancel:
-                           close.accepted = false
-                           break
-                       }
-                   }
-               }
+            switch (button) {
+            case Dialog.Yes:
+                save();
+                break;
+            case Dialog.No:
+                break;
+            case Dialog.Cancel:
+                close.accepted = false;
+                break;
+            }
+        }
+    }
 
     NotificationPopup {
         id: notif
@@ -105,35 +101,29 @@ ApplicationWindow {
     /** SAVE */
     function save() {
         if (filename === "")
-            return saveAs()
+            return saveAs();
 
-        TabListModel.save(filename)
+        TabListModel.save(filename);
     }
 
     function saveAs() {
-        let newName = CarboxylQuickInterface.getSaveFileName(
-                qsTr("Save Layout"),
-                QDashApplication.dataLocation + "/layout.json",
-                "JSON files (*.json);;All files (*)")
+        let newName = CarboxylQuickInterface.getSaveFileName(qsTr("Save Layout"), QDashApplication.dataLocation + "/layout.json", "JSON files (*.json);;All files (*)");
 
         if (newName !== "") {
-            filename = newName
-            logs.info("IO", "Saving to " + filename)
-            TabListModel.save(filename)
+            filename = newName;
+            logs.info("IO", "Saving to " + filename);
+            TabListModel.save(filename);
         }
     }
 
     /** LOAD */
     function load() {
-        let newName = CarboxylQuickInterface.getOpenFileName(
-                qsTr("Open Layout"),
-                QDashApplication.dataLocation + "/layout.json",
-                "JSON files (*.json);;All files (*)")
+        let newName = CarboxylQuickInterface.getOpenFileName(qsTr("Open Layout"), QDashApplication.dataLocation + "/layout.json", "JSON files (*.json);;All files (*)");
 
         if (newName !== "") {
-            filename = newName
-            logs.info("IO", "Loading file " + filename)
-            TabListModel.load(filename)
+            filename = newName;
+            logs.info("IO", "Loading file " + filename);
+            TabListModel.load(filename);
         }
     }
 
@@ -167,14 +157,13 @@ ApplicationWindow {
                     model: QDashSettings.recentFiles
 
                     delegate: MenuItem {
-                        text: qsTr("&" + index + ". " + PlatformHelper.baseName(
-                                       modelData))
+                        text: qsTr("&" + index + ". " + PlatformHelper.baseName(modelData))
                         onTriggered: {
                             if (modelData === "" || modelData === null)
-                                return
-                            TabListModel.clear()
-                            filename = modelData
-                            TabListModel.load(modelData)
+                                return;
+                            TabListModel.clear();
+                            filename = modelData;
+                            TabListModel.load(modelData);
                         }
                     }
                 }
@@ -216,7 +205,7 @@ ApplicationWindow {
                         text: qsTr("&" + model.key)
                         onTriggered: {
                             // TODO: make extensible
-                            screen.addWidget(model.key, "", model.value)
+                            screen.addWidget(model.key, "", model.value);
                         }
                     }
                 }
@@ -269,30 +258,29 @@ ApplicationWindow {
 
     /** THE REST */
     Component.onCompleted: {
-        Clover.registerTheme(CustomThemes.hannahDark)
+        Clover.registerTheme(CustomThemes.hannahDark);
 
-        Clover.accent = Clover.accents[QDashSettings.accent]
-        Clover.theme = Clover.themes[QDashSettings.theme]
+        Clover.accent = Clover.accents[QDashSettings.accent];
+        Clover.theme = Clover.themes[QDashSettings.theme];
 
-        dsResize()
-        QDashSettings.resizeToDSChanged.connect(dsResize)
+        dsResize();
+        QDashSettings.resizeToDSChanged.connect(dsResize);
 
         if (CompileDefinitions.singleFile) {
-            load()
-        } else if (QDashSettings.loadRecent
-                   && QDashSettings.recentFiles.length > 0) {
-            filename = QDashSettings.recentFiles[0]
+            load();
+        } else if (QDashSettings.loadRecent && QDashSettings.recentFiles.length > 0) {
+            filename = QDashSettings.recentFiles[0];
             if (filename === "" || filename === null)
-                return
-            TabListModel.load(filename)
+                return;
+            TabListModel.load(filename);
         }
     }
 
     Component.onDestruction: {
-        QDashSettings.windowWidth = width
-        QDashSettings.windowHeight = height
-        QDashSettings.windowY = y
-        QDashSettings.windowX = x
+        QDashSettings.windowWidth = width;
+        QDashSettings.windowHeight = height;
+        QDashSettings.windowY = y;
+        QDashSettings.windowX = x;
     }
 
     MainScreen {
@@ -339,8 +327,7 @@ ApplicationWindow {
                 centerIn: parent
             }
 
-            text: filename === "" ? "No File" : PlatformHelper.filename(
-                                        filename)
+            text: filename === "" ? "No File" : PlatformHelper.filename(filename)
 
             font.pixelSize: 16
         }

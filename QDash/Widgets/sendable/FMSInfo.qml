@@ -18,39 +18,39 @@ SendableWidget {
     property int fontSize: 18
 
     function update(topic, value) {
-        widget.connected = true
+        widget.connected = true;
         switch (topic) {
         case "MatchNumber":
-        {
-            match.matchNumber = value
-            break
-        }
+            {
+                match.matchNumber = value;
+                break;
+            }
         case "MatchType":
-        {
-            match.matchType = match.matchTypeMap[value]
-            break
-        }
+            {
+                match.matchType = match.matchTypeMap[value];
+                break;
+            }
         case "EventName":
-        {
-            match.eventName = value === "" ? "Event" : value
-            break
-        }
+            {
+                match.eventName = value === "" ? "Event" : value;
+                break;
+            }
         case "IsRedAlliance":
-        {
-            rect.isRedAlliance = value
-            break
-        }
+            {
+                rect.isRedAlliance = value;
+                break;
+            }
         case "GameSpecificMessage":
-        {
-            gsm.gameSpecificMessage = value
-            break
-        }
+            {
+                gsm.gameSpecificMessage = value;
+                break;
+            }
         case "FMSControlData":
-        {
-            let state = QDashApplication.wordToState(value)
-            stateText.state = state
-            break
-        }
+            {
+                let state = QDashApplication.wordToState(value);
+                stateText.state = state;
+                break;
+            }
         }
     }
 
@@ -79,6 +79,7 @@ SendableWidget {
             implicitHeight: fontSize * 2
 
             Label {
+                id: match
                 anchors.fill: parent
 
                 horizontalAlignment: Text.AlignHCenter
@@ -89,8 +90,6 @@ SendableWidget {
                 property string eventName: "Event"
                 property list<string> matchTypeMap: ["Unknown", "Practice", "Quals", "Elims"]
 
-                id: match
-
                 font.pixelSize: fontSize
 
                 text: eventName + ": " + matchType + " Match " + matchNumber
@@ -99,11 +98,10 @@ SendableWidget {
         }
 
         Label {
+            id: gsm
             Layout.fillWidth: true
 
             property string gameSpecificMessage: ""
-
-            id: gsm
 
             font.pixelSize: fontSize
 
@@ -116,11 +114,10 @@ SendableWidget {
         }
 
         Label {
+            id: stateText
             Layout.fillWidth: true
 
             property string state: "Unknown"
-
-            id: stateText
 
             font.pixelSize: fontSize
 
@@ -131,50 +128,36 @@ SendableWidget {
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
-
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
-
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
-
-                    RowLayout {
-                        LabeledSpinBox {
-                            label: "Title Font Size"
-                            bindedProperty: "titleFontSize"
-                        }
-
-                        LabeledSpinBox {
-                            label: "Font Size"
-                            bindedProperty: "fontSize"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+        RowLayout {
+            LabeledSpinBox {
+                label: "Title Font Size"
+                bindedProperty: "titleFontSize"
             }
+
+            LabeledSpinBox {
+                label: "Font Size"
+                bindedProperty: "fontSize"
+            }
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

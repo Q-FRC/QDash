@@ -24,42 +24,42 @@ PrimitiveWidget {
             MenuItem {
                 text: "Spin Box"
                 onTriggered: {
-                    model.type = "double"
+                    model.type = "double";
                 }
             }
 
             MenuItem {
                 text: "Dial"
                 onTriggered: {
-                    model.type = "doubleDial"
+                    model.type = "doubleDial";
                 }
             }
 
             MenuItem {
                 text: "Radial Gauge"
                 onTriggered: {
-                    model.type = "doubleGauge"
+                    model.type = "doubleGauge";
                 }
             }
 
             MenuItem {
                 text: "Progress Bar"
                 onTriggered: {
-                    model.type = "doubleBar"
+                    model.type = "doubleBar";
                 }
             }
 
             MenuItem {
                 text: "Number Display"
                 onTriggered: {
-                    model.type = "doubleDisplay"
+                    model.type = "doubleDisplay";
                 }
             }
         }
     }
 
     function update(value) {
-        txt.value = Math.ceil(value)
+        txt.value = Math.ceil(value);
     }
 
     Text {
@@ -69,8 +69,7 @@ PrimitiveWidget {
 
         property double value
 
-        text: Math.floor(value / 60) + ":" + String((value % 60).toFixed(
-                                                        0)).padStart(2, '0')
+        text: Math.floor(value / 60) + ":" + String((value % 60).toFixed(0)).padStart(2, '0')
 
         color: value < 30 ? warningColor : Clover.theme.currentAccent
         horizontalAlignment: Text.AlignHCenter
@@ -88,59 +87,45 @@ PrimitiveWidget {
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
-
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
-
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
-
-                    RowLayout {
-                        LabeledSpinBox {
-                            label: "Title Font Size"
-                            bindedProperty: "titleFontSize"
-                        }
-
-                        LabeledSpinBox {
-                            label: "Maximum Font Size"
-                            bindedProperty: "maxFontSize"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "Display Settings"
-                    }
-
-                    ColorField {
-                        label: "Warning Color"
-                        bindedProperty: "warningColor"
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+        RowLayout {
+            LabeledSpinBox {
+                label: "Title Font Size"
+                bindedProperty: "titleFontSize"
             }
+
+            LabeledSpinBox {
+                label: "Maximum Font Size"
+                bindedProperty: "maxFontSize"
+            }
+        }
+
+        SectionHeader {
+            label: "Display Settings"
+        }
+
+        ColorField {
+            label: "Warning Color"
+            bindedProperty: "warningColor"
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

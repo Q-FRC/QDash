@@ -17,7 +17,7 @@ Loader {
     onLoaded: item.open()
 
     function open() {
-        active = true
+        active = true;
     }
 
     sourceComponent: active ? src : undefined

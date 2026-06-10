@@ -101,70 +101,54 @@ PrimitiveWidget {
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
-
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
-
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
-
-                    RowLayout {
-
-                        LabeledSpinBox {
-                            label: "Title Font Size"
-                            bindedProperty: "titleFontSize"
-                        }
-
-                        LabeledSpinBox {
-                            label: "Maximum Font Size"
-                            bindedProperty: "maxFontSize"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "Display Settings"
-                    }
-
-                    RowLayout {
-
-                        LabeledSpinBox {
-                            label: "Number of Decimals"
-                            bindedProperty: "decimals"
-
-                            from: 0
-                        }
-
-                        ColorField {
-                            label: "Text Color"
-                            bindedProperty: "color"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+        RowLayout {
+            LabeledSpinBox {
+                label: "Title Font Size"
+                bindedProperty: "titleFontSize"
             }
+
+            LabeledSpinBox {
+                label: "Maximum Font Size"
+                bindedProperty: "maxFontSize"
+            }
+        }
+
+        SectionHeader {
+            label: "Display Settings"
+        }
+
+        RowLayout {
+            LabeledSpinBox {
+                label: "Number of Decimals"
+                bindedProperty: "decimals"
+
+                from: 0
+            }
+
+            ColorField {
+                label: "Text Color"
+                bindedProperty: "color"
+            }
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

@@ -28,22 +28,22 @@ PrimitiveWidget {
             MenuItem {
                 text: "Text"
                 onTriggered: {
-                    model.type = "string"
+                    model.type = "string";
                 }
             }
 
             MenuItem {
                 text: "Text Display"
                 onTriggered: {
-                    model.type = "textDisplay"
+                    model.type = "textDisplay";
                 }
             }
         }
     }
 
     function update(value) {
-        widget.connected = true
-        itemValue = value
+        widget.connected = true;
+        itemValue = value;
     }
 
     ShapeHandler {
@@ -62,53 +62,39 @@ PrimitiveWidget {
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
+        LabeledSpinBox {
+            label: "Title Font Size"
+            bindedProperty: "titleFontSize"
+        }
 
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
+        SectionHeader {
+            label: "Color Settings"
+        }
 
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
+        LabeledComboBox {
+            model: shapeChoices
+            label: "Shape"
+            bindedProperty: "shape"
+        }
 
-                    LabeledSpinBox {
-                        label: "Title Font Size"
-                        bindedProperty: "titleFontSize"
-                    }
+        SectionHeader {
+            label: "NT Settings"
+        }
 
-                    SectionHeader {
-                        label: "Color Settings"
-                    }
-
-                    LabeledComboBox {
-                        model: shapeChoices
-                        label: "Shape"
-                        bindedProperty: "shape"
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
-            }
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

@@ -16,25 +16,24 @@ Rectangle {
     property real startAngle: -135
     property real endAngle: 135
 
-    property real angle: (value - minValue) / (maxValue - minValue)
-                         * (endAngle - startAngle) + startAngle
+    property real angle: (value - minValue) / (maxValue - minValue) * (endAngle - startAngle) + startAngle
 
     property int valueFontSize: 20
 
     onValueChanged: {
         if (value <= minValue)
-            value = minValue
+            value = minValue;
         if (value >= maxValue)
-            value = maxValue
+            value = maxValue;
     }
 
     color: "transparent"
 
     function fixGaugeSize() {
         if (width < height && width !== 0) {
-            height = width
+            height = width;
         } else if (height < width && height !== 0) {
-            width = height
+            width = height;
         }
     }
 
@@ -56,8 +55,7 @@ Rectangle {
                 width: container.width
                 height: container.height
 
-                rotation: index * (gauge.endAngle - gauge.startAngle)
-                          / gauge.numTicks + gauge.startAngle
+                rotation: index * (gauge.endAngle - gauge.startAngle) / gauge.numTicks + gauge.startAngle
 
                 Column {
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -77,8 +75,7 @@ Rectangle {
                     Label {
                         id: txt
 
-                        text: (gauge.minValue + index * (gauge.maxValue - gauge.minValue)
-                               / gauge.numTicks).toFixed(1)
+                        text: (gauge.minValue + index * (gauge.maxValue - gauge.minValue) / gauge.numTicks).toFixed(1)
 
                         anchors.horizontalCenter: parent.horizontalCenter
 
@@ -144,32 +141,6 @@ Rectangle {
             anchors.fill: parent
             z: 2
 
-            component GaugePath: ShapePath {
-                id: gaugePath
-
-                required property int sweep
-                required property int start
-                required property color stroke
-
-                capStyle: ShapePath.FlatCap
-
-                strokeWidth: 4
-                strokeColor: stroke
-                fillColor: "transparent"
-
-                startX: container.width / 2
-                startY: container.height / 2
-
-                PathAngleArc {
-                    radiusX: container.width / 2 - 2
-                    radiusY: container.height / 2 - 2
-                    centerX: container.width / 2
-                    centerY: container.height / 2
-                    startAngle: gaugePath.start
-                    sweepAngle: gaugePath.sweep
-                }
-            }
-
             // unfilled
             GaugePath {
                 stroke: gauge.angle >= gauge.endAngle ? "transparent" : "lightgray"
@@ -198,6 +169,32 @@ Rectangle {
                 horizontalCenter: parent.horizontalCenter
                 topMargin: 20
             }
+        }
+    }
+
+    component GaugePath: ShapePath {
+        id: gaugePath
+
+        required property int sweep
+        required property int start
+        required property color stroke
+
+        capStyle: ShapePath.FlatCap
+
+        strokeWidth: 4
+        strokeColor: stroke
+        fillColor: "transparent"
+
+        startX: container.width / 2
+        startY: container.height / 2
+
+        PathAngleArc {
+            radiusX: container.width / 2 - 2
+            radiusY: container.height / 2 - 2
+            centerX: container.width / 2
+            centerY: container.height / 2
+            startAngle: gaugePath.start
+            sweepAngle: gaugePath.sweep
         }
     }
 }

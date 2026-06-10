@@ -24,22 +24,22 @@ PrimitiveWidget {
             MenuItem {
                 text: "Color"
                 onTriggered: {
-                    model.type = "colorText"
+                    model.type = "colorText";
                 }
             }
 
             MenuItem {
                 text: "Text Display"
                 onTriggered: {
-                    model.type = "textDisplay"
+                    model.type = "textDisplay";
                 }
             }
         }
     }
 
     function update(value) {
-        widget.connected = true
-        textField.text = value
+        widget.connected = true;
+        textField.text = value;
     }
 
     Item {
@@ -68,56 +68,41 @@ PrimitiveWidget {
             }
 
             onTextEdited: {
-                widget.setValue(text)
+                widget.setValue(text);
             }
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
-
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
-
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
-
-                    RowLayout {
-
-                        LabeledSpinBox {
-                            label: "Title Font Size"
-                            bindedProperty: "titleFontSize"
-                        }
-
-                        LabeledSpinBox {
-                            label: "Font Size"
-                            bindedProperty: "fontSize"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+        RowLayout {
+            LabeledSpinBox {
+                label: "Title Font Size"
+                bindedProperty: "titleFontSize"
             }
+
+            LabeledSpinBox {
+                label: "Font Size"
+                bindedProperty: "fontSize"
+            }
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

@@ -25,10 +25,10 @@ CarboxylLabeledDoubleSpinBox {
     Layout.fillWidth: true
 
     function open() {
-        value = bindTarget[bindedProperty]
+        value = bindTarget[bindedProperty];
     }
 
     function accept() {
-        bindTarget[bindedProperty] = value
+        bindTarget[bindedProperty] = value;
     }
 }

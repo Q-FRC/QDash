@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-
 /*
     MLDoubleSpinBox
     https://github.com/mpaperno/maxLibQt
@@ -30,7 +29,6 @@
 */
 import QtQuick
 import QtQuick.Controls
-
 
 /*!
     \brief MLDoubleSpinBox is a drop-in replacement for QtQuick Controls 2 SpinBox which can handle double-precision numbers and long integers.
@@ -106,16 +104,10 @@ Control {
     property int buttonRepeatDelay: 300 //!< Milliseconds to delay before held +/- button repeat is activated.
     property int buttonRepeatInterval: 100 //!< +/- button repeat interval while held (in milliseconds).
 
-    readonly property string cleanText: getCleanText(
-                                            displayText) //!< Holds the text of the spin box excluding any prefix, suffix, or leading or trailing whitespace.
-    readonly property bool acceptableInput: textInputItem
-                                            && textInputItem.acceptableInput //!< Indicates if input is valid (it would be nicer if the validator would expose an "isValid" prop/method!).
-    readonly property real topValue: Math.max(
-                                         from,
-                                         to) //!< The effective maximum value
-    readonly property real botValue: Math.min(
-                                         from,
-                                         to) //!< The effective minimum value
+    readonly property string cleanText: getCleanText(displayText) //!< Holds the text of the spin box excluding any prefix, suffix, or leading or trailing whitespace.
+    readonly property bool acceptableInput: textInputItem && textInputItem.acceptableInput //!< Indicates if input is valid (it would be nicer if the validator would expose an "isValid" prop/method!).
+    readonly property real topValue: Math.max(from, to) //!< The effective maximum value
+    readonly property real botValue: Math.min(from, to) //!< The effective minimum value
 
     //! The SpinBox item. To use a custom one, replace the \p contentItem with a class derived from Controls 2.x SpinBox.
     //! Or use any other \p contentItem (or even \e null) and (optionally) set the #textInputItem to some \e Item with a \c text property for a custom display.
@@ -131,7 +123,6 @@ Control {
         notation: control.notation
         locale: control.effectiveLocale.name
     }
-
 
     /*! This is an experimental validator using a RegExp instead of numerical validation (which we do anyway).
         The advantage of using it is that:
@@ -167,14 +158,13 @@ Control {
 
     //! Increment value by one #stepSize
     function increase() {
-        stepBy(1)
+        stepBy(1);
     }
 
     //! Decrement value by one #stepSize
     function decrease() {
-        stepBy(-1)
+        stepBy(-1);
     }
-
 
     /*! Adjust value by number of \p steps. (Each step size is determined by the spin box #stepSize property.)
         \param type:int steps Number of steps to adjust by. Can be negative to decrement the value.
@@ -182,9 +172,8 @@ Control {
     */
     function stepBy(steps, noWrap) {
         // always use current editor value in case user has changed it w/out losing focus
-        setValue(textValue() + (stepSize * steps), noWrap)
+        setValue(textValue() + (stepSize * steps), noWrap);
     }
-
 
     /*! Set the spin box value to \p newValue. This is generally preferable to setting the #value spin box property directly, but not required.
         \param type:real newValue The value to set.
@@ -194,99 +183,92 @@ Control {
     */
     function setValue(newValue, noWrap, notModified) {
         if (!wrap || noWrap)
-            newValue = Math.max(Math.min(newValue, control.topValue),
-                                control.botValue)
+            newValue = Math.max(Math.min(newValue, control.topValue), control.botValue);
         else if (newValue < control.botValue)
-            newValue = control.topValue
+            newValue = control.topValue;
         else if (newValue > control.topValue)
-            newValue = control.botValue
+            newValue = control.botValue;
 
-        newValue = Number(newValue.toFixed(Math.max(decimals, 0))) // round
+        newValue = Number(newValue.toFixed(Math.max(decimals, 0))); // round
 
         if (value !== newValue) {
-            isValidated = true
-            value = newValue
-            isValidated = false
+            isValidated = true;
+            value = newValue;
+            isValidated = false;
             if (!notModified)
-                valueModified()
+                valueModified();
             if (spinBoxItem)
-                spinBoxItem.value = 0 // reset this to prevent it from disabling the buttons or other weirdness
-            return true
+                spinBoxItem.value = 0; // reset this to prevent it from disabling the buttons or other weirdness
+            return true;
         }
-        return false
+        return false;
     }
 
     //! Reimplimented from SpinBox
     function textFromValue(value, locale) {
         if (!locale)
-            locale = effectiveLocale
+            locale = effectiveLocale;
 
-        var text = value.toLocaleString(
-                    locale,
-                    (notation === DoubleValidator.StandardNotation ? 'f' : 'e'),
-                    Math.max(decimals, 0))
+        var text = value.toLocaleString(locale, (notation === DoubleValidator.StandardNotation ? 'f' : 'e'), Math.max(decimals, 0));
 
         if (!showGroupSeparator && locale.name !== "C")
-            text = text.replace(new RegExp("\\" + locale.groupSeparator, "g"),
-                                "")
+            text = text.replace(new RegExp("\\" + locale.groupSeparator, "g"), "");
         if (trimExtraZeros) {
-            var pt = locale.decimalPoint
-            var ex = new RegExp("\\" + pt + "0*$|(\\" + pt + "\\d*[1-9])(0+)$").exec(
-                        text)
+            var pt = locale.decimalPoint;
+            var ex = new RegExp("\\" + pt + "0*$|(\\" + pt + "\\d*[1-9])(0+)$").exec(text);
             if (ex)
-                text = text.replace(ex[0], ex[1] || "")
+                text = text.replace(ex[0], ex[1] || "");
         }
 
         if (prefix)
-            text = prefix + text
+            text = prefix + text;
         if (suffix)
-            text = text + suffix
+            text = text + suffix;
 
-        return text
+        return text;
     }
 
     //! Reimplimented from SpinBox
     function valueFromText(text, locale) {
         if (!locale)
-            locale = effectiveLocale
+            locale = effectiveLocale;
         // strip prefix/suffix, or custom pre-processor
-        text = getCleanText(text, locale)
+        text = getCleanText(text, locale);
         // We need to clean the string before using Number::fromLocaleString because it throws errors when the input format isn't valid, eg. thousands separator in the wrong place. D'oh.
-        var re = "[^\\+\\-\\d\\" + locale.decimalPoint + locale.exponential + "]+"
-        text = text.replace(new RegExp(re, "gi"), "")
+        var re = "[^\\+\\-\\d\\" + locale.decimalPoint + locale.exponential + "]+";
+        text = text.replace(new RegExp(re, "gi"), "");
         if (!text.length)
-            text = "0"
+            text = "0";
 
-        return Number.fromLocaleString(locale, text)
+        return Number.fromLocaleString(locale, text);
     }
-
 
     /*! Return \p text stripped of any \e prefix or \e suffix and trimmed. Same as \e cleanText property.
             Called by #valueFromText() before other cleanup operations. Could be reimplemented for custom replacements. */
     function getCleanText(text, locale) {
-        text = String(text)
+        text = String(text);
         if (prefix)
-            text = text.replace(prefixRegEx, "")
+            text = text.replace(prefixRegEx, "");
         if (suffix)
-            text = text.replace(suffixRegEx, "")
-        return text.trim()
+            text = text.replace(suffixRegEx, "");
+        return text.trim();
     }
 
     //! Make \p string safe for use in RegExp as a literal.
     function escapeRegExpChars(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
     //! Make \p string safe for use in Qt input mask as a literal. \sa QLineEdit::inputMask
     function escapeInputMaskChars(string) {
-        return string.replace(/[{}\[\]\\><!#09anxdhb]/gi, '\\$&')
+        return string.replace(/[{}\[\]\\><!#09anxdhb]/gi, '\\$&');
     }
 
     //! Return a RegExp object to validate numeric entry according to the current formatting & locale specs and accounting for any prefix/suffix.
     function doubleValidationRegEx() {
-        var locale = effectiveLocale, pnt = locale.decimalPoint, grp = locale.groupSeparator, exp = locale.exponential, pfx = escapeRegExpChars(prefix), sfx = escapeRegExpChars(suffix), expRe = "(?:" + exp + "[+-]?[\\d]+)?", re = "^" + pfx + "[+-]?(?:[\\d]{1,3}\\" + grp + "?)+\\" + pnt + "?[\\d]*" + expRe + sfx + "$"
+        var locale = effectiveLocale, pnt = locale.decimalPoint, grp = locale.groupSeparator, exp = locale.exponential, pfx = escapeRegExpChars(prefix), sfx = escapeRegExpChars(suffix), expRe = "(?:" + exp + "[+-]?[\\d]+)?", re = "^" + pfx + "[+-]?(?:[\\d]{1,3}\\" + grp + "?)+\\" + pnt + "?[\\d]*" + expRe + sfx + "$";
         // ^[+-]?(?:[\d]{1,3},?)+\.?[\d]*(?:e[+-]?[\d]+)?$
-        return new RegExp(re, "i")
+        return new RegExp(re, "i");
     }
 
     // internals
@@ -294,95 +276,90 @@ Control {
     property bool completed: false //!< \private
     readonly property var defaultLocale: Qt.locale("C") //!< \private
     readonly property var effectiveLocale: useLocaleFormat ? locale : defaultLocale //!< \private
-    readonly property var prefixRegEx: new RegExp("^" + escapeRegExpChars(
-                                                      prefix)) //!< \private
-    readonly property var suffixRegEx: new RegExp(escapeRegExpChars(
-                                                      suffix) + "$") //!< \private
+    readonly property var prefixRegEx: new RegExp("^" + escapeRegExpChars(prefix)) //!< \private
+    readonly property var suffixRegEx: new RegExp(escapeRegExpChars(suffix) + "$") //!< \private
 
     //! \private Get numeric value from current text
     function textValue() {
-        return textInputItem ? valueFromText(textInputItem.text,
-                                             effectiveLocale) : 0
+        return textInputItem ? valueFromText(textInputItem.text, effectiveLocale) : 0;
     }
 
     //! \private Update the current value and/or formatting of the displayed text. In mnost cases one would use \e setValue() .
     function updateValueFromText() {
         if (!setValue(textValue(), true))
-            updateUi() // make sure the text is formatted anyway
+            updateUi(); // make sure the text is formatted anyway
     }
 
     //! \private
     function handleKeyEvent(event) {
-        var steps = 0
+        var steps = 0;
         if (event.key === Qt.Key_Up)
-            steps = 1
+            steps = 1;
         else if (event.key === Qt.Key_Down)
-            steps = -1
+            steps = -1;
         else if (event.key === Qt.Key_PageUp)
-            steps = control.pageSteps
+            steps = control.pageSteps;
         else if (event.key === Qt.Key_PageDown)
-            steps = -control.pageSteps
+            steps = -control.pageSteps;
         else if (event.key !== Qt.Key_Enter && event.key !== Qt.Key_Return)
-            return
-
-        event.accepted = true
+            return;
+        event.accepted = true;
 
         if (steps)
-            stepBy(steps)
+            stepBy(steps);
         else
-            updateValueFromText()
+            updateValueFromText();
     }
 
     //! \private
     function toggleButtonPress(press, increment) {
         if (!press) {
-            btnRepeatTimer.stop()
-            return
+            btnRepeatTimer.stop();
+            return;
         }
 
         if (increment)
-            increase()
+            increase();
         else
-            decrease()
-        btnRepeatTimer.increment = increment
-        btnRepeatTimer.start()
+            decrease();
+        btnRepeatTimer.increment = increment;
+        btnRepeatTimer.start();
     }
 
     //! \private
     function updateUi() {
         if (!completed)
-            return
-
+            return;
         if (textInputItem)
-            textInputItem.text = textFromValue(value, effectiveLocale)
+            textInputItem.text = textFromValue(value, effectiveLocale);
 
         if (spinBoxItem) {
             if (spinBoxItem.up && spinBoxItem.up.indicator)
-                spinBoxItem.up.indicator.enabled = (wrap || value < topValue)
+                spinBoxItem.up.indicator.enabled = (wrap || value < topValue);
             if (spinBoxItem.down && spinBoxItem.down.indicator)
-                spinBoxItem.down.indicator.enabled = (wrap || value > botValue)
+                spinBoxItem.down.indicator.enabled = (wrap || value > botValue);
         }
     }
 
     onValueChanged: {
         if (!completed)
-            return
+            return;
         if (!isValidated)
-            setValue(value, true, true)
-        updateUi()
+            setValue(value, true, true);
+        updateUi();
     }
 
     // We need to override spin box arrow key events to distinguish from +/- button presses, otherwise we get double repeats.
     onSpinBoxItemChanged: {
         if (spinBoxItem)
-            spinBoxItem.Keys.forwardTo = [control]
+            spinBoxItem.Keys.forwardTo = [control];
     }
 
     Component.onCompleted: {
-        completed = true
+        completed = true;
         // An initial value may have been set, but not validated. Do that now.
         if (!setValue(value, true, true))
-            updateUi() // in case it hasn't changed
+            updateUi(); // in case it hasn't changed
     }
 
     onWrapChanged: updateUi()
@@ -395,14 +372,14 @@ Control {
     Connections {
         target: control.spinBoxItem ? control.spinBoxItem.up : null
         function onPressedChanged() {
-            control.toggleButtonPress(control.spinBoxItem.up.pressed, true)
+            control.toggleButtonPress(control.spinBoxItem.up.pressed, true);
         }
     }
 
     Connections {
         target: control.spinBoxItem ? control.spinBoxItem.down : null
         function onPressedChanged() {
-            control.toggleButtonPress(control.spinBoxItem.down.pressed, false)
+            control.toggleButtonPress(control.spinBoxItem.down.pressed, false);
         }
     }
 
@@ -411,15 +388,14 @@ Control {
         // Checking active focus works better than onEditingFinished because the latter doesn't fire if input is invalid (nor does it fix it up automatically).
         function onActiveFocusChanged() {
             if (!control.textInputItem.activeFocus)
-                control.updateValueFromText()
+                control.updateValueFromText();
         }
     }
 
     // We use a binding here just in case the resident SpinBox is older than v2.3
     Binding {
         target: control.spinBoxItem
-        when: control.spinBoxItem
-              && typeof control.spinBoxItem.wrap !== "undefined"
+        when: control.spinBoxItem && typeof control.spinBoxItem.wrap !== "undefined"
         property: "wrap"
         value: control.wrap
     }
@@ -446,11 +422,11 @@ Control {
         onRunningChanged: delay = true
         onTriggered: {
             if (delay)
-                delay = false
+                delay = false;
             else if (increment)
-                control.increase()
+                control.increase();
             else
-                control.decrease()
+                control.decrease();
         }
     }
 
@@ -461,13 +437,12 @@ Control {
         acceptedButtons: Qt.NoButton
         enabled: control.wheelEnabled
         onWheel: {
-            var delta = (wheel.angleDelta.y
-                         === 0.0 ? -wheel.angleDelta.x : wheel.angleDelta.y) / 120
+            var delta = (wheel.angleDelta.y === 0.0 ? -wheel.angleDelta.x : wheel.angleDelta.y) / 120;
             if (wheel.inverted)
-                delta *= -1
+                delta *= -1;
             if (wheel.modifiers & Qt.ControlModifier)
-                delta *= control.pageSteps
-            control.stepBy(delta)
+                delta *= control.pageSteps;
+            control.stepBy(delta);
         }
     }
 }

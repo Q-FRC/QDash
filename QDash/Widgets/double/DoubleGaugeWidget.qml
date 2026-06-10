@@ -33,51 +33,51 @@ PrimitiveWidget {
             MenuItem {
                 text: "Dial"
                 onTriggered: {
-                    model.type = "doubleDial"
+                    model.type = "doubleDial";
                 }
             }
 
             MenuItem {
                 text: "Spin Box"
                 onTriggered: {
-                    model.type = "double"
+                    model.type = "double";
                 }
             }
 
             MenuItem {
                 text: "Progress Bar"
                 onTriggered: {
-                    model.type = "doubleBar"
+                    model.type = "doubleBar";
                 }
             }
 
             MenuItem {
                 text: "Number Display"
                 onTriggered: {
-                    model.type = "doubleDisplay"
+                    model.type = "doubleDisplay";
                 }
             }
 
             MenuItem {
                 text: "Match Time"
                 onTriggered: {
-                    model.type = "matchTime"
+                    model.type = "matchTime";
                 }
             }
 
             MenuItem {
                 text: "Phase Display"
                 onTriggered: {
-                    model.type = "phaseShift"
+                    model.type = "phaseShift";
                 }
             }
         }
     }
 
     function fixGaugeSize() {
-        gauge.width = width
-        gauge.height = height - titleField.height
-        gauge.fixGaugeSize()
+        gauge.width = width;
+        gauge.height = height - titleField.height;
+        gauge.fixGaugeSize();
     }
 
     Component.onCompleted: fixGaugeSize()
@@ -85,8 +85,8 @@ PrimitiveWidget {
     onWidthChanged: fixGaugeSize()
 
     function update(value) {
-        widget.connected = true
-        gauge.value = value
+        widget.connected = true;
+        gauge.value = value;
     }
 
     Item {
@@ -127,86 +127,69 @@ PrimitiveWidget {
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
-
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
-
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
-
-                    RowLayout {
-
-                        LabeledSpinBox {
-                            label: "Title Font Size"
-                            bindedProperty: "titleFontSize"
-                        }
-
-                        LabeledSpinBox {
-                            label: "Font Size"
-                            bindedProperty: "fontSize"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "Gauge Settings"
-                    }
-
-                    LabeledSpinBox {
-                        label: "Number of Ticks"
-                        bindedProperty: "ticks"
-                    }
-
-                    RowLayout {
-
-                        LabeledDoubleSpinBox {
-                            label: "Minimum Value"
-                            bindedProperty: "min"
-                        }
-
-                        LabeledDoubleSpinBox {
-                            label: "Maximum Value"
-                            bindedProperty: "max"
-                        }
-                    }
-
-                    RowLayout {
-
-                        LabeledDoubleSpinBox {
-                            label: "Start Angle"
-                            bindedProperty: "startAngle"
-                        }
-
-                        LabeledDoubleSpinBox {
-                            label: "End Angle"
-                            bindedProperty: "endAngle"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+        RowLayout {
+            LabeledSpinBox {
+                label: "Title Font Size"
+                bindedProperty: "titleFontSize"
             }
+
+            LabeledSpinBox {
+                label: "Font Size"
+                bindedProperty: "fontSize"
+            }
+        }
+
+        SectionHeader {
+            label: "Gauge Settings"
+        }
+
+        LabeledSpinBox {
+            label: "Number of Ticks"
+            bindedProperty: "ticks"
+        }
+
+        RowLayout {
+            LabeledDoubleSpinBox {
+                label: "Minimum Value"
+                bindedProperty: "min"
+            }
+
+            LabeledDoubleSpinBox {
+                label: "Maximum Value"
+                bindedProperty: "max"
+            }
+        }
+
+        RowLayout {
+            LabeledDoubleSpinBox {
+                label: "Start Angle"
+                bindedProperty: "startAngle"
+            }
+
+            LabeledDoubleSpinBox {
+                label: "End Angle"
+                bindedProperty: "endAngle"
+            }
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

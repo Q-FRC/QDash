@@ -36,9 +36,9 @@ Row {
     signal dropped(point pos)
 
     function widgetAdd(name, topic, type) {
-        button.text = closedText
-        close()
-        addWidget(name, topic, type)
+        button.text = closedText;
+        close();
+        addWidget(name, topic, type);
     }
 
     Rectangle {
@@ -102,22 +102,22 @@ Row {
                     property bool ready: false
 
                     onActiveChanged: if (!active && ready) {
-                                         ready = false
-                                         dropped(centroid.position)
-                                     }
+                        ready = false;
+                        dropped(centroid.position);
+                    }
 
                     function drag() {
-                        let global = mapToItem(topicView, centroid.position)
+                        let global = mapToItem(topicView, centroid.position);
                         if (!topicView.contains(global)) {
                             if (!ready) {
-                                widgetAdd(model.name, model.topic, model.type)
+                                widgetAdd(model.name, model.topic, model.type);
 
-                                ready = true
+                                ready = true;
                             }
 
-                            let p = mapToItem(tv, centroid.position)
-                            p.x += tv.x
-                            dragging(p)
+                            let p = mapToItem(tv, centroid.position);
+                            p.x += tv.x;
+                            dragging(p);
                         }
                     }
 
@@ -155,7 +155,7 @@ Row {
                 }
                 TableView.onPooled: indicatorAnimation.complete()
                 TableView.onReused: if (current)
-                                        indicatorAnimation.start()
+                    indicatorAnimation.start()
                 onExpandedChanged: indicator.rotation = expanded ? 90 : 0
 
                 Rectangle {
@@ -173,10 +173,9 @@ Row {
 
                     TapHandler {
                         onSingleTapped: {
-                            let index = treeView.index(row, column)
-                            treeView.selectionModel.setCurrentIndex(
-                                        index, ItemSelectionModel.NoUpdate)
-                            treeView.toggleExpanded(row)
+                            let index = treeView.index(row, column);
+                            treeView.selectionModel.setCurrentIndex(index, ItemSelectionModel.NoUpdate);
+                            treeView.toggleExpanded(row);
                         }
                     }
 
@@ -219,13 +218,13 @@ Row {
 
         onClicked: {
             if (text === closedText) {
-                opened = true
-                open()
-                text = openText
+                opened = true;
+                open();
+                text = openText;
             } else {
-                opened = false
-                close()
-                text = closedText
+                opened = false;
+                close();
+                text = closedText;
             }
         }
     }

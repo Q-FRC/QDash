@@ -13,15 +13,15 @@ ColumnLayout {
     readonly property int controlWidth: Math.min(width, 350)
 
     function accept() {
-        team.accept()
-        ip.accept()
-        mode.accept()
+        team.accept();
+        ip.accept();
+        mode.accept();
     }
 
     function open() {
-        team.open()
-        ip.open()
-        mode.open()
+        team.open();
+        ip.open();
+        mode.open();
     }
 
     LabeledSpinBox {

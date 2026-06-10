@@ -15,27 +15,27 @@ RowLayout {
 
     function accept() {
         if (QDashSettings.style !== style.currentText) {
-            QDashApplication.shouldReload = true
+            QDashApplication.shouldReload = true;
         }
 
-        QDashSettings.style = style.currentText
-        QDashSettings.theme = theme.currentIndex
-        QDashSettings.accent = accent.currentIndex
+        QDashSettings.style = style.currentText;
+        QDashSettings.theme = theme.currentIndex;
+        QDashSettings.accent = accent.currentIndex;
 
-        fontSize.accept()
-        displayFontSize.accept()
-        titleFontSize.accept()
+        fontSize.accept();
+        displayFontSize.accept();
+        titleFontSize.accept();
 
-        Clover.accent = Clover.accents[accent.currentIndex]
-        Clover.theme = Clover.themes[theme.currentIndex]
+        Clover.accent = Clover.accents[accent.currentIndex];
+        Clover.theme = Clover.themes[theme.currentIndex];
 
         // TODO(crueter): Better handling of background images and such
         // This is just bespoke for hannah montana right now
         if (Clover.theme === CustomThemes.hannahDark) {
-            QDashSettings.hannahMontanaMode = true
+            QDashSettings.hannahMontanaMode = true;
             // FIXME(crueter): Automatically set violet accent? Needs Carboxyl option perhaps
         } else {
-            QDashSettings.hannahMontanaMode = false
+            QDashSettings.hannahMontanaMode = false;
         }
     }
 
@@ -53,8 +53,7 @@ RowLayout {
 
             label: qsTr("Style")
 
-            Component.onCompleted: currentIndex = model.indexOf(
-                                       CarboxylApplication.styleName)
+            Component.onCompleted: currentIndex = model.indexOf(CarboxylApplication.styleName)
         }
 
         CarboxylLabeledComboBox {

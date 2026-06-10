@@ -14,7 +14,7 @@ Loader {
     sourceComponent: active ? src : undefined
 
     function open() {
-        active = true
+        active = true;
     }
 
     property Component src: CarboxylMessageDialog {
@@ -25,10 +25,7 @@ Loader {
         width: 400
         height: 275
 
-        text: "<p>QDash is a reliable, high-performance FRC dashboard with "
-              + "a low resource cost, suited for low-end computers and for maximizing "
-              + "Driver Station resources.</p>" + buildConfig.buildInfo(
-                  ) + "Copyleft 2023-2026 crueter"
+        text: "<p>QDash is a reliable, high-performance FRC dashboard with " + "a low resource cost, suited for low-end computers and for maximizing " + "Driver Station resources.</p>" + buildConfig.buildInfo() + "Copyleft 2023-2026 crueter"
 
         standardButtons: Dialog.Ok
 

@@ -9,16 +9,18 @@ import Carboxyl.Clover
 import QDash.Controls
 
 Rectangle {
+    id: widget
     signal moved(real x, real y)
 
     property string item_topic
-
-    id: widget
 
     // *all* widgets must define their properties in this list.
     // They are then updated, and passed to the JSON.
     // This is primarily done to reduce startup overhead on AMD E-350
     property list<string> propertyKeys
+
+    // The content passed to BaseConfigDialog.
+    required property Component configContent
 
     // default to disconnected and invalid
     property bool connected: false
@@ -50,54 +52,54 @@ Rectangle {
     Connections {
         target: tab
         function onTopicViewRectChanged() {
-            let rc = tab.topicViewRect
-            let tvRight = rc.x + rc.width
-            widget.tvOverlap = tvRight >= x
+            let rc = tab.topicViewRect;
+            let tvRight = rc.x + rc.width;
+            widget.tvOverlap = tvRight >= x;
         }
     }
 
     function checkDrag() {
         if (Drag.active || dragForced) {
             // only call this to get the green/red rectangle outline
-            grid.validSpot(x, y, row, column, rowSpan, colSpan, !dragForced)
+            grid.validSpot(x, y, row, column, rowSpan, colSpan, !dragForced);
         }
     }
 
     function checkResize() {
         if (width < grid.colWidth - 16) {
-            width = grid.colWidth - 16
+            width = grid.colWidth - 16;
         }
 
         if (height < grid.rowHeight - 16) {
-            height = grid.rowHeight - 16
+            height = grid.rowHeight - 16;
         }
 
         if (resizeActive) {
-            grid.validResize(width, height, x, y, row, column, rowSpan, colSpan)
+            grid.validResize(width, height, x, y, row, column, rowSpan, colSpan);
         }
     }
 
     function cancelDrag() {
-        dragForced = false
-        resizeActive = false
-        Drag.cancel()
-        grid.resetValid()
+        dragForced = false;
+        resizeActive = false;
+        Drag.cancel();
+        grid.resetValid();
     }
 
     function startDrag() {
-        originalRect = Qt.rect(widget.x, widget.y, widget.width, widget.height)
-        dragArea.drag.target = widget
-        widget.z = 4
+        originalRect = Qt.rect(widget.x, widget.y, widget.width, widget.height);
+        dragArea.drag.target = widget;
+        widget.z = 4;
     }
 
     function startResize() {
-        originalRect = Qt.rect(widget.x, widget.y, widget.width, widget.height)
-        widget.resizeActive = true
-        widget.z = 4
+        originalRect = Qt.rect(widget.x, widget.y, widget.width, widget.height);
+        widget.resizeActive = true;
+        widget.z = 4;
     }
 
     function getPoint() {
-        return grid.getPoint(x, y, false)
+        return grid.getPoint(x, y, false);
     }
 
     // Drag/Resize animations
@@ -129,32 +131,32 @@ Rectangle {
         }
 
         onFinished: {
-            width = widget.originalRect.width
-            height = widget.originalRect.height
-            x = widget.originalRect.x
-            y = widget.originalRect.y
+            width = widget.originalRect.width;
+            height = widget.originalRect.height;
+            x = widget.originalRect.x;
+            y = widget.originalRect.y;
         }
     }
 
     function animateBacksize() {
-        resizeBackAnimX.from = widget.x
-        resizeBackAnimX.to = originalRect.x
-        resizeBackAnimY.from = widget.y
-        resizeBackAnimY.to = originalRect.y
+        resizeBackAnimX.from = widget.x;
+        resizeBackAnimX.to = originalRect.x;
+        resizeBackAnimY.from = widget.y;
+        resizeBackAnimY.to = originalRect.y;
 
-        resizeBackAnimWidth.from = widget.width
-        resizeBackAnimWidth.to = originalRect.width
-        resizeBackAnimHeight.from = widget.height
-        resizeBackAnimHeight.to = originalRect.height
+        resizeBackAnimWidth.from = widget.width;
+        resizeBackAnimWidth.to = originalRect.width;
+        resizeBackAnimHeight.from = widget.height;
+        resizeBackAnimHeight.to = originalRect.height;
 
-        resizeBackAnim.start()
+        resizeBackAnim.start();
     }
 
     function dragTapped() {
         if (dragForced || widget.Drag.active) {
-            cancelDrag()
+            cancelDrag();
         } else {
-            startDrag()
+            startDrag();
         }
     }
 
@@ -191,36 +193,36 @@ Rectangle {
     onMcolumnSpanChanged: model.colSpan = mcolumnSpan
 
     function remove() {
-        twm.remove(model.row, model.column)
+        twm.remove(model.row, model.column);
     }
 
     Component.onCompleted: {
-        tab.latestWidget = this
+        tab.latestWidget = this;
 
-        mrow = model.row
-        mcolumn = model.column
-        mrowSpan = model.rowSpan
-        mcolumnSpan = model.colSpan
+        mrow = model.row;
+        mcolumn = model.column;
+        mrowSpan = model.rowSpan;
+        mcolumnSpan = model.colSpan;
 
-        fixSize()
+        fixSize();
 
-        propertyKeys.push("titleFontSize")
+        propertyKeys.push("titleFontSize");
 
         // TODO(crueter): Properties should have some way to define a default.
         // This way if a property is at default and it changes in an update or a setting, it will change in
         // dependent widgets.
         for (var i = 0; i < propertyKeys.length; i++) {
-            let p = propertyKeys[i]
-            let jsonProp = model.properties[p]
+            let p = propertyKeys[i];
+            let jsonProp = model.properties[p];
 
             if (typeof jsonProp !== "undefined")
-                this[p] = jsonProp
+                this[p] = jsonProp;
 
             this[p + "Changed"].connect(() => {
-                                            let x = model.properties
-                                            x[p] = this[p]
-                                            model.properties = x
-                                        })
+                let x = model.properties;
+                x[p] = this[p];
+                model.properties = x;
+            });
         }
     }
 
@@ -234,19 +236,19 @@ Rectangle {
         target: tab
 
         function onColWidthChanged() {
-            widget.fixSize()
+            widget.fixSize();
         }
 
         function onRowHeightChanged() {
-            widget.fixSize()
+            widget.fixSize();
         }
     }
 
     function fixSize() {
-        width = grid.colWidth * model.colSpan - 16
-        height = grid.rowHeight * model.rowSpan - 16
-        x = grid.colWidth * model.column + 8
-        y = grid.rowHeight * model.row + 8
+        width = grid.colWidth * model.colSpan - 16;
+        height = grid.rowHeight * model.rowSpan - 16;
+        x = grid.colWidth * model.column + 8;
+        y = grid.rowHeight * model.row + 8;
     }
 
     /** RIGHT-CLICK MENU **/
@@ -258,21 +260,21 @@ Rectangle {
             Menu {
                 Component.onCompleted: {
                     if (!_extensionInstance && menuExtension)
-                        _extensionInstance = menuExtension.createObject(widget)
+                        _extensionInstance = menuExtension.createObject(widget);
 
                     if (_extensionInstance) {
                         if (_extensionInstance instanceof Menu)
-                            addMenu(_extensionInstance)
-                        // TODO(crueter): More extensibility?
+                            addMenu(_extensionInstance);
                         else
-                            addItem(_extensionInstance)
+                            // TODO(crueter): More extensibility?
+                            addItem(_extensionInstance);
                     }
 
                     // RIP iOS
                     if (CompileDefinitions.brokenMenus) {
-                        open()
+                        open();
                     } else {
-                        popup()
+                        popup();
                     }
                 }
 
@@ -285,9 +287,9 @@ Rectangle {
                     text: "Configure"
                     onTriggered: {
                         if (configLoader) {
-                            configLoader.active = true
+                            configLoader.active = true;
                         } else if (config) {
-                            config.open()
+                            config.open();
                         }
                     }
                 }
@@ -304,7 +306,7 @@ Rectangle {
 
     function openContextMenu() {
         if (!rcMenuLoader.active && !(Drag.active || dragForced))
-            rcMenuLoader.active = true
+            rcMenuLoader.active = true;
     }
 
     MouseArea {
@@ -318,40 +320,37 @@ Rectangle {
         hoverEnabled: true
 
         onPressed: mouse => {
-                       focus = true
-                       if (mouse.button === Qt.RightButton) {
-                           drag.target = null
-                           widget.openContextMenu()
-                       } else if (mouse.button === Qt.LeftButton) {
-                           dragTapped()
-                       }
-                   }
+            focus = true;
+            if (mouse.button === Qt.RightButton) {
+                drag.target = null;
+                widget.openContextMenu();
+            } else if (mouse.button === Qt.LeftButton) {
+                dragTapped();
+            }
+        }
 
         onReleased: mouse => {
-                        if (mouse.button === Qt.LeftButton) {
-                            if (CompileDefinitions.tapOnly)
-                            mouse.accepted = false
+            if (mouse.button === Qt.LeftButton) {
+                if (CompileDefinitions.tapOnly)
+                    mouse.accepted = false;
 
-                            drag.target = null
+                drag.target = null;
 
-                            if (grid.validSpot(widget.x, widget.y, row, column,
-                                               rowSpan, colSpan, true)) {
+                if (grid.validSpot(widget.x, widget.y, row, column, rowSpan, colSpan, true)) {
+                    let newPoint = grid.getPoint(widget.x, widget.y, true);
 
-                                let newPoint = grid.getPoint(widget.x,
-                                                             widget.y, true)
+                    model.row = newPoint.y;
+                    model.column = newPoint.x;
 
-                                model.row = newPoint.y
-                                model.column = newPoint.x
+                    fixSize();
+                } else {
+                    animateBacksize();
+                }
+                grid.resetValid();
 
-                                fixSize()
-                            } else {
-                                animateBacksize()
-                            }
-                            grid.resetValid()
-
-                            widget.z = 3
-                        }
-                    }
+                widget.z = 3;
+            }
+        }
 
         onDoubleClicked: openContextMenu()
     }
@@ -362,17 +361,13 @@ Rectangle {
     }
 
     Loader {
-        active: CompileDefinitions.tapOnly
-                || (hoverHandler.hovered && !widget.tvOverlap
-                    && !(widget.dragForced || widget.Drag.active))
+        active: CompileDefinitions.tapOnly || (hoverHandler.hovered && !widget.tvOverlap && !(widget.dragForced || widget.Drag.active))
 
         anchors.fill: parent
 
         z: 26
 
-        sourceComponent: Component {
-            ResizeComponent {}
-        }
+        sourceComponent: ResizeComponent {}
     }
 
     /* ACTUAL DATA */
@@ -404,14 +399,8 @@ Rectangle {
         verticalAlignment: Text.AlignVCenter
     }
 
-
-    /**
-    * This is the "base" configuration dialog containing the NT and font settings.
-    * Copy it for your widget.
-    */
     Loader {
-        // Uncomment this for your widget
-        // id: configLoader
+        id: configLoader
         active: false
         asynchronous: true
 
@@ -419,30 +408,7 @@ Rectangle {
 
         sourceComponent: Component {
             BaseConfigDialog {
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
-
-                    LabeledSpinBox {
-                        label: "Title Font Size"
-                        bindedProperty: "titleFontSize"
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+                content: widget.configContent
             }
         }
     }

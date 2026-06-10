@@ -17,11 +17,11 @@ RowLayout {
     property var bindTarget: widget
 
     function open() {
-        textField.open()
+        textField.open();
     }
 
     function accept() {
-        textField.accept()
+        textField.accept();
     }
 
     ColorDialog {

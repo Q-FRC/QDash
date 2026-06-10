@@ -8,30 +8,28 @@ import Carboxyl.Contour
 import Carboxyl.Clover
 
 CarboxylLabeledComboBox {
+    id: control
     property list<var> choices
 
     model: choices
     onChoicesChanged: model = choices
 
-    id: control
-
     function filter(filter) {
-        let newList = []
-        let regex = new RegExp(".*" + filter + ".*", "i")
+        let newList = [];
+        let regex = new RegExp(".*" + filter + ".*", "i");
         for (var i = 0; i < choices.length; ++i) {
             if (choices[i].match(regex)) {
-                newList.push(choices[i])
+                newList.push(choices[i]);
             }
         }
 
-        model = newList
+        model = newList;
     }
 
     popup: Popup {
         y: control.editable ? control.height - 5 : 0
         width: control.width
-        height: Math.min(contentItem.implicitHeight + verticalPadding * 2,
-                         control.Window.height - topMargin - bottomMargin)
+        height: Math.min(contentItem.implicitHeight + verticalPadding * 2, control.Window.height - topMargin - bottomMargin)
         transformOrigin: Item.Top
         topMargin: 12
         bottomMargin: 12

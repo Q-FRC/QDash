@@ -1,4 +1,3 @@
-
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick.Shapes
@@ -14,9 +13,9 @@ Shape {
     vendorExtensionsEnabled: true
     Component.onCompleted: {
         if (typeof this.preferredRendererType != 'undefined') {
-            this.preferredRendererType = Shape.CurveRenderer
+            this.preferredRendererType = Shape.CurveRenderer;
         } else {
-            logs.debug("UI", "Qt version is too old for curve renderer.")
+            logs.debug("UI", "Qt version is too old for curve renderer.");
         }
     }
 }

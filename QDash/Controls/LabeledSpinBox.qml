@@ -25,10 +25,10 @@ CarboxylLabeledSpinBox {
     to: 1E9
 
     function open() {
-        value = bindTarget[bindedProperty]
+        value = bindTarget[bindedProperty];
     }
 
     function accept() {
-        bindTarget[bindedProperty] = value
+        bindTarget[bindedProperty] = value;
     }
 }

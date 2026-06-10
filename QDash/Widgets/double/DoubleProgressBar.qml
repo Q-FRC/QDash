@@ -34,50 +34,50 @@ PrimitiveWidget {
             MenuItem {
                 text: "Spin Box"
                 onTriggered: {
-                    model.type = "double"
+                    model.type = "double";
                 }
             }
 
             MenuItem {
                 text: "Dial"
                 onTriggered: {
-                    model.type = "doubleDial"
+                    model.type = "doubleDial";
                 }
             }
 
             MenuItem {
                 text: "Radial Gauge"
                 onTriggered: {
-                    model.type = "doubleGauge"
+                    model.type = "doubleGauge";
                 }
             }
 
             MenuItem {
                 text: "Number Display"
                 onTriggered: {
-                    model.type = "doubleDisplay"
+                    model.type = "doubleDisplay";
                 }
             }
 
             MenuItem {
                 text: "Match Time"
                 onTriggered: {
-                    model.type = "matchTime"
+                    model.type = "matchTime";
                 }
             }
 
             MenuItem {
                 text: "Phase Display"
                 onTriggered: {
-                    model.type = "phaseShift"
+                    model.type = "phaseShift";
                 }
             }
         }
     }
 
     function update(value) {
-        widget.connected = true
-        bar.value = value
+        widget.connected = true;
+        bar.value = value;
     }
 
     ProgressBar {
@@ -120,8 +120,7 @@ PrimitiveWidget {
                 Text {
                     color: Clover.theme.text
 
-                    text: (bar.from + index * (bar.to - bar.from) / numTicks).toFixed(
-                              1) + suffix
+                    text: (bar.from + index * (bar.to - bar.from) / numTicks).toFixed(1) + suffix
 
                     font.pixelSize: 15
 
@@ -155,88 +154,72 @@ PrimitiveWidget {
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
-
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
-
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
-
-                    RowLayout {
-                        LabeledSpinBox {
-                            label: "Title Font Size"
-                            bindedProperty: "titleFontSize"
-                        }
-
-                        LabeledSpinBox {
-                            label: "Font Size"
-                            bindedProperty: "fontSize"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "Bar Settings"
-                    }
-
-                    RowLayout {
-
-                        LabeledDoubleSpinBox {
-                            label: "Lower Bound"
-                            bindedProperty: "lowerBound"
-                        }
-
-                        LabeledDoubleSpinBox {
-                            label: "Upper Bound"
-                            bindedProperty: "upperBound"
-                        }
-                    }
-
-                    RowLayout {
-
-                        LabeledSpinBox {
-                            label: "Number of Ticks"
-                            bindedProperty: "numTicks"
-
-                            stepSize: 1
-                        }
-
-                        LabeledTextField {
-                            label: "Suffix"
-                            bindedProperty: "suffix"
-                        }
-                    }
-
-                    LabeledCheckbox {
-                        label: "Vertical?"
-                        bindedProperty: "vertical"
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    // TODO: Automatically append this
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+        RowLayout {
+            LabeledSpinBox {
+                label: "Title Font Size"
+                bindedProperty: "titleFontSize"
             }
+
+            LabeledSpinBox {
+                label: "Font Size"
+                bindedProperty: "fontSize"
+            }
+        }
+
+        SectionHeader {
+            label: "Bar Settings"
+        }
+
+        RowLayout {
+            LabeledDoubleSpinBox {
+                label: "Lower Bound"
+                bindedProperty: "lowerBound"
+            }
+
+            LabeledDoubleSpinBox {
+                label: "Upper Bound"
+                bindedProperty: "upperBound"
+            }
+        }
+
+        RowLayout {
+            LabeledSpinBox {
+                label: "Number of Ticks"
+                bindedProperty: "numTicks"
+
+                stepSize: 1
+            }
+
+            LabeledTextField {
+                label: "Suffix"
+                bindedProperty: "suffix"
+            }
+        }
+
+        LabeledCheckbox {
+            label: "Vertical?"
+            bindedProperty: "vertical"
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        // TODO: Automatically append this
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

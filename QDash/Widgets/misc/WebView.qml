@@ -43,58 +43,39 @@ BaseWidget {
         }
     }
 
-    // TODO(crueter): Make this a common component too
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
+        LabeledSpinBox {
+            id: titleFontField
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignTop
 
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
+            label: "Title Font Size"
 
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
+            bindedProperty: "titleFontSize"
+        }
 
-                    LabeledSpinBox {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
+        SectionHeader {
+            label: "Web View Settings"
+        }
 
-                        id: titleFontField
+        LabeledTextField {
+            id: urlField
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignTop
 
-                        label: "Title Font Size"
+            label: "URL"
 
-                        bindedProperty: "titleFontSize"
-                        
-                    }
-
-                    SectionHeader {
-                        label: "Web View Settings"
-                    }
-
-                    LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: urlField
-
-                        label: "URL"
-
-                        bindedProperty: "item_url"
-                        
-                    }
-                }
-            }
+            bindedProperty: "item_url"
         }
     }
 

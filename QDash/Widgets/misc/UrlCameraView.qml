@@ -53,17 +53,16 @@ BaseWidget {
             source: url
 
             function reconnect() {
-                player.stop()
-                connectTimer.start()
+                player.stop();
+                connectTimer.start();
             }
 
             onSourceChanged: reconnect()
 
             videoOutput: video
             onErrorOccurred: (error, errorString) => {
-                                 logs.warn("UrlCameraView",
-                                           "Qt reported error " + errorString)
-                             }
+                logs.warn("UrlCameraView", "Qt reported error " + errorString);
+            }
         }
 
         VideoOutput {
@@ -72,43 +71,29 @@ BaseWidget {
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
+        LabeledSpinBox {
+            label: "Title Font Size"
+            bindedProperty: "titleFontSize"
+        }
 
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
+        SectionHeader {
+            label: "Stream Settings"
+        }
 
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
-
-                    LabeledSpinBox {
-                        label: "Title Font Size"
-                        bindedProperty: "titleFontSize"
-                    }
-
-                    SectionHeader {
-                        label: "Stream Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "URL"
-                        bindedProperty: "url"
-                    }
-                }
-            }
+        LabeledTextField {
+            label: "URL"
+            bindedProperty: "url"
         }
     }
 }

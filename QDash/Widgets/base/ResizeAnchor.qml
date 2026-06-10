@@ -26,12 +26,7 @@ Item {
     // only enable resize anchor if it's not at the edge of the grid,
     // AND resizing isn't possible in that direction.
     // TODO(crueter): Wtf is this formatting
-    readonly property bool isAtEdge: ((hasLeft && control.mcolumn === 0 && control.mcolumnSpan === 1)
-                                      || (hasTop && control.mrow === 0 && control.mrowSpan
-                                          === 1) || (hasRight
-                                                     && (control.mcolumn + control.mcolumnSpan) >= tab.cols && control.mcolumnSpan
-                                                     === 1) || (hasBottom
-                                                                && (control.mrow + control.mrowSpan) >= tab.rows && control.mrowSpan === 1))
+    readonly property bool isAtEdge: ((hasLeft && control.mcolumn === 0 && control.mcolumnSpan === 1) || (hasTop && control.mrow === 0 && control.mrowSpan === 1) || (hasRight && (control.mcolumn + control.mcolumnSpan) >= tab.cols && control.mcolumnSpan === 1) || (hasBottom && (control.mrow + control.mrowSpan) >= tab.rows && control.mrowSpan === 1))
 
     enabled: !isAtEdge
     mouseArea.enabled: !isAtEdge
@@ -62,86 +57,86 @@ Item {
         cursorShape: {
             if (horiz && vert) {
                 if ((hasLeft && hasTop) || (hasRight && hasBottom)) {
-                    return Qt.SizeFDiagCursor
+                    return Qt.SizeFDiagCursor;
                 } else {
-                    return Qt.SizeBDiagCursor
+                    return Qt.SizeBDiagCursor;
                 }
             } else if (horiz) {
-                return Qt.SizeHorCursor
+                return Qt.SizeHorCursor;
             } else {
-                return Qt.SizeVerCursor
+                return Qt.SizeVerCursor;
             }
         }
 
         drag.target: parent
         drag.axis: {
             if (horiz && vert) {
-                return Drag.XAndYAxis
+                return Drag.XAndYAxis;
             } else if (horiz) {
-                return Drag.XAxis
+                return Drag.XAxis;
             } else if (vert) {
-                return Drag.YAxis
+                return Drag.YAxis;
             }
         }
 
         onPressed: mouse => {
-                       // simple clicks that don't do anything get passed to the titleField
-                       if (hasTop && mouse.y > margin / 2) {
-                           mouse.accepted = false
-                       } else {
-                           mouse.accepted = true
-                       }
-                   }
+            // simple clicks that don't do anything get passed to the titleField
+            if (hasTop && mouse.y > margin / 2) {
+                mouse.accepted = false;
+            } else {
+                mouse.accepted = true;
+            }
+        }
         onMouseXChanged: {
             if (drag.active) {
-                let newWidth = control.width
-                let newX = control.x
+                let newWidth = control.width;
+                let newX = control.x;
 
                 if (hasRight) {
-                    newWidth += mouseX
+                    newWidth += mouseX;
                 } else if (hasLeft) {
-                    newWidth -= mouseX
-                    newX += mouseX
+                    newWidth -= mouseX;
+                    newX += mouseX;
                 }
 
                 if (newWidth >= control.minWidth) {
-                    control.width = newWidth
-                    control.x = newX
+                    control.width = newWidth;
+                    control.x = newX;
                 } else {
                     if (hasLeft) {
-                        let diff = control.minWidth - control.width
+                        let diff = control.minWidth - control.width;
                         if (Math.abs(diff) < 0.5)
-                            diff = 0
-                        control.x -= diff
+                            diff = 0;
+                        control.x -= diff;
                     }
-                    control.width = control.minWidth
+                    control.width = control.minWidth;
                 }
             }
         }
 
         onMouseYChanged: {
             if (drag.active) {
-                let newHeight = control.height
-                let newY = control.y
+                let newHeight = control.height;
+                let newY = control.y;
 
                 if (hasBottom) {
-                    newHeight += mouseY
+                    newHeight += mouseY;
                 } else if (hasTop) {
-                    newHeight -= mouseY
-                    newY += mouseY
+                    newHeight -= mouseY;
+                    newY += mouseY;
                 }
 
                 if (newHeight >= control.minHeight) {
-                    control.height = newHeight
-                    control.y = newY
+                    control.height = newHeight;
+                    control.y = newY;
                 } else {
                     if (hasLeft) {
-                        let diff = control.minHeight - control.height
+                        let diff = control.minHeight - control.height;
                         if (Math.abs(diff) < 0.5)
-                            diff = 0
-                        control.y -= diff
+                            diff = 0;
+                        control.y -= diff;
                     }
-                    control.height = control.minHeight
+                    control.height = control.minHeight;
                 }
             }
         }

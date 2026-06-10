@@ -5,6 +5,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 2.15
 
 CheckBox {
+    id: textField
     required property string label
 
     /** what property to bind to */
@@ -12,8 +13,6 @@ CheckBox {
 
     /** the target to bind the property to */
     property var bindTarget: widget
-
-    id: textField
     font.pixelSize: 18
 
     indicator.implicitWidth: 28
@@ -22,11 +21,11 @@ CheckBox {
     Layout.fillWidth: true
 
     function open() {
-        checked = bindTarget[bindedProperty]
+        checked = bindTarget[bindedProperty];
     }
 
     function accept() {
-        bindTarget[bindedProperty] = checked
+        bindTarget[bindedProperty] = checked;
     }
 
     text: label

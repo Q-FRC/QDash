@@ -18,7 +18,7 @@ Loader {
     sourceComponent: active ? src : undefined
 
     function open() {
-        active = true
+        active = true;
     }
 
     property Component src: CarboxylDialog {
@@ -33,16 +33,16 @@ Loader {
         onClosed: loader.active = false
 
         onAccepted: {
-            server.accept()
-            appearance.accept()
-            misc.accept()
+            server.accept();
+            appearance.accept();
+            misc.accept();
 
-            QDashSettings.reconnect()
+            QDashSettings.reconnect();
 
             if (QDashApplication.shouldReload) {
-                QDashApplication.shouldReload = false
+                QDashApplication.shouldReload = false;
 
-                styleWarnDialog.open()
+                styleWarnDialog.open();
             }
         }
 
@@ -54,8 +54,8 @@ Loader {
         }
 
         onAboutToShow: {
-            server.open()
-            misc.open()
+            server.open();
+            misc.open();
         }
 
         SwipeView {
@@ -109,13 +109,12 @@ Loader {
                 model: ["Network", "Appearance", "Miscellaneous"]
 
                 CarboxylTabButton {
+                    id: btn
                     required property string modelData
                     required property int index
 
                     // TODO(crueter): Why
                     Component.onCompleted: tabBar.setCurrentIndex(0)
-
-                    id: btn
 
                     text: modelData
 

@@ -31,15 +31,15 @@ PrimitiveWidget {
             MenuItem {
                 text: "Checkbox"
                 onTriggered: {
-                    model.type = "bool"
+                    model.type = "bool";
                 }
             }
         }
     }
 
     function update(value) {
-        connected = true
-        itemValue = value
+        connected = true;
+        itemValue = value;
     }
 
     ShapeHandler {
@@ -58,67 +58,53 @@ PrimitiveWidget {
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
+        LabeledSpinBox {
+            label: "Title Font Size"
+            bindedProperty: "titleFontSize"
+        }
 
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
+        SectionHeader {
+            label: "Color Settings"
+        }
 
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
+        LabeledComboBox {
+            label: "Shape"
+            bindedProperty: "shape"
+            model: shapeChoices
+        }
 
-                    LabeledSpinBox {
-                        label: "Title Font Size"
-                        bindedProperty: "titleFontSize"
-                    }
+        RowLayout {
+            Layout.fillWidth: true
 
-                    SectionHeader {
-                        label: "Color Settings"
-                    }
-
-                    LabeledComboBox {
-                        label: "Shape"
-                        bindedProperty: "shape"
-                        model: shapeChoices
-                    }
-
-                    RowLayout {
-                        Layout.fillWidth: true
-
-                        ColorField {
-                            label: "True Color"
-                            bindedProperty: "trueColor"
-                        }
-
-                        ColorField {
-                            label: "False Color"
-                            bindedProperty: "falseColor"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+            ColorField {
+                label: "True Color"
+                bindedProperty: "trueColor"
             }
+
+            ColorField {
+                label: "False Color"
+                bindedProperty: "falseColor"
+            }
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

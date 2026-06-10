@@ -17,7 +17,7 @@ Loader {
     signal accepted
 
     function open() {
-        active = true
+        active = true;
     }
 
     property Component src: CarboxylMessageDialog {
@@ -32,7 +32,7 @@ Loader {
         onAccepted: loader.accepted()
 
         onClosed: {
-            loader.active = false
+            loader.active = false;
         }
     }
 }

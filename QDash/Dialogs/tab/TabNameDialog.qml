@@ -21,7 +21,7 @@ Loader {
     signal accepted
 
     function open() {
-        active = true
+        active = true;
     }
 
     property Component src: CarboxylDialog {
@@ -34,13 +34,13 @@ Loader {
         popupType: Popup.Window
 
         onAboutToShow: {
-            tabName.focus = true
-            tabName.text = ""
+            tabName.focus = true;
+            tabName.text = "";
         }
 
         onAccepted: {
-            loader.text = tabName.text
-            loader.accepted()
+            loader.text = tabName.text;
+            loader.accepted();
         }
 
         standardButtons: Dialog.Ok | Dialog.Cancel

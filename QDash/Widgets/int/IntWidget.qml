@@ -29,22 +29,22 @@ PrimitiveWidget {
             MenuItem {
                 text: "Dial"
                 onTriggered: {
-                    model.type = "dial"
+                    model.type = "dial";
                 }
             }
 
             MenuItem {
                 text: "Number Display"
                 onTriggered: {
-                    model.type = "intDisplay"
+                    model.type = "intDisplay";
                 }
             }
         }
     }
 
     function update(value) {
-        widget.connected = true
-        spin.value = value
+        widget.connected = true;
+        spin.value = value;
     }
 
     Item {
@@ -81,79 +81,63 @@ PrimitiveWidget {
             }
 
             onValueModified: {
-                widget.setValue(value)
+                widget.setValue(value);
             }
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
-
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
-
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
-
-                    RowLayout {
-
-                        LabeledSpinBox {
-                            label: "Title Font Size"
-                            bindedProperty: "titleFontSize"
-                        }
-
-                        LabeledSpinBox {
-                            label: "Font Size"
-                            bindedProperty: "fontSize"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "Spin Box Settings"
-                    }
-
-                    RowLayout {
-
-                        LabeledSpinBox {
-                            label: "Lower Bound"
-                            bindedProperty: "lowerBound"
-                        }
-
-                        LabeledSpinBox {
-                            label: "Upper Bound"
-                            bindedProperty: "upperBound"
-                        }
-                    }
-
-                    LabeledSpinBox {
-                        label: "Step Size"
-                        bindedProperty: "stepSize"
-                        from: 0
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+        RowLayout {
+            LabeledSpinBox {
+                label: "Title Font Size"
+                bindedProperty: "titleFontSize"
             }
+
+            LabeledSpinBox {
+                label: "Font Size"
+                bindedProperty: "fontSize"
+            }
+        }
+
+        SectionHeader {
+            label: "Spin Box Settings"
+        }
+
+        RowLayout {
+            LabeledSpinBox {
+                label: "Lower Bound"
+                bindedProperty: "lowerBound"
+            }
+
+            LabeledSpinBox {
+                label: "Upper Bound"
+                bindedProperty: "upperBound"
+            }
+        }
+
+        LabeledSpinBox {
+            label: "Step Size"
+            bindedProperty: "stepSize"
+            from: 0
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

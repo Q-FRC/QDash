@@ -4,13 +4,12 @@ import QtQuick.Layouts
 import Carboxyl.Contour
 
 CarboxylLabeledComboBox {
+    id: combo
     /** what property to bind to */
     required property string bindedProperty
 
     /** the target to bind the property to */
     property var bindTarget: widget
-
-    id: combo
     font.pixelSize: 18
 
     implicitHeight: 38
@@ -18,10 +17,10 @@ CarboxylLabeledComboBox {
     Layout.fillWidth: true
 
     function open() {
-        currentIndex = indexOfValue(bindTarget[bindedProperty])
+        currentIndex = indexOfValue(bindTarget[bindedProperty]);
     }
 
     function accept() {
-        bindTarget[bindedProperty] = currentText
+        bindTarget[bindedProperty] = currentText;
     }
 }

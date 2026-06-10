@@ -29,50 +29,50 @@ PrimitiveWidget {
             MenuItem {
                 text: "Dial"
                 onTriggered: {
-                    model.type = "doubleDial"
+                    model.type = "doubleDial";
                 }
             }
 
             MenuItem {
                 text: "Radial Gauge"
                 onTriggered: {
-                    model.type = "doubleGauge"
+                    model.type = "doubleGauge";
                 }
             }
 
             MenuItem {
                 text: "Progress Bar"
                 onTriggered: {
-                    model.type = "doubleBar"
+                    model.type = "doubleBar";
                 }
             }
 
             MenuItem {
                 text: "Number Display"
                 onTriggered: {
-                    model.type = "doubleDisplay"
+                    model.type = "doubleDisplay";
                 }
             }
 
             MenuItem {
                 text: "Match Time"
                 onTriggered: {
-                    model.type = "matchTime"
+                    model.type = "matchTime";
                 }
             }
 
             MenuItem {
                 text: "Phase Display"
                 onTriggered: {
-                    model.type = "phaseShift"
+                    model.type = "phaseShift";
                 }
             }
         }
     }
 
     function update(value) {
-        widget.connected = true
-        spin.value = value
+        widget.connected = true;
+        spin.value = value;
     }
 
     Item {
@@ -110,77 +110,61 @@ PrimitiveWidget {
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
-
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
-
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
-
-                    RowLayout {
-
-                        LabeledSpinBox {
-                            label: "Title Font Size"
-                            bindedProperty: "titleFontSize"
-                        }
-
-                        LabeledSpinBox {
-                            label: "Font Size"
-                            bindedProperty: "fontSize"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "Spin Box Settings"
-                    }
-
-                    RowLayout {
-
-                        LabeledDoubleSpinBox {
-                            label: "Lower Bound"
-                            bindedProperty: "lowerBound"
-                        }
-
-                        LabeledDoubleSpinBox {
-                            label: "Upper Bound"
-                            bindedProperty: "upperBound"
-                        }
-                    }
-
-                    LabeledDoubleSpinBox {
-                        label: "Step Size"
-
-                        bindedProperty: "stepSize"
-
-                        from: 0
-                        stepSize: 0.1
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+        RowLayout {
+            LabeledSpinBox {
+                label: "Title Font Size"
+                bindedProperty: "titleFontSize"
             }
+
+            LabeledSpinBox {
+                label: "Font Size"
+                bindedProperty: "fontSize"
+            }
+        }
+
+        SectionHeader {
+            label: "Spin Box Settings"
+        }
+
+        RowLayout {
+            LabeledDoubleSpinBox {
+                label: "Lower Bound"
+                bindedProperty: "lowerBound"
+            }
+
+            LabeledDoubleSpinBox {
+                label: "Upper Bound"
+                bindedProperty: "upperBound"
+            }
+        }
+
+        LabeledDoubleSpinBox {
+            label: "Step Size"
+
+            bindedProperty: "stepSize"
+
+            from: 0
+            stepSize: 0.1
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }

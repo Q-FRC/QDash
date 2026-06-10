@@ -41,38 +41,38 @@ PrimitiveWidget {
     property color robotColor: "#FF0000"
 
     function redraw() {
-        robot.redraw()
+        robot.redraw();
     }
 
     onRobotLengthMetersChanged: redraw()
     onRobotWidthMetersChanged: redraw()
 
     function update(value) {
-        robot.xMeters = value[0]
-        robot.yMeters = value[1]
-        robot.angleDeg = value[2]
+        robot.xMeters = value[0];
+        robot.yMeters = value[1];
+        robot.angleDeg = value[2];
 
-        redraw()
+        redraw();
     }
 
     // TODO: This is kinda weird
     // might want to make this global or something? idk
     function updateMirror(value) {
-        mirrorField = value
+        mirrorField = value;
     }
 
     function unsubscribeMirror() {
         if (TopicStore !== null) {
-            TopicStore.unsubscribe("/FMSInfo/IsRedAlliance", updateMirror)
+            TopicStore.unsubscribe("/FMSInfo/IsRedAlliance", updateMirror);
         }
     }
 
     onMirrorForRedAllianceChanged: {
         if (mirrorForRedAlliance) {
-            TopicStore.subscribe("/FMSInfo/IsRedAlliance", updateMirror)
+            TopicStore.subscribe("/FMSInfo/IsRedAlliance", updateMirror);
         } else {
-            unsubscribeMirror()
-            mirrorField = false
+            unsubscribeMirror();
+            mirrorField = false;
         }
     }
 
@@ -113,31 +113,25 @@ PrimitiveWidget {
         property double angleDeg: 0
 
         function redraw() {
-            let meterRatio = (useVerticalField ? fieldImage.paintedWidth : fieldImage.paintedHeight)
-                / fieldWidth
+            let meterRatio = (useVerticalField ? fieldImage.paintedWidth : fieldImage.paintedHeight) / fieldWidth;
 
-            height = robotWidthMeters * meterRatio
-            width = robotLengthMeters * meterRatio
+            height = robotWidthMeters * meterRatio;
+            width = robotLengthMeters * meterRatio;
 
-            let xPixels = (useVerticalField ? -yMeters : xMeters) * meterRatio
-            let yPixels = (useVerticalField ? xMeters : yMeters) * meterRatio
+            let xPixels = (useVerticalField ? -yMeters : xMeters) * meterRatio;
+            let yPixels = (useVerticalField ? xMeters : yMeters) * meterRatio;
 
-            let realFieldX = fieldImage.x + (fieldImage.width - fieldImage.paintedWidth) / 2
-            let realFieldY = fieldImage.y + (fieldImage.height - fieldImage.paintedHeight) / 2
+            let realFieldX = fieldImage.x + (fieldImage.width - fieldImage.paintedWidth) / 2;
+            let realFieldY = fieldImage.y + (fieldImage.height - fieldImage.paintedHeight) / 2;
 
-            let startPoint = useVerticalField ? Qt.point(
-                                                    realFieldX + fieldImage.paintedWidth - width,
-                                                    realFieldY
-                                                    + fieldImage.paintedHeight) : Qt.point(
-                                                    realFieldX,
-                                                    realFieldY + fieldImage.paintedHeight)
+            let startPoint = useVerticalField ? Qt.point(realFieldX + fieldImage.paintedWidth - width, realFieldY + fieldImage.paintedHeight) : Qt.point(realFieldX, realFieldY + fieldImage.paintedHeight);
 
-            x = startPoint.x + xPixels - (useVerticalField ? -height : width) / 2
-            y = startPoint.y - yPixels - (useVerticalField ? width : height) / 2
+            x = startPoint.x + xPixels - (useVerticalField ? -height : width) / 2;
+            y = startPoint.y - yPixels - (useVerticalField ? width : height) / 2;
 
-            rotation = -angleDeg + (useVerticalField ? 270 : 0)
+            rotation = -angleDeg + (useVerticalField ? 270 : 0);
 
-            path.redraw(x, y, height, width, angleDeg)
+            path.redraw(x, y, height, width, angleDeg);
         }
     }
 
@@ -163,126 +157,112 @@ PrimitiveWidget {
             }
 
             function redraw(x, y, h, w, rot) {
-                shape.x = x
-                shape.y = y
+                shape.x = x;
+                shape.y = y;
 
-                shape.width = w
-                shape.height = h
+                shape.width = w;
+                shape.height = h;
 
-                start.x = w
-                start.y = h / 2
+                start.x = w;
+                start.y = h / 2;
 
-                middle.x = 2
-                middle.y = h - 2
+                middle.x = 2;
+                middle.y = h - 2;
 
-                end.x = 2
-                end.y = 0
+                end.x = 2;
+                end.y = 0;
 
-                shape.rotation = -rot + (useVerticalField ? 270 : 0)
+                shape.rotation = -rot + (useVerticalField ? 270 : 0);
             }
         }
     }
 
-    Loader {
-        id: configLoader
-        active: false
-        asynchronous: true
+    configContent: ColumnLayout {
+        id: layout
+        spacing: 12
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
 
-        onLoaded: item.open()
+        SectionHeader {
+            label: "Font Settings"
+        }
 
-        sourceComponent: Component {
-            BaseConfigDialog {
-                id: config
+        LabeledSpinBox {
+            label: "Title Font Size"
+            bindedProperty: "titleFontSize"
+        }
 
-                content: ColumnLayout {
-                    id: layout
-                    spacing: 12
-                    anchors.fill: parent
-                    anchors.leftMargin: 2
-                    clip: true
+        SectionHeader {
+            label: "Robot Settings"
+        }
 
-                    SectionHeader {
-                        label: "Font Settings"
-                    }
+        RowLayout {
+            Layout.fillWidth: true
 
-                    LabeledSpinBox {
-                        label: "Title Font Size"
-                        bindedProperty: "titleFontSize"
-                    }
-
-                    SectionHeader {
-                        label: "Robot Settings"
-                    }
-
-                    RowLayout {
-                        Layout.fillWidth: true
-
-                        LabeledComboBox {
-                            label: "Robot Shape"
-                            bindedProperty: "robotShape"
-                            model: robotShapeChoices
-                        }
-
-                        ColorField {
-                            label: "Robot Color"
-                            bindedProperty: "robotColor"
-                        }
-                    }
-
-                    RowLayout {
-                        Layout.fillWidth: true
-
-                        LabeledDoubleSpinBox {
-                            from: 0
-                            stepSize: 0.1
-
-                            label: "Robot Width (m)"
-                            bindedProperty: "robotWidthMeters"
-                        }
-
-                        LabeledDoubleSpinBox {
-                            from: 0
-                            stepSize: 0.1
-
-                            label: "Robot Length (m)"
-                            bindedProperty: "robotLengthMeters"
-                        }
-                    }
-
-                    SectionHeader {
-                        label: "Field Settings"
-                    }
-
-                    RowLayout {
-                        Layout.fillWidth: true
-
-                        LabeledCheckbox {
-                            label: "Use Vertical Field"
-                            bindedProperty: "useVerticalField"
-                        }
-
-                        LabeledCheckbox {
-                            label: "Mirror for Red"
-                            bindedProperty: "mirrorForRedAlliance"
-                        }
-                    }
-
-                    LabeledComboBox {
-                        label: "Field Type"
-                        bindedProperty: "fieldType"
-                        model: fieldChoices
-                    }
-
-                    SectionHeader {
-                        label: "NT Settings"
-                    }
-
-                    LabeledTextField {
-                        label: "Topic"
-                        bindedProperty: "item_topic"
-                    }
-                }
+            LabeledComboBox {
+                label: "Robot Shape"
+                bindedProperty: "robotShape"
+                model: robotShapeChoices
             }
+
+            ColorField {
+                label: "Robot Color"
+                bindedProperty: "robotColor"
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            LabeledDoubleSpinBox {
+                from: 0
+                stepSize: 0.1
+
+                label: "Robot Width (m)"
+                bindedProperty: "robotWidthMeters"
+            }
+
+            LabeledDoubleSpinBox {
+                from: 0
+                stepSize: 0.1
+
+                label: "Robot Length (m)"
+                bindedProperty: "robotLengthMeters"
+            }
+        }
+
+        SectionHeader {
+            label: "Field Settings"
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            LabeledCheckbox {
+                label: "Use Vertical Field"
+                bindedProperty: "useVerticalField"
+            }
+
+            LabeledCheckbox {
+                label: "Mirror for Red"
+                bindedProperty: "mirrorForRedAlliance"
+            }
+        }
+
+        LabeledComboBox {
+            label: "Field Type"
+            bindedProperty: "fieldType"
+            model: fieldChoices
+        }
+
+        SectionHeader {
+            label: "NT Settings"
+        }
+
+        LabeledTextField {
+            label: "Topic"
+            bindedProperty: "item_topic"
         }
     }
 }
