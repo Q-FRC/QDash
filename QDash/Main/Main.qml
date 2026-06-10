@@ -3,6 +3,7 @@
 import QtCore
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 import Carboxyl.Clover
 import Carboxyl.Contour
@@ -31,8 +32,8 @@ ApplicationWindow {
         if (QDashSettings.resizeToDS) {
             logs.debug("UI", "DS Resize")
 
-            // TODO(crueter): Better heuristic for DS resize.
-            QDashSettings.windowHeight = PlatformHelper.screenHeight() - 230
+            QDashSettings.windowHeight = PlatformHelper.screenHeight(
+                        ) - 200 - PlatformHelper.titlebarHeight(this)
             QDashSettings.windowWidth = PlatformHelper.screenWidth()
 
             // Explicitly disallow resizing, because the user probably doesn't want to

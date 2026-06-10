@@ -20,6 +20,8 @@ CarboxylLabeledTextField {
 
     horizontalAlignment: Text.AlignHCenter
 
+    Layout.fillWidth: true
+
     function open() {
         text = bindTarget[bindedProperty]
     }

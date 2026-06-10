@@ -5,9 +5,9 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import QDash.Controls
-import Carboxyl.Clover
+import QDash.Widgets
 
-import QtQuick.Shapes 2.15
+import Carboxyl.Clover
 
 PrimitiveWidget {
     id: widget
@@ -85,15 +85,8 @@ PrimitiveWidget {
                     }
 
                     LabeledSpinBox {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: titleFontField
-
                         label: "Title Font Size"
-
                         bindedProperty: "titleFontSize"
-                        
                     }
 
                     SectionHeader {
@@ -101,15 +94,9 @@ PrimitiveWidget {
                     }
 
                     LabeledComboBox {
-                        id: shapeField
-
-                        Layout.fillWidth: true
                         model: shapeChoices
-
                         label: "Shape"
-
                         bindedProperty: "shape"
-                        
                     }
 
                     SectionHeader {
@@ -117,15 +104,8 @@ PrimitiveWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: topicField
-
                         label: "Topic"
-
                         bindedProperty: "item_topic"
-                        
                     }
                 }
             }

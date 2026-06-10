@@ -206,13 +206,7 @@ PrimitiveWidget {
                     }
 
                     LabeledSpinBox {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: titleFontField
-
                         label: "Title Font Size"
-
                         bindedProperty: "titleFontSize"
                     }
 
@@ -224,24 +218,13 @@ PrimitiveWidget {
                         Layout.fillWidth: true
 
                         LabeledComboBox {
-                            id: robotShapeField
-
-                            Layout.fillWidth: true
-
                             label: "Robot Shape"
-
                             bindedProperty: "robotShape"
-
                             model: robotShapeChoices
                         }
 
                         ColorField {
-                            id: colorField
-
-                            Layout.fillWidth: true
-
                             label: "Robot Color"
-
                             bindedProperty: "robotColor"
                         }
                     }
@@ -250,29 +233,19 @@ PrimitiveWidget {
                         Layout.fillWidth: true
 
                         LabeledDoubleSpinBox {
-                            id: robotWField
-
-                            Layout.fillWidth: true
                             from: 0
+                            stepSize: 0.1
 
                             label: "Robot Width (m)"
-
                             bindedProperty: "robotWidthMeters"
-
-                            stepSize: 0.1
                         }
 
                         LabeledDoubleSpinBox {
-                            id: robotLField
-
-                            Layout.fillWidth: true
                             from: 0
+                            stepSize: 0.1
 
                             label: "Robot Length (m)"
-
                             bindedProperty: "robotLengthMeters"
-
-                            stepSize: 0.1
                         }
                     }
 
@@ -284,32 +257,20 @@ PrimitiveWidget {
                         Layout.fillWidth: true
 
                         LabeledCheckbox {
-                            id: vertField
-                            Layout.fillWidth: true
-
                             label: "Use Vertical Field"
-
                             bindedProperty: "useVerticalField"
                         }
 
                         LabeledCheckbox {
-                            id: mirrorRedField
-                            Layout.fillWidth: true
-
                             label: "Mirror for Red"
-
                             bindedProperty: "mirrorForRedAlliance"
                         }
                     }
 
                     LabeledComboBox {
-                        id: fieldField // lol
-                        Layout.fillWidth: true
-
                         label: "Field Type"
-                        model: fieldChoices
-
                         bindedProperty: "fieldType"
+                        model: fieldChoices
                     }
 
                     SectionHeader {
@@ -317,13 +278,7 @@ PrimitiveWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: topicField
-
                         label: "Topic"
-
                         bindedProperty: "item_topic"
                     }
                 }

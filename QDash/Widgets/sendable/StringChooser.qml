@@ -15,7 +15,9 @@ SendableWidget {
 
     topics: ["options", "active", "selected"]
 
-    property int item_fontSize: 14
+    propertyKeys: ["fontSize"]
+
+    property int fontSize: 14
 
     property bool readyToUpdate: true
 
@@ -66,7 +68,7 @@ SendableWidget {
                 right: button.left
             }
 
-            font.pixelSize: item_fontSize
+            font.pixelSize: fontSize
 
             implicitHeight: 40
 
@@ -121,6 +123,8 @@ SendableWidget {
         }
     }
 
+    // TODO(crueter): Alongside deduping the loader stuff, most of this is just
+    // type-label-property, with maybe a few extras... possible schema candidate?
     Loader {
         id: configLoader
         active: false
@@ -144,25 +148,14 @@ SendableWidget {
                     }
 
                     RowLayout {
-
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: titleFontField
-
                             label: "Title Font Size"
-
                             bindedProperty: "titleFontSize"
                         }
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: fontField
-
                             label: "Font Size"
-
-                            bindedProperty: "item_fontSize"
+                            bindedProperty: "fontSize"
                         }
                     }
 
@@ -171,13 +164,7 @@ SendableWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: topicField
-
                         label: "Topic"
-
                         bindedProperty: "item_topic"
                     }
                 }

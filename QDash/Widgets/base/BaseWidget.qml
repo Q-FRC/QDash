@@ -430,11 +430,7 @@ Rectangle {
                     }
 
                     LabeledSpinBox {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
                         label: "Title Font Size"
-
                         bindedProperty: "titleFontSize"
                     }
 
@@ -443,11 +439,7 @@ Rectangle {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
                         label: "Topic"
-
                         bindedProperty: "item_topic"
                     }
                 }

@@ -19,6 +19,8 @@ CheckBox {
     indicator.implicitWidth: 28
     indicator.implicitHeight: 28
 
+    Layout.fillWidth: true
+
     function open() {
         checked = bindTarget[bindedProperty]
     }

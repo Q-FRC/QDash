@@ -81,13 +81,7 @@ PrimitiveWidget {
                     }
 
                     LabeledSpinBox {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: titleFontField
-
                         label: "Title Font Size"
-
                         bindedProperty: "titleFontSize"
                     }
 
@@ -96,36 +90,21 @@ PrimitiveWidget {
                     }
 
                     LabeledComboBox {
-                        id: shapeField
-
-                        Layout.fillWidth: true
-                        model: shapeChoices
-
                         label: "Shape"
-
                         bindedProperty: "shape"
+                        model: shapeChoices
                     }
 
                     RowLayout {
                         Layout.fillWidth: true
 
                         ColorField {
-                            id: trueField
-
-                            Layout.fillWidth: true
-
                             label: "True Color"
-
                             bindedProperty: "trueColor"
                         }
 
                         ColorField {
-                            id: falseField
-
-                            Layout.fillWidth: true
-
                             label: "False Color"
-
                             bindedProperty: "falseColor"
                         }
                     }
@@ -135,13 +114,7 @@ PrimitiveWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: topicField
-
                         label: "Topic"
-
                         bindedProperty: "item_topic"
                     }
                 }

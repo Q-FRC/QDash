@@ -22,6 +22,8 @@ CarboxylLabeledDoubleSpinBox {
     from: -1E9
     to: 1E9
 
+    Layout.fillWidth: true
+
     function open() {
         value = bindTarget[bindedProperty]
     }

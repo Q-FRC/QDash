@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
+import QtQuick.Layouts
 import Carboxyl.Contour
 
 CarboxylLabeledComboBox {
@@ -13,6 +14,8 @@ CarboxylLabeledComboBox {
     font.pixelSize: 18
 
     implicitHeight: 38
+
+    Layout.fillWidth: true
 
     function open() {
         currentIndex = indexOfValue(bindTarget[bindedProperty])

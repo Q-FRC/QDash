@@ -5,6 +5,8 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts
 
 import QDash.Controls
+import QDash.Widgets
+
 import Carboxyl.Clover
 
 SendableWidget {
@@ -12,7 +14,9 @@ SendableWidget {
 
     topics: [".name", "running"]
 
-    property int item_fontSize: 18
+    propertyKeys: ["fontSize"]
+
+    property int fontSize: 18
 
     function update(topic, value) {
         widget.connected = true
@@ -52,7 +56,7 @@ SendableWidget {
                 right: parent.right
             }
 
-            font.pixelSize: item_fontSize
+            font.pixelSize: fontSize
             enabled: widget.connected
 
             property bool running: false
@@ -92,25 +96,13 @@ SendableWidget {
                     RowLayout {
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: titleFontField
-
                             label: "Title Font Size"
-
                             bindedProperty: "titleFontSize"
-                            
                         }
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: fontField
-
                             label: "Font Size"
-
-                            bindedProperty: "item_fontSize"
-                            
+                            bindedProperty: "fontSize"
                         }
                     }
 
@@ -119,15 +111,8 @@ SendableWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: topicField
-
                         label: "Topic"
-
                         bindedProperty: "item_topic"
-                        
                     }
                 }
             }

@@ -174,13 +174,7 @@ PrimitiveWidget {
                     }
 
                     LabeledSpinBox {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: titleFontField
-
                         label: "Title Font Size"
-
                         bindedProperty: "titleFontSize"
                     }
 
@@ -189,18 +183,12 @@ PrimitiveWidget {
                     }
 
                     LabeledSpinBox {
-                        Layout.fillWidth: true
-
-                        id: fpsField
-
                         label: "FPS"
-
                         bindedProperty: "item_fps"
                     }
 
                     RowLayout {
                         Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
 
                         Label {
                             font.pixelSize: 16
@@ -208,11 +196,7 @@ PrimitiveWidget {
                         }
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-                            id: resWField
-
                             label: "Width"
-
                             bindedProperty: "item_resW"
                         }
 
@@ -222,11 +206,7 @@ PrimitiveWidget {
                         }
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-                            id: resHField
-
                             label: "Height"
-
                             bindedProperty: "item_resH"
                         }
                     }
@@ -241,9 +221,6 @@ PrimitiveWidget {
                         }
 
                         Slider {
-                            Layout.fillWidth: true
-                            id: qualityField
-
                             from: 0
                             to: 100
                             stepSize: 10
@@ -263,13 +240,7 @@ PrimitiveWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: topicField
-
                         label: "Topic"
-
                         bindedProperty: "item_topic"
                     }
                 }

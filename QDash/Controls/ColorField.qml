@@ -33,7 +33,6 @@ RowLayout {
 
     LabeledTextField {
         id: textField
-        Layout.fillWidth: true
 
         label: parent.label
         bindedProperty: parent.bindedProperty
@@ -45,8 +44,6 @@ RowLayout {
         text: "Pick"
         font.pixelSize: 18
 
-        onClicked: {
-            colorDialog.open()
-        }
+        onClicked: colorDialog.open()
     }
 }

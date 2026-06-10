@@ -174,9 +174,6 @@ PrimitiveWidget {
 
                     RowLayout {
                         LabeledSpinBox {
-                            // TODO: commonize fillWidth
-                            Layout.fillWidth: true
-
                             label: "Title Font Size"
                             bindedProperty: "titleFontSize"
                         }
@@ -196,23 +193,17 @@ PrimitiveWidget {
                     RowLayout {
 
                         LabeledDoubleSpinBox {
-                            Layout.fillWidth: true
-
                             label: "Lower Bound"
                             bindedProperty: "lowerBound"
                         }
 
                         LabeledDoubleSpinBox {
-                            Layout.fillWidth: true
-
                             label: "Upper Bound"
                             bindedProperty: "upperBound"
                         }
                     }
 
                     LabeledDoubleSpinBox {
-                        Layout.fillWidth: true
-
                         label: "Step Size"
                         bindedProperty: "stepSize"
 
@@ -227,15 +218,11 @@ PrimitiveWidget {
                     RowLayout {
 
                         LabeledDoubleSpinBox {
-                            Layout.fillWidth: true
-
                             label: "Start Angle"
                             bindedProperty: "startAngle"
                         }
 
                         LabeledDoubleSpinBox {
-                            Layout.fillWidth: true
-
                             label: "End Angle"
                             bindedProperty: "endAngle"
                         }
@@ -246,9 +233,6 @@ PrimitiveWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
                         label: "Topic"
                         bindedProperty: "item_topic"
                     }

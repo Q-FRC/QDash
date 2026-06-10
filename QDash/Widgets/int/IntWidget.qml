@@ -111,22 +111,12 @@ PrimitiveWidget {
                     RowLayout {
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: titleFontField
-
                             label: "Title Font Size"
-
                             bindedProperty: "titleFontSize"
                         }
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: fontField
-
                             label: "Font Size"
-
                             bindedProperty: "fontSize"
                         }
                     }
@@ -138,35 +128,19 @@ PrimitiveWidget {
                     RowLayout {
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: lowField
-
                             label: "Lower Bound"
-
                             bindedProperty: "lowerBound"
                         }
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: upField
-
                             label: "Upper Bound"
-
                             bindedProperty: "upperBound"
                         }
                     }
 
                     LabeledSpinBox {
-                        Layout.fillWidth: true
-
-                        id: stepField
-
                         label: "Step Size"
-
                         bindedProperty: "stepSize"
-
                         from: 0
                     }
 
@@ -175,13 +149,7 @@ PrimitiveWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: topicField
-
                         label: "Topic"
-
                         bindedProperty: "item_topic"
                     }
                 }

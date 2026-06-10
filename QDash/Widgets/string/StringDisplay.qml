@@ -5,6 +5,8 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts
 
 import QDash.Controls
+import QDash.Widgets
+
 import Carboxyl.Clover
 
 PrimitiveWidget {
@@ -93,25 +95,13 @@ PrimitiveWidget {
                     RowLayout {
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: titleFontField
-
                             label: "Title Font Size"
-
                             bindedProperty: "titleFontSize"
-
                         }
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: fontField
-
                             label: "Maximum Font Size"
-
                             bindedProperty: "maxFontSize"
-
                         }
                     }
 
@@ -121,25 +111,13 @@ PrimitiveWidget {
                     RowLayout {
 
                         ColorField {
-                            Layout.fillWidth: true
-
-                            id: colorField
-
                             label: "Text Color"
-
                             bindedProperty: "color"
-
                         }
 
                         LabeledCheckbox {
-                            Layout.fillWidth: true
-
-                            id: wrapField
-
                             label: "Wrap Text?"
-
                             bindedProperty: "wrap"
-
                         }
                     }
 
@@ -148,15 +126,8 @@ PrimitiveWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: topicField
-
                         label: "Topic"
-
                         bindedProperty: "item_topic"
-
                     }
                 }
             }

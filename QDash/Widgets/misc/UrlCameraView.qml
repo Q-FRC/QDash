@@ -95,13 +95,7 @@ BaseWidget {
                     }
 
                     LabeledSpinBox {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: titleFontField
-
                         label: "Title Font Size"
-
                         bindedProperty: "titleFontSize"
                     }
 
@@ -110,11 +104,7 @@ BaseWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
                         label: "URL"
-
                         bindedProperty: "url"
                     }
                 }

@@ -13,8 +13,9 @@ SendableWidget {
     id: widget
 
     topics: ["MatchNumber", "MatchType", "EventName", "IsRedAlliance", "GameSpecificMessage", "FMSControlData"]
+    propertyKeys: ["fontSize"]
 
-    property int item_fontSize: 18
+    property int fontSize: 18
 
     function update(topic, value) {
         widget.connected = true
@@ -75,7 +76,7 @@ SendableWidget {
 
             color: isRedAlliance ? "red" : "blue"
 
-            implicitHeight: item_fontSize * 2
+            implicitHeight: fontSize * 2
 
             Label {
                 anchors.fill: parent
@@ -90,7 +91,7 @@ SendableWidget {
 
                 id: match
 
-                font.pixelSize: item_fontSize
+                font.pixelSize: fontSize
 
                 text: eventName + ": " + matchType + " Match " + matchNumber
                 enabled: widget.connected
@@ -104,7 +105,7 @@ SendableWidget {
 
             id: gsm
 
-            font.pixelSize: item_fontSize
+            font.pixelSize: fontSize
 
             horizontalAlignment: Text.AlignHCenter
 
@@ -121,7 +122,7 @@ SendableWidget {
 
             id: stateText
 
-            font.pixelSize: item_fontSize
+            font.pixelSize: fontSize
 
             horizontalAlignment: Text.AlignHCenter
 
@@ -153,25 +154,14 @@ SendableWidget {
                     }
 
                     RowLayout {
-
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: titleFontField
-
                             label: "Title Font Size"
-
                             bindedProperty: "titleFontSize"
                         }
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: fontField
-
                             label: "Font Size"
-
-                            bindedProperty: "item_fontSize"
+                            bindedProperty: "fontSize"
                         }
                     }
 
@@ -180,13 +170,7 @@ SendableWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: topicField
-
                         label: "Topic"
-
                         bindedProperty: "item_topic"
                     }
                 }

@@ -19,6 +19,8 @@ CarboxylLabeledSpinBox {
 
     font.pixelSize: 18
 
+    Layout.fillWidth: true
+
     from: 0
     to: 1E9
 

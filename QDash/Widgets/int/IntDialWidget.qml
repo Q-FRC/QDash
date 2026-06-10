@@ -5,6 +5,8 @@ import QtQuick.Controls 6.8
 import QtQuick.Layouts 6.8
 
 import QDash.Controls
+import QDash.Widgets
+
 import Carboxyl.Clover
 
 PrimitiveWidget {
@@ -143,22 +145,12 @@ PrimitiveWidget {
                     RowLayout {
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: titleFontField
-
                             label: "Title Font Size"
-
                             bindedProperty: "titleFontSize"
                         }
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: fontField
-
                             label: "Font Size"
-
                             bindedProperty: "fontSize"
                         }
                     }
@@ -170,35 +162,19 @@ PrimitiveWidget {
                     RowLayout {
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: lowField
-
                             label: "Lower Bound"
-
                             bindedProperty: "lowerBound"
                         }
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: upField
-
                             label: "Upper Bound"
-
                             bindedProperty: "upperBound"
                         }
                     }
 
                     LabeledSpinBox {
-                        Layout.fillWidth: true
-
-                        id: stepField
-
                         label: "Step Size"
-
                         bindedProperty: "stepSize"
-
                         from: 0
                     }
 
@@ -207,24 +183,13 @@ PrimitiveWidget {
                     }
 
                     RowLayout {
-
                         LabeledDoubleSpinBox {
-                            Layout.fillWidth: true
-
-                            id: startField
-
                             label: "Start Angle"
-
                             bindedProperty: "startAngle"
                         }
 
                         LabeledDoubleSpinBox {
-                            Layout.fillWidth: true
-
-                            id: endField
-
                             label: "End Angle"
-
                             bindedProperty: "endAngle"
                         }
                     }
@@ -234,13 +199,7 @@ PrimitiveWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: topicField
-
                         label: "Topic"
-
                         bindedProperty: "item_topic"
                     }
                 }

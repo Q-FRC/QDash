@@ -152,22 +152,12 @@ PrimitiveWidget {
                     RowLayout {
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: titleFontField
-
                             label: "Title Font Size"
-
                             bindedProperty: "titleFontSize"
                         }
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
-                            id: fontField
-
                             label: "Font Size"
-
                             bindedProperty: "fontSize"
                         }
                     }
@@ -177,34 +167,19 @@ PrimitiveWidget {
                     }
 
                     LabeledSpinBox {
-                        Layout.fillWidth: true
-
-                        id: tickField
-
                         label: "Number of Ticks"
-
                         bindedProperty: "ticks"
                     }
 
                     RowLayout {
 
                         LabeledDoubleSpinBox {
-                            Layout.fillWidth: true
-
-                            id: lowField
-
                             label: "Minimum Value"
-
                             bindedProperty: "min"
                         }
 
                         LabeledDoubleSpinBox {
-                            Layout.fillWidth: true
-
-                            id: upField
-
                             label: "Maximum Value"
-
                             bindedProperty: "max"
                         }
                     }
@@ -212,22 +187,12 @@ PrimitiveWidget {
                     RowLayout {
 
                         LabeledDoubleSpinBox {
-                            Layout.fillWidth: true
-
-                            id: startField
-
                             label: "Start Angle"
-
                             bindedProperty: "startAngle"
                         }
 
                         LabeledDoubleSpinBox {
-                            Layout.fillWidth: true
-
-                            id: endField
-
                             label: "End Angle"
-
                             bindedProperty: "endAngle"
                         }
                     }
@@ -237,13 +202,7 @@ PrimitiveWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
-                        id: topicField
-
                         label: "Topic"
-
                         bindedProperty: "item_topic"
                     }
                 }

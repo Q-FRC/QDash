@@ -112,18 +112,12 @@ PrimitiveWidget {
 
                     RowLayout {
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
                             label: "Title Font Size"
-
                             bindedProperty: "titleFontSize"
                         }
 
                         LabeledSpinBox {
-                            Layout.fillWidth: true
-
                             label: "Maximum Font Size"
-
                             bindedProperty: "maxFontSize"
                         }
                     }
@@ -133,10 +127,7 @@ PrimitiveWidget {
                     }
 
                     ColorField {
-                        Layout.fillWidth: true
-
                         label: "Warning Color"
-
                         bindedProperty: "warningColor"
                     }
 
@@ -145,11 +136,7 @@ PrimitiveWidget {
                     }
 
                     LabeledTextField {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
-
                         label: "Topic"
-
                         bindedProperty: "item_topic"
                     }
                 }
