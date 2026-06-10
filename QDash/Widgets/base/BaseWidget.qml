@@ -2,7 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import Carboxyl.Clover
+
 import QDash.Controls
+import QDash.Core
+
 import QtQuick 6.8
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Basic as B
@@ -400,6 +403,8 @@ Rectangle {
         sourceComponent: Component {
             BaseConfigDialog {
                 content: widget.configContent
+
+                onClosed: configLoader.active = false
             }
         }
 
