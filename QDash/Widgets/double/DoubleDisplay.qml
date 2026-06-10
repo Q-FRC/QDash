@@ -52,52 +52,54 @@ PrimitiveWidget {
         }
     }
 
-    configContent: ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
+    configComponent: Component {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
+            spacing: 12
 
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "titleFontSize"
-                label: "Title Font Size"
+            SectionHeader {
+                label: "Font Settings"
             }
 
-            LabeledSpinBox {
-                bindedProperty: "maxFontSize"
-                label: "Maximum Font Size"
-            }
-        }
+            RowLayout {
+                LabeledSpinBox {
+                    bindedProperty: "titleFontSize"
+                    label: "Title Font Size"
+                }
 
-        SectionHeader {
-            label: "Display Settings"
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "decimals"
-                from: 0
-                label: "Number of Decimals"
+                LabeledSpinBox {
+                    bindedProperty: "maxFontSize"
+                    label: "Maximum Font Size"
+                }
             }
 
-            ColorField {
-                bindedProperty: "color"
-                label: "Text Color"
+            SectionHeader {
+                label: "Display Settings"
             }
-        }
 
-        SectionHeader {
-            label: "NT Settings"
-        }
+            RowLayout {
+                LabeledSpinBox {
+                    bindedProperty: "decimals"
+                    from: 0
+                    label: "Number of Decimals"
+                }
 
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
+                ColorField {
+                    bindedProperty: "color"
+                    label: "Text Color"
+                }
+            }
+
+            SectionHeader {
+                label: "NT Settings"
+            }
+
+            LabeledTextField {
+                bindedProperty: "item_topic"
+                label: "Topic"
+            }
         }
     }
 }

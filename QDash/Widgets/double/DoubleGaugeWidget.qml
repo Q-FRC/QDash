@@ -73,68 +73,70 @@ PrimitiveWidget {
         }
     }
 
-    configContent: ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
+    configComponent: Component {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
+            spacing: 12
 
-        SectionHeader {
-            label: "Font Settings"
-        }
+            SectionHeader {
+                label: "Font Settings"
+            }
 
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "titleFontSize"
-                label: "Title Font Size"
+            RowLayout {
+                LabeledSpinBox {
+                    bindedProperty: "titleFontSize"
+                    label: "Title Font Size"
+                }
+
+                LabeledSpinBox {
+                    bindedProperty: "fontSize"
+                    label: "Font Size"
+                }
+            }
+
+            SectionHeader {
+                label: "Gauge Settings"
             }
 
             LabeledSpinBox {
-                bindedProperty: "fontSize"
-                label: "Font Size"
-            }
-        }
-
-        SectionHeader {
-            label: "Gauge Settings"
-        }
-
-        LabeledSpinBox {
-            bindedProperty: "ticks"
-            label: "Number of Ticks"
-        }
-
-        RowLayout {
-            LabeledDoubleSpinBox {
-                bindedProperty: "min"
-                label: "Minimum Value"
+                bindedProperty: "ticks"
+                label: "Number of Ticks"
             }
 
-            LabeledDoubleSpinBox {
-                bindedProperty: "max"
-                label: "Maximum Value"
+            RowLayout {
+                LabeledDoubleSpinBox {
+                    bindedProperty: "min"
+                    label: "Minimum Value"
+                }
+
+                LabeledDoubleSpinBox {
+                    bindedProperty: "max"
+                    label: "Maximum Value"
+                }
             }
-        }
 
-        RowLayout {
-            LabeledDoubleSpinBox {
-                bindedProperty: "startAngle"
-                label: "Start Angle"
+            RowLayout {
+                LabeledDoubleSpinBox {
+                    bindedProperty: "startAngle"
+                    label: "Start Angle"
+                }
+
+                LabeledDoubleSpinBox {
+                    bindedProperty: "endAngle"
+                    label: "End Angle"
+                }
             }
 
-            LabeledDoubleSpinBox {
-                bindedProperty: "endAngle"
-                label: "End Angle"
+            SectionHeader {
+                label: "NT Settings"
             }
-        }
 
-        SectionHeader {
-            label: "NT Settings"
-        }
-
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
+            LabeledTextField {
+                bindedProperty: "item_topic"
+                label: "Topic"
+            }
         }
     }
 }

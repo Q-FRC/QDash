@@ -64,58 +64,60 @@ PrimitiveWidget {
         }
     }
 
-    configContent: ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
+    configComponent: Component {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
+            spacing: 12
 
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "titleFontSize"
-                label: "Title Font Size"
+            SectionHeader {
+                label: "Font Settings"
             }
 
-            LabeledSpinBox {
-                bindedProperty: "fontSize"
-                label: "Font Size"
+            RowLayout {
+                LabeledSpinBox {
+                    bindedProperty: "titleFontSize"
+                    label: "Title Font Size"
+                }
+
+                LabeledSpinBox {
+                    bindedProperty: "fontSize"
+                    label: "Font Size"
+                }
             }
-        }
 
-        SectionHeader {
-            label: "Spin Box Settings"
-        }
+            SectionHeader {
+                label: "Spin Box Settings"
+            }
 
-        RowLayout {
+            RowLayout {
+                LabeledDoubleSpinBox {
+                    bindedProperty: "lowerBound"
+                    label: "Lower Bound"
+                }
+
+                LabeledDoubleSpinBox {
+                    bindedProperty: "upperBound"
+                    label: "Upper Bound"
+                }
+            }
+
             LabeledDoubleSpinBox {
-                bindedProperty: "lowerBound"
-                label: "Lower Bound"
+                bindedProperty: "stepSize"
+                from: 0
+                label: "Step Size"
+                stepSize: 0.1
             }
 
-            LabeledDoubleSpinBox {
-                bindedProperty: "upperBound"
-                label: "Upper Bound"
+            SectionHeader {
+                label: "NT Settings"
             }
-        }
 
-        LabeledDoubleSpinBox {
-            bindedProperty: "stepSize"
-            from: 0
-            label: "Step Size"
-            stepSize: 0.1
-        }
-
-        SectionHeader {
-            label: "NT Settings"
-        }
-
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
+            LabeledTextField {
+                bindedProperty: "item_topic"
+                label: "Topic"
+            }
         }
     }
 }

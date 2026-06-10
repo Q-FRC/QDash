@@ -100,70 +100,72 @@ PrimitiveWidget {
         }
     }
 
-    configContent: ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
+    configComponent: Component {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
+            spacing: 12
 
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "titleFontSize"
-                label: "Title Font Size"
+            SectionHeader {
+                label: "Font Settings"
             }
 
-            LabeledSpinBox {
-                bindedProperty: "fontSize"
-                label: "Font Size"
-            }
-        }
+            RowLayout {
+                LabeledSpinBox {
+                    bindedProperty: "titleFontSize"
+                    label: "Title Font Size"
+                }
 
-        SectionHeader {
-            label: "Bar Settings"
-        }
-
-        RowLayout {
-            LabeledDoubleSpinBox {
-                bindedProperty: "lowerBound"
-                label: "Lower Bound"
+                LabeledSpinBox {
+                    bindedProperty: "fontSize"
+                    label: "Font Size"
+                }
             }
 
-            LabeledDoubleSpinBox {
-                bindedProperty: "upperBound"
-                label: "Upper Bound"
-            }
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "numTicks"
-                label: "Number of Ticks"
-                stepSize: 1
+            SectionHeader {
+                label: "Bar Settings"
             }
 
+            RowLayout {
+                LabeledDoubleSpinBox {
+                    bindedProperty: "lowerBound"
+                    label: "Lower Bound"
+                }
+
+                LabeledDoubleSpinBox {
+                    bindedProperty: "upperBound"
+                    label: "Upper Bound"
+                }
+            }
+
+            RowLayout {
+                LabeledSpinBox {
+                    bindedProperty: "numTicks"
+                    label: "Number of Ticks"
+                    stepSize: 1
+                }
+
+                LabeledTextField {
+                    bindedProperty: "suffix"
+                    label: "Suffix"
+                }
+            }
+
+            LabeledCheckbox {
+                bindedProperty: "vertical"
+                label: "Vertical?"
+            }
+
+            SectionHeader {
+                label: "NT Settings"
+            }
+
+            // TODO: Automatically append this
             LabeledTextField {
-                bindedProperty: "suffix"
-                label: "Suffix"
+                bindedProperty: "item_topic"
+                label: "Topic"
             }
-        }
-
-        LabeledCheckbox {
-            bindedProperty: "vertical"
-            label: "Vertical?"
-        }
-
-        SectionHeader {
-            label: "NT Settings"
-        }
-
-        // TODO: Automatically append this
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
         }
     }
 }

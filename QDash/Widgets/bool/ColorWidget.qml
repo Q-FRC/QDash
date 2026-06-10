@@ -32,55 +32,6 @@ PrimitiveWidget {
 
     propertyKeys: ["falseColor", "trueColor", "shape"]
 
-    configContent: ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
-
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        LabeledSpinBox {
-            bindedProperty: "titleFontSize"
-            label: "Title Font Size"
-        }
-
-        SectionHeader {
-            label: "Color Settings"
-        }
-
-        LabeledComboBox {
-            bindedProperty: "shape"
-            label: "Shape"
-            model: shapeChoices
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            ColorField {
-                bindedProperty: "trueColor"
-                label: "True Color"
-            }
-
-            ColorField {
-                bindedProperty: "falseColor"
-                label: "False Color"
-            }
-        }
-
-        SectionHeader {
-            label: "NT Settings"
-        }
-
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
-        }
-    }
-
     ShapeHandler {
         id: shape
 
@@ -93,6 +44,57 @@ PrimitiveWidget {
             margins: 10
             right: parent.right
             top: titleField.bottom
+        }
+    }
+
+    configComponent: Component {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
+            spacing: 12
+
+            SectionHeader {
+                label: "Font Settings"
+            }
+
+            LabeledSpinBox {
+                bindedProperty: "titleFontSize"
+                label: "Title Font Size"
+            }
+
+            SectionHeader {
+                label: "Color Settings"
+            }
+
+            LabeledComboBox {
+                bindedProperty: "shape"
+                label: "Shape"
+                model: widget.shapeChoices
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+
+                ColorField {
+                    bindedProperty: "trueColor"
+                    label: "True Color"
+                }
+
+                ColorField {
+                    bindedProperty: "falseColor"
+                    label: "False Color"
+                }
+            }
+
+            SectionHeader {
+                label: "NT Settings"
+            }
+
+            LabeledTextField {
+                bindedProperty: "item_topic"
+                label: "Topic"
+            }
         }
     }
 }

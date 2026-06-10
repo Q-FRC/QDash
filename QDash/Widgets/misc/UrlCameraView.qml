@@ -77,28 +77,30 @@ BaseWidget {
         }
     }
 
-    configContent: ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
+    configComponent: Component {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
+            spacing: 12
 
-        SectionHeader {
-            label: "Font Settings"
-        }
+            SectionHeader {
+                label: "Font Settings"
+            }
 
-        LabeledSpinBox {
-            bindedProperty: "titleFontSize"
-            label: "Title Font Size"
-        }
+            LabeledSpinBox {
+                bindedProperty: "titleFontSize"
+                label: "Title Font Size"
+            }
 
-        SectionHeader {
-            label: "Stream Settings"
-        }
+            SectionHeader {
+                label: "Stream Settings"
+            }
 
-        LabeledTextField {
-            bindedProperty: "url"
-            label: "URL"
+            LabeledTextField {
+                bindedProperty: "url"
+                label: "URL"
+            }
         }
     }
 }

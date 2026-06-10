@@ -179,89 +179,92 @@ PrimitiveWidget {
         }
     }
 
-    configContent: ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
+    configComponent: Component {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
+            spacing: 12
 
-        SectionHeader {
-            label: "Font Settings"
-        }
+            SectionHeader {
+                label: "Font Settings"
+            }
 
-        LabeledSpinBox {
-            bindedProperty: "titleFontSize"
-            label: "Title Font Size"
-        }
+            LabeledSpinBox {
+                bindedProperty: "titleFontSize"
+                label: "Title Font Size"
+            }
 
-        SectionHeader {
-            label: "Robot Settings"
-        }
+            SectionHeader {
+                label: "Robot Settings"
+            }
 
-        RowLayout {
-            Layout.fillWidth: true
+            RowLayout {
+                Layout.fillWidth: true
+
+                LabeledComboBox {
+                    bindedProperty: "robotShape"
+                    label: "Robot Shape"
+                    model: widget.robotShapeChoices
+                }
+
+                ColorField {
+                    bindedProperty: "robotColor"
+                    label: "Robot Color"
+                }
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+
+                LabeledDoubleSpinBox {
+                    bindedProperty: "robotWidthMeters"
+                    label: "Robot Width (m)"
+
+                    from: 0
+                    stepSize: 0.1
+                }
+
+                LabeledDoubleSpinBox {
+                    bindedProperty: "robotLengthMeters"
+                    from: 0
+                    label: "Robot Length (m)"
+                    stepSize: 0.1
+                }
+            }
+
+            SectionHeader {
+                label: "Field Settings"
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+
+                LabeledCheckbox {
+                    bindedProperty: "useVerticalField"
+                    label: "Use Vertical Field"
+                }
+
+                LabeledCheckbox {
+                    bindedProperty: "mirrorForRedAlliance"
+                    label: "Mirror for Red"
+                }
+            }
 
             LabeledComboBox {
-                bindedProperty: "robotShape"
-                label: "Robot Shape"
-                model: robotShapeChoices
+                bindedProperty: "fieldType"
+                label: "Field Type"
+                model: widget.fieldChoices
             }
 
-            ColorField {
-                bindedProperty: "robotColor"
-                label: "Robot Color"
-            }
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            LabeledDoubleSpinBox {
-                bindedProperty: "robotWidthMeters"
-                from: 0
-                label: "Robot Width (m)"
-                stepSize: 0.1
+            SectionHeader {
+                label: "NT Settings"
             }
 
-            LabeledDoubleSpinBox {
-                bindedProperty: "robotLengthMeters"
-                from: 0
-                label: "Robot Length (m)"
-                stepSize: 0.1
+            LabeledTextField {
+                bindedProperty: "item_topic"
+                label: "Topic"
             }
-        }
-
-        SectionHeader {
-            label: "Field Settings"
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            LabeledCheckbox {
-                bindedProperty: "useVerticalField"
-                label: "Use Vertical Field"
-            }
-
-            LabeledCheckbox {
-                bindedProperty: "mirrorForRedAlliance"
-                label: "Mirror for Red"
-            }
-        }
-
-        LabeledComboBox {
-            bindedProperty: "fieldType"
-            label: "Field Type"
-            model: fieldChoices
-        }
-
-        SectionHeader {
-            label: "NT Settings"
-        }
-
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
         }
     }
 }

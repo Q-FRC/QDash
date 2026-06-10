@@ -12,26 +12,31 @@ import QtQuick.Controls
 CarboxylDialog {
     id: config
 
-    required property Item content
+    required property Component configComponent
 
     implicitWidth: 550
     popupType: Popup.Window
     standardButtons: Dialog.Ok | Dialog.Cancel
     title: "Configure Widget"
 
-    onAboutToShow: Util.searchFunction(content, "open")
     onAccepted: {
-        Util.searchFunction(content, "accept")
+        Util.searchFunction(content.item, "accept")
         twm.modified = true
     }
 
     ScrollView {
-        contentChildren: [content]
-
+        id: scroll
+        contentChildren: [content.item]
         onWidthChanged: contentWidth = width - effectiveScrollBarWidth
+        anchors.fill: parent
 
-        anchors {
-            fill: parent
+        Loader {
+            id: content
+
+            asynchronous: true
+            sourceComponent: configComponent
+
+            onLoaded: Util.searchFunction(item, "open")
         }
     }
 }

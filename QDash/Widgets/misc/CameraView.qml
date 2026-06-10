@@ -170,85 +170,87 @@ PrimitiveWidget {
         }
     }
 
-    configContent: ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
+    configComponent: Component {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
+            spacing: 12
 
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        LabeledSpinBox {
-            bindedProperty: "titleFontSize"
-            label: "Title Font Size"
-        }
-
-        SectionHeader {
-            label: "Stream Settings"
-        }
-
-        LabeledSpinBox {
-            bindedProperty: "item_fps"
-            label: "FPS"
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            Label {
-                font.pixelSize: 16
-                text: "Resolution"
+            SectionHeader {
+                label: "Font Settings"
             }
 
             LabeledSpinBox {
-                bindedProperty: "item_resW"
-                label: "Width"
+                bindedProperty: "titleFontSize"
+                label: "Title Font Size"
             }
 
-            Label {
-                font.pixelSize: 18
-                text: "x"
+            SectionHeader {
+                label: "Stream Settings"
             }
 
             LabeledSpinBox {
-                bindedProperty: "item_resH"
-                label: "Height"
-            }
-        }
-
-        RowLayout {
-            Layout.alignment: Qt.AlignTop
-            Layout.fillWidth: true
-
-            Label {
-                font.pixelSize: 16
-                text: "Quality"
+                bindedProperty: "item_fps"
+                label: "FPS"
             }
 
-            Slider {
-                function accept() {
-                    widget.item_quality = value
+            RowLayout {
+                Layout.fillWidth: true
+
+                Label {
+                    font.pixelSize: 16
+                    text: "Resolution"
                 }
 
-                function open() {
-                    value = widget.item_quality
+                LabeledSpinBox {
+                    bindedProperty: "item_resW"
+                    label: "Width"
                 }
 
-                from: 0
-                stepSize: 10
-                to: 100
+                Label {
+                    font.pixelSize: 18
+                    text: "x"
+                }
+
+                LabeledSpinBox {
+                    bindedProperty: "item_resH"
+                    label: "Height"
+                }
             }
-        }
 
-        SectionHeader {
-            label: "NT Settings"
-        }
+            RowLayout {
+                Layout.alignment: Qt.AlignTop
+                Layout.fillWidth: true
 
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
+                Label {
+                    font.pixelSize: 16
+                    text: "Quality"
+                }
+
+                Slider {
+                    function accept() {
+                        widget.item_quality = value
+                    }
+
+                    function open() {
+                        value = widget.item_quality
+                    }
+
+                    from: 0
+                    stepSize: 10
+                    to: 100
+                }
+            }
+
+            SectionHeader {
+                label: "NT Settings"
+            }
+
+            LabeledTextField {
+                bindedProperty: "item_topic"
+                label: "Topic"
+            }
         }
     }
 }

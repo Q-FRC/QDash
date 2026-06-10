@@ -48,44 +48,46 @@ PrimitiveWidget {
         }
     }
 
-    configContent: ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
+    configComponent: Component {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
+            spacing: 12
 
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "titleFontSize"
-                label: "Title Font Size"
+            SectionHeader {
+                label: "Font Settings"
             }
 
-            LabeledSpinBox {
-                bindedProperty: "maxFontSize"
-                label: "Maximum Font Size"
+            RowLayout {
+                LabeledSpinBox {
+                    bindedProperty: "titleFontSize"
+                    label: "Title Font Size"
+                }
+
+                LabeledSpinBox {
+                    bindedProperty: "maxFontSize"
+                    label: "Maximum Font Size"
+                }
             }
-        }
 
-        SectionHeader {
-            label: "Display Settings"
-        }
+            SectionHeader {
+                label: "Display Settings"
+            }
 
-        ColorField {
-            bindedProperty: "color"
-            label: "Text Color"
-        }
+            ColorField {
+                bindedProperty: "color"
+                label: "Text Color"
+            }
 
-        SectionHeader {
-            label: "NT Settings"
-        }
+            SectionHeader {
+                label: "NT Settings"
+            }
 
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
+            LabeledTextField {
+                bindedProperty: "item_topic"
+                label: "Topic"
+            }
         }
     }
 }

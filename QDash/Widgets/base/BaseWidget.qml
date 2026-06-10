@@ -21,7 +21,7 @@ Rectangle {
     property Component menuExtension: null
 
     // The content passed to BaseConfigDialog.
-    property Item configContent
+    property Component configComponent
 
     // default to disconnected and invalid
     property bool connected: false
@@ -451,7 +451,7 @@ Rectangle {
 
         sourceComponent: Component {
             BaseConfigDialog {
-                content: widget.configContent
+                configComponent: widget.configComponent
 
                 onClosed: configLoader.active = false
             }

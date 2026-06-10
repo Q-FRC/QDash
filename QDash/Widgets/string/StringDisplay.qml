@@ -49,51 +49,53 @@ PrimitiveWidget {
         }
     }
 
-    configContent: ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
+    configComponent: Component {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
+            spacing: 12
 
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "titleFontSize"
-                label: "Title Font Size"
+            SectionHeader {
+                label: "Font Settings"
             }
 
-            LabeledSpinBox {
-                bindedProperty: "maxFontSize"
-                label: "Maximum Font Size"
-            }
-        }
+            RowLayout {
+                LabeledSpinBox {
+                    bindedProperty: "titleFontSize"
+                    label: "Title Font Size"
+                }
 
-        SectionHeader {
-            label: "Display Settings"
-        }
-
-        RowLayout {
-            ColorField {
-                bindedProperty: "color"
-                label: "Text Color"
+                LabeledSpinBox {
+                    bindedProperty: "maxFontSize"
+                    label: "Maximum Font Size"
+                }
             }
 
-            LabeledCheckbox {
-                bindedProperty: "wrap"
-                label: "Wrap Text?"
+            SectionHeader {
+                label: "Display Settings"
             }
-        }
 
-        SectionHeader {
-            label: "NT Settings"
-        }
+            RowLayout {
+                ColorField {
+                    bindedProperty: "color"
+                    label: "Text Color"
+                }
 
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
+                LabeledCheckbox {
+                    bindedProperty: "wrap"
+                    label: "Wrap Text?"
+                }
+            }
+
+            SectionHeader {
+                label: "NT Settings"
+            }
+
+            LabeledTextField {
+                bindedProperty: "item_topic"
+                label: "Topic"
+            }
         }
     }
 }

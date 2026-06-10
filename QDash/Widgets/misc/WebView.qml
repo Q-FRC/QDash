@@ -20,36 +20,38 @@ BaseWidget {
 
     connected: true
 
-    configContent: ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
+    configComponent: Component {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
+            spacing: 12
 
-        SectionHeader {
-            label: "Font Settings"
-        }
+            SectionHeader {
+                label: "Font Settings"
+            }
 
-        LabeledSpinBox {
-            id: titleFontField
+            LabeledSpinBox {
+                id: titleFontField
 
-            Layout.alignment: Qt.AlignTop
-            Layout.fillWidth: true
-            bindedProperty: "titleFontSize"
-            label: "Title Font Size"
-        }
+                Layout.alignment: Qt.AlignTop
+                Layout.fillWidth: true
+                bindedProperty: "titleFontSize"
+                label: "Title Font Size"
+            }
 
-        SectionHeader {
-            label: "Web View Settings"
-        }
+            SectionHeader {
+                label: "Web View Settings"
+            }
 
-        LabeledTextField {
-            id: urlField
+            LabeledTextField {
+                id: urlField
 
-            Layout.alignment: Qt.AlignTop
-            Layout.fillWidth: true
-            bindedProperty: "item_url"
-            label: "URL"
+                Layout.alignment: Qt.AlignTop
+                Layout.fillWidth: true
+                bindedProperty: "item_url"
+                label: "URL"
+            }
         }
     }
     menuExtension: Component {

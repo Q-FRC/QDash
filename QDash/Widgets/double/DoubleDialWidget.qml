@@ -98,75 +98,77 @@ PrimitiveWidget {
         }
     }
 
-    configContent: ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
+    configComponent: Component {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
+            spacing: 12
 
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        RowLayout {
-            LabeledSpinBox {
-                bindedProperty: "titleFontSize"
-                label: "Title Font Size"
+            SectionHeader {
+                label: "Font Settings"
             }
 
-            LabeledSpinBox {
-                Layout.fillWidth: true
-                bindedProperty: "fontSize"
-                label: "Font Size"
-            }
-        }
+            RowLayout {
+                LabeledSpinBox {
+                    bindedProperty: "titleFontSize"
+                    label: "Title Font Size"
+                }
 
-        SectionHeader {
-            label: "Spin Box Settings"
-        }
-
-        RowLayout {
-            LabeledDoubleSpinBox {
-                bindedProperty: "lowerBound"
-                label: "Lower Bound"
+                LabeledSpinBox {
+                    Layout.fillWidth: true
+                    bindedProperty: "fontSize"
+                    label: "Font Size"
+                }
             }
 
-            LabeledDoubleSpinBox {
-                bindedProperty: "upperBound"
-                label: "Upper Bound"
+            SectionHeader {
+                label: "Spin Box Settings"
             }
-        }
 
-        LabeledDoubleSpinBox {
-            bindedProperty: "stepSize"
-            from: 0
-            label: "Step Size"
-            stepSize: 0.1
-        }
+            RowLayout {
+                LabeledDoubleSpinBox {
+                    bindedProperty: "lowerBound"
+                    label: "Lower Bound"
+                }
 
-        SectionHeader {
-            label: "Dial Settings"
-        }
-
-        RowLayout {
-            LabeledDoubleSpinBox {
-                bindedProperty: "startAngle"
-                label: "Start Angle"
+                LabeledDoubleSpinBox {
+                    bindedProperty: "upperBound"
+                    label: "Upper Bound"
+                }
             }
 
             LabeledDoubleSpinBox {
-                bindedProperty: "endAngle"
-                label: "End Angle"
+                bindedProperty: "stepSize"
+                from: 0
+                label: "Step Size"
+                stepSize: 0.1
             }
-        }
 
-        SectionHeader {
-            label: "NT Settings"
-        }
+            SectionHeader {
+                label: "Dial Settings"
+            }
 
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
+            RowLayout {
+                LabeledDoubleSpinBox {
+                    bindedProperty: "startAngle"
+                    label: "Start Angle"
+                }
+
+                LabeledDoubleSpinBox {
+                    bindedProperty: "endAngle"
+                    label: "End Angle"
+                }
+            }
+
+            SectionHeader {
+                label: "NT Settings"
+            }
+
+            LabeledTextField {
+                bindedProperty: "item_topic"
+                label: "Topic"
+            }
         }
     }
 }

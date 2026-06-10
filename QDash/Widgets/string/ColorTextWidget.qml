@@ -42,38 +42,40 @@ PrimitiveWidget {
         }
     }
 
-    configContent: ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-        spacing: 12
+    configComponent: Component {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 2
+            clip: true
+            spacing: 12
 
-        SectionHeader {
-            label: "Font Settings"
-        }
+            SectionHeader {
+                label: "Font Settings"
+            }
 
-        LabeledSpinBox {
-            bindedProperty: "titleFontSize"
-            label: "Title Font Size"
-        }
+            LabeledSpinBox {
+                bindedProperty: "titleFontSize"
+                label: "Title Font Size"
+            }
 
-        SectionHeader {
-            label: "Color Settings"
-        }
+            SectionHeader {
+                label: "Color Settings"
+            }
 
-        LabeledComboBox {
-            bindedProperty: "shape"
-            label: "Shape"
-            model: shapeChoices
-        }
+            LabeledComboBox {
+                bindedProperty: "shape"
+                label: "Shape"
+                model: widget.shapeChoices
+            }
 
-        SectionHeader {
-            label: "NT Settings"
-        }
+            SectionHeader {
+                label: "NT Settings"
+            }
 
-        LabeledTextField {
-            bindedProperty: "item_topic"
-            label: "Topic"
+            LabeledTextField {
+                bindedProperty: "item_topic"
+                label: "Topic"
+            }
         }
     }
 }
