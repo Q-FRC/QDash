@@ -14,32 +14,10 @@ PrimitiveWidget {
 
     readOnly: true
     roleString: "colorText"
+    typeString: "string"
+    widgetLabel: "Color"
 
     propertyKeys: ["shape"]
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Text"
-
-                onTriggered: {
-                    model.type = "string"
-                }
-            }
-
-            MenuItem {
-                text: "Text Display"
-
-                onTriggered: {
-                    model.type = "textDisplay"
-                }
-            }
-        }
-    }
-
     property string itemValue
     property string shape: "Rectangle"
     property list<string> shapeChoices: ["Rectangle", "Circle", "Triangle"]

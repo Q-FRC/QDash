@@ -38,7 +38,7 @@ ApplicationWindow {
 
     /** LOAD */
     function load() {
-        let newName = CarboxylQuickInterface.getOpenFileName(qsTr("Open Layout"), QDashApplication.dataLocation + "/layout.json", "JSON files (*.json);;All files (*)")
+        let newName = CarboxylQuickInterface.getOpenFileName(qsTr("Open Layout"), QDashApplication.dataLocation, "JSON files (*.json);;All files (*)")
 
         if (newName !== "") {
             filename = newName

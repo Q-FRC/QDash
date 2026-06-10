@@ -14,64 +14,10 @@ PrimitiveWidget {
 
     readOnly: true
     roleString: "doubleDisplay"
+    typeString: "double"
+    widgetLabel: "Number Display"
 
     propertyKeys: ["maxFontSize", "decimals", "fontColor"]
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Spin Box"
-
-                onTriggered: {
-                    model.type = "double"
-                }
-            }
-
-            MenuItem {
-                text: "Dial"
-
-                onTriggered: {
-                    model.type = "doubleDial"
-                }
-            }
-
-            MenuItem {
-                text: "Radial Gauge"
-
-                onTriggered: {
-                    model.type = "doubleGauge"
-                }
-            }
-
-            MenuItem {
-                text: "Progress Bar"
-
-                onTriggered: {
-                    model.type = "doubleBar"
-                }
-            }
-
-            MenuItem {
-                text: "Match Time"
-
-                onTriggered: {
-                    model.type = "matchTime"
-                }
-            }
-
-            MenuItem {
-                text: "Phase Display"
-
-                onTriggered: {
-                    model.type = "phaseShift"
-                }
-            }
-        }
-    }
-
     property int decimals: 2
     property color fontColor: Clover.theme.currentAccent
     property int maxFontSize: QDashSettings.defaultDisplayFontSize

@@ -69,14 +69,6 @@ foreach(file ${files})
 
     file(READ ${file} content)
 
-    # Read-only
-    string(REGEX MATCH "readOnly: ([a-z]*)" ro_out ${content})
-    if (ro_out)
-        string(REPLACE "readOnly: " "" readonly ${ro_out})
-    else()
-        set(readonly false)
-    endif()
-
     # Role strings
     string(REGEX MATCH "roleString: \"([a-zA-Z0-9 ]*)\"" rs_out ${content})
     if (rs_out)
@@ -86,9 +78,6 @@ foreach(file ${files})
         message(FATAL_ERROR "File ${file_rel} does not "
             "have a roleString property defined!")
     endif()
-
-    # TODO: Generate type map for QML and C++
-    # TODO: Default {im,}mutable types for TopicListModel?
 
     # now construct DelegateChoice
     list(GET file_list 1 filename)
@@ -106,9 +95,50 @@ foreach(file ${files})
 ]=] delegate_choice @ONLY)
 
     string(APPEND DELEGATES ${delegate_choice})
+
+    # The rest of this is only needed for typed widgets.
+    # Misc and sendable don't need any of this
+    if (file MATCHES "sendable" OR file MATCHES "misc")
+        continue()
+    endif()
+
+    # Read-only
+    string(REGEX MATCH "readOnly: ([a-z]*)" ro_out ${content})
+    if (ro_out)
+        string(REPLACE "readOnly: " "" readonly ${ro_out})
+    else()
+        set(readonly false)
+    endif()
+
+    # Labels
+    string(REGEX MATCH "widgetLabel: \"([a-zA-Z0-9 ]*)\"" label_out ${content})
+    if (label_out)
+        string(REPLACE "widgetLabel: " "" label_tmp ${label_out})
+        string(REPLACE "\"" "" label ${label_tmp})
+    else()
+        message(FATAL_ERROR "File ${file_rel} does not "
+            "have a widgetLabel property defined!")
+    endif()
+
+    # TODO: Generate type map for QML and C++
+    # TODO: Default {im,}mutable types for TopicListModel?
+
+    # construct widget type map
+    # TODO: LABELS
+    string(CONFIGURE [=[
+        {"type": "@type@", "roleString": "@role_string@",
+            "readOnly": @readonly@, "label": "@label@"},
+]=] type_map @ONLY)
+    string(APPEND TYPE_MAP ${type_map})
 endforeach()
 
 configure_file(WidgetDelegate.qml.in ${CMAKE_CURRENT_SOURCE_DIR}/WidgetDelegate.qml)
+configure_file(WidgetTypeMap.qml.in ${CMAKE_CURRENT_SOURCE_DIR}/WidgetTypeMap.qml)
+
+set_source_files_properties(WidgetTypeMap.qml
+    PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_target_qml_sources(QDashQmlWidgets
-    QML_FILES WidgetDelegate.qml)
+    QML_FILES
+    WidgetDelegate.qml
+    WidgetTypeMap.qml)

@@ -14,6 +14,8 @@ PrimitiveWidget {
 
     readOnly: true
     roleString: "color"
+    typeString: "bool"
+    widgetLabel: "Color"
 
     property color falseColor: "#FF0000"
     property color trueColor: "#00FF00"
@@ -76,21 +78,6 @@ PrimitiveWidget {
         LabeledTextField {
             bindedProperty: "item_topic"
             label: "Topic"
-        }
-    }
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Checkbox"
-
-                onTriggered: {
-                    model.type = "bool"
-                }
-            }
         }
     }
 

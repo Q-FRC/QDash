@@ -14,32 +14,10 @@ PrimitiveWidget {
 
     readOnly: false
     roleString: "int"
+    typeString: "int"
+    widgetLabel: "Spin Box"
 
     propertyKeys: ["fontSize", "stepSize", "upperBound", "lowerBound"]
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Dial"
-
-                onTriggered: {
-                    model.type = "dial"
-                }
-            }
-
-            MenuItem {
-                text: "Number Display"
-
-                onTriggered: {
-                    model.type = "intDisplay"
-                }
-            }
-        }
-    }
-
     property int fontSize: QDashSettings.defaultFontSize
     property int lowerBound: -100000
     property int stepSize: 1

@@ -36,6 +36,12 @@ Rectangle {
     // what role this widget is given within the model
     property string roleString
 
+    // the label used in the right-click switch menu
+    property string widgetLabel
+
+    // the type used for the widget type map
+    property string typeString
+
     property int mcolumn
     property int mcolumnSpan
     property int mrow
@@ -143,6 +149,10 @@ Rectangle {
         originalRect = Qt.rect(widget.x, widget.y, widget.width, widget.height)
         widget.resizeActive = true
         widget.z = 4
+    }
+
+    function setType(type) {
+        model.type = type
     }
 
     Drag.active: dragArea.drag.active
@@ -284,6 +294,8 @@ Rectangle {
         sourceComponent: Component {
             Menu {
                 Component.onCompleted: {
+                    siblingMenu.model = WidgetTypeMap.siblings(roleString, typeString, readOnly)
+
                     if (!_extensionInstance && menuExtension)
                         _extensionInstance = menuExtension.createObject(widget)
 
@@ -302,6 +314,7 @@ Rectangle {
                         popup()
                     }
                 }
+
                 onClosed: rcMenuLoader.active = false
 
                 MenuItem {
@@ -326,6 +339,23 @@ Rectangle {
                     text: "Copy"
 
                     onTriggered: copy(idx)
+                }
+
+                Menu {
+                    title: "Switch Widget"
+
+                    enabled: siblingMenu.count > 0
+
+                    Repeater {
+                        id: siblingMenu
+                        delegate: MenuItem {
+                            required property string label
+                            required property string roleString
+
+                            text: label
+                            onTriggered: widget.setType(roleString)
+                        }
+                    }
                 }
             }
         }

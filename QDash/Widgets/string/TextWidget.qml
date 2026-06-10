@@ -14,32 +14,10 @@ PrimitiveWidget {
 
     readOnly: false
     roleString: "string"
+    typeString: "string"
+    widgetLabel: "Text Field"
 
     propertyKeys: ["fontSize"]
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Color"
-
-                onTriggered: {
-                    model.type = "colorText"
-                }
-            }
-
-            MenuItem {
-                text: "Text Display"
-
-                onTriggered: {
-                    model.type = "textDisplay"
-                }
-            }
-        }
-    }
-
     property int fontSize: QDashSettings.defaultFontSize
 
     function update(value) {

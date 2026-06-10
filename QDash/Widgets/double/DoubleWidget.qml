@@ -15,64 +15,10 @@ PrimitiveWidget {
 
     readOnly: false
     roleString: "double"
+    typeString: "double"
+    widgetLabel: "Spin Box"
 
     propertyKeys: ["stepSize", "fontSize", "lowerBound", "upperBound"]
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Dial"
-
-                onTriggered: {
-                    model.type = "doubleDial"
-                }
-            }
-
-            MenuItem {
-                text: "Radial Gauge"
-
-                onTriggered: {
-                    model.type = "doubleGauge"
-                }
-            }
-
-            MenuItem {
-                text: "Progress Bar"
-
-                onTriggered: {
-                    model.type = "doubleBar"
-                }
-            }
-
-            MenuItem {
-                text: "Number Display"
-
-                onTriggered: {
-                    model.type = "doubleDisplay"
-                }
-            }
-
-            MenuItem {
-                text: "Match Time"
-
-                onTriggered: {
-                    model.type = "matchTime"
-                }
-            }
-
-            MenuItem {
-                text: "Phase Display"
-
-                onTriggered: {
-                    model.type = "phaseShift"
-                }
-            }
-        }
-    }
-
     property int fontSize: QDashSettings.defaultFontSize
     property double lowerBound: -100000.0
     property double stepSize: 0.1

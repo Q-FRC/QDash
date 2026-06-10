@@ -14,24 +14,10 @@ PrimitiveWidget {
 
     readOnly: false
     roleString: "bool"
+    typeString: "bool"
+    widgetLabel: "Checkbox"
 
     propertyKeys: ["checkboxSize"]
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Color Display"
-
-                onTriggered: {
-                    model.type = "color"
-                }
-            }
-        }
-    }
-
     property int checkboxSize: 40
 
     function update(value) {

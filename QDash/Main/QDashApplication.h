@@ -34,6 +34,7 @@ public:
 
 public slots:
     void reload();
+    void gc();
 
     int run();
 

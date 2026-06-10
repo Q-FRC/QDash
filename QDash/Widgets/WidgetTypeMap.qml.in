@@ -1,0 +1,25 @@
+pragma Singleton
+
+import QtQuick
+
+QtObject {
+    readonly property var typeMap: [
+@TYPE_MAP@    ]
+
+    function siblings(role, type, readOnly) {
+        let siblings = []
+
+        // ignore misc/sendable; those can handle it on their own.
+        if (type === "misc" || type === "sendable") return []
+
+        for (let w of typeMap) {
+            // TODO
+            if (w.type === type && w.roleString !== role /*&& w.readOnly === readOnly*/) {
+                let obj = {"roleString": w.roleString, "label": w.label}
+                siblings.push(obj)
+            }
+        }
+
+        return siblings
+    }
+}

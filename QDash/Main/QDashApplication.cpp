@@ -151,6 +151,11 @@ void QDashApplication::reload()
     exit(0);
 }
 
+void QDashApplication::gc()
+{
+    m_engine->collectGarbage();
+}
+
 // TODO(crueter): Bring this back, QML will handle this (maybe)
 // nt::NetworkTableEntry notificationEntry = Globals::inst.GetEntry("/QDash/RobotNotifications");
 

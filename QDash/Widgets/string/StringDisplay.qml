@@ -14,32 +14,10 @@ PrimitiveWidget {
 
     readOnly: true
     roleString: "textDisplay"
+    typeString: "string"
+    widgetLabel: "Text Display"
 
     propertyKeys: ["maxFontSize", "fontColor", "wrap"]
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Text Field"
-
-                onTriggered: {
-                    model.type = "string"
-                }
-            }
-
-            MenuItem {
-                text: "Color"
-
-                onTriggered: {
-                    model.type = "colorText"
-                }
-            }
-        }
-    }
-
     property color fontColor: Clover.theme.currentAccent
     property int maxFontSize: QDashSettings.defaultDisplayFontSize
     property bool wrap: true

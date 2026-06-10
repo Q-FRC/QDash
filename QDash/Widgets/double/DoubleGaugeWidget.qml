@@ -15,64 +15,10 @@ PrimitiveWidget {
 
     readOnly: true
     roleString: "doubleGauge"
+    typeString: "double"
+    widgetLabel: "Radial Gauge"
 
     propertyKeys: ["fontSize", "ticks", "startAngle", "endAngle", "min", "max"]
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Dial"
-
-                onTriggered: {
-                    model.type = "doubleDial"
-                }
-            }
-
-            MenuItem {
-                text: "Spin Box"
-
-                onTriggered: {
-                    model.type = "double"
-                }
-            }
-
-            MenuItem {
-                text: "Progress Bar"
-
-                onTriggered: {
-                    model.type = "doubleBar"
-                }
-            }
-
-            MenuItem {
-                text: "Number Display"
-
-                onTriggered: {
-                    model.type = "doubleDisplay"
-                }
-            }
-
-            MenuItem {
-                text: "Match Time"
-
-                onTriggered: {
-                    model.type = "matchTime"
-                }
-            }
-
-            MenuItem {
-                text: "Phase Display"
-
-                onTriggered: {
-                    model.type = "phaseShift"
-                }
-            }
-        }
-    }
-
     property double endAngle: 135
     property int fontSize: QDashSettings.defaultFontSize
     property double max: 100

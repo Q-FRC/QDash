@@ -14,32 +14,10 @@ PrimitiveWidget {
 
     readOnly: true
     roleString: "intDisplay"
+    typeString: "int"
+    widgetLabel: "Number Display"
 
     propertyKeys: ["maxFontSize", "fontColor"]
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Spin Box"
-
-                onTriggered: {
-                    model.type = "int"
-                }
-            }
-
-            MenuItem {
-                text: "Dial"
-
-                onTriggered: {
-                    model.type = "dial"
-                }
-            }
-        }
-    }
-
     property color fontColor: Clover.theme.currentAccent
     property int maxFontSize: QDashSettings.defaultDisplayFontSize
 
