@@ -12,6 +12,9 @@ import QtQuick.Layouts
 SendableWidget {
     id: widget
 
+    readOnly: true
+    roleString: "Command"
+
     propertyKeys: ["fontSize"]
     topics: [".name", "running"]
 

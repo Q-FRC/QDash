@@ -10,7 +10,6 @@ BaseWidget {
     id: widget
 
     property string oldTopic
-    property bool readOnly: false
     property string suffix: ""
     property string trueTopic: topic + suffix
 

@@ -13,6 +13,9 @@ import QtWebEngine
 BaseWidget {
     id: widget
 
+    readOnly: false
+    roleString: "web"
+
     property string item_url: ""
 
     connected: true

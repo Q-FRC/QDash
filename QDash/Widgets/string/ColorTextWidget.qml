@@ -12,6 +12,9 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    readOnly: true
+    roleString: "colorText"
+
     propertyKeys: ["shape"]
     menuExtension: Component {
         Menu {

@@ -12,8 +12,10 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
-    propertyKeys: ["maxFontSize", "fontColor"]
+    readOnly: true
+    roleString: "intDisplay"
 
+    propertyKeys: ["maxFontSize", "fontColor"]
     menuExtension: Component {
         Menu {
             id: switchMenu

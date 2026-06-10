@@ -11,6 +11,9 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    readOnly: true
+    roleString: "matchTime"
+
     propertyKeys: ["maxFontSize", "warningColor"]
     menuExtension: Component {
         Menu {

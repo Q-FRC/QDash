@@ -12,6 +12,9 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    readOnly: true
+    roleString: "doubleDisplay"
+
     propertyKeys: ["maxFontSize", "decimals", "fontColor"]
     menuExtension: Component {
         Menu {

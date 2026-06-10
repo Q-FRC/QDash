@@ -12,6 +12,9 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    readOnly: false
+    roleString: "bool"
+
     propertyKeys: ["checkboxSize"]
     menuExtension: Component {
         Menu {

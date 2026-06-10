@@ -13,6 +13,9 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    readOnly: true
+    roleString: "doubleBar"
+
     propertyKeys: ["fontSize", "numTicks", "suffix", "lowerBound", "upperBound", "vertical"]
     menuExtension: Component {
         Menu {

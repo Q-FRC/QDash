@@ -15,6 +15,9 @@ import QtQuick.Layouts 6.8
 BaseWidget {
     id: widget
 
+    readOnly: true
+    roleString: "urlCamera"
+
     propertyKeys: ["url"]
     property string url: ""
 

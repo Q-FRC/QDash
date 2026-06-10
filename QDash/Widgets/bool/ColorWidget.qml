@@ -12,11 +12,16 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    readOnly: true
+    roleString: "color"
+
     property color falseColor: "#FF0000"
+    property color trueColor: "#00FF00"
+
     property bool itemValue: false
+
     property string shape: "Rectangle"
     property list<string> shapeChoices: ["Rectangle", "Circle", "Triangle"]
-    property color trueColor: "#00FF00"
 
     function update(value) {
         connected = true

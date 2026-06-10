@@ -15,6 +15,9 @@ import QtQuick.Layouts 6.8
 PrimitiveWidget {
     id: widget
 
+    readOnly: true
+    roleString: "camera"
+
     // TODO(crueter): Fix
     propertyKeys: ["item_url", "item_fps", "item_quality", "item_resW", "item_resH"]
     suffix: "/streams"

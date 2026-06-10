@@ -14,6 +14,9 @@ import QtQuick.Shapes 2.15
 PrimitiveWidget {
     id: widget
 
+    readOnly: true
+    roleString: "Field2d"
+
     antialiasing: true
     propertyKeys: ["robotShape", "robotColor", "robotWidthMeters", "robotLengthMeters" //
         , "useVerticalField", "mirrorForRedAlliance", "fieldType"]

@@ -13,6 +13,9 @@ import QtQuick.Layouts
 SendableWidget {
     id: widget
 
+    readOnly: false
+    roleString: "String Chooser"
+
     propertyKeys: ["fontSize"]
     topics: ["options", "active", "selected"]
 

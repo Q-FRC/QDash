@@ -12,6 +12,9 @@ import QtQuick.Layouts
 SendableWidget {
     id: widget
 
+    readOnly: true
+    roleString: "FMSInfo"
+
     propertyKeys: ["fontSize"]
     topics: ["MatchNumber", "MatchType", "EventName", "IsRedAlliance", "GameSpecificMessage", "FMSControlData"]
 

@@ -12,6 +12,9 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    readOnly: true
+    roleString: "textDisplay"
+
     propertyKeys: ["maxFontSize", "fontColor", "wrap"]
     menuExtension: Component {
         Menu {

@@ -79,3 +79,5 @@ build
 
 **/.qmlls.ini
 /.cache
+
+WidgetDelegate.qml

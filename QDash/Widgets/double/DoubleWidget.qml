@@ -13,6 +13,9 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    readOnly: false
+    roleString: "double"
+
     propertyKeys: ["stepSize", "fontSize", "lowerBound", "upperBound"]
     menuExtension: Component {
         Menu {

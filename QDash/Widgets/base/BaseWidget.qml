@@ -30,6 +30,12 @@ Rectangle {
     property bool dragForced: false
     property bool dragging: Drag.active || dragForced
 
+    // meta properties
+    property bool readOnly: false
+
+    // what role this widget is given within the model
+    property string roleString
+
     property int mcolumn
     property int mcolumnSpan
     property int mrow

@@ -13,6 +13,9 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    readOnly: false
+    roleString: "doubleDial"
+
     propertyKeys: ["stepSize", "fontSize", "startAngle", "endAngle", "lowerBound", "upperBound"]
     menuExtension: Component {
         Menu {

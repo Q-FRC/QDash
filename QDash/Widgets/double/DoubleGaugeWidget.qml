@@ -13,6 +13,9 @@ import QtQuick.Layouts
 PrimitiveWidget {
     id: widget
 
+    readOnly: true
+    roleString: "doubleGauge"
+
     propertyKeys: ["fontSize", "ticks", "startAngle", "endAngle", "min", "max"]
     menuExtension: Component {
         Menu {
