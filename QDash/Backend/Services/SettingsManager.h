@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifndef SETTINGSMANAGER_H
-#define SETTINGSMANAGER_H
+#pragma once
 
 #include <QFile>
 #include <QObject>
@@ -117,4 +116,3 @@ public:
 };
 
 #undef property
-#endif // SETTINGSMANAGER_H

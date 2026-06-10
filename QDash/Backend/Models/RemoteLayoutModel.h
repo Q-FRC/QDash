@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifndef REMOTELAYOUTMODEL_H
-#define REMOTELAYOUTMODEL_H
+#pragma once
 
 #include <QAbstractListModel>
 #include <QNetworkAccessManager>
@@ -48,4 +47,3 @@ private:
     TopicStore *m_store;
 };
 
-#endif // REMOTELAYOUTMODEL_H

@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifndef TABWIDGETSMODEL_H
-#define TABWIDGETSMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 #include <QQmlEngine>
@@ -109,4 +108,3 @@ private:
 
 Q_DECLARE_METATYPE(TabWidgetsModel)
 
-#endif // TABWIDGETSMODEL_H

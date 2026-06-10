@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifndef TABLISTMODEL_H
-#define TABLISTMODEL_H
+#pragma once
 
 #include <QAbstractListModel>
 #include <QJsonArray>
@@ -73,4 +72,3 @@ private:
     int m_selectedTab = 0;
     bool m_modified = false;
 };
-#endif // TABLISTMODEL_H

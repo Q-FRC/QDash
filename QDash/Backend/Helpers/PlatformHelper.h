@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifndef PLATFORMHELPER_H
-#define PLATFORMHELPER_H
+#pragma once
 
 #include <QObject>
 #include <QQuickWindow>
@@ -26,4 +25,3 @@ public:
 signals:
 };
 
-#endif // PLATFORMHELPER_H

@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifndef TopicStore_H
-#define TopicStore_H
+#pragma once
 
 #include "Services/Logger.h"
 
@@ -139,4 +138,3 @@ signals:
     void topicUnpublished(const std::string &topicName);
 };
 
-#endif // TopicStore_H

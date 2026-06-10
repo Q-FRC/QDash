@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifndef NOTIFICATIONHELPER_H
-#define NOTIFICATIONHELPER_H
+#pragma once
 
 #include <QObject>
 #include <QQmlEngine>
@@ -63,4 +62,3 @@ private:
     Logger *m_logger;
 };
 
-#endif // NOTIFICATIONHELPER_H

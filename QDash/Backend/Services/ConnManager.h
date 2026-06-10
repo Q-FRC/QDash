@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifndef CONNMANAGER_H
-#define CONNMANAGER_H
+#pragma once
 
 #include <QObject>
 #include <QQmlEngine>
@@ -49,4 +48,3 @@ signals:
     void modifiedChanged(bool modified);
 };
 
-#endif // CONNMANAGER_H

@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifndef TOPICLISTMODEL_H
-#define TOPICLISTMODEL_H
+#pragma once
 
 #include <QStandardItemModel>
 
@@ -27,4 +26,3 @@ private:
     TopicStore *m_store;
 };
 
-#endif // MODELSTOPICLISTMODEL_H

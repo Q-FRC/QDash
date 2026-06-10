@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifndef COMPILEDEFINITIONS_H
-#define COMPILEDEFINITIONS_H
+#pragma once
 
 #include <QObject>
 
@@ -90,4 +89,3 @@ public:
     }
 };
 
-#endif // COMPILEDEFINITIONS_H

@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifndef GENERICMAPMODEL_H
-#define GENERICMAPMODEL_H
+#pragma once
 
 #include <QAbstractListModel>
 
@@ -35,4 +34,3 @@ private:
     QList<Data> m_data;
 };
 
-#endif // GENERICMAPMODEL_H
