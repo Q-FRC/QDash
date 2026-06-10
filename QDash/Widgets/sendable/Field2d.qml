@@ -52,8 +52,7 @@ PrimitiveWidget {
     }
 
     antialiasing: true
-    propertyKeys: ["robotShape", "robotColor", "robotWidthMeters", "robotLengthMeters", "useVerticalField",
-        "mirrorForRedAlliance", "fieldType"]
+    propertyKeys: ["robotShape", "robotColor", "robotWidthMeters", "robotLengthMeters", "useVerticalField", "mirrorForRedAlliance", "fieldType"]
     suffix: "/Robot"
 
     configContent: ColumnLayout {
@@ -191,9 +190,7 @@ PrimitiveWidget {
             let realFieldX = fieldImage.x + (fieldImage.width - fieldImage.paintedWidth) / 2
             let realFieldY = fieldImage.y + (fieldImage.height - fieldImage.paintedHeight) / 2
 
-            let startPoint = useVerticalField ? Qt.point(realFieldX + fieldImage.paintedWidth - width, realFieldY
-                                                         + fieldImage.paintedHeight) : Qt.point(realFieldX, realFieldY
-                                                                                                + fieldImage.paintedHeight)
+            let startPoint = useVerticalField ? Qt.point(realFieldX + fieldImage.paintedWidth - width, realFieldY + fieldImage.paintedHeight) : Qt.point(realFieldX, realFieldY + fieldImage.paintedHeight)
 
             x = startPoint.x + xPixels - (useVerticalField ? -height : width) / 2
             y = startPoint.y - yPixels - (useVerticalField ? width : height) / 2

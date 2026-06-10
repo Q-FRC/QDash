@@ -9,8 +9,7 @@ import QtQuick.Controls.Basic as B
 import QtQuick.Layouts 2.15
 
 Repeater {
-    model: [Qt.RightEdge, Qt.LeftEdge, Qt.TopEdge, Qt.BottomEdge, Qt.RightEdge | Qt.TopEdge, Qt.RightEdge
-        | Qt.BottomEdge, Qt.LeftEdge | Qt.TopEdge, Qt.LeftEdge | Qt.BottomEdge]
+    model: [Qt.RightEdge, Qt.LeftEdge, Qt.TopEdge, Qt.BottomEdge, Qt.RightEdge | Qt.TopEdge, Qt.RightEdge | Qt.BottomEdge, Qt.LeftEdge | Qt.TopEdge, Qt.LeftEdge | Qt.BottomEdge]
 
     ResizeAnchor {
         required property int modelData

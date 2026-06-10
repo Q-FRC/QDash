@@ -18,13 +18,7 @@ Item {
     // only enable resize anchor if it's not at the edge of the grid,
     // AND resizing isn't possible in that direction.
     // TODO(crueter): Wtf is this formatting
-    readonly property bool isAtEdge: ((hasLeft && control.mcolumn === 0 && control.mcolumnSpan === 1) || (hasTop
-                                                                                                          && control.mrow
-                                                                                                          === 0 && control.mrowSpan
-                                                                                                          === 1) || (
-                                          hasRight && (control.mcolumn + control.mcolumnSpan) >= tab.cols && control.mcolumnSpan
-                                          === 1) || (hasBottom && (control.mrow + control.mrowSpan) >= tab.rows
-                                                     && control.mrowSpan === 1))
+    readonly property bool isAtEdge: ((hasLeft && control.mcolumn === 0 && control.mcolumnSpan === 1) || (hasTop && control.mrow === 0 && control.mrowSpan === 1) || (hasRight && (control.mcolumn + control.mcolumnSpan) >= tab.cols && control.mcolumnSpan === 1) || (hasBottom && (control.mrow + control.mrowSpan) >= tab.rows && control.mrowSpan === 1))
     property int margin: Math.min(control.width, control.height) / divisor
     property alias mouseArea: mouseArea
     property bool vert: hasTop || hasBottom

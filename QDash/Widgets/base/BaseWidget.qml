@@ -360,8 +360,7 @@ Rectangle {
     }
 
     Loader {
-        active: CompileDefinitions.tapOnly || (hoverHandler.hovered && !widget.tvOverlap && !(widget.dragForced
-                                                                                              || widget.Drag.active))
+        active: CompileDefinitions.tapOnly || (hoverHandler.hovered && !widget.tvOverlap && !(widget.dragForced || widget.Drag.active))
         anchors.fill: parent
         z: 26
 

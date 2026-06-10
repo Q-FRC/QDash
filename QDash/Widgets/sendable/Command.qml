@@ -19,15 +19,15 @@ SendableWidget {
 
         switch (topic) {
         case ".name":
-        {
-            cmdButton.name = value
-            break
-        }
+            {
+                cmdButton.name = value
+                break
+            }
         case "running":
-        {
-            cmdButton.running = value
-            break
-        }
+            {
+                cmdButton.running = value
+                break
+            }
         }
     }
 

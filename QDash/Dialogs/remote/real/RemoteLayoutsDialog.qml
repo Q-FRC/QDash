@@ -27,8 +27,7 @@ Loader {
             onAccepted: {
                 selected = RemoteLayoutModel.url(list.currentIndex)
                 let defaultPath = StandardPaths.writableLocation(StandardPaths.AppLocalDataLocation) + "/layout.json"
-                let filename = CarboxylQuickInterface.getSaveFileName(qsTr("Save Layout"), defaultPath,
-                                                                      "JSON files (*.json);;All files (*)")
+                let filename = CarboxylQuickInterface.getSaveFileName(qsTr("Save Layout"), defaultPath, "JSON files (*.json);;All files (*)")
                 RemoteLayoutModel.download(selected, filename)
             }
             onClosed: loader.active = false

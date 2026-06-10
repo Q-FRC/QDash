@@ -15,14 +15,14 @@ BaseWidget {
     property string trueTopic: topic + suffix
 
     function _subscribe() {
-        if (enabled && trueTopic) {
+        if (enabled && trueTopic !== "") {
             TopicStore.subscribe(trueTopic, update)
             TopicStore.forceUpdate(trueTopic)
         }
     }
 
     function _unsubscribe() {
-        if (oldTopic) {
+        if (oldTopic !== "") {
             TopicStore.unsubscribe(oldTopic, update)
         }
     }
@@ -36,8 +36,8 @@ BaseWidget {
 
     // Define this in your widget
     function update(value) {
-        console.error("PrimitiveWidget's update function should NEVER be called. "
-                      + "If this is the case, you likely forgot to define the update function in your widget.")
+        console.error("PrimitiveWidget's update function should NEVER be called. " + //
+        "If this is the case, you likely forgot to define the update function in your widget.")
     }
 
     Component.onCompleted: {

@@ -18,36 +18,36 @@ SendableWidget {
         widget.connected = true
         switch (topic) {
         case "MatchNumber":
-        {
-            match.matchNumber = value
-            break
-        }
+            {
+                match.matchNumber = value
+                break
+            }
         case "MatchType":
-        {
-            match.matchType = match.matchTypeMap[value]
-            break
-        }
+            {
+                match.matchType = match.matchTypeMap[value]
+                break
+            }
         case "EventName":
-        {
-            match.eventName = value === "" ? "Event" : value
-            break
-        }
+            {
+                match.eventName = value === "" ? "Event" : value
+                break
+            }
         case "IsRedAlliance":
-        {
-            rect.isRedAlliance = value
-            break
-        }
+            {
+                rect.isRedAlliance = value
+                break
+            }
         case "GameSpecificMessage":
-        {
-            gsm.gameSpecificMessage = value
-            break
-        }
+            {
+                gsm.gameSpecificMessage = value
+                break
+            }
         case "FMSControlData":
-        {
-            let state = QDashApplication.wordToState(value)
-            stateText.state = state
-            break
-        }
+            {
+                let state = QDashApplication.wordToState(value)
+                stateText.state = state
+                break
+            }
         }
     }
 

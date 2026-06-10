@@ -38,8 +38,7 @@ ApplicationWindow {
 
     /** LOAD */
     function load() {
-        let newName = CarboxylQuickInterface.getOpenFileName(qsTr("Open Layout"), QDashApplication.dataLocation
-                                                             + "/layout.json", "JSON files (*.json);;All files (*)")
+        let newName = CarboxylQuickInterface.getOpenFileName(qsTr("Open Layout"), QDashApplication.dataLocation + "/layout.json", "JSON files (*.json);;All files (*)")
 
         if (newName !== "") {
             filename = newName
@@ -57,8 +56,7 @@ ApplicationWindow {
     }
 
     function saveAs() {
-        let newName = CarboxylQuickInterface.getSaveFileName(qsTr("Save Layout"), QDashApplication.dataLocation
-                                                             + "/layout.json", "JSON files (*.json);;All files (*)")
+        let newName = CarboxylQuickInterface.getSaveFileName(qsTr("Save Layout"), QDashApplication.dataLocation + "/layout.json", "JSON files (*.json);;All files (*)")
 
         if (newName !== "") {
             filename = newName
@@ -249,9 +247,7 @@ ApplicationWindow {
     // Warn the user if they close before saving.
     onClosing: close => {
         if (TabListModel.modified) {
-            let button = CarboxylQuickInterface.showMessageBox(CarboxylEnums.Warning, "Save Changes?",
-                                                               "Your changes will be lost if you don't save.",
-                                                               Dialog.Yes | Dialog.No | Dialog.Cancel)
+            let button = CarboxylQuickInterface.showMessageBox(CarboxylEnums.Warning, "Save Changes?", "Your changes will be lost if you don't save.", Dialog.Yes | Dialog.No | Dialog.Cancel)
 
             switch (button) {
             case Dialog.Yes:

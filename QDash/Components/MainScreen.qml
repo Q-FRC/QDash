@@ -119,20 +119,20 @@ Rectangle {
         sequences: ["Ctrl+Tab"]
 
         onActivated: if (swipe.currentIndex < swipe.count - 1) {
-                         swipe.incrementCurrentIndex()
-                     } else {
-                         swipe.setCurrentIndex(0)
-                     }
+            swipe.incrementCurrentIndex()
+        } else {
+            swipe.setCurrentIndex(0)
+        }
     }
 
     Shortcut {
         sequences: ["Ctrl+Shift+Tab"]
 
         onActivated: if (swipe.currentIndex > 0) {
-                         swipe.decrementCurrentIndex()
-                     } else {
-                         swipe.setCurrentIndex(swipe.count - 1)
-                     }
+            swipe.decrementCurrentIndex()
+        } else {
+            swipe.setCurrentIndex(swipe.count - 1)
+        }
     }
 
     TopicView {
@@ -203,9 +203,10 @@ Rectangle {
         anchors.centerIn: parent
         font.pixelSize: 20
         horizontalAlignment: Text.AlignHCenter
-        text: "Welcome to QDash!\n" + "To get started, connect to your robot WiFi\n"
-              + "and go to Settings (Ctrl+Comma).\nAdd a tab with Ctrl+T, and add a widget\n"
-              + "through the arrow menu on the left."
+        text: "Welcome to QDash!\n" + //
+        "To get started, connect to your robot WiFi\n" + //
+        "and go to Settings (Ctrl+Comma).\nAdd a tab with Ctrl+T, and add a widget\n" + //
+        "through the arrow menu on the left."
         visible: swipe.count === 0
         z: 0
     }

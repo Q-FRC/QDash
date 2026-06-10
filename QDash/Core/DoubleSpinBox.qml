@@ -74,15 +74,13 @@ and suffix. It is pretty generalized, but for standard notation only.
 Control {
     id: control
 
-    readonly property bool acceptableInput: textInputItem
-                                            && textInputItem.acceptableInput //!< Indicates if input is valid (it would be nicer if the validator would expose an "isValid" prop/method!).
+    readonly property bool acceptableInput: textInputItem && textInputItem.acceptableInput //!< Indicates if input is valid (it would be nicer if the validator would expose an "isValid" prop/method!).
     readonly property real botValue: Math.min(from, to) //!< The effective minimum value
 
     property int buttonRepeatDelay: 300 //!< Milliseconds to delay before held +/- button repeat is activated.
     property int buttonRepeatInterval: 100 //!< +/- button repeat interval while held (in milliseconds).
 
-    readonly property string cleanText: getCleanText(
-                                            displayText) //!< Holds the text of the spin box excluding any prefix, suffix, or leading or trailing whitespace.
+    readonly property string cleanText: getCleanText(displayText) //!< Holds the text of the spin box excluding any prefix, suffix, or leading or trailing whitespace.
     property bool completed: false //!< \private
 
     // Custom properties
@@ -122,10 +120,8 @@ Control {
         regularExpression: control.doubleValidationRegEx()
     }
     //!< Input mask for the text edit control (\sa TextInput::inputMask).
-    property bool selectByMouse:
-        true //!< Whether to allow selection of text (bound to the text editor of the spinbox control).
-    property bool showGroupSeparator:
-        true //!< Whether to format numbers with the thousands separator visible (using current locale if useLocaleFormat is true).
+    property bool selectByMouse: true //!< Whether to allow selection of text (bound to the text editor of the spinbox control).
+    property bool showGroupSeparator: true //!< Whether to format numbers with the thousands separator visible (using current locale if useLocaleFormat is true).
 
     //! The SpinBox item. To use a custom one, replace the \p contentItem with a class derived from Controls 2.x SpinBox.
     //! Or use any other \p contentItem (or even \e null) and (optionally) set the #textInputItem to some \e Item with a \c text property for a custom display.
@@ -140,8 +136,7 @@ Control {
     property double to: 100.0
     readonly property real topValue: Math.max(from, to) //!< The effective maximum value
     property bool trimExtraZeros: true //!< Whether to remove trailing zeros from decimals.
-    property bool useLocaleFormat:
-        true //!< Whether to format numbers according to the current locale. If false, use standard "C" format.
+    property bool useLocaleFormat: true //!< Whether to format numbers according to the current locale. If false, use standard "C" format.
     property QtObject validator: doubleValidator //!< There are 2 validators available, see notes for each below.
 
     // Standard SpinBox API properties (v2.4)
@@ -158,14 +153,7 @@ Control {
 
     //! Return a RegExp object to validate numeric entry according to the current formatting & locale specs and accounting for any prefix/suffix.
     function doubleValidationRegEx() {
-        var locale = effectiveLocale, pnt = locale.decimalPoint, grp = locale.groupSeparator, exp = locale.exponential,
-        pfx = escapeRegExpChars(prefix), sfx = escapeRegExpChars(suffix), expRe = "(?:" + exp + "[+-]?[\\d]+)?", re
-                                                                                                                 = "^" + pfx
-                                                                                                                 + "[+-]?(?:[\\d]{1,3}\\"
-                                                                                                                 + grp + "?)+\\"
-                                                                                                                 + pnt + "?[\\d]*"
-                                                                                                                 + expRe + sfx
-                                                                                                                 + "$"
+        var locale = effectiveLocale, pnt = locale.decimalPoint, grp = locale.groupSeparator, exp = locale.exponential, pfx = escapeRegExpChars(prefix), sfx = escapeRegExpChars(suffix), expRe = "(?:" + exp + "[+-]?[\\d]+)?", re = "^" + pfx + "[+-]?(?:[\\d]{1,3}\\" + grp + "?)+\\" + pnt + "?[\\d]*" + expRe + sfx + "$"
         // ^[+-]?(?:[\d]{1,3},?)+\.?[\d]*(?:e[+-]?[\d]+)?$
         return new RegExp(re, "i")
     }
@@ -264,8 +252,7 @@ Control {
         if (!locale)
             locale = effectiveLocale
 
-        var text = value.toLocaleString(locale, (notation === DoubleValidator.StandardNotation ? 'f' : 'e'), Math.max(decimals,
-                                                                                                                      0))
+        var text = value.toLocaleString(locale, (notation === DoubleValidator.StandardNotation ? 'f' : 'e'), Math.max(decimals, 0))
 
         if (!showGroupSeparator && locale.name !== "C")
             text = text.replace(new RegExp("\\" + locale.groupSeparator, "g"), "")

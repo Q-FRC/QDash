@@ -192,12 +192,7 @@ PrimitiveWidget {
             }
 
             function resetSource() {
-                source = Qt.url(item_url + (item_url.includes("?") ? "&" : "?") + (item_quality !== 0 ? "compression="
-                                                                                                        + item_quality
-                                                                                                        + "&" : "") + (
-                                    item_fps !== 0 ? "fps=" + item_fps + "&" : "") + (item_resH !== 0 && item_resW !== 0
-                                                                                      ? "resolution=" + item_resW + "x"
-                                                                                        + item_resH : ""))
+                source = Qt.url(item_url + (item_url.includes("?") ? "&" : "?") + (item_quality !== 0 ? "compression=" + item_quality + "&" : "") + (item_fps !== 0 ? "fps=" + item_fps + "&" : "") + (item_resH !== 0 && item_resW !== 0 ? "resolution=" + item_resW + "x" + item_resH : ""))
             }
 
             function restartVideo() {

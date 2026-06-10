@@ -109,7 +109,7 @@ Row {
 
                 TableView.onPooled: indicatorAnimation.complete()
                 TableView.onReused: if (current)
-                                        indicatorAnimation.start()
+                    indicatorAnimation.start()
                 onExpandedChanged: indicator.rotation = expanded ? 90 : 0
 
                 DragHandler {
@@ -136,9 +136,9 @@ Row {
                     target: null
 
                     onActiveChanged: if (!active && ready) {
-                                         ready = false
-                                         dropped(centroid.position)
-                                     }
+                        ready = false
+                        dropped(centroid.position)
+                    }
                     xAxis.onActiveValueChanged: drag()
                     yAxis.onActiveValueChanged: drag()
                 }
@@ -147,9 +147,7 @@ Row {
                     id: background
 
                     anchors.fill: parent
-                    color: row === treeView.currentRow ? palette.highlight : (treeView.alternatingRows && row % 2
-                                                                              !== 0) ? palette.base :
-                                                                                       palette.alternateBase
+                    color: row === treeView.currentRow ? palette.highlight : (treeView.alternatingRows && row % 2 !== 0) ? palette.base : palette.alternateBase
                 }
 
                 Label {

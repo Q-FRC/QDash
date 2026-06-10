@@ -20,23 +20,23 @@ SendableWidget {
         widget.connected = true
         switch (topic) {
         case "options":
-        {
-            combo.choices = value
-            break
-        }
-        case "active":
-        {
-            if (!readyToUpdate) {
-                readyToUpdate = true
-                return
+            {
+                combo.choices = value
+                break
             }
+        case "active":
+            {
+                if (!readyToUpdate) {
+                    readyToUpdate = true
+                    return
+                }
 
-            button.valid = true
-            combo.currentIndex = combo.indexOfValue(value)
-            combo.previousIndex = combo.currentIndex
+                button.valid = true
+                combo.currentIndex = combo.indexOfValue(value)
+                combo.previousIndex = combo.currentIndex
 
-            break
-        }
+                break
+            }
         }
     }
 
@@ -118,8 +118,7 @@ SendableWidget {
                 function onConnected(conn) {
                     if (conn) {
                         if (combo.previousIndex !== -1) {
-                            logs.info("StringChooser", "Force-updating chooser \"" + item_topic + "\" to value "
-                                      + combo.currentText)
+                            logs.info("StringChooser", "Force-updating chooser \"" + item_topic + "\" to value " + combo.currentText)
 
                             widget.readyToUpdate = false
                             widget.setValue("selected", combo.currentText)
