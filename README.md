@@ -4,10 +4,6 @@ A reliable, high-performance, low-footprint dashboard for use with FRC.
 
 ![QDash](QDash-display.png "QDash")
 
-## GitHub Mirror
-
-If you're reading this from GitHub, keep in mind that this repository is a mirror of the main code stored on [my Forgejo instance](https://git.crueter.xyz/QFRC/QDash). Issues and pull requests submitted here *will* still be reviewed and addressed, though, so don't be afraid!
-
 ## Lightweight
 
 Dashboards don't have to be resource hogs. In fact, dashboards should be designed to take up as few resources as possible. Dashboards that use up resources like nobody's business will cause **packet loss** and **comms issues** when run on driver stations! To counteract this, QDash has been specifically designed from the ground up to use as few resources as possible, *without* sacrificing aesthetics or usability.
@@ -16,20 +12,22 @@ Dashboards don't have to be resource hogs. In fact, dashboards should be designe
 
 The following numbers were measured on a ThinkPad X220T (i5-2520M). The numbers were measured on Linux/X11 on KDE Plasma 6, and cross-verified on the same laptop running Windows 10 22H2 and Windows 11 25H2. These tests used the default options for all dashboards, and used the *Graphide* theme for QDash (the heaviest in terms of CPU and memory).
 
-| Metric            | Shuffleboard  | QDash         | Elastic |
-| ----------------- | ------------- | ------------- | ------- |
-| Memory (Base)     | 550MB         | 30-50MB       | 140MB   |
-| Memory (Heavy Use)| 620MB-1.5GB   | 70-120MB      | 472MB   |
-| CPU (Base)        | 2-20%         | 0%            | 0%      |
-| CPU (Heavy Use)   | 30-85%        | 5%            | 35%     |
+| Metric            | Shuffleboard  | Elastic | QDash         |
+| ----------------- | ------------- | ------- | ------------- |
+| Memory (Base)     | 550MB         | 140MB   | 30-50MB       |
+| Memory (Heavy Use)| 620MB-1.5GB   | 472MB   | 50-90MB       |
+| CPU (Base)        | 2-20%         | 0%      | 0%            |
+| CPU (Heavy Use)   | 30-85%        | 35%     | 2%            |
 
 QDash excels with its lightweight performance thanks to:
 
 - Qt Quick's efficiency & full GPU acceleration
-- [Carboxyl](https://git.crueter.xyz/crueter/Carboxyl)'s performance shims, low-footprint theming system, and compatibility layers
+- [Carboxyl](https://git.crueter.xyz/crueter/Carboxyl)'s performance shims and low-footprint style system
 - No menu that subscribes to every topic at once
 - Shared subscriptions between duplicate topics
 - Widgets only update and repaint when they need to
+- Memory and CPU-heavy components are loaded on-demand
+- General control flow optimizations at every level to reduce memory allocations and CPU cycles
 
 ## Themes
 
