@@ -24,4 +24,3 @@ public:
     Q_INVOKABLE bool isMac();
 signals:
 };
-

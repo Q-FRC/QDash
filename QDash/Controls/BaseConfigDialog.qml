@@ -1,71 +1,68 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-import QtQuick
-import QtQuick.Controls
 
 import Carboxyl.Clover
 
 import Carboxyl.Contour
+import QtQuick
+import QtQuick.Controls
 
 CarboxylDialog {
     id: config
+
     required property Item content
 
-    popupType: Popup.Window
-
     implicitWidth: 550
-
-    title: "Configure Widget"
-
+    popupType: Popup.Window
     standardButtons: Dialog.Ok | Dialog.Cancel
-
-    ScrollView {
-        anchors {
-            fill: parent
-        }
-
-        onWidthChanged: contentWidth = width - effectiveScrollBarWidth
-        contentChildren: [content]
-    }
+    title: "Configure Widget"
 
     onAboutToShow: {
         // TODO: This should be recursive but also idc
         for (var i = 0; i < layout.children.length; ++i) {
-            var child = layout.children[i];
+            var child = layout.children[i]
             if (typeof child !== "undefined" && "open" in child) {
-                child.open();
+                child.open()
             } else {
                 for (var j = 0; j < child.children.length; ++j) {
-                    let grandchild = child.children[j];
+                    let grandchild = child.children[j]
 
                     if (typeof grandchild !== "undefined" && "open" in grandchild) {
-                        grandchild.open();
+                        grandchild.open()
                     }
                 }
             }
         }
     }
-
     onAccepted: {
         // TODO: This should be recursive but also idc
         for (var i = 0; i < layout.children.length; ++i) {
-            var child = layout.children[i];
+            var child = layout.children[i]
             if (typeof child !== "undefined" && "accept" in child) {
-                child.accept();
+                child.accept()
             } else {
                 for (var j = 0; j < child.children.length; ++j) {
-                    let grandchild = child.children[j];
+                    let grandchild = child.children[j]
 
                     if (typeof grandchild !== "undefined" && "accept" in grandchild) {
-                        grandchild.accept();
+                        grandchild.accept()
                     }
                 }
             }
         }
 
-        twm.modified = true;
+        twm.modified = true
     }
-
     onClosed: if (configLoader)
-        configLoader.active = false
+                  configLoader.active = false
+
+    ScrollView {
+        contentChildren: [content]
+
+        onWidthChanged: contentWidth = width - effectiveScrollBarWidth
+
+        anchors {
+            fill: parent
+        }
+    }
 }

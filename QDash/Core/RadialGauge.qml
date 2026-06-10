@@ -1,43 +1,40 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
+
+import Carboxyl.Clover
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Shapes
 
-import Carboxyl.Clover
-
 Rectangle {
     id: gauge
 
-    property int numTicks: 15
-    property real value: 1.80
-    property real minValue: 0
-    property real maxValue: 99.4
-    property real startAngle: -135
-    property real endAngle: 135
-
     property real angle: (value - minValue) / (maxValue - minValue) * (endAngle - startAngle) + startAngle
-
+    property real endAngle: 135
+    property real maxValue: 99.4
+    property real minValue: 0
+    property int numTicks: 15
+    property real startAngle: -135
+    property real value: 1.80
     property int valueFontSize: 20
-
-    onValueChanged: {
-        if (value <= minValue)
-            value = minValue;
-        if (value >= maxValue)
-            value = maxValue;
-    }
-
-    color: "transparent"
 
     function fixGaugeSize() {
         if (width < height && width !== 0) {
-            height = width;
+            height = width
         } else if (height < width && height !== 0) {
-            width = height;
+            width = height
         }
     }
 
+    color: "transparent"
     radius: width / 2
+
+    onValueChanged: {
+        if (value <= minValue)
+            value = minValue
+        if (value >= maxValue)
+            value = maxValue
+    }
 
     Item {
         id: container
@@ -52,35 +49,33 @@ Rectangle {
 
             Item {
                 id: tickContainer
-                width: container.width
-                height: container.height
 
+                height: container.height
                 rotation: index * (gauge.endAngle - gauge.startAngle) / gauge.numTicks + gauge.startAngle
+                width: container.width
 
                 Column {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: parent.top
                     anchors.topMargin: 5
-
                     spacing: txt.contentWidth / 2.5
 
                     Rectangle {
                         id: tick
-                        width: 2
-                        height: 12
-                        color: Clover.theme.text
+
                         anchors.horizontalCenter: parent.horizontalCenter
+                        color: Clover.theme.text
+                        height: 12
+                        width: 2
                     }
 
                     Label {
                         id: txt
 
-                        text: (gauge.minValue + index * (gauge.maxValue - gauge.minValue) / gauge.numTicks).toFixed(1)
-
                         anchors.horizontalCenter: parent.horizontalCenter
-
-                        rotation: -tickContainer.rotation
                         font.pixelSize: 11
+                        rotation: -tickContainer.rotation
+                        text: (gauge.minValue + index * (gauge.maxValue - gauge.minValue) / gauge.numTicks).toFixed(1)
                     }
                 }
             }
@@ -88,15 +83,12 @@ Rectangle {
 
         Rectangle {
             id: knob
-            color: "lightgray"
-
-            width: parent.width / 15
-            height: width
-
-            radius: width / 2
 
             anchors.centerIn: parent
-
+            color: "lightgray"
+            height: width
+            radius: width / 2
+            width: parent.width / 15
             z: 1
         }
 
@@ -105,16 +97,13 @@ Rectangle {
 
             anchors.bottom: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-
+            height: gauge.width / 3
             rotation: gauge.angle
             transformOrigin: Item.Bottom
-
             width: knob.width
-            height: gauge.width / 3
 
             ShapePath {
                 fillColor: "red"
-
                 startX: needle.width / 2
                 startY: 0
 
@@ -138,14 +127,14 @@ Rectangle {
         // Filled
         AcceleratedShape {
             id: filled
+
             anchors.fill: parent
             z: 2
 
             // unfilled
             GaugePath {
-                stroke: gauge.angle >= gauge.endAngle ? "transparent" : "lightgray"
-
                 start: gauge.startAngle - 90
+                stroke: gauge.angle >= gauge.endAngle ? "transparent" : "lightgray"
                 sweep: gauge.endAngle - gauge.startAngle
             }
 
@@ -153,20 +142,19 @@ Rectangle {
             // draw it "over" the unfilled... because otherwise you get jank garbage
             // like weird gaps and such
             GaugePath {
-                stroke: Clover.theme.currentAccent
-
                 start: gauge.startAngle - 90
+                stroke: Clover.theme.currentAccent
                 sweep: gauge.angle - gauge.startAngle
             }
         }
 
         Label {
-            text: gauge.value.toFixed(2)
             font.pixelSize: valueFontSize
+            text: gauge.value.toFixed(2)
 
             anchors {
-                top: parent.verticalCenter
                 horizontalCenter: parent.horizontalCenter
+                top: parent.verticalCenter
                 topMargin: 20
             }
         }
@@ -175,24 +163,22 @@ Rectangle {
     component GaugePath: ShapePath {
         id: gaugePath
 
-        required property int sweep
         required property int start
         required property color stroke
+        required property int sweep
 
         capStyle: ShapePath.FlatCap
-
-        strokeWidth: 4
-        strokeColor: stroke
         fillColor: "transparent"
-
         startX: container.width / 2
         startY: container.height / 2
+        strokeColor: stroke
+        strokeWidth: 4
 
         PathAngleArc {
-            radiusX: container.width / 2 - 2
-            radiusY: container.height / 2 - 2
             centerX: container.width / 2
             centerY: container.height / 2
+            radiusX: container.width / 2 - 2
+            radiusY: container.height / 2 - 2
             startAngle: gaugePath.start
             sweepAngle: gaugePath.sweep
         }

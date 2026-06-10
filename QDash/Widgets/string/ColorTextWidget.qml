@@ -1,81 +1,43 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
+
+import Carboxyl.Clover
+
+import QDash.Controls
+import QDash.Widgets
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import QDash.Controls
-import QDash.Widgets
-
-import Carboxyl.Clover
-
 PrimitiveWidget {
     id: widget
 
+    property string itemValue
     property string shape: "Rectangle"
+    property list<string> shapeChoices: ["Rectangle", "Circle", "Triangle"]
+
+    function update(value) {
+        widget.connected = true
+        itemValue = value
+    }
 
     propertyKeys: ["shape"]
 
-    property list<string> shapeChoices: ["Rectangle", "Circle", "Triangle"]
-
-    property string itemValue
-
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Text"
-                onTriggered: {
-                    model.type = "string";
-                }
-            }
-
-            MenuItem {
-                text: "Text Display"
-                onTriggered: {
-                    model.type = "textDisplay";
-                }
-            }
-        }
-    }
-
-    function update(value) {
-        widget.connected = true;
-        itemValue = value;
-    }
-
-    ShapeHandler {
-        id: shape
-
-        itemShape: widget.shape
-        itemColor: widget.itemValue
-
-        anchors {
-            top: titleField.bottom
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-
-            margins: 10
-        }
-    }
-
     configContent: ColumnLayout {
         id: layout
-        spacing: 12
+
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
+        spacing: 12
 
         SectionHeader {
             label: "Font Settings"
         }
 
         LabeledSpinBox {
-            label: "Title Font Size"
             bindedProperty: "titleFontSize"
+            label: "Title Font Size"
         }
 
         SectionHeader {
@@ -83,9 +45,9 @@ PrimitiveWidget {
         }
 
         LabeledComboBox {
-            model: shapeChoices
-            label: "Shape"
             bindedProperty: "shape"
+            label: "Shape"
+            model: shapeChoices
         }
 
         SectionHeader {
@@ -93,8 +55,46 @@ PrimitiveWidget {
         }
 
         LabeledTextField {
-            label: "Topic"
             bindedProperty: "item_topic"
+            label: "Topic"
+        }
+    }
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Text"
+
+                onTriggered: {
+                    model.type = "string"
+                }
+            }
+
+            MenuItem {
+                text: "Text Display"
+
+                onTriggered: {
+                    model.type = "textDisplay"
+                }
+            }
+        }
+    }
+
+    ShapeHandler {
+        id: shape
+
+        itemColor: widget.itemValue
+        itemShape: widget.shape
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            margins: 10
+            right: parent.right
+            top: titleField.bottom
         }
     }
 }

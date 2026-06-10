@@ -1,161 +1,40 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
+
+import Carboxyl.Clover
+import QDash.Controls
+
+import QDash.Core
+import QDash.Widgets
 import QtQuick
 import QtQuick.Controls 6.8
 import QtQuick.Layouts
 
-import QDash.Core
-import QDash.Controls
-import QDash.Widgets
-
-import Carboxyl.Clover
-
 PrimitiveWidget {
     id: widget
 
-    property double stepSize: 0.1
-
-    property int fontSize: QDashSettings.defaultFontSize
-
-    property double startAngle: -180
     property double endAngle: 180
-
+    property int fontSize: QDashSettings.defaultFontSize
     property double lowerBound: -100000.0
+    property double startAngle: -180
+    property double stepSize: 0.1
     property double upperBound: 100000.0
+
+    function update(value) {
+        widget.connected = true
+        spin.value = value
+        dial.value = value
+    }
 
     propertyKeys: ["stepSize", "fontSize", "startAngle", "endAngle", "lowerBound", "upperBound"]
 
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Spin Box"
-                onTriggered: {
-                    model.type = "double";
-                }
-            }
-
-            MenuItem {
-                text: "Radial Gauge"
-                onTriggered: {
-                    model.type = "doubleGauge";
-                }
-            }
-
-            MenuItem {
-                text: "Progress Bar"
-                onTriggered: {
-                    model.type = "doubleBar";
-                }
-            }
-
-            MenuItem {
-                text: "Number Display"
-                onTriggered: {
-                    model.type = "doubleDisplay";
-                }
-            }
-
-            MenuItem {
-                text: "Match Time"
-                onTriggered: {
-                    model.type = "matchTime";
-                }
-            }
-
-            MenuItem {
-                text: "Phase Display"
-                onTriggered: {
-                    model.type = "phaseShift";
-                }
-            }
-        }
-    }
-
-    function update(value) {
-        widget.connected = true;
-        spin.value = value;
-        dial.value = value;
-    }
-
-    DoubleSpinBox {
-        id: spin
-
-        font.pixelSize: widget.fontSize
-
-        enabled: widget.connected
-        editable: true
-
-        value: 0
-
-        from: widget.lowerBound
-        to: widget.upperBound
-        stepSize: widget.stepSize
-
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
-
-            margins: 10
-        }
-
-        onValueModified: {
-            dial.value = value;
-            widget.setValue(value);
-        }
-
-        function move(val) {
-            let previousValue = value;
-
-            value = val;
-            widget.setValue(value);
-
-            widget.valid = Math.abs(previousValue - value) < 0.01;
-        }
-    }
-
-    Dial {
-        id: dial
-
-        inputMode: Dial.Circular
-
-        font.pixelSize: widget.fontSize
-
-        value: 0
-        stepSize: widget.stepSize
-
-        width: Math.min(parent.width, spin.y - titleField.height - 40)
-        height: width
-
-        from: widget.lowerBound
-        to: widget.upperBound
-
-        startAngle: widget.startAngle
-        endAngle: widget.endAngle
-
-        enabled: widget.connected
-
-        anchors {
-            top: titleField.bottom
-            horizontalCenter: parent.horizontalCenter
-
-            margins: 20
-        }
-
-        onMoved: {
-            spin.move(value);
-        }
-    }
-
     configContent: ColumnLayout {
         id: layout
-        spacing: 12
+
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
+        spacing: 12
 
         SectionHeader {
             label: "Font Settings"
@@ -163,15 +42,14 @@ PrimitiveWidget {
 
         RowLayout {
             LabeledSpinBox {
-                label: "Title Font Size"
                 bindedProperty: "titleFontSize"
+                label: "Title Font Size"
             }
 
             LabeledSpinBox {
                 Layout.fillWidth: true
-
-                label: "Font Size"
                 bindedProperty: "fontSize"
+                label: "Font Size"
             }
         }
 
@@ -181,21 +59,20 @@ PrimitiveWidget {
 
         RowLayout {
             LabeledDoubleSpinBox {
-                label: "Lower Bound"
                 bindedProperty: "lowerBound"
+                label: "Lower Bound"
             }
 
             LabeledDoubleSpinBox {
-                label: "Upper Bound"
                 bindedProperty: "upperBound"
+                label: "Upper Bound"
             }
         }
 
         LabeledDoubleSpinBox {
-            label: "Step Size"
             bindedProperty: "stepSize"
-
             from: 0
+            label: "Step Size"
             stepSize: 0.1
         }
 
@@ -205,13 +82,13 @@ PrimitiveWidget {
 
         RowLayout {
             LabeledDoubleSpinBox {
-                label: "Start Angle"
                 bindedProperty: "startAngle"
+                label: "Start Angle"
             }
 
             LabeledDoubleSpinBox {
-                label: "End Angle"
                 bindedProperty: "endAngle"
+                label: "End Angle"
             }
         }
 
@@ -220,8 +97,122 @@ PrimitiveWidget {
         }
 
         LabeledTextField {
-            label: "Topic"
             bindedProperty: "item_topic"
+            label: "Topic"
+        }
+    }
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Spin Box"
+
+                onTriggered: {
+                    model.type = "double"
+                }
+            }
+
+            MenuItem {
+                text: "Radial Gauge"
+
+                onTriggered: {
+                    model.type = "doubleGauge"
+                }
+            }
+
+            MenuItem {
+                text: "Progress Bar"
+
+                onTriggered: {
+                    model.type = "doubleBar"
+                }
+            }
+
+            MenuItem {
+                text: "Number Display"
+
+                onTriggered: {
+                    model.type = "doubleDisplay"
+                }
+            }
+
+            MenuItem {
+                text: "Match Time"
+
+                onTriggered: {
+                    model.type = "matchTime"
+                }
+            }
+
+            MenuItem {
+                text: "Phase Display"
+
+                onTriggered: {
+                    model.type = "phaseShift"
+                }
+            }
+        }
+    }
+
+    DoubleSpinBox {
+        id: spin
+
+        function move(val) {
+            let previousValue = value
+
+            value = val
+            widget.setValue(value)
+
+            widget.valid = Math.abs(previousValue - value) < 0.01
+        }
+
+        editable: true
+        enabled: widget.connected
+        font.pixelSize: widget.fontSize
+        from: widget.lowerBound
+        stepSize: widget.stepSize
+        to: widget.upperBound
+        value: 0
+
+        onValueModified: {
+            dial.value = value
+            widget.setValue(value)
+        }
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            margins: 10
+            right: parent.right
+        }
+    }
+
+    Dial {
+        id: dial
+
+        enabled: widget.connected
+        endAngle: widget.endAngle
+        font.pixelSize: widget.fontSize
+        from: widget.lowerBound
+        height: width
+        inputMode: Dial.Circular
+        startAngle: widget.startAngle
+        stepSize: widget.stepSize
+        to: widget.upperBound
+        value: 0
+        width: Math.min(parent.width, spin.y - titleField.height - 40)
+
+        onMoved: {
+            spin.move(value)
+        }
+
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            margins: 20
+            top: titleField.bottom
         }
     }
 }

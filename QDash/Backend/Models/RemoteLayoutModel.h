@@ -46,4 +46,3 @@ private:
     QNetworkAccessManager m_manager;
     TopicStore *m_store;
 };
-

@@ -1,95 +1,88 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
+
+import Carboxyl.Clover
+
+import Carboxyl.Contour
+import QDash.Dialogs
 import QtQuick 6.8
 import QtQuick.Controls 6.8
 import QtQuick.Layouts 6.8
 
-import Carboxyl.Clover
-import QDash.Dialogs
-
-import Carboxyl.Contour
-
 Loader {
     id: loader
-    active: false
-    asynchronous: true
-    onLoaded: item.open()
-
-    sourceComponent: active ? src : undefined
-
-    function open() {
-        active = true;
-    }
 
     property Component src: CarboxylDialog {
         id: serverDialog
 
-        implicitWidth: 575
         implicitHeight: 475
+        implicitWidth: 575
+        popupType: Popup.Window
+        standardButtons: Dialog.Ok | Dialog.Cancel
         title: "Settings"
 
-        popupType: Popup.Window
-
-        onClosed: loader.active = false
-
+        onAboutToShow: {
+            server.open()
+            misc.open()
+        }
         onAccepted: {
-            server.accept();
-            appearance.accept();
-            misc.accept();
+            server.accept()
+            appearance.accept()
+            misc.accept()
 
-            QDashSettings.reconnect();
+            QDashSettings.reconnect()
 
             if (QDashApplication.shouldReload) {
-                QDashApplication.shouldReload = false;
+                QDashApplication.shouldReload = false
 
-                styleWarnDialog.open();
+                styleWarnDialog.open()
             }
         }
-
-        standardButtons: Dialog.Ok | Dialog.Cancel
+        onClosed: loader.active = false
 
         Shortcut {
-            onActivated: reject()
             sequence: Qt.Key_Escape
-        }
 
-        onAboutToShow: {
-            server.open();
-            misc.open();
+            onActivated: reject()
         }
 
         SwipeView {
             id: swipe
-            currentIndex: tabBar.currentIndex
+
             clip: true
+            currentIndex: tabBar.currentIndex
 
             anchors {
-                top: tabBar.bottom
                 bottom: parent.bottom
                 left: parent.left
-                right: parent.right
-
                 margins: 15
+                right: parent.right
+                top: tabBar.bottom
             }
 
             ServerTab {
                 id: server
+
                 clip: true
             }
 
             AppearanceTab {
                 id: appearance
+
                 clip: true
             }
 
             MiscTab {
                 id: misc
+
                 clip: true
             }
         }
 
         CarboxylTabBar {
             id: tabBar
+
+            contentHeight: 80
             currentIndex: swipe.currentIndex
             position: TabBar.Header
 
@@ -98,34 +91,41 @@ Loader {
             }
 
             anchors {
-                top: parent.top
                 left: parent.left
                 right: parent.right
+                top: parent.top
             }
-
-            contentHeight: 80
 
             Repeater {
                 model: ["Network", "Appearance", "Miscellaneous"]
 
                 CarboxylTabButton {
                     id: btn
-                    required property string modelData
+
                     required property int index
+                    required property string modelData
+
+                    coloredIcon: true
+                    icon.height: 40
+                    icon.source: "qrc:/" + modelData
+                    icon.width: 40
+                    inlineIcon: false
+                    text: modelData
 
                     // TODO(crueter): Why
                     Component.onCompleted: tabBar.setCurrentIndex(0)
-
-                    text: modelData
-
-                    icon.height: 40
-                    icon.width: 40
-                    icon.source: "qrc:/" + modelData
-
-                    coloredIcon: true
-                    inlineIcon: false
                 }
             }
         }
     }
+
+    function open() {
+        active = true
+    }
+
+    active: false
+    asynchronous: true
+    sourceComponent: active ? src : undefined
+
+    onLoaded: item.open()
 }

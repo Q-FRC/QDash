@@ -4,7 +4,8 @@
 #include "ConnManager.h"
 #include "Services/TopicStore.h"
 
-ConnManager::ConnManager(TopicStore* store, QObject* parent) : QObject{parent}, m_store{store} {
+ConnManager::ConnManager(TopicStore *store, QObject *parent) : QObject{parent}, m_store{store}
+{
     connect(store, &TopicStore::connected, this, &ConnManager::setAddress);
     connect(store, &TopicStore::connectedStateChanged, this, &ConnManager::setConnected);
 }
@@ -51,11 +52,13 @@ void ConnManager::setAddress(const QString &newAddress)
     emit addressChanged();
 }
 
-bool ConnManager::modified() const {
+bool ConnManager::modified() const
+{
     return m_modified;
 }
 
-void ConnManager::setModified(bool newModified) {
+void ConnManager::setModified(bool newModified)
+{
     if (m_modified == newModified)
         return;
     m_modified = newModified;
@@ -65,7 +68,6 @@ void ConnManager::setModified(bool newModified) {
                   .arg(BuildConfig.APPLICATION_NAME, m_status, m_modified ? "*" : "");
 
     emit titleChanged();
-
 }
 
 QString ConnManager::status() const

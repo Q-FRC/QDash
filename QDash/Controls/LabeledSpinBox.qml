@@ -1,34 +1,32 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 2.15
 
 import Carboxyl.Clover
 
 import Carboxyl.Contour
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 2.15
 
 CarboxylLabeledSpinBox {
     id: spin
 
-    /** what property to bind to */
-    required property string bindedProperty
-
     /** the target to bind the property to */
     property var bindTarget: widget
 
-    font.pixelSize: 18
-
-    Layout.fillWidth: true
-
-    from: 0
-    to: 1E9
-
-    function open() {
-        value = bindTarget[bindedProperty];
-    }
+    /** what property to bind to */
+    required property string bindedProperty
 
     function accept() {
-        bindTarget[bindedProperty] = value;
+        bindTarget[bindedProperty] = value
     }
+
+    function open() {
+        value = bindTarget[bindedProperty]
+    }
+
+    Layout.fillWidth: true
+    font.pixelSize: 18
+    from: 0
+    to: 1E9
 }

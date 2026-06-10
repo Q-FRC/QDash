@@ -36,7 +36,8 @@ double PlatformHelper::titlebarHeight(QQuickWindow *window)
     return window->frameGeometry().height() - window->geometry().height();
 }
 
-QString PlatformHelper::filename(const QString& path) {
+QString PlatformHelper::filename(const QString &path)
+{
     return QFileInfo(path).fileName();
 }
 

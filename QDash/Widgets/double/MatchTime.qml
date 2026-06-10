@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts
+import Carboxyl.Clover
 
 import QDash.Controls
 import QDash.Widgets
-import Carboxyl.Clover
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts
 
 PrimitiveWidget {
     id: widget
@@ -14,85 +14,19 @@ PrimitiveWidget {
     property int maxFontSize: QDashSettings.defaultDisplayFontSize
     property color warningColor: "yellow"
 
-    propertyKeys: ["maxFontSize", "warningColor"]
-
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Spin Box"
-                onTriggered: {
-                    model.type = "double";
-                }
-            }
-
-            MenuItem {
-                text: "Dial"
-                onTriggered: {
-                    model.type = "doubleDial";
-                }
-            }
-
-            MenuItem {
-                text: "Radial Gauge"
-                onTriggered: {
-                    model.type = "doubleGauge";
-                }
-            }
-
-            MenuItem {
-                text: "Progress Bar"
-                onTriggered: {
-                    model.type = "doubleBar";
-                }
-            }
-
-            MenuItem {
-                text: "Number Display"
-                onTriggered: {
-                    model.type = "doubleDisplay";
-                }
-            }
-        }
-    }
-
     function update(value) {
-        txt.value = Math.ceil(value);
+        txt.value = Math.ceil(value)
     }
 
-    Text {
-        id: txt
-
-        font.pixelSize: maxFontSize
-
-        property double value
-
-        text: Math.floor(value / 60) + ":" + String((value % 60).toFixed(0)).padStart(2, '0')
-
-        color: value < 30 ? warningColor : Clover.theme.currentAccent
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-
-        fontSizeMode: Text.Fit
-
-        anchors {
-            top: titleField.bottom
-            right: parent.right
-            left: parent.left
-            bottom: parent.bottom
-
-            margins: 10
-        }
-    }
+    propertyKeys: ["maxFontSize", "warningColor"]
 
     configContent: ColumnLayout {
         id: layout
-        spacing: 12
+
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
+        spacing: 12
 
         SectionHeader {
             label: "Font Settings"
@@ -100,13 +34,13 @@ PrimitiveWidget {
 
         RowLayout {
             LabeledSpinBox {
-                label: "Title Font Size"
                 bindedProperty: "titleFontSize"
+                label: "Title Font Size"
             }
 
             LabeledSpinBox {
-                label: "Maximum Font Size"
                 bindedProperty: "maxFontSize"
+                label: "Maximum Font Size"
             }
         }
 
@@ -115,8 +49,8 @@ PrimitiveWidget {
         }
 
         ColorField {
-            label: "Warning Color"
             bindedProperty: "warningColor"
+            label: "Warning Color"
         }
 
         SectionHeader {
@@ -124,8 +58,76 @@ PrimitiveWidget {
         }
 
         LabeledTextField {
-            label: "Topic"
             bindedProperty: "item_topic"
+            label: "Topic"
+        }
+    }
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Spin Box"
+
+                onTriggered: {
+                    model.type = "double"
+                }
+            }
+
+            MenuItem {
+                text: "Dial"
+
+                onTriggered: {
+                    model.type = "doubleDial"
+                }
+            }
+
+            MenuItem {
+                text: "Radial Gauge"
+
+                onTriggered: {
+                    model.type = "doubleGauge"
+                }
+            }
+
+            MenuItem {
+                text: "Progress Bar"
+
+                onTriggered: {
+                    model.type = "doubleBar"
+                }
+            }
+
+            MenuItem {
+                text: "Number Display"
+
+                onTriggered: {
+                    model.type = "doubleDisplay"
+                }
+            }
+        }
+    }
+
+    Text {
+        id: txt
+
+        property double value
+
+        color: value < 30 ? warningColor : Clover.theme.currentAccent
+        font.pixelSize: maxFontSize
+        fontSizeMode: Text.Fit
+        horizontalAlignment: Text.AlignHCenter
+        text: Math.floor(value / 60) + ":" + String((value % 60).toFixed(0)).padStart(2, '0')
+        verticalAlignment: Text.AlignVCenter
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            margins: 10
+            right: parent.right
+            top: titleField.bottom
         }
     }
 }

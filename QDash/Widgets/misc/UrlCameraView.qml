@@ -1,15 +1,15 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 6.8
+
+import Carboxyl.Clover
 
 import QDash.Controls
 import QDash.Widgets
 
-import Carboxyl.Clover
-
 import QtMultimedia
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 6.8
 
 // TODO: rotation, flip, etc
 BaseWidget {
@@ -19,10 +19,38 @@ BaseWidget {
 
     propertyKeys: ["url"]
 
+    configContent: ColumnLayout {
+        id: layout
+
+        anchors.fill: parent
+        anchors.leftMargin: 2
+        clip: true
+        spacing: 12
+
+        SectionHeader {
+            label: "Font Settings"
+        }
+
+        LabeledSpinBox {
+            bindedProperty: "titleFontSize"
+            label: "Title Font Size"
+        }
+
+        SectionHeader {
+            label: "Stream Settings"
+        }
+
+        LabeledTextField {
+            bindedProperty: "url"
+            label: "URL"
+        }
+    }
     menuExtension: Component {
         MenuItem {
             id: reconnItem
+
             text: "Reconnect"
+
             onTriggered: player.reconnect()
         }
     }
@@ -31,69 +59,45 @@ BaseWidget {
         id: rct
 
         color: "transparent"
-        anchors {
-            top: titleField.bottom
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
 
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
             margins: 8
+            right: parent.right
+            top: titleField.bottom
         }
 
         Timer {
             id: connectTimer
+
             interval: 100
             repeat: false
+
             onTriggered: player.play()
         }
 
         MediaPlayer {
             id: player
 
-            source: url
-
             function reconnect() {
-                player.stop();
-                connectTimer.start();
+                player.stop()
+                connectTimer.start()
             }
 
-            onSourceChanged: reconnect()
-
+            source: url
             videoOutput: video
+
             onErrorOccurred: (error, errorString) => {
-                logs.warn("UrlCameraView", "Qt reported error " + errorString);
+                logs.warn("UrlCameraView", "Qt reported error " + errorString)
             }
+            onSourceChanged: reconnect()
         }
 
         VideoOutput {
             id: video
+
             anchors.fill: parent
-        }
-    }
-
-    configContent: ColumnLayout {
-        id: layout
-        spacing: 12
-        anchors.fill: parent
-        anchors.leftMargin: 2
-        clip: true
-
-        SectionHeader {
-            label: "Font Settings"
-        }
-
-        LabeledSpinBox {
-            label: "Title Font Size"
-            bindedProperty: "titleFontSize"
-        }
-
-        SectionHeader {
-            label: "Stream Settings"
-        }
-
-        LabeledTextField {
-            label: "URL"
-            bindedProperty: "url"
         }
     }
 }

@@ -1,76 +1,34 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
+
+import Carboxyl.Clover
+
+import QDash.Controls
+import QDash.Widgets
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
 
-import QDash.Controls
-import QDash.Widgets
-
-import Carboxyl.Clover
-
 PrimitiveWidget {
     id: widget
 
-    property int maxFontSize: QDashSettings.defaultDisplayFontSize
     property color fontColor: Clover.theme.currentAccent
+    property int maxFontSize: QDashSettings.defaultDisplayFontSize
+
+    function update(value) {
+        widget.connected = true
+        txt.text = value
+    }
 
     propertyKeys: ["maxFontSize", "fontColor"]
 
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Spin Box"
-                onTriggered: {
-                    model.type = "int";
-                }
-            }
-
-            MenuItem {
-                text: "Dial"
-                onTriggered: {
-                    model.type = "dial";
-                }
-            }
-        }
-    }
-
-    function update(value) {
-        widget.connected = true;
-        txt.text = value;
-    }
-
-    Text {
-        id: txt
-
-        font.pixelSize: maxFontSize
-
-        color: widget.fontColor
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-
-        fontSizeMode: Text.Fit
-        enabled: widget.connected
-
-        anchors {
-            top: titleField.bottom
-            right: parent.right
-            left: parent.left
-            bottom: parent.bottom
-
-            margins: 10
-        }
-    }
-
     configContent: ColumnLayout {
         id: layout
-        spacing: 12
+
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
+        spacing: 12
 
         SectionHeader {
             label: "Font Settings"
@@ -78,13 +36,13 @@ PrimitiveWidget {
 
         RowLayout {
             LabeledSpinBox {
-                label: "Title Font Size"
                 bindedProperty: "titleFontSize"
+                label: "Title Font Size"
             }
 
             LabeledSpinBox {
-                label: "Maximum Font Size"
                 bindedProperty: "maxFontSize"
+                label: "Maximum Font Size"
             }
         }
 
@@ -93,8 +51,8 @@ PrimitiveWidget {
         }
 
         ColorField {
-            label: "Text Color"
             bindedProperty: "color"
+            label: "Text Color"
         }
 
         SectionHeader {
@@ -102,8 +60,50 @@ PrimitiveWidget {
         }
 
         LabeledTextField {
-            label: "Topic"
             bindedProperty: "item_topic"
+            label: "Topic"
+        }
+    }
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Spin Box"
+
+                onTriggered: {
+                    model.type = "int"
+                }
+            }
+
+            MenuItem {
+                text: "Dial"
+
+                onTriggered: {
+                    model.type = "dial"
+                }
+            }
+        }
+    }
+
+    Text {
+        id: txt
+
+        color: widget.fontColor
+        enabled: widget.connected
+        font.pixelSize: maxFontSize
+        fontSizeMode: Text.Fit
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            margins: 10
+            right: parent.right
+            top: titleField.bottom
         }
     }
 }

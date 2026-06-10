@@ -8,8 +8,10 @@
 #include <QGuiApplication>
 #include <QSettings>
 
-SettingsManager::SettingsManager(Logger* logs, TopicStore* store, QObject* parent)
-    : QObject{parent}, m_logs(logs), m_store{store} {}
+SettingsManager::SettingsManager(Logger *logs, TopicStore *store, QObject *parent)
+    : QObject{parent}, m_logs(logs), m_store{store}
+{
+}
 
 void SettingsManager::reconnect()
 {
@@ -40,7 +42,8 @@ void SettingsManager::reconnect()
     m_store->disconnectServer();
 }
 
-void SettingsManager::addRecentFile(const QString& filename) {
+void SettingsManager::addRecentFile(const QString &filename)
+{
     QStringList recentFiles = Settings::RecentFiles;
     int index = recentFiles.indexOf(filename);
 
@@ -59,7 +62,8 @@ void SettingsManager::addRecentFile(const QString& filename) {
     emit recentFilesChanged();
 }
 
-void SettingsManager::addRecentFile(QFile& file) {
+void SettingsManager::addRecentFile(QFile &file)
+{
     QString fileName = file.fileName();
     addRecentFile(fileName);
 }
@@ -106,7 +110,8 @@ Setting::operator int() const
     return value().toInt();
 }
 
-namespace Settings {
+namespace Settings
+{
 const Setting RecentFiles{"recentFiles", QStringList{}};
 const Setting LoadRecent{"loadRecent", true};
 
@@ -132,4 +137,4 @@ const Setting ConnMode{"connMode", 0};
 const Setting TeamNumber{"teamNumber", "0"};
 const Setting IP{"ip", "0.0.0.0"};
 const Setting DisableWidgets{"disableWidgets", true};
-}
+} // namespace Settings

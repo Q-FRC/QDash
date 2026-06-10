@@ -25,4 +25,3 @@ private:
     QStringList m_data;
     TopicStore *m_store;
 };
-

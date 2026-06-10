@@ -1,62 +1,64 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
+
+import QDash.Core
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Shapes 2.15
-
-import QDash.Core
 
 AcceleratedShape {
     id: shape
 
     property color itemColor
     property string itemShape
-
     readonly property real radius: Math.min(width, height) / 2
 
+    // inject path into shape data
+    data: [shapeLoader.item]
+
     anchors {
-        top: titleField.bottom
-        left: parent.left
-        right: parent.right
         bottom: parent.bottom
+        left: parent.left
         margins: 10
+        right: parent.right
+        top: titleField.bottom
     }
 
     // shape selector
     Loader {
         id: shapeLoader
+
         sourceComponent: {
             if (itemShape === "Triangle")
-                return triangleComp;
+                return triangleComp
             if (itemShape === "Rectangle")
-                return rectangleComp;
+                return rectangleComp
             if (itemShape === "Circle")
-                return circleComp;
-            return null;
+                return circleComp
+            return null
         }
     }
 
-    // inject path into shape data
-    data: [shapeLoader.item]
-
     Component {
         id: triangleComp
-        ShapePath {
-            strokeWidth: 1
-            strokeColor: shape.itemColor
-            fillColor: shape.itemColor
 
+        ShapePath {
+            fillColor: shape.itemColor
             startX: 0
             startY: shape.height
+            strokeColor: shape.itemColor
+            strokeWidth: 1
 
             PathLine {
                 x: shape.width / 2
                 y: 0
             }
+
             PathLine {
                 x: shape.width
                 y: shape.height
             }
+
             PathLine {
                 x: 0
                 y: shape.height
@@ -66,26 +68,29 @@ AcceleratedShape {
 
     Component {
         id: rectangleComp
-        ShapePath {
-            strokeWidth: 1
-            strokeColor: shape.itemColor
-            fillColor: shape.itemColor
 
+        ShapePath {
+            fillColor: shape.itemColor
             startX: 0
             startY: 0
+            strokeColor: shape.itemColor
+            strokeWidth: 1
 
             PathLine {
                 x: shape.width
                 y: 0
             }
+
             PathLine {
                 x: shape.width
                 y: shape.height
             }
+
             PathLine {
                 x: 0
                 y: shape.height
             }
+
             PathLine {
                 x: 0
                 y: 0
@@ -95,28 +100,28 @@ AcceleratedShape {
 
     Component {
         id: circleComp
-        ShapePath {
-            strokeWidth: 1
-            strokeColor: shape.itemColor
-            fillColor: shape.itemColor
 
+        ShapePath {
+            fillColor: shape.itemColor
             startX: shape.width / 2
             startY: 0
+            strokeColor: shape.itemColor
+            strokeWidth: 1
 
             PathArc {
-                x: shape.width / 2
-                y: shape.width < shape.height ? shape.width : shape.height
                 radiusX: shape.radius
                 radiusY: shape.radius
                 useLargeArc: true
+                x: shape.width / 2
+                y: shape.width < shape.height ? shape.width : shape.height
             }
 
             PathArc {
-                x: shape.width / 2
-                y: 0
                 radiusX: shape.radius
                 radiusY: shape.radius
                 useLargeArc: true
+                x: shape.width / 2
+                y: 0
             }
         }
     }

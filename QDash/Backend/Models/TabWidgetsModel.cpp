@@ -107,7 +107,8 @@ Widget TabWidgetsModel::copy(int idx)
     return nw;
 }
 
-void TabWidgetsModel::reset(const QList<Widget>& w) {
+void TabWidgetsModel::reset(const QList<Widget> &w)
+{
     beginResetModel();
     m_data = w;
     endResetModel();
@@ -115,7 +116,8 @@ void TabWidgetsModel::reset(const QList<Widget>& w) {
     setModified(false);
 }
 
-void TabWidgetsModel::add(const Widget &w) {
+void TabWidgetsModel::add(const Widget &w)
+{
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_data << w;
     endInsertRows();
@@ -140,7 +142,8 @@ void TabWidgetsModel::add(QString title, QString topic, QString type)
 
 void TabWidgetsModel::setEqualTo(TabWidgetsModel *w)
 {
-    if (!w || w == this) return;
+    if (!w || w == this)
+        return;
 
     beginResetModel();
     m_data = w->internalData();
@@ -150,7 +153,8 @@ void TabWidgetsModel::setEqualTo(TabWidgetsModel *w)
     m_cols = w->cols();
 }
 
-const QList<Widget>& TabWidgetsModel::internalData()  {
+const QList<Widget> &TabWidgetsModel::internalData()
+{
     return m_data;
 }
 
@@ -239,11 +243,13 @@ QHash<int, QByteArray> TabWidgetsModel::roleNames() const
     return rez;
 }
 
-bool TabWidgetsModel::modified() const {
+bool TabWidgetsModel::modified() const
+{
     return m_modified;
 }
 
-void TabWidgetsModel::setModified(bool newModified) {
+void TabWidgetsModel::setModified(bool newModified)
+{
     if (m_modified == newModified)
         return;
     m_modified = newModified;
@@ -284,26 +290,32 @@ TabWidgetsModel *TabWidgetsModel::loadObject(QObject *parent, const QJsonArray &
 
         auto const type = obj.value("type").toString();
 #ifndef QDASH_CAMVIEW
-        if (type == "camera") continue;
+        if (type == "camera")
+            continue;
 #endif
 
 #ifndef QDASH_WEBVIEW
-        if (type == "web") continue;
+        if (type == "web")
+            continue;
 #endif
 
         // Old or obsolete widgets. //
 
         // reef display (2025)
-        if (type == "reef") continue;
+        if (type == "reef")
+            continue;
 
         // phase shift (2026)
-        if (type == "phaseShift") continue;
+        if (type == "phaseShift")
+            continue;
 
         // errors (legacy)
-        if (type == "errors") continue;
+        if (type == "errors")
+            continue;
 
         // int gauge (not useful)
-        if (type == "gauge") continue;
+        if (type == "gauge")
+            continue;
 
         Widget w;
 

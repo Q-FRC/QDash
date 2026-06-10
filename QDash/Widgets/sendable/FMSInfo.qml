@@ -1,139 +1,66 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
+
+import Carboxyl.Clover
+
+import QDash.Controls
+import QDash.Widgets
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
 
-import QDash.Controls
-import QDash.Widgets
-
-import Carboxyl.Clover
-
 SendableWidget {
     id: widget
-
-    topics: ["MatchNumber", "MatchType", "EventName", "IsRedAlliance", "GameSpecificMessage", "FMSControlData"]
-    propertyKeys: ["fontSize"]
 
     property int fontSize: 18
 
     function update(topic, value) {
-        widget.connected = true;
+        widget.connected = true
         switch (topic) {
         case "MatchNumber":
-            {
-                match.matchNumber = value;
-                break;
-            }
+        {
+            match.matchNumber = value
+            break
+        }
         case "MatchType":
-            {
-                match.matchType = match.matchTypeMap[value];
-                break;
-            }
+        {
+            match.matchType = match.matchTypeMap[value]
+            break
+        }
         case "EventName":
-            {
-                match.eventName = value === "" ? "Event" : value;
-                break;
-            }
+        {
+            match.eventName = value === "" ? "Event" : value
+            break
+        }
         case "IsRedAlliance":
-            {
-                rect.isRedAlliance = value;
-                break;
-            }
+        {
+            rect.isRedAlliance = value
+            break
+        }
         case "GameSpecificMessage":
-            {
-                gsm.gameSpecificMessage = value;
-                break;
-            }
+        {
+            gsm.gameSpecificMessage = value
+            break
+        }
         case "FMSControlData":
-            {
-                let state = QDashApplication.wordToState(value);
-                stateText.state = state;
-                break;
-            }
+        {
+            let state = QDashApplication.wordToState(value)
+            stateText.state = state
+            break
+        }
         }
     }
 
-    ColumnLayout {
-        anchors {
-            top: titleField.bottom
-            topMargin: 8
-
-            left: parent.left
-            right: parent.right
-
-            leftMargin: 10
-            rightMargin: 10
-        }
-
-        Rectangle {
-            id: rect
-
-            Layout.fillWidth: true
-            property bool isRedAlliance: false
-
-            radius: 4
-
-            color: isRedAlliance ? "red" : "blue"
-
-            implicitHeight: fontSize * 2
-
-            Label {
-                id: match
-                anchors.fill: parent
-
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-
-                property int matchNumber: 0
-                property string matchType: "Unknown"
-                property string eventName: "Event"
-                property list<string> matchTypeMap: ["Unknown", "Practice", "Quals", "Elims"]
-
-                font.pixelSize: fontSize
-
-                text: eventName + ": " + matchType + " Match " + matchNumber
-                enabled: widget.connected
-            }
-        }
-
-        Label {
-            id: gsm
-            Layout.fillWidth: true
-
-            property string gameSpecificMessage: ""
-
-            font.pixelSize: fontSize
-
-            horizontalAlignment: Text.AlignHCenter
-
-            text: gameSpecificMessage
-
-            visible: gameSpecificMessage !== ""
-            enabled: widget.connected
-        }
-
-        Label {
-            id: stateText
-            Layout.fillWidth: true
-
-            property string state: "Unknown"
-
-            font.pixelSize: fontSize
-
-            horizontalAlignment: Text.AlignHCenter
-
-            text: state
-            enabled: widget.connected
-        }
-    }
+    propertyKeys: ["fontSize"]
+    topics: ["MatchNumber", "MatchType", "EventName", "IsRedAlliance", "GameSpecificMessage", "FMSControlData"]
 
     configContent: ColumnLayout {
         id: layout
-        spacing: 12
+
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
+        spacing: 12
 
         SectionHeader {
             label: "Font Settings"
@@ -141,13 +68,13 @@ SendableWidget {
 
         RowLayout {
             LabeledSpinBox {
-                label: "Title Font Size"
                 bindedProperty: "titleFontSize"
+                label: "Title Font Size"
             }
 
             LabeledSpinBox {
-                label: "Font Size"
                 bindedProperty: "fontSize"
+                label: "Font Size"
             }
         }
 
@@ -156,8 +83,71 @@ SendableWidget {
         }
 
         LabeledTextField {
-            label: "Topic"
             bindedProperty: "item_topic"
+            label: "Topic"
+        }
+    }
+
+    ColumnLayout {
+        anchors {
+            left: parent.left
+            leftMargin: 10
+            right: parent.right
+            rightMargin: 10
+            top: titleField.bottom
+            topMargin: 8
+        }
+
+        Rectangle {
+            id: rect
+
+            property bool isRedAlliance: false
+
+            Layout.fillWidth: true
+            color: isRedAlliance ? "red" : "blue"
+            implicitHeight: fontSize * 2
+            radius: 4
+
+            Label {
+                id: match
+
+                property string eventName: "Event"
+                property int matchNumber: 0
+                property string matchType: "Unknown"
+                property list<string> matchTypeMap: ["Unknown", "Practice", "Quals", "Elims"]
+
+                anchors.fill: parent
+                enabled: widget.connected
+                font.pixelSize: fontSize
+                horizontalAlignment: Text.AlignHCenter
+                text: eventName + ": " + matchType + " Match " + matchNumber
+                verticalAlignment: Text.AlignVCenter
+            }
+        }
+
+        Label {
+            id: gsm
+
+            property string gameSpecificMessage: ""
+
+            Layout.fillWidth: true
+            enabled: widget.connected
+            font.pixelSize: fontSize
+            horizontalAlignment: Text.AlignHCenter
+            text: gameSpecificMessage
+            visible: gameSpecificMessage !== ""
+        }
+
+        Label {
+            id: stateText
+
+            property string state: "Unknown"
+
+            Layout.fillWidth: true
+            enabled: widget.connected
+            font.pixelSize: fontSize
+            horizontalAlignment: Text.AlignHCenter
+            text: state
         }
     }
 }

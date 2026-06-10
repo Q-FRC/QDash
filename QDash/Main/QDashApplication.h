@@ -68,4 +68,3 @@ private:
 
     bool m_shouldReload = false;
 };
-

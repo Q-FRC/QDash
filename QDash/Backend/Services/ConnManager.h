@@ -47,4 +47,3 @@ signals:
     void addressChanged();
     void modifiedChanged(bool modified);
 };
-

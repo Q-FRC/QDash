@@ -37,7 +37,8 @@ void GenericMapModel::add(QString key, QString value)
     endInsertRows();
 }
 
-int GenericMapModel::count() {
+int GenericMapModel::count()
+{
     return m_data.count();
 }
 

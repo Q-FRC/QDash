@@ -11,8 +11,10 @@
 #include <QJsonObject>
 #include <QSaveFile>
 
-TabListModel::TabListModel(Logger* logs, SettingsManager* settings, QObject* parent)
-    : QAbstractListModel(parent), m_settings(settings), m_logs(logs) {}
+TabListModel::TabListModel(Logger *logs, SettingsManager *settings, QObject *parent)
+    : QAbstractListModel(parent), m_settings(settings), m_logs(logs)
+{
+}
 
 int TabListModel::rowCount(const QModelIndex &_) const
 {
@@ -76,7 +78,8 @@ Qt::ItemFlags TabListModel::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
-void TabListModel::add(Tab t) {
+void TabListModel::add(Tab t)
+{
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_data << t;
     endInsertRows();
@@ -142,7 +145,6 @@ void TabListModel::save(const QString &filename)
     setModified(false);
 
     m_settings->addRecentFile(file.fileName());
-
 }
 
 QJsonDocument TabListModel::saveObject() const
@@ -183,7 +185,8 @@ void TabListModel::load(const QString &filename)
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qCritical() << "Could not open file" << name.toStdString().c_str() << file.errorString();
-        m_logs->critical("Layout", QStringLiteral("Failed to open file %1: %2").arg(name, file.errorString()));
+        m_logs->critical(
+            "Layout", QStringLiteral("Failed to open file %1: %2").arg(name, file.errorString()));
 
         return;
     }
@@ -239,7 +242,8 @@ void TabListModel::clear()
     endResetModel();
 }
 
-int TabListModel::tabNamed(const QString& name) {
+int TabListModel::tabNamed(const QString &name)
+{
     for (int i = 0; i < rowCount(); ++i) {
         Tab t = m_data.at(i);
         if (t.title == name) {
@@ -251,8 +255,10 @@ int TabListModel::tabNamed(const QString& name) {
     return -1;
 }
 
-bool TabListModel::modified() {
-    if (m_modified) return true;
+bool TabListModel::modified()
+{
+    if (m_modified)
+        return true;
 
     bool modified = m_modified;
     for (const Tab &tab : std::as_const(m_data)) {
@@ -261,7 +267,8 @@ bool TabListModel::modified() {
     return modified;
 }
 
-void TabListModel::setModified(const bool modified) {
+void TabListModel::setModified(const bool modified)
+{
     if (m_modified == modified)
         return;
     m_modified = modified;

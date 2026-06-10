@@ -29,7 +29,8 @@ public:
     operator int() const;
 } Setting;
 
-namespace Settings {
+namespace Settings
+{
 Q_NAMESPACE
 extern const Setting RecentFiles;
 extern const Setting LoadRecent;
@@ -76,7 +77,7 @@ class TopicStore;
 class SettingsManager : public QObject {
     Q_OBJECT
 
-    Logger* m_logs;
+    Logger *m_logs;
     TopicStore *m_store;
 
     property(bool, loadRecent, LoadRecent);
@@ -93,7 +94,7 @@ class SettingsManager : public QObject {
 
     property(bool, hannahMontanaMode, HannahMontanaMode)
 
-    property(int, defaultFontSize, DefaultFontSize);
+        property(int, defaultFontSize, DefaultFontSize);
     property(int, defaultDisplayFontSize, DefaultDisplayFontSize);
     property(int, defaultTitleFontSize, DefaultTitleFontSize);
 
@@ -107,10 +108,10 @@ class SettingsManager : public QObject {
     property(bool, disableWidgets, DisableWidgets);
 
 public:
-    explicit SettingsManager(Logger* logs, TopicStore *store, QObject* parent = nullptr);
+    explicit SettingsManager(Logger *logs, TopicStore *store, QObject *parent = nullptr);
 
-    void addRecentFile(QFile& file);
-    void addRecentFile(const QString& file);
+    void addRecentFile(QFile &file);
+    void addRecentFile(const QString &file);
 
     Q_INVOKABLE void reconnect();
 };

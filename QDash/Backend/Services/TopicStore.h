@@ -27,14 +27,14 @@ public:
      * @brief addListener Add a subscriber to this listener.
      * @param func The function to call for this subscriber.
      */
-    void addListener(const QJSValue& func);
+    void addListener(const QJSValue &func);
 
     /**
      * @brief rmListener Remove a subscriber from this listener.
      * @param func The function to remove from the listener.
      * @return Whether or not the function was removed.
      */
-    bool rmListener(const QJSValue& func);
+    bool rmListener(const QJSValue &func);
 
     /**
      * @brief empty Check if this listener is empty.
@@ -47,12 +47,12 @@ public:
      * @param event The NetworkTables event associated with this update.
      *   Set to a blank event or omit to automatically fetch the data from NT.
      */
-    Q_INVOKABLE void updateEvent(const nt::Event& event = nt::Event());
+    Q_INVOKABLE void updateEvent(const nt::Event &event = nt::Event());
 
     /**
      * @brief update Update all subscribers with the provided value.
      */
-    void update(const QVariant& value);
+    void update(const QVariant &value);
 
     /**
      * @brief unpublish Unpublish this listener's associated NT entry,
@@ -64,7 +64,7 @@ public:
      * @brief setValue Set the value of this listener's associated NT entry.
      * @param value The value to publish to NetworkTables.
      */
-    void setValue(const QVariant& value);
+    void setValue(const QVariant &value);
 
     /**
      * @brief getValue Get the value of this listener's associated NT entry.
@@ -87,25 +87,25 @@ private:
     QQmlEngine *m_engine = nullptr;
     nt::NetworkTableInstance m_instance;
 
-    bool operator==(const Listener& other) const;
+    bool operator==(const Listener &other) const;
 };
 
 class TopicStore : public QObject {
     Q_OBJECT
 private:
-    Q_INVOKABLE Listener* entry(const QString& topic);
+    Q_INVOKABLE Listener *entry(const QString &topic);
 
     QHash<QString, Listener *> m_listeners;
 
-    Logger* m_logs;
+    Logger *m_logs;
     QQmlEngine *m_engine;
     nt::NetworkTableInstance m_instance;
 
 public:
-    static QVariant toVariant(const nt::Value& value);
-    static nt::Value toValue(const QVariant& value);
+    static QVariant toVariant(const nt::Value &value);
+    static nt::Value toValue(const QVariant &value);
 
-    TopicStore(QQmlEngine *engine, Logger* logs, QObject* parent = nullptr);
+    TopicStore(QQmlEngine *engine, Logger *logs, QObject *parent = nullptr);
 
     nt::NetworkTableEntry getRawEntry(const std::string_view &path);
     std::vector<nt::ConnectionInfo> getConnections() const;
@@ -117,16 +117,16 @@ public:
 
     // The QJSValue is the function this subscription is connected to
     // So each subscription's unique ID is just the function itself.
-    Q_INVOKABLE void subscribe(const QString& ntTopic, const QJSValue& func);
-    Q_INVOKABLE void unsubscribe(const QString& ntTopic, const QJSValue& func);
+    Q_INVOKABLE void subscribe(const QString &ntTopic, const QJSValue &func);
+    Q_INVOKABLE void unsubscribe(const QString &ntTopic, const QJSValue &func);
 
-    Q_INVOKABLE void subscribeOneShot(const QString& ntTopic,
+    Q_INVOKABLE void subscribeOneShot(const QString &ntTopic,
                                       std::function<void(QVariant)> callback);
 
     Q_INVOKABLE QVariant getValue(const QString &topic);
-    Q_INVOKABLE void setValue(const QString &topic, const QVariant& value);
+    Q_INVOKABLE void setValue(const QString &topic, const QVariant &value);
 
-    Q_INVOKABLE void forceUpdate(const QString& topic);
+    Q_INVOKABLE void forceUpdate(const QString &topic);
 
     QString typeString(const QString &topic);
 signals:
@@ -137,4 +137,3 @@ signals:
     void topicPublished(const std::string &topicName);
     void topicUnpublished(const std::string &topicName);
 };
-

@@ -4,7 +4,7 @@ import QtQuick
 
 Loader {
     id: loader
-    active: false
 
+    active: false
     sourceComponent: undefined
 }

@@ -5,13 +5,13 @@
 #include "Helpers/NotificationHelper.h"
 #include "Helpers/PlatformHelper.h"
 #include "Models/RemoteLayoutModel.h"
-#include "Services/Logger.h"
-#include "Services/ConnManager.h"
-#include "Services/SettingsManager.h"
 #include "Models/TabListModel.h"
 #include "Models/TopicListModel.h"
-#include "Services/TopicStore.h"
 #include "QDashApplication.h"
+#include "Services/ConnManager.h"
+#include "Services/Logger.h"
+#include "Services/SettingsManager.h"
+#include "Services/TopicStore.h"
 
 #include <CarboxylApplication.h>
 #include <CarboxylQuickInterface.h>
@@ -25,7 +25,8 @@
 
 static constexpr const int EXIT_RELOAD = -2;
 
-QDashApplication::QDashApplication(int& argc, char* argv[]) : QGuiApplication(argc, argv) {
+QDashApplication::QDashApplication(int &argc, char *argv[]) : QGuiApplication(argc, argv)
+{
     QGuiApplication::setOrganizationName(BuildConfig.ORGANIZATION_NAME);
     QGuiApplication::setApplicationName(BuildConfig.APPLICATION_NAME);
     QGuiApplication::setApplicationVersion(BuildConfig.GIT_TAG);
@@ -58,8 +59,8 @@ QDashApplication::QDashApplication(int& argc, char* argv[]) : QGuiApplication(ar
     tlm = new TabListModel(logs, settings, this);
 
     // carboxyl setup
-    CarboxylApplication* carboxylApp =
-        new CarboxylApplication(*this, m_engine, settings->style(), QStringLiteral("Graphide"), true);
+    CarboxylApplication *carboxylApp = new CarboxylApplication(*this, m_engine, settings->style(),
+                                                               QStringLiteral("Graphide"), true);
     carboxylApp->setParent(this);
 
     /// CONTEXT
@@ -87,7 +88,8 @@ QDashApplication::QDashApplication(int& argc, char* argv[]) : QGuiApplication(ar
         []() { QCoreApplication::exit(-1); }, Qt::QueuedConnection);
 }
 
-QString QDashApplication::toLocalPath(const QString& path) {
+QString QDashApplication::toLocalPath(const QString &path)
+{
     QString name = path;
 #ifdef Q_OS_WINDOWS
     name.replace("file:///", "");
@@ -98,19 +100,22 @@ QString QDashApplication::toLocalPath(const QString& path) {
     return name;
 }
 
-int QDashApplication::run() {
+int QDashApplication::run()
+{
     m_engine->loadFromModule("QDash.Main", "Main");
     int ret = exec();
     return ret;
 }
 
-QString QDashApplication::dataLocation() {
+QString QDashApplication::dataLocation()
+{
     QDir dir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     dir.mkpath(".");
     return dir.absolutePath();
 }
 
-QString QDashApplication::wordToState(int val) {
+QString QDashApplication::wordToState(int val)
+{
     auto word = ControlWord(val);
 
     QString mode, state;
@@ -134,7 +139,8 @@ QString QDashApplication::wordToState(int val) {
     return QStringLiteral("%1 %2").arg(mode, state);
 }
 
-void QDashApplication::reload() {
+void QDashApplication::reload()
+{
     qDebug() << "Reload called";
     QString program = QGuiApplication::applicationFilePath();
 #if defined(TARGET_OS_IOS) || defined(__ANDROID__)

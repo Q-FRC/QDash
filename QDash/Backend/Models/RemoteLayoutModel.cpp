@@ -3,17 +3,19 @@
 
 #include "RemoteLayoutModel.h"
 
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonArray>
 
 #include <QNetworkReply>
 #include <QTimer>
 
 #include "Services/TopicStore.h"
 
-RemoteLayoutModel::RemoteLayoutModel(TopicStore* store, QObject* parent)
-    : QAbstractListModel(parent), m_store{store} {}
+RemoteLayoutModel::RemoteLayoutModel(TopicStore *store, QObject *parent)
+    : QAbstractListModel(parent), m_store{store}
+{
+}
 
 int RemoteLayoutModel::rowCount(const QModelIndex &_) const
 {

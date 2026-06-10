@@ -33,4 +33,3 @@ protected:
 private:
     QList<Data> m_data;
 };
-

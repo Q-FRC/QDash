@@ -1,95 +1,86 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-import QtCore
-import QtQuick
-import QtQuick.Controls
 
 import Carboxyl.Clover
 import Carboxyl.Contour
 
 import QDash.Backend.Models
+import QtCore
+import QtQuick
+import QtQuick.Controls
 
 Loader {
     id: loader
-    active: false
-    asynchronous: true
-    onLoaded: item.open()
-
-    function open() {
-        active = true;
-    }
-
-    sourceComponent: active ? src : undefined
 
     property Component src: Component {
         CarboxylDialog {
             id: remote
+
             property url selected
 
-            implicitWidth: 350
             implicitHeight: 350
-
+            implicitWidth: 350
             popupType: Popup.Window
-
+            standardButtons: Dialog.Ok | Dialog.Close
             title: "Remote Layouts"
 
-            standardButtons: Dialog.Ok | Dialog.Close
-
-            onClosed: loader.active = false
-
             onAccepted: {
-                selected = RemoteLayoutModel.url(list.currentIndex);
-                let defaultPath = StandardPaths.writableLocation(StandardPaths.AppLocalDataLocation) + "/layout.json";
-                let filename = CarboxylQuickInterface.getSaveFileName(qsTr("Save Layout"), defaultPath, "JSON files (*.json);;All files (*)");
-                RemoteLayoutModel.download(selected, filename);
+                selected = RemoteLayoutModel.url(list.currentIndex)
+                let defaultPath = StandardPaths.writableLocation(StandardPaths.AppLocalDataLocation) + "/layout.json"
+                let filename = CarboxylQuickInterface.getSaveFileName(qsTr("Save Layout"), defaultPath,
+                                                                      "JSON files (*.json);;All files (*)")
+                RemoteLayoutModel.download(selected, filename)
             }
-
+            onClosed: loader.active = false
             onOpened: {
-                busy.running = true;
+                busy.running = true
 
                 if (RemoteLayoutModel.load())
-                    busy.running = true;
+                    busy.running = true
             }
 
             CarboxylMessageDialog {
                 id: fail
-                width: 350
+
                 height: 350
                 standardButtons: Dialog.Ok
-                title: "Error"
                 text: "You must be connected to a robot with a web server to download remote layouts."
+                title: "Error"
+                width: 350
 
                 onClosed: remote.close()
             }
 
             Connections {
-                target: RemoteLayoutModel
+                function onFailed() {
+                    fail.open()
+                }
+
                 function onFileOpened(filename) {
-                    window.filename = filename;
-                    TabListModel.load(filename);
-                    remote.close();
+                    window.filename = filename
+                    TabListModel.load(filename)
+                    remote.close()
                 }
 
                 function onListReady() {
-                    busy.running = false;
+                    busy.running = false
                 }
 
-                function onFailed() {
-                    fail.open();
-                }
+                target: RemoteLayoutModel
             }
 
             BusyIndicator {
                 id: busy
 
-                running: false
                 anchors.centerIn: parent
                 height: 50
+                running: false
                 width: 50
             }
 
             ListView {
                 id: list
+
                 anchors.fill: parent
                 anchors.margins: 20
                 model: RemoteLayoutModel
@@ -104,4 +95,14 @@ Loader {
             }
         }
     }
+
+    function open() {
+        active = true
+    }
+
+    active: false
+    asynchronous: true
+    sourceComponent: active ? src : undefined
+
+    onLoaded: item.open()
 }

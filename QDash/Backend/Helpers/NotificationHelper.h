@@ -61,4 +61,3 @@ private:
 
     Logger *m_logger;
 };
-

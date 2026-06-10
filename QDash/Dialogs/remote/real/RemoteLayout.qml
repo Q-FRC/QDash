@@ -1,19 +1,19 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-import QtQuick
-import QtQuick.Controls
 
 import Carboxyl.Clover
+import QtQuick
+import QtQuick.Controls
 
 Rectangle {
     id: rem
 
-    signal clicked
     signal activated
+    signal clicked
 
     color: mouseArea.containsMouse ? "#82bbff" : (ListView.isCurrentItem ? "#00aaff" : Clover.theme.base)
-    radius: 5
     opacity: 1
+    radius: 5
 
     Behavior on color {
         ColorAnimation {
@@ -28,22 +28,20 @@ Rectangle {
 
     MouseArea {
         id: mouseArea
+
         anchors.fill: parent
         hoverEnabled: true
 
-        onDoubleClicked: activated()
-
         onClicked: rem.clicked()
+        onDoubleClicked: activated()
     }
 
     Label {
         anchors.fill: parent
         anchors.leftMargin: 20
-
-        text: model.name
         font.pixelSize: Math.round(18)
-
         horizontalAlignment: Text.AlignLeft
+        text: model.name
         verticalAlignment: Text.AlignVCenter
     }
 }

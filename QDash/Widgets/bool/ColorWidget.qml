@@ -1,77 +1,45 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts
+
+import Carboxyl.Clover
 
 import QDash.Controls
 import QDash.Widgets
-
-import Carboxyl.Clover
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts
 
 PrimitiveWidget {
     id: widget
 
     property color falseColor: "#FF0000"
+    property bool itemValue: false
+    property string shape: "Rectangle"
+    property list<string> shapeChoices: ["Rectangle", "Circle", "Triangle"]
     property color trueColor: "#00FF00"
 
-    property string shape: "Rectangle"
+    function update(value) {
+        connected = true
+        itemValue = value
+    }
 
     propertyKeys: ["falseColor", "trueColor", "shape"]
 
-    property list<string> shapeChoices: ["Rectangle", "Circle", "Triangle"]
-
-    property bool itemValue: false
-
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Checkbox"
-                onTriggered: {
-                    model.type = "bool";
-                }
-            }
-        }
-    }
-
-    function update(value) {
-        connected = true;
-        itemValue = value;
-    }
-
-    ShapeHandler {
-        id: shape
-
-        itemShape: widget.shape
-        itemColor: widget.itemValue ? widget.trueColor : widget.falseColor
-
-        anchors {
-            top: titleField.bottom
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-
-            margins: 10
-        }
-    }
-
     configContent: ColumnLayout {
         id: layout
-        spacing: 12
+
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
+        spacing: 12
 
         SectionHeader {
             label: "Font Settings"
         }
 
         LabeledSpinBox {
-            label: "Title Font Size"
             bindedProperty: "titleFontSize"
+            label: "Title Font Size"
         }
 
         SectionHeader {
@@ -79,8 +47,8 @@ PrimitiveWidget {
         }
 
         LabeledComboBox {
-            label: "Shape"
             bindedProperty: "shape"
+            label: "Shape"
             model: shapeChoices
         }
 
@@ -88,13 +56,13 @@ PrimitiveWidget {
             Layout.fillWidth: true
 
             ColorField {
-                label: "True Color"
                 bindedProperty: "trueColor"
+                label: "True Color"
             }
 
             ColorField {
-                label: "False Color"
                 bindedProperty: "falseColor"
+                label: "False Color"
             }
         }
 
@@ -103,8 +71,38 @@ PrimitiveWidget {
         }
 
         LabeledTextField {
-            label: "Topic"
             bindedProperty: "item_topic"
+            label: "Topic"
+        }
+    }
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Checkbox"
+
+                onTriggered: {
+                    model.type = "bool"
+                }
+            }
+        }
+    }
+
+    ShapeHandler {
+        id: shape
+
+        itemColor: widget.itemValue ? widget.trueColor : widget.falseColor
+        itemShape: widget.shape
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            margins: 10
+            right: parent.right
+            top: titleField.bottom
         }
     }
 }

@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "TopicListModel.h"
 #include "Services/TopicStore.h"
+#include "TopicListModel.h"
 
 QList<QStandardItem *> recursiveSearch(QStandardItem *item, const QString &topic)
 {
@@ -34,16 +34,13 @@ TopicListModel::TopicListModel(TopicStore *store, QObject *parent)
 
     QStandardItemModel::setItemRoleNames(rez);
 
-    connect(m_store, &TopicStore::topicPublished, this, [this](const std::string &topicName) {
-        add(QString::fromStdString(topicName));
-    });
+    connect(m_store, &TopicStore::topicPublished, this,
+            [this](const std::string &topicName) { add(QString::fromStdString(topicName)); });
 
     // TODO: handle unpublishing
     // topics->remove(QString::fromStdString(topicName));
 
-    connect(m_store, &TopicStore::disconnected, this, [this]() {
-        clear();
-    });
+    connect(m_store, &TopicStore::disconnected, this, [this]() { clear(); });
 }
 
 QVariant TopicListModel::data(const QModelIndex &index, int role) const
@@ -100,12 +97,12 @@ void TopicListModel::add(const QString &toAdd)
                         std::string value = type.GetString("invalid");
 
                         if (value == "invalid") {
-                            m_store->subscribeOneShot(
-                                toAdd, [this,  parentItem, parentPath](const QVariant &value) mutable {
-                                    parentItem->setData(parentPath, TOPIC);
-                                    QString typeStr = value.toString();
-                                    parentItem->setData(typeStr, TYPE);
-                                });
+                            m_store->subscribeOneShot(toAdd, [this, parentItem, parentPath](
+                                                                 const QVariant &value) mutable {
+                                parentItem->setData(parentPath, TOPIC);
+                                QString typeStr = value.toString();
+                                parentItem->setData(typeStr, TYPE);
+                            });
                         } else {
                             parentItem->setData(parentPath, TOPIC);
                             QString typeStr = QString::fromStdString(value);

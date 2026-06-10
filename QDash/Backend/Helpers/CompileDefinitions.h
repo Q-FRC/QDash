@@ -62,7 +62,8 @@ public:
 #endif
     }
 
-    constexpr bool tapOnly() {
+    constexpr bool tapOnly()
+    {
 #if defined(__ANDROID__) || defined(TARGET_OS_IOS)
         return true;
 #else
@@ -70,7 +71,8 @@ public:
 #endif
     }
 
-    constexpr bool singleFile() {
+    constexpr bool singleFile()
+    {
 #ifdef QDASH_SINGLEMODE
         return true;
 #else
@@ -80,7 +82,8 @@ public:
 
     // Qt for iOS has mildly broken menus
     // You can't call popup()
-    constexpr bool brokenMenus() {
+    constexpr bool brokenMenus()
+    {
 #if defined(TARGET_OS_IOS)
         return true;
 #else
@@ -88,4 +91,3 @@ public:
 #endif
     }
 };
-

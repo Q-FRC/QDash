@@ -82,6 +82,7 @@ void Logger::debug(const QString &subsystem, const QString &message)
     }
 }
 
-void Logger::openLogLocation() {
+void Logger::openLogLocation()
+{
     QDesktopServices::openUrl(QUrl::fromLocalFile(m_dir.absolutePath()));
 }

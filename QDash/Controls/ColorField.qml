@@ -1,48 +1,49 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts
-import QtQuick.Dialogs
 
 import Carboxyl.Clover
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Dialogs
+import QtQuick.Layouts
 
 RowLayout {
-    required property string label
-
-    /** what property to bind to */
-    required property string bindedProperty
 
     /** the target to bind the property to */
     property var bindTarget: widget
 
-    function open() {
-        textField.open();
-    }
+    /** what property to bind to */
+    required property string bindedProperty
+    required property string label
 
     function accept() {
-        textField.accept();
+        textField.accept()
+    }
+
+    function open() {
+        textField.open()
     }
 
     ColorDialog {
         id: colorDialog
 
         selectedColor: textField.text
+
         onAccepted: textField.text = colorDialog.selectedColor
     }
 
     LabeledTextField {
         id: textField
 
-        label: parent.label
-        bindedProperty: parent.bindedProperty
         bindTarget: parent.bindTarget
+        bindedProperty: parent.bindedProperty
+        label: parent.label
     }
 
     Button {
         Layout.fillWidth: true
-        text: "Pick"
         font.pixelSize: 18
+        text: "Pick"
 
         onClicked: colorDialog.open()
     }

@@ -1,112 +1,35 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
+
+import Carboxyl.Clover
+
+import QDash.Controls
+import QDash.Widgets
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
 
-import QDash.Controls
-import QDash.Widgets
-
-import Carboxyl.Clover
-
 PrimitiveWidget {
     id: widget
 
-    property int maxFontSize: QDashSettings.defaultDisplayFontSize
     property int decimals: 2
     property color fontColor: Clover.theme.currentAccent
-
-    propertyKeys: ["maxFontSize", "decimals", "fontColor"]
-
-    // TODO(crueter): There should be some kind of interface that maps names to model types
-    // That way we can just use Repeater or whatever, or define all the widget types for a specific
-    // type???
-    menuExtension: Component {
-        Menu {
-            id: switchMenu
-            title: "Switch Widget..."
-
-            MenuItem {
-                text: "Spin Box"
-                onTriggered: {
-                    model.type = "double"
-                }
-            }
-
-            MenuItem {
-                text: "Dial"
-                onTriggered: {
-                    model.type = "doubleDial"
-                }
-            }
-
-            MenuItem {
-                text: "Radial Gauge"
-                onTriggered: {
-                    model.type = "doubleGauge"
-                }
-            }
-
-            MenuItem {
-                text: "Progress Bar"
-                onTriggered: {
-                    model.type = "doubleBar"
-                }
-            }
-
-            MenuItem {
-                text: "Match Time"
-                onTriggered: {
-                    model.type = "matchTime"
-                }
-            }
-
-            MenuItem {
-                text: "Phase Display"
-                onTriggered: {
-                    model.type = "phaseShift"
-                }
-            }
-        }
-    }
+    property int maxFontSize: QDashSettings.defaultDisplayFontSize
 
     function update(value) {
         widget.connected = true
         txt.value = value
     }
 
-    Text {
-        id: txt
-
-        font.pixelSize: maxFontSize
-
-        property double value
-
-        text: value.toFixed(decimals)
-
-        color: widget.fontColor
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-
-        fontSizeMode: Text.Fit
-        enabled: widget.connected
-
-        anchors {
-            top: titleField.bottom
-            right: parent.right
-            left: parent.left
-            bottom: parent.bottom
-
-            margins: 10
-        }
-    }
+    propertyKeys: ["maxFontSize", "decimals", "fontColor"]
 
     configContent: ColumnLayout {
         id: layout
-        spacing: 12
+
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
+        spacing: 12
 
         SectionHeader {
             label: "Font Settings"
@@ -114,13 +37,13 @@ PrimitiveWidget {
 
         RowLayout {
             LabeledSpinBox {
-                label: "Title Font Size"
                 bindedProperty: "titleFontSize"
+                label: "Title Font Size"
             }
 
             LabeledSpinBox {
-                label: "Maximum Font Size"
                 bindedProperty: "maxFontSize"
+                label: "Maximum Font Size"
             }
         }
 
@@ -130,15 +53,14 @@ PrimitiveWidget {
 
         RowLayout {
             LabeledSpinBox {
-                label: "Number of Decimals"
                 bindedProperty: "decimals"
-
                 from: 0
+                label: "Number of Decimals"
             }
 
             ColorField {
-                label: "Text Color"
                 bindedProperty: "color"
+                label: "Text Color"
             }
         }
 
@@ -147,8 +69,89 @@ PrimitiveWidget {
         }
 
         LabeledTextField {
-            label: "Topic"
             bindedProperty: "item_topic"
+            label: "Topic"
+        }
+    }
+
+    // TODO(crueter): There should be some kind of interface that maps names to model types
+    // That way we can just use Repeater or whatever, or define all the widget types for a specific
+    // type???
+    menuExtension: Component {
+        Menu {
+            id: switchMenu
+
+            title: "Switch Widget..."
+
+            MenuItem {
+                text: "Spin Box"
+
+                onTriggered: {
+                    model.type = "double"
+                }
+            }
+
+            MenuItem {
+                text: "Dial"
+
+                onTriggered: {
+                    model.type = "doubleDial"
+                }
+            }
+
+            MenuItem {
+                text: "Radial Gauge"
+
+                onTriggered: {
+                    model.type = "doubleGauge"
+                }
+            }
+
+            MenuItem {
+                text: "Progress Bar"
+
+                onTriggered: {
+                    model.type = "doubleBar"
+                }
+            }
+
+            MenuItem {
+                text: "Match Time"
+
+                onTriggered: {
+                    model.type = "matchTime"
+                }
+            }
+
+            MenuItem {
+                text: "Phase Display"
+
+                onTriggered: {
+                    model.type = "phaseShift"
+                }
+            }
+        }
+    }
+
+    Text {
+        id: txt
+
+        property double value
+
+        color: widget.fontColor
+        enabled: widget.connected
+        font.pixelSize: maxFontSize
+        fontSizeMode: Text.Fit
+        horizontalAlignment: Text.AlignHCenter
+        text: value.toFixed(decimals)
+        verticalAlignment: Text.AlignVCenter
+
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            margins: 10
+            right: parent.right
+            top: titleField.bottom
         }
     }
 }

@@ -10,7 +10,8 @@
 
 NotificationHelper::NotificationHelper(Logger *logger, QObject *parent)
     : QObject{parent}, m_logger{logger}
-{}
+{
+}
 
 void NotificationHelper::fromJson(const QJsonDocument &doc)
 {

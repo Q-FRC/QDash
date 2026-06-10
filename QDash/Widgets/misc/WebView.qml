@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
+import Carboxyl.Clover
+
+import QDash.Config
 import QtCore
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 6.8
-
-import QDash.Config
-import Carboxyl.Clover
 
 import QtWebEngine
 
@@ -14,41 +14,16 @@ BaseWidget {
     id: widget
 
     property string item_url: ""
+
     connected: true
-
-    menuExtension: Component {
-        Menu {
-            id: webMenu
-            title: "Web Actions"
-
-            MenuItem {
-                text: "Back"
-                onTriggered: web.goBack()
-            }
-
-            MenuItem {
-                text: "Forward"
-                onTriggered: web.goForward()
-            }
-
-            MenuItem {
-                text: "Reload"
-                onTriggered: web.reload()
-            }
-
-            MenuItem {
-                text: "Sync URL"
-                onTriggered: item_url = web.url
-            }
-        }
-    }
 
     configContent: ColumnLayout {
         id: layout
-        spacing: 12
+
         anchors.fill: parent
         anchors.leftMargin: 2
         clip: true
+        spacing: 12
 
         SectionHeader {
             label: "Font Settings"
@@ -56,12 +31,11 @@ BaseWidget {
 
         LabeledSpinBox {
             id: titleFontField
-            Layout.fillWidth: true
+
             Layout.alignment: Qt.AlignTop
-
-            label: "Title Font Size"
-
+            Layout.fillWidth: true
             bindedProperty: "titleFontSize"
+            label: "Title Font Size"
         }
 
         SectionHeader {
@@ -70,24 +44,53 @@ BaseWidget {
 
         LabeledTextField {
             id: urlField
-            Layout.fillWidth: true
+
             Layout.alignment: Qt.AlignTop
-
-            label: "URL"
-
+            Layout.fillWidth: true
             bindedProperty: "item_url"
+            label: "URL"
+        }
+    }
+    menuExtension: Component {
+        Menu {
+            id: webMenu
+
+            title: "Web Actions"
+
+            MenuItem {
+                text: "Back"
+
+                onTriggered: web.goBack()
+            }
+
+            MenuItem {
+                text: "Forward"
+
+                onTriggered: web.goForward()
+            }
+
+            MenuItem {
+                text: "Reload"
+
+                onTriggered: web.reload()
+            }
+
+            MenuItem {
+                text: "Sync URL"
+
+                onTriggered: item_url = web.url
+            }
         }
     }
 
     Item {
         anchors {
-            top: titleField.bottom
             bottom: parent.bottom
             left: parent.left
-            right: parent.right
-
             leftMargin: 10
+            right: parent.right
             rightMargin: 10
+            top: titleField.bottom
         }
 
         WebEngineView {
@@ -98,9 +101,9 @@ BaseWidget {
 
             // TODO: profiles
             profile: WebEngineProfile {
-                storageName: "QDash"
-                persistentCookiesPolicy: WebEngineProfile.ForcePersistentCookies
                 offTheRecord: false
+                persistentCookiesPolicy: WebEngineProfile.ForcePersistentCookies
+                storageName: "QDash"
             }
         }
     }

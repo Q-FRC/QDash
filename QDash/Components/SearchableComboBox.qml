@@ -1,121 +1,119 @@
 // SPDX-FileCopyrightText: Copyright 2026 crueter
 // SPDX-License-Identifier: GPL-3.0-or-later
-import QtQuick
-import QtCore
-import QtQuick.Controls
+import Carboxyl.Clover
 
 import Carboxyl.Contour
-import Carboxyl.Clover
+import QtCore
+import QtQuick
+import QtQuick.Controls
 
 CarboxylLabeledComboBox {
     id: control
+
     property list<var> choices
 
-    model: choices
-    onChoicesChanged: model = choices
-
     function filter(filter) {
-        let newList = [];
-        let regex = new RegExp(".*" + filter + ".*", "i");
+        let newList = []
+        let regex = new RegExp(".*" + filter + ".*", "i")
         for (var i = 0; i < choices.length; ++i) {
             if (choices[i].match(regex)) {
-                newList.push(choices[i]);
+                newList.push(choices[i])
             }
-        }
-
-        model = newList;
-    }
-
-    popup: Popup {
-        y: control.editable ? control.height - 5 : 0
-        width: control.width
-        height: Math.min(contentItem.implicitHeight + verticalPadding * 2, control.Window.height - topMargin - bottomMargin)
-        transformOrigin: Item.Top
-        topMargin: 12
-        bottomMargin: 12
-        verticalPadding: 8
-
-        enter: Transition {
-            // grow_fade_in
-            NumberAnimation {
-                property: "scale"
-                from: 0.9
-                easing.type: Easing.OutQuint
-                duration: 220
             }
-            NumberAnimation {
-                property: "opacity"
-                from: 0.0
-                easing.type: Easing.OutCubic
-                duration: 150
+
+                model = newList
             }
-        }
 
-        exit: Transition {
-            // shrink_fade_out
-            NumberAnimation {
-                property: "scale"
-                to: 0.9
-                easing.type: Easing.OutQuint
-                duration: 220
-            }
-            NumberAnimation {
-                property: "opacity"
-                to: 0.0
-                easing.type: Easing.OutCubic
-                duration: 150
-            }
-        }
+                model: choices
 
-        contentItem: Item {
-            implicitHeight: search.height + 28 + listView.contentHeight
-            width: parent.width
+                popup: Popup {
+                    bottomMargin: 12
+                    height: Math.min(contentItem.implicitHeight + verticalPadding * 2, control.Window.height - topMargin
+                                     - bottomMargin)
+                    topMargin: 12
+                    transformOrigin: Item.Top
+                    verticalPadding: 8
+                    width: control.width
+                    y: control.editable ? control.height - 5 : 0
 
-            CarboxylLabeledTextField {
-                id: search
+                    background: Rectangle {
+                        color: Clover.theme.base
+                        layer.enabled: control.enabled
+                        radius: 4
+                    }
+                    contentItem: Item {
+                        implicitHeight: search.height + 28 + listView.contentHeight
+                        width: parent.width
 
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
+                        CarboxylLabeledTextField {
+                            id: search
 
-                    margins: 10
-                    topMargin: 18
+                            font.pixelSize: 16
+                            label: "Search"
+
+                            onTextEdited: control.filter(text)
+
+                            anchors {
+                                left: parent.left
+                                margins: 10
+                                right: parent.right
+                                top: parent.top
+                                topMargin: 18
+                            }
+                        }
+
+                        ListView {
+                            id: listView
+
+                            clip: true
+                            currentIndex: control.highlightedIndex
+                            highlightMoveDuration: 0
+                            model: control.delegateModel
+
+                            ScrollIndicator.vertical: ScrollIndicator {}
+
+                            anchors {
+                                bottom: parent.bottom
+                                left: parent.left
+                                right: parent.right
+                                top: search.bottom
+                                topMargin: 10
+                            }
+                        }
+                    }
+                    enter: Transition {
+                        // grow_fade_in
+                        NumberAnimation {
+                            duration: 220
+                            easing.type: Easing.OutQuint
+                            from: 0.9
+                            property: "scale"
+                        }
+
+                        NumberAnimation {
+                            duration: 150
+                            easing.type: Easing.OutCubic
+                            from: 0.0
+                            property: "opacity"
+                        }
+                    }
+                    exit: Transition {
+                        // shrink_fade_out
+                        NumberAnimation {
+                            duration: 220
+                            easing.type: Easing.OutQuint
+                            property: "scale"
+                            to: 0.9
+                        }
+
+                        NumberAnimation {
+                            duration: 150
+                            easing.type: Easing.OutCubic
+                            property: "opacity"
+                            to: 0.0
+                        }
+                    }
                 }
 
-                font.pixelSize: 16
-
-                label: "Search"
-
-                onTextEdited: control.filter(text)
+                onChoicesChanged: model = choices
             }
-
-            ListView {
-                id: listView
-
-                clip: true
-                anchors {
-                    top: search.bottom
-                    left: parent.left
-                    right: parent.right
-                    bottom: parent.bottom
-
-                    topMargin: 10
-                }
-
-                model: control.delegateModel
-                currentIndex: control.highlightedIndex
-                highlightMoveDuration: 0
-
-                ScrollIndicator.vertical: ScrollIndicator {}
-            }
-        }
-
-        background: Rectangle {
-            radius: 4
-            color: Clover.theme.base
-
-            layer.enabled: control.enabled
-        }
-    }
-}
